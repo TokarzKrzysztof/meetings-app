@@ -1,3 +1,9 @@
+:host-context(.can-go-back) {
+  .back-button {
+    display: block;
+  }
+}
+
 .title {
   font-weight: normal;
   text-transform: uppercase;
@@ -9,6 +15,6 @@
     display: none;
   }
   .toolbar {
-    --background: transparent;
+    --background: white;
   }
 }

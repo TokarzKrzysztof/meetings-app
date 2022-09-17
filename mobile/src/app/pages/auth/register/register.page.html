@@ -1,4 +1,4 @@
-<app-header [transparent]="true" [title]="'logowanie'"> </app-header>
+<app-header [transparent]="true" [title]="'rejestracja'"> </app-header>
 
 <ion-content>
   <ion-img class="w-60 mx-auto mt-5" [src]="'assets/img/logo.png'"></ion-img>
@@ -17,9 +17,9 @@
     </app-input>
   </div>
 
-  <app-auth-button class="mt-4"> Zaloguj </app-auth-button>
+  <app-auth-button class="mt-4"> Zarejestruj się </app-auth-button>
 
   <div class="mt-6 flex center">
-    <ion-button fill="clear" class="create-new-account-btn" (click)="handleGoToRegister()">utwórz nowe konto</ion-button>
+    <ion-button fill="clear" class="create-new-account-btn" (click)="handleGoToLogin()">mam już konto</ion-button>
   </div>
 </ion-content>

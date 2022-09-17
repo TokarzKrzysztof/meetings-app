@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NavController } from '@ionic/angular';
+import { AppRoutes } from '../../../utils/enums/app-routes';
 
 @Component({
   selector: 'app-login',
@@ -6,10 +8,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+  constructor(private nav: NavController) {}
 
-  constructor() { }
+  ngOnInit() {}
 
-  ngOnInit() {
+  handleGoToRegister() {
+    this.nav.navigateForward(AppRoutes.Register);
   }
-
 }

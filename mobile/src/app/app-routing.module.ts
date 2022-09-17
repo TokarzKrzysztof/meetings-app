@@ -1,17 +1,23 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AppRoutes } from './utils/enums/app-routes';
 
 const routes: Routes = [
   {
-    path: 'login',
+    path: AppRoutes.Login,
     loadChildren: () =>
       import('./pages/auth/login/login.module').then((m) => m.LoginPageModule),
   },
   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
+    path: AppRoutes.Register,
+    loadChildren: () =>
+      import('./pages/auth/register/register.module').then((m) => m.RegisterPageModule),
   },
+  {
+    path: '',
+    redirectTo: AppRoutes.Login,
+    pathMatch: 'full',
+  }
 ];
 
 @NgModule({
