@@ -1,0 +1,83 @@
+@import "./variables.scss";
+
+.flex {
+  display: flex;
+  align-items: center;
+
+  &.end {
+    justify-content: flex-end;
+  }
+  &.center {
+    justify-content: center;
+  }
+  &.between {
+    justify-content: space-between;
+  }
+}
+
+@for $i from 1 through 30 {
+  .m-#{$i} {
+    margin: $i * $spacing + px;
+  }
+}
+
+@for $i from 1 through 30 {
+  .my-#{$i} {
+    margin-top: $i * $spacing + px;
+    margin-bottom: $i * $spacing + px;
+  }
+  .mx-#{$i} {
+    margin-left: $i * $spacing + px;
+    margin-right: $i * $spacing + px;
+  }
+}
+
+@for $i from 1 through 30 {
+  .mt-#{$i} {
+    margin-top: $i * $spacing + px;
+  }
+  .mr-#{$i} {
+    margin-right: $i * $spacing + px;
+  }
+  .mb-#{$i} {
+    margin-bottom: $i * $spacing + px;
+  }
+  .ml-#{$i} {
+    margin-left: $i * $spacing + px;
+  }
+}
+
+@for $i from 1 through 30 {
+  .p-#{$i} {
+    padding-top: $i * $spacing + px;
+    padding-right: $i * $spacing + px;
+    padding-bottom: $i * $spacing + px;
+    padding-left: $i * $spacing + px;
+  }
+}
+
+@for $i from 1 through 30 {
+  .py-#{$i} {
+    padding-top: $i * $spacing + px;
+    padding-bottom: $i * $spacing + px;
+  }
+  .px-#{$i} {
+    padding-left: $i * $spacing + px;
+    padding-right: $i * $spacing + px;
+  }
+}
+
+@for $i from 1 through 30 {
+  .pt-#{$i} {
+    padding-top: $i * $spacing + px;
+  }
+  .pr-#{$i} {
+    padding-right: $i * $spacing + px;
+  }
+  .pb-#{$i} {
+    padding-bottom: $i * $spacing + px;
+  }
+  .pl-#{$i} {
+    padding-left: $i * $spacing + px;
+  }
+}
