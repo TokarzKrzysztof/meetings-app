@@ -1,3 +1,18 @@
-<app-header [title]="'logowanie'"> </app-header>
+<app-header [transparent]="true" [title]="'logowanie'"> </app-header>
 
-<ion-content> </ion-content>
+<ion-img class="w-60 mx-auto mt-5" [src]="'assets/img/logo.png'"></ion-img>
+
+<div class="w-70 mx-auto mt-5">
+  <app-input class="mb-2" [placeholder]="'Email'">
+    <ion-icon icon-start name="person-outline"></ion-icon>
+  </app-input>
+  <app-input
+    class="mb-2"
+    [placeholder]="'Password'"
+    [type]="'password'"
+    [autocomplete]="'off'"
+  >
+    <ion-icon icon-start name="lock-closed-outline"></ion-icon>
+  </app-input>
+  <app-auth-button class="mt-4"> Zaloguj </app-auth-button>
+</div>

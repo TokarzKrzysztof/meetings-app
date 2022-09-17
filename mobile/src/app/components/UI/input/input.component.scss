@@ -1,0 +1,13 @@
+@import "../../../../styles/variables.scss";
+
+:host {
+  display: inline-block;
+}
+
+.input {
+  border-bottom: 1px solid #eee;
+  &.has-focus {
+    transition: .5s;
+    border-color: $color-primary-dark;
+  }
+}

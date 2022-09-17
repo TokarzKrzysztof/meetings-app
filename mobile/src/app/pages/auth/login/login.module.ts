@@ -8,6 +8,8 @@ import { LoginPageRoutingModule } from './login-routing.module';
 
 import { LoginPage } from './login.page';
 import { HeaderComponent } from '../../../components/header/header.component';
+import { UIModule } from '../../../components/UI/ui.module';
+import { AuthButtonComponent } from '../../../components/auth-button/auth-button.component';
 
 @NgModule({
   imports: [
@@ -16,6 +18,8 @@ import { HeaderComponent } from '../../../components/header/header.component';
     IonicModule,
     LoginPageRoutingModule,
     HeaderComponent,
+    UIModule,
+    AuthButtonComponent
   ],
   declarations: [LoginPage],
 })
