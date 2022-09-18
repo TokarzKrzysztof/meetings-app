@@ -13,6 +13,7 @@ export class LoginPage implements OnInit {
   ngOnInit() {}
 
   handleGoToRegister() {
+    console.log("click")
     this.nav.navigateForward(AppRoutes.Register);
   }
 }

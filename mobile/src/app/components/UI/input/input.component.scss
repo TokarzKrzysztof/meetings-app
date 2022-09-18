@@ -1,7 +1,8 @@
 @import "../../../../styles/variables.scss";
 
 :host {
-  display: inline-block;
+  display: block;
+  width: 100%;
 }
 
 .input {

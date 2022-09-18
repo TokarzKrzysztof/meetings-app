@@ -9,12 +9,3 @@
   text-transform: uppercase;
   letter-spacing: 1px;
 }
-
-.header.transparent {
-  &::after {
-    display: none;
-  }
-  .toolbar {
-    --background: white;
-  }
-}

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { IonInput } from '@ionic/angular';
 
 @Component({
   selector: 'app-input',
@@ -8,9 +9,9 @@ import { FormControl } from '@angular/forms';
 })
 export class InputComponent implements OnInit {
   @Input() control: FormControl = new FormControl();
-  @Input() placeholder: string;
-  @Input() type: string;
-  @Input() autocomplete: string;
+  @Input() placeholder: IonInput["placeholder"];
+  @Input() type: IonInput["type"];
+  @Input() autocomplete: IonInput["autocomplete"] = 'off';
 
   constructor() {}
 

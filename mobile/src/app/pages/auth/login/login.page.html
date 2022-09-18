@@ -1,18 +1,13 @@
-<app-header [transparent]="true" [title]="'logowanie'"> </app-header>
+<app-header [title]="'logowanie'"> </app-header>
 
 <ion-content>
   <ion-img class="w-60 mx-auto mt-5" [src]="'assets/img/logo.png'"></ion-img>
 
   <div class="w-70 mx-auto mt-5">
-    <app-input class="mb-2" [placeholder]="'Email'">
+    <app-input class="mb-2" [placeholder]="'Adres email'">
       <ion-icon icon-start name="person-outline"></ion-icon>
     </app-input>
-    <app-input
-      class="mb-2"
-      [placeholder]="'Password'"
-      [type]="'password'"
-      [autocomplete]="'off'"
-    >
+    <app-input class="mb-2" [placeholder]="'Hasło'" [type]="'password'">
       <ion-icon icon-start name="lock-closed-outline"></ion-icon>
     </app-input>
   </div>
@@ -20,6 +15,8 @@
   <app-auth-button class="mt-4"> Zaloguj </app-auth-button>
 
   <div class="mt-6 flex center">
-    <ion-button fill="clear" class="create-new-account-btn" (click)="handleGoToRegister()">utwórz nowe konto</ion-button>
+    <app-button [fill]="'clear'" (click)="handleGoToRegister()">
+      utwórz nowe konto</app-button
+    >
   </div>
 </ion-content>
