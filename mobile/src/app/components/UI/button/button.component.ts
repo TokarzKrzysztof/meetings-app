@@ -8,6 +8,7 @@ import { IonButton } from '@ionic/angular';
 })
 export class ButtonComponent implements OnInit, OnChanges {
   @Input() variant: 'text' = 'text';
+  @Input() type: IonButton['type'] = 'button';
 
   btnParams: Partial<IonButton> = {};
 

@@ -1,3 +1,9 @@
+:host-context(.ng-submitted) {
+  .input.ion-invalid {
+    border-color: var(--ion-color-danger);
+    --color: var(--ion-color-danger);
+  }
+}
 
 :host {
   display: block;
@@ -9,9 +15,5 @@
   &.has-focus {
     transition: 0.5s;
     border-color: var(--ion-color-primary-shade);
-  }
-  &.ion-touched.ion-invalid {
-    border-color: var(--ion-color-danger);
-    --color: var(--ion-color-danger);
   }
 }

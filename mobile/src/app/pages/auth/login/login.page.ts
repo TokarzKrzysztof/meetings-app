@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
+import { AuthService } from '../../../services/auth.service';
 import { AppRoutes } from '../../../utils/enums/app-routes';
 
 @Component({
@@ -17,7 +18,7 @@ export class LoginPage implements OnInit {
     password: new FormControl<string>(null, [Validators.required]),
   });
 
-  constructor(private nav: NavController) {}
+  constructor(private nav: NavController, private authService: AuthService) {}
 
   ngOnInit() {}
 
@@ -25,7 +26,10 @@ export class LoginPage implements OnInit {
     this.nav.navigateForward(AppRoutes.Register);
   }
 
-  handleLogin() {
+  onSubmit() {
     if (this.formGroup.invalid) return;
+    this.authService.login(
+      this.formGroup.value as { email: string; password: string }
+    );
   }
 }
