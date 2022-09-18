@@ -1,4 +1,3 @@
-@import "../../../../styles/variables.scss";
 
 :host {
   display: block;
@@ -8,7 +7,11 @@
 .input {
   border-bottom: 1px solid #eee;
   &.has-focus {
-    transition: .5s;
-    border-color: $color-primary-dark;
+    transition: 0.5s;
+    border-color: var(--ion-color-primary-shade);
+  }
+  &.ion-touched.ion-invalid {
+    border-color: var(--ion-color-danger);
+    --color: var(--ion-color-danger);
   }
 }

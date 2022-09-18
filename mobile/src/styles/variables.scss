@@ -1,22 +1,18 @@
-$spacing: 4;
-$text-color-primary: #64636b;
-$color-primary: #22ecb1;
-$color-primary-dark: #23cdb3;
-$button-shadow: 0px 3px 22px 1px rgb(160 160 160);
-
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
 /** Ionic CSS Variables **/
 :root {
   --ion-background-color: white;
+  --text-color-primary: #64636b;
+  --button-shadow: 0px 3px 22px 1px rgb(160 160 160);
 
   /** primary **/
-  --ion-color-primary: $color-primary;
+  --ion-color-primary: #22ecb1;
   --ion-color-primary-rgb: 34, 236, 177;
   --ion-color-primary-contrast: #000000;
   --ion-color-primary-contrast-rgb: 0, 0, 0;
-  --ion-color-primary-shade: $color-primary-dark;
+  --ion-color-primary-shade: #23cdb3;
   --ion-color-primary-tint: #4c8dff;
 
   /** secondary **/

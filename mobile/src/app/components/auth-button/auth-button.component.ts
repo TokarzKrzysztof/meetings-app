@@ -10,7 +10,7 @@ import { IonicModule } from '@ionic/angular';
   styleUrls: ['./auth-button.component.scss'],
 })
 export class AuthButtonComponent implements OnInit {
-
+  
   constructor() { }
 
   ngOnInit() {}
