@@ -13,6 +13,7 @@ import { AuthService } from '../../../services/auth.service';
 import { AppRoutes } from '../../../utils/enums/app-routes';
 import { takeUntil } from 'rxjs/operators';
 import { Destroyable } from '../../../utils/destroyable';
+import { FormUtils } from '../../../utils/form-utils';
 
 @Component({
   selector: 'app-register',
@@ -25,31 +26,41 @@ export class RegisterPage extends Destroyable implements OnInit {
     { text: 'Kobieta', value: UserGender.Female },
   ];
 
-  formGroup = new FormGroup({
-    email: new FormControl<string>(null, [
-      Validators.required,
-      Validators.email,
-    ]),
-    password: new FormControl<string>(null, [Validators.required]),
-    passwordRepeat: new FormControl<string>(null, [Validators.required]),
-    firstName: new FormControl<string>(null, [Validators.required]),
-    lastName: new FormControl<string>(null, [Validators.required]),
-    gender: new FormControl<UserGender>(UserGender.Male, [Validators.required]),
-  });
+  formGroup = new FormGroup(
+    {
+      email: new FormControl<string>(null, [
+        Validators.required,
+        Validators.email,
+      ]),
+      password: new FormControl<string>(null, [Validators.required]),
+      passwordRepeat: new FormControl<string>(null, [Validators.required]),
+      firstName: new FormControl<string>(null, [Validators.required]),
+      lastName: new FormControl<string>(null, [Validators.required]),
+      gender: new FormControl<UserGender>(UserGender.Male, [
+        Validators.required,
+      ]),
+    },
+    { updateOn: 'submit' }
+  );
 
   constructor(private nav: NavController, private authService: AuthService) {
     super();
   }
 
   ngOnInit() {
-    this.formGroup.valueChanges.subscribe(({ password, passwordRepeat }) => {
-      const error =
-        password !== passwordRepeat ? { passwordsNotMatch: true } : null;
-      this.formGroup.controls.password.setErrors(error);
-      this.formGroup.controls.passwordRepeat.setErrors(error);
-
-      this.formGroup.updateValueAndValidity({ emitEvent: false });
-    });
+    this.formGroup.valueChanges
+      .pipe(takeUntil(this.onDestroy$))
+      .subscribe(() => {
+        const { password, passwordRepeat } = this.formGroup.controls;
+        const isValid = password.value === passwordRepeat.value;
+        if (isValid) {
+          FormUtils.removeError(password, 'passwordsNotMatch');
+          FormUtils.removeError(passwordRepeat, 'passwordsNotMatch');
+        } else {
+          FormUtils.addError(password, 'passwordsNotMatch');
+          FormUtils.addError(passwordRepeat, 'passwordsNotMatch');
+        }
+      });
   }
 
   handleGoToLogin() {
