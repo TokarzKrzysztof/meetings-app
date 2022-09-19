@@ -1,10 +1,10 @@
-<ion-radio-group [formControl]="control">
+<ion-radio-group class="radio-group" [formControl]="control">
   <ion-list-header class="ion-no-padding">
     <ion-label>{{title}}</ion-label>
   </ion-list-header>
 
   <ion-item class="ion-no-padding" *ngFor="let item of options">
     <ion-label>{{item.text}}</ion-label>
-    <ion-radio color="primary" slot="start" [value]="item.value"></ion-radio>
+    <ion-radio class="radio-btn" slot="start" [value]="item.value"></ion-radio>
   </ion-item>
 </ion-radio-group>

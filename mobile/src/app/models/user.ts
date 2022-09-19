@@ -3,7 +3,7 @@ export enum UserGender {
     Female
 }
 
-export class User {
+export interface User {
     id: string;
     firstName: string;
     lastName: string;

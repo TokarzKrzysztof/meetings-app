@@ -1,9 +1,9 @@
-$spacing: 4;
-
 .flex {
   display: flex;
   align-items: center;
-
+  &.column {
+    flex-direction: column;
+  }
   &.end {
     justify-content: flex-end;
   }
@@ -15,70 +15,70 @@ $spacing: 4;
   }
 }
 
-@for $i from 1 through 30 {
+@for $i from 1 through 50 {
   .m-#{$i} {
-    margin: $i * $spacing + px;
+    margin: $i + px;
   }
 }
 
-@for $i from 1 through 30 {
+@for $i from 1 through 50 {
   .my-#{$i} {
-    margin-top: $i * $spacing + px;
-    margin-bottom: $i * $spacing + px;
+    margin-top: $i + px;
+    margin-bottom: $i + px;
   }
   .mx-#{$i} {
-    margin-left: $i * $spacing + px;
-    margin-right: $i * $spacing + px;
+    margin-left: $i + px;
+    margin-right: $i + px;
   }
 }
 
-@for $i from 1 through 30 {
+@for $i from 1 through 50 {
   .mt-#{$i} {
-    margin-top: $i * $spacing + px;
+    margin-top: $i + px;
   }
   .mr-#{$i} {
-    margin-right: $i * $spacing + px;
+    margin-right: $i + px;
   }
   .mb-#{$i} {
-    margin-bottom: $i * $spacing + px;
+    margin-bottom: $i + px;
   }
   .ml-#{$i} {
-    margin-left: $i * $spacing + px;
+    margin-left: $i + px;
   }
 }
 
-@for $i from 1 through 30 {
+@for $i from 1 through 50 {
   .p-#{$i} {
-    padding-top: $i * $spacing + px;
-    padding-right: $i * $spacing + px;
-    padding-bottom: $i * $spacing + px;
-    padding-left: $i * $spacing + px;
+    padding-top: $i + px;
+    padding-right: $i + px;
+    padding-bottom: $i + px;
+    padding-left: $i + px;
   }
 }
 
-@for $i from 1 through 30 {
+@for $i from 1 through 50 {
   .py-#{$i} {
-    padding-top: $i * $spacing + px;
-    padding-bottom: $i * $spacing + px;
+    padding-top: $i + px;
+    padding-bottom: $i + px;
   }
   .px-#{$i} {
-    padding-left: $i * $spacing + px;
-    padding-right: $i * $spacing + px;
+    padding-left: $i + px;
+    padding-right: $i + px;
   }
 }
 
-@for $i from 1 through 30 {
+@for $i from 1 through 50 {
   .pt-#{$i} {
-    padding-top: $i * $spacing + px;
+    padding-top: $i + px;
   }
   .pr-#{$i} {
-    padding-right: $i * $spacing + px;
+    padding-right: $i + px;
   }
   .pb-#{$i} {
-    padding-bottom: $i * $spacing + px;
+    padding-bottom: $i + px;
   }
   .pl-#{$i} {
-    padding-left: $i * $spacing + px;
+    padding-left: $i + px;
   }
 }
 
@@ -87,7 +87,7 @@ $spacing: 4;
     width: $i * 10%;
   }
 }
- 
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;

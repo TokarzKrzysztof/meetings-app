@@ -11,11 +11,11 @@ import { AppRoutes } from '../../../utils/enums/app-routes';
 })
 export class LoginPage implements OnInit {
   formGroup = new FormGroup({
-    email: new FormControl<string>(null, [
+    email: new FormControl<string | null>(null, [
       Validators.required,
       Validators.email,
     ]),
-    password: new FormControl<string>(null, [Validators.required]),
+    password: new FormControl<string | null>(null, [Validators.required]),
   });
 
   constructor(private nav: NavController, private authService: AuthService) {}

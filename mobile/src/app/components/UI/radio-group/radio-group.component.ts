@@ -13,9 +13,9 @@ export interface RadioOption<T = any> {
 })
 export class RadioGroupComponent implements OnInit {
   @Input() control: FormControl = new FormControl();
-  @Input() title: string;
+  @Input() title: string = "";
   @Input() options: RadioOption[] = [];
-
+  
   constructor() { }
 
   ngOnInit() {}

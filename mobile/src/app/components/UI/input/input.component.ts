@@ -10,7 +10,7 @@ import { IonInput } from '@ionic/angular';
 export class InputComponent implements OnInit {
   @Input() control: FormControl = new FormControl();
   @Input() placeholder: IonInput["placeholder"];
-  @Input() type: IonInput["type"];
+  @Input() type: IonInput["type"] = 'text';
   @Input() autocomplete: IonInput["autocomplete"] = 'off';
 
   constructor() {}

@@ -5,10 +5,21 @@ import { InputComponent } from './input/input.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from './button/button.component';
 import { RadioGroupComponent } from './radio-group/radio-group.component';
+import { ErrorMessageComponent } from './error-message/error-message.component';
 
 @NgModule({
-  declarations: [InputComponent, ButtonComponent, RadioGroupComponent],
+  declarations: [
+    InputComponent,
+    ButtonComponent,
+    RadioGroupComponent,
+    ErrorMessageComponent,
+  ],
   imports: [CommonModule, IonicModule, ReactiveFormsModule],
-  exports: [InputComponent, ButtonComponent, RadioGroupComponent],
+  exports: [
+    InputComponent,
+    ButtonComponent,
+    RadioGroupComponent,
+    ErrorMessageComponent,
+  ],
 })
 export class UIModule {}

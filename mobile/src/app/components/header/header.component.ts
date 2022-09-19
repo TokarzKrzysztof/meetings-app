@@ -10,7 +10,7 @@ import { IonicModule, NavController } from '@ionic/angular';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  @Input() title: string;
+  @Input() title: string = "";
 
   constructor() {}
 

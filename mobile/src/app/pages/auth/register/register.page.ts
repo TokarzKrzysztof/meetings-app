@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
+  NgForm,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
@@ -26,22 +27,19 @@ export class RegisterPage extends Destroyable implements OnInit {
     { text: 'Kobieta', value: UserGender.Female },
   ];
 
-  formGroup = new FormGroup(
-    {
-      email: new FormControl<string>(null, [
-        Validators.required,
-        Validators.email,
-      ]),
-      password: new FormControl<string>(null, [Validators.required]),
-      passwordRepeat: new FormControl<string>(null, [Validators.required]),
-      firstName: new FormControl<string>(null, [Validators.required]),
-      lastName: new FormControl<string>(null, [Validators.required]),
-      gender: new FormControl<UserGender>(UserGender.Male, [
-        Validators.required,
-      ]),
-    },
-    { updateOn: 'submit' }
-  );
+  formGroup = new FormGroup({
+    email: new FormControl<string | null>(null, [
+      Validators.required,
+      Validators.email,
+    ]),
+    password: new FormControl<string | null>(null, [Validators.required]),
+    passwordRepeat: new FormControl<string | null>(null, [Validators.required]),
+    firstName: new FormControl<string | null>(null, [Validators.required]),
+    lastName: new FormControl<string | null>(null, [Validators.required]),
+    gender: new FormControl<UserGender>(UserGender.Male, [Validators.required]),
+  });
+
+  errorMsg: string | null = null;
 
   constructor(private nav: NavController, private authService: AuthService) {
     super();
@@ -56,9 +54,11 @@ export class RegisterPage extends Destroyable implements OnInit {
         if (isValid) {
           FormUtils.removeError(password, 'passwordsNotMatch');
           FormUtils.removeError(passwordRepeat, 'passwordsNotMatch');
+          this.errorMsg = null;
         } else {
           FormUtils.addError(password, 'passwordsNotMatch');
           FormUtils.addError(passwordRepeat, 'passwordsNotMatch');
+          this.errorMsg = 'Hasła są różne';
         }
       });
   }
@@ -68,7 +68,6 @@ export class RegisterPage extends Destroyable implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.formGroup.valid);
     if (this.formGroup.invalid) return;
     this.authService.login(
       this.formGroup.value as { email: string; password: string }
