@@ -1,0 +1,14 @@
+:host {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--loader-background);
+}
+
+.spinner {
+    width: 70px;
+    height: 70px;
+}

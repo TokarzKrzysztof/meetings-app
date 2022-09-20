@@ -15,6 +15,7 @@ import { AppRoutes } from '../../../utils/enums/app-routes';
 import { takeUntil } from 'rxjs/operators';
 import { Destroyable } from '../../../utils/destroyable';
 import { FormUtils } from '../../../utils/form-utils';
+import { LoaderService } from '../../../utils/services/loader.service';
 
 @Component({
   selector: 'app-register',
@@ -41,7 +42,7 @@ export class RegisterPage extends Destroyable implements OnInit {
 
   errorMsg: string | null = null;
 
-  constructor(private nav: NavController, private authService: AuthService) {
+  constructor(private nav: NavController, private authService: AuthService, private loader: LoaderService) {
     super();
   }
 
@@ -69,6 +70,10 @@ export class RegisterPage extends Destroyable implements OnInit {
 
   onSubmit() {
     if (this.formGroup.invalid) return;
+    this.loader.show();
+    setTimeout(() => {
+      this.loader.hide();
+    }, 2000);
     this.authService.login(
       this.formGroup.value as { email: string; password: string }
     );
