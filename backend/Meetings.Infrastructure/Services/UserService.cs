@@ -3,6 +3,7 @@ using Meetings.Infrastructure.Services.Interfaces;
 using Meetings.Models.User;
 using Meetings.Utils;
 using Meetings.Utils.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,6 +33,11 @@ namespace Meetings.Infrastructure.Services
             data.Password = PasswordHasher.Hash(data.Password);
             
             await _repository.Create(data);
+        }
+
+        public async Task<User> TryGetUserByEmail(string email)
+        {
+            return await _repository.Data.SingleOrDefaultAsync(x => x.Email == email);
         }
     }
 }

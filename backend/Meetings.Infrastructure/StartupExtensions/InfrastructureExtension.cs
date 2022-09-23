@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace Meetings.Infrastructure.StartupExtensions
 {
-    public static class InftrastructureStartupExtensions
+    public static class InfrastructureExtension
     {
         public static void AddServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
         }
     }
 }

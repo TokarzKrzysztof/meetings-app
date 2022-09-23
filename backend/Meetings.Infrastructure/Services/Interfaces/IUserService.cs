@@ -9,6 +9,7 @@ namespace Meetings.Infrastructure.Services.Interfaces
 {
     public interface IUserService
     {
+        Task<User> TryGetUserByEmail(string email);
         Task Register(UserResource data);
     }
 }

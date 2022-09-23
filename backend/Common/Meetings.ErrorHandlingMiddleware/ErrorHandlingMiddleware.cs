@@ -31,6 +31,10 @@ namespace Meetings.ErrorHandlingMiddleware
                 if (ex.GetType() == typeof(ValidationException))
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
+                }       
+                if (ex.GetType() == typeof(UnauthorizedAccessException))
+                {
+                    response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 }
 
                 var result = JsonSerializer.Serialize(new { response.StatusCode, ex.Message, ex.StackTrace });

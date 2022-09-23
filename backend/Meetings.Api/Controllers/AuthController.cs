@@ -1,6 +1,5 @@
 ﻿using Meetings.Infrastructure.Services.Interfaces;
 using Meetings.Models.User;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meetings.Api.Controllers
@@ -9,18 +8,17 @@ namespace Meetings.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserService _userService;
-
-        public AuthController(IUserService userService)
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
         {
-            _userService = userService;
+            _authService = authService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] UserResource data)
+        public async Task<IActionResult> Login([FromBody] string email, [FromBody] string password)
         {
-            await _userService.Register(data);
-            return Ok();
+            string token = await _authService.Login(email, password);
+            return Ok(token);
         }
     }
 }

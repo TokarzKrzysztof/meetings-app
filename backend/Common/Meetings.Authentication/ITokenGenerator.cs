@@ -1,7 +1,9 @@
-﻿namespace Meetings.Authentication
+﻿using Meetings.Models.User;
+
+namespace Meetings.Authentication
 {
     public interface ITokenGenerator
     {
-        string GenerateToken();
+        string GenerateToken(User user);
     }
 }

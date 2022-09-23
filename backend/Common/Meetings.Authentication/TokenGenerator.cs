@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Meetings.Models.User;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -19,7 +20,7 @@ namespace Meetings.Authentication
             _configuration = configuration;
         }
 
-        public string GenerateToken()
+        public string GenerateToken(User user)
         {
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
@@ -28,10 +29,8 @@ namespace Meetings.Authentication
             {
                 Subject = new ClaimsIdentity(new List<Claim>
                 {
-                    //new Claim("Id", Guid.NewGuid().ToString()),
-                    //new Claim(JwtRegisteredClaimNames.Sub, ""),
-                    //new Claim(JwtRegisteredClaimNames.Email, ""),
-                    //new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                    new Claim("Id",  user.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 }),
                 //Expires = DateTime.UtcNow.AddMinutes(5),
                 Issuer = issuer,
