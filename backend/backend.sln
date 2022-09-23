@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{03B850
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.Authentication", "Common\Meetings.Authentication\Meetings.Authentication.csproj", "{9A82C538-24D5-43F5-9CE9-7C01E0AEB128}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meetings.Utils", "Common\Meetings.Utils\Meetings.Utils.csproj", "{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,12 +43,17 @@ Global
 		{9A82C538-24D5-43F5-9CE9-7C01E0AEB128}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A82C538-24D5-43F5-9CE9-7C01E0AEB128}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A82C538-24D5-43F5-9CE9-7C01E0AEB128}.Release|Any CPU.Build.0 = Release|Any CPU
+		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9A82C538-24D5-43F5-9CE9-7C01E0AEB128} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
+		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {051323AE-1851-400B-B379-2E6EC46C5D63}

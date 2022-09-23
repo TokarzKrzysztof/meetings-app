@@ -1,6 +1,7 @@
 ﻿using Meetings.Database.Repositories;
 using Meetings.Infrastructure.Services.Interfaces;
 using Meetings.Models.User;
+using Meetings.Utils.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,16 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<string> Register(UserResource data)
         {
+            data.ValidateRequired(nameof(UserResource.FirstName));
+            data.ValidateRequired(nameof(UserResource.LastName));
+            data.ValidateRequired(nameof(UserResource.Password));
+            data.ValidateRequired(nameof(UserResource.PasswordRepeat));
+            data.ValidateEmail(nameof(UserResource.Email));
+
+            if (data.Password != data.PasswordRepeat)
+            {
+                throw new Exception("Passwords do not match");
+            }
 
             await _repository.Create(data);
             return "";

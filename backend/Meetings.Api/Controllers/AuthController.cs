@@ -15,6 +15,8 @@ namespace Meetings.Api.Controllers
         {
             _userService = userService;
         }
+
+        [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserResource data)
         {
             string token = await _userService.Register(data);
