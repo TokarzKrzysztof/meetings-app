@@ -20,11 +20,11 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<string> Register(UserResource data)
         {
-            data.ValidateRequired(nameof(UserResource.FirstName));
-            data.ValidateRequired(nameof(UserResource.LastName));
-            data.ValidateRequired(nameof(UserResource.Password));
-            data.ValidateRequired(nameof(UserResource.PasswordRepeat));
-            data.ValidateEmail(nameof(UserResource.Email));
+            data.ValidateRequired(x => x.FirstName);
+            data.ValidateRequired(x => x.LastName);
+            data.ValidateRequired(x => x.Password);
+            data.ValidateRequired(x => x.PasswordRepeat);
+            data.ValidateEmail(x => x.Email);
 
             if (data.Password != data.PasswordRepeat)
             {

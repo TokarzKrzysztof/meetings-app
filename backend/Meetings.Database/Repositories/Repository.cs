@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Meetings.Database.Repositories
 {
-    public class Repository<TEntity>: IRepository<TEntity> where TEntity : EntityBase
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
     {
         private readonly ApplicationDbContext _db;
 
