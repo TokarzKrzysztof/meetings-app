@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Meetings.Authentication\Meetings.Authentication.csproj" />
+    <ProjectReference Include="..\Common\Meetings.Authentication\Meetings.Authentication.csproj" />
     <ProjectReference Include="..\Meetings.Database\Meetings.Database.csproj" />
     <ProjectReference Include="..\Meetings.Infrastructure\Meetings.Infrastructure.csproj" />
     <ProjectReference Include="..\Meetings.Models\Meetings.Models.csproj" />
