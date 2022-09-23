@@ -9,6 +9,6 @@ namespace Meetings.Infrastructure.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<string> Register(UserResource data);
+        Task Register(UserResource data);
     }
 }
