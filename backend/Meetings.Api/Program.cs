@@ -1,4 +1,6 @@
 using Meetings.Authentication.StartupExtensions;
+using Meetings.Database.StartupExtensions;
+using Meetings.Infrastructure.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,8 @@ builder.Services.AddSwaggerGen();
 
 // custom extensions
 builder.AddCustomAuthentication();
+builder.AddDatabase();
+builder.AddServices();
 
 var app = builder.Build();
 
