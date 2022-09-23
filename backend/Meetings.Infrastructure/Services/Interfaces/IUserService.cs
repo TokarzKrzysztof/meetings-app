@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Meetings.Models.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace Meetings.Infrastructure.Services.Interfaces
 {
     public interface IUserService
     {
+        Task<string> Register(UserResource data);
     }
 }
