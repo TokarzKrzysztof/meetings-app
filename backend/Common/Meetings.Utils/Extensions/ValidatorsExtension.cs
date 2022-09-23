@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Mail;
@@ -16,7 +17,7 @@ namespace Meetings.Utils.Extensions
             object? value = func.Compile().Invoke(data);
             if (string.IsNullOrWhiteSpace(value?.ToString()))
             {
-                throw new Exception($"Value of property {func.Body} in {typeof(T).Name} is required");
+                throw new ValidationException($"Value of property {func.Body} in {typeof(T).Name} is required");
             }
         }
 
@@ -25,7 +26,7 @@ namespace Meetings.Utils.Extensions
             object? value = func.Compile().Invoke(data);
             if (!EmailUtils.IsValidEmail(value + ""))
             {
-                throw new Exception($"Value of property {func.Body} in {typeof(T).Name} is not valid email");
+                throw new ValidationException($"Value of property {func.Body} in {typeof(T).Name} is not valid email");
             }
         }
 
@@ -34,7 +35,7 @@ namespace Meetings.Utils.Extensions
             object? value = func.Compile().Invoke(data);
             if (Convert.ToDouble(value) < min)
             {
-                throw new Exception($"Value of property {func.Body} in {typeof(T).Name} is lower than {min}");
+                throw new ValidationException($"Value of property {func.Body} in {typeof(T).Name} is lower than {min}");
             }
         }
 
@@ -43,7 +44,7 @@ namespace Meetings.Utils.Extensions
             object? value = func.Compile().Invoke(data);
             if (Convert.ToDouble(value) > max)
             {
-                throw new Exception($"Value of property {func.Body} in {typeof(T).Name} is higher than {max}");
+                throw new ValidationException($"Value of property {func.Body} in {typeof(T).Name} is higher than {max}");
             }
         }
 
@@ -58,7 +59,7 @@ namespace Meetings.Utils.Extensions
             object? value = func.Compile().Invoke(data);
             if (Convert.ToDateTime(value) < min)
             {
-                throw new Exception($"Value of property {func.Body} in {typeof(T).Name} is lower than {min}");
+                throw new ValidationException($"Value of property {func.Body} in {typeof(T).Name} is lower than {min}");
             }
         }
 
@@ -67,7 +68,7 @@ namespace Meetings.Utils.Extensions
             object? value = func.Compile().Invoke(data);
             if (Convert.ToDateTime(value) > max)
             {
-                throw new Exception($"Value of property {func.Body} in {typeof(T).Name} is higher than {max}");
+                throw new ValidationException($"Value of property {func.Body} in {typeof(T).Name} is higher than {max}");
             }
         }
 

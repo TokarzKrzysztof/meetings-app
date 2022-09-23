@@ -1,5 +1,6 @@
 using Meetings.Authentication.StartupExtensions;
 using Meetings.Database.StartupExtensions;
+using Meetings.ErrorHandlingMiddleware.StartupExtensions;
 using Meetings.Infrastructure.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// custom extensions
+// custom builder extensions
 builder.AddCustomAuthentication();
 builder.AddDatabase();
 builder.AddServices();
@@ -29,6 +30,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// custom app extensions
+app.AddErrorHandlingMiddleware();
 
 app.MapControllers();
 
