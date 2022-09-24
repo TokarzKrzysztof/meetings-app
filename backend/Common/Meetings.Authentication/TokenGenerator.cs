@@ -29,7 +29,9 @@ namespace Meetings.Authentication
             {
                 Subject = new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim("Id",  user.Id.ToString()),
+                    new Claim("id",  user.Id.ToString()),
+                    new Claim("firstName",  user.FirstName),
+                    new Claim("lastName",  user.LastName),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 }),
                 //Expires = DateTime.UtcNow.AddMinutes(5),
