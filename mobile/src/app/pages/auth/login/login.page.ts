@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
+import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../services/auth.service';
 import { AppRoutes } from '../../../utils/enums/app-routes';
+import { LoaderService } from '../../../utils/services/loader.service';
 
 @Component({
   selector: 'app-login',
@@ -11,14 +13,11 @@ import { AppRoutes } from '../../../utils/enums/app-routes';
 })
 export class LoginPage implements OnInit {
   formGroup = new FormGroup({
-    email: new FormControl<string | null>(null, [
-      Validators.required,
-      Validators.email,
-    ]),
+    email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
     password: new FormControl<string | null>(null, [Validators.required]),
   });
 
-  constructor(private nav: NavController, private authService: AuthService) {}
+  constructor(private nav: NavController, private authService: AuthService, private loader: LoaderService) {}
 
   ngOnInit() {}
 
@@ -28,8 +27,12 @@ export class LoginPage implements OnInit {
 
   onSubmit() {
     if (this.formGroup.invalid) return;
-    this.authService.login(
-      this.formGroup.value as { email: string; password: string }
-    );
+    this.loader.show();
+    this.authService
+      .login(this.formGroup.value as { email: string; password: string })
+      .pipe(finalize(() => this.loader.hide()))
+      .subscribe((token) => {
+        window.localStorage.setItem('token', token);
+      });
   }
 }

@@ -6,7 +6,10 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP } from '@awesome-cordova-plugins/http/ngx';
+import { TokenInterceptor } from './utils/interceptors/token.interceptor';
+import { NativeInterceptor } from './utils/interceptors/native.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,9 +17,14 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: NativeInterceptor, multi: true },
+    HTTP,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

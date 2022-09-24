@@ -1,21 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-  AbstractControl,
-  FormControl,
-  FormGroup,
-  NgForm,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, NgForm, ValidatorFn, Validators } from '@angular/forms';
 import { NavController } from '@ionic/angular';
 import { RadioOption } from '../../../components/UI/radio-group/radio-group.component';
-import { UserGender } from '../../../models/user';
+import { User, UserGender } from '../../../models/user';
 import { AuthService } from '../../../services/auth.service';
 import { AppRoutes } from '../../../utils/enums/app-routes';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { Destroyable } from '../../../utils/destroyable';
 import { FormUtils } from '../../../utils/form-utils';
 import { LoaderService } from '../../../utils/services/loader.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -29,10 +23,7 @@ export class RegisterPage extends Destroyable implements OnInit {
   ];
 
   formGroup = new FormGroup({
-    email: new FormControl<string | null>(null, [
-      Validators.required,
-      Validators.email,
-    ]),
+    email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
     password: new FormControl<string | null>(null, [Validators.required]),
     passwordRepeat: new FormControl<string | null>(null, [Validators.required]),
     firstName: new FormControl<string | null>(null, [Validators.required]),
@@ -42,26 +33,24 @@ export class RegisterPage extends Destroyable implements OnInit {
 
   errorMsg: string | null = null;
 
-  constructor(private nav: NavController, private authService: AuthService, private loader: LoaderService) {
+  constructor(private nav: NavController, private userService: UserService, private loader: LoaderService) {
     super();
   }
 
   ngOnInit() {
-    this.formGroup.valueChanges
-      .pipe(takeUntil(this.onDestroy$))
-      .subscribe(() => {
-        const { password, passwordRepeat } = this.formGroup.controls;
-        const isValid = password.value === passwordRepeat.value;
-        if (isValid) {
-          FormUtils.removeError(password, 'passwordsNotMatch');
-          FormUtils.removeError(passwordRepeat, 'passwordsNotMatch');
-          this.errorMsg = null;
-        } else {
-          FormUtils.addError(password, 'passwordsNotMatch');
-          FormUtils.addError(passwordRepeat, 'passwordsNotMatch');
-          this.errorMsg = 'Hasła są różne';
-        }
-      });
+    this.formGroup.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
+      const { password, passwordRepeat } = this.formGroup.controls;
+      const isValid = password.value === passwordRepeat.value;
+      if (isValid) {
+        FormUtils.removeError(password, 'passwordsNotMatch');
+        FormUtils.removeError(passwordRepeat, 'passwordsNotMatch');
+        this.errorMsg = null;
+      } else {
+        FormUtils.addError(password, 'passwordsNotMatch');
+        FormUtils.addError(passwordRepeat, 'passwordsNotMatch');
+        this.errorMsg = 'Hasła są różne';
+      }
+    });
   }
 
   handleGoToLogin() {
@@ -71,11 +60,11 @@ export class RegisterPage extends Destroyable implements OnInit {
   onSubmit() {
     if (this.formGroup.invalid) return;
     this.loader.show();
-    setTimeout(() => {
-      this.loader.hide();
-    }, 2000);
-    this.authService.login(
-      this.formGroup.value as { email: string; password: string }
-    );
+    this.userService
+      .register(this.formGroup.value as Partial<User>)
+      .pipe(finalize(() => this.loader.hide()))
+      .subscribe(() => {
+        this.handleGoToLogin();
+      });
   }
 }

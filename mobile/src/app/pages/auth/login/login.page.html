@@ -3,7 +3,7 @@
 <ion-content>
   <form (ngSubmit)="onSubmit()">
     <ion-img class="w-60 mx-auto mt-20" [src]="'assets/img/logo.png'"></ion-img>
-  
+
     <div class="w-70 mx-auto mt-20">
       <app-input class="mb-8" [placeholder]="'Adres email'" [control]="formGroup.controls.email">
         <ion-icon icon-start name="person-outline"></ion-icon>
@@ -12,15 +12,13 @@
         <ion-icon icon-start name="lock-closed-outline"></ion-icon>
       </app-input>
     </div>
-  
+
     <div class="flex center mt-16">
       <app-auth-button> Zaloguj </app-auth-button>
     </div>
-  
+
     <div class="mt-24 flex center">
-      <app-button [variant]="'text'" (click)="handleGoToRegister()">
-        utwórz nowe konto
-      </app-button>
+      <app-button [variant]="'text'" (click)="handleGoToRegister()"> utwórz nowe konto </app-button>
     </div>
   </form>
 </ion-content>
