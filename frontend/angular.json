@@ -10,7 +10,8 @@
           "style": "scss",
           "standalone": true,
           "displayBlock": true,
-          "skipTests": true
+          "skipTests": true,
+          "changeDetection": "OnPush"
         },
         "@schematics/angular:pipe": {
           "standalone": true,
@@ -114,5 +115,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
