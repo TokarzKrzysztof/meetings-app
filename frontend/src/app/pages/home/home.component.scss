@@ -1,0 +1,23 @@
+@import 'src/styles/variables';
+
+:host {
+  display: block;
+}
+
+.wrapper {
+  padding: $spacing2;
+}
+
+.title {
+  margin-bottom: $spacing2;
+  margin-top: $spacing6;
+  text-align: center;
+  font-size: $fontSizeLg;
+}
+.sub-title {
+  margin-top: $spacing4;
+  margin-bottom: $spacing8;
+  text-align: center;
+  font-weight: normal;
+  font-size: $fontSizeMd;
+}

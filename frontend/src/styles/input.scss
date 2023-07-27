@@ -1,0 +1,23 @@
+@import 'src/styles/variables';
+
+mat-form-field.app-input {
+  width: 100%;
+
+  .mat-mdc-text-field-wrapper {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__trailing {
+      border-color: $colorPrimary;
+    }
+    &:hover {
+      .mdc-notched-outline__leading,
+      .mdc-notched-outline__trailing {
+        border-color: $colorPrimaryHover !important;
+      }
+    }
+    .mat-mdc-form-field-infix {
+      min-height: initial;
+      padding-top: $spacing1;
+      padding-bottom: $spacing1;
+    }
+  }
+}
