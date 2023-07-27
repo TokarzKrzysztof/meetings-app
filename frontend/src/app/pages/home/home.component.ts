@@ -11,4 +11,6 @@ import { HomeCategoriesSearchComponent } from "./home-categories-search/home-cat
     styleUrls: ['./home.component.scss'],
     imports: [CommonModule, MaterialModule, HomeCategoriesSearchComponent, HeaderComponent]
 })
-export class HomeComponent {}
+export class HomeComponent {
+    isLoading = false;
+}

@@ -1,0 +1,26 @@
+@import 'src/styles/variables';
+
+.loading {
+  position: relative;
+  box-shadow: none !important;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    animation: loading 1s infinite alternate;
+    z-index: $loadingZIndex;
+  }
+}
+
+@keyframes loading {
+  from {
+    background-color: rgb(245, 245, 245);
+  }
+  to {
+    background-color: rgb(250, 250, 250);
+  }
+}

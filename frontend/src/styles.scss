@@ -38,6 +38,7 @@ $frontend-theme: mat.define-light-theme(
 @import './styles/input.scss';
 @import './styles/select.scss';
 @import './styles/overlay-panel.scss';
+@import './styles/loading.scss';
 
 * {
   box-sizing: border-box;

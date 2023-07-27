@@ -3,18 +3,29 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
 import { MaterialModule } from 'src/app/utils/material/material.module';
+import { LoaderComponent } from "../../../components/loader/loader.component";
 
 @Component({
-  selector: 'app-home-categories-search',
-  standalone: true,
-  templateUrl: './home-categories-search.component.html',
-  styleUrls: ['./home-categories-search.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MaterialModule, ReactiveFormsModule],
+    selector: 'app-home-categories-search',
+    standalone: true,
+    templateUrl: './home-categories-search.component.html',
+    styleUrls: ['./home-categories-search.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, MaterialModule, ReactiveFormsModule, LoaderComponent]
 })
 export class HomeCategoriesSearchComponent {
   myControl = new FormControl('');
-  options: string[] = ['One', 'Two', 'Three'];
+  options: string[] = [
+    'Tenis',
+    'Tenis stołowy',
+    'Bilard',
+    'Kręgle',
+    'Spotkania',
+    'Piłka nożna',
+    'Szachy',
+    'Planszówki',
+    'Warcaby',
+  ];
   filteredOptions!: Observable<string[]>;
 
   ngOnInit() {

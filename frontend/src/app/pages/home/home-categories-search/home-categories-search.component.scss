@@ -25,28 +25,17 @@ $iconSize: 20px;
       height: $iconSize;
       font-size: $iconSize;
       opacity: 0.5;
-      padding: 2px 5px 0 10px !important;     
+      padding: 2px 5px 0 10px !important;
     }
-  
+
     .mat-mdc-text-field-wrapper {
       .mdc-notched-outline__leading,
       .mdc-notched-outline__trailing {
         border-color: rgb(230, 230, 230);
-        // border-color: $colorPrimary;
       }
-      // &:hover:not(.mdc-text-field--focused) {
-      //   .mdc-notched-outline__leading,
-      //   .mdc-notched-outline__trailing {
-      //     // border-color: rgb(230, 230, 230) !important;
-      //     // border-color: $colorPrimaryHover !important;
-      //   }
-      // }
       .mat-mdc-form-field-infix {
         min-height: initial;
-        // padding-top: $spacing1;
-        // padding-bottom: $spacing1;
       }
     }
   }
 }
-

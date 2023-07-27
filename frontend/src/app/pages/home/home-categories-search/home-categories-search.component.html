@@ -1,6 +1,11 @@
 <mat-form-field>
   <mat-icon matPrefix>search</mat-icon>
-  <input matInput placeholder="Wpisz kategorię której szukasz..." [formControl]="myControl" [matAutocomplete]="auto" />
+  <input
+    matInput
+    placeholder="Wyszukaj spośród 21312 kategorii..."
+    [formControl]="myControl"
+    [matAutocomplete]="auto"
+  />
   <mat-autocomplete #auto="matAutocomplete">
     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
       {{ option }}

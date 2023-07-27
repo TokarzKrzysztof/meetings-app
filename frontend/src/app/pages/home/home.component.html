@@ -1,6 +1,5 @@
 <header app-header></header>
-<div class="wrapper">
-  <h1 class="title">Znajdź ludzi dzielących Twoje zainteresowania!</h1>
-  <h3 class="sub-title">Wyszukaj spośród 21312 kategorii!</h3>
-  <app-home-categories-search></app-home-categories-search>
-</div>
+<main class="wrapper">
+  <h1 [ngClass]="{ loading: isLoading }" class="title">Znajdź ludzi dzielących Twoje zainteresowania!</h1>
+  <app-home-categories-search [ngClass]="{ loading: isLoading }" class="loading"></app-home-categories-search>
+</main>
