@@ -1,4 +1,4 @@
-﻿using Meetings.Models.User;
+﻿using Meetings.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

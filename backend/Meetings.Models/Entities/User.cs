@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Meetings.Models.User
+namespace Meetings.Models.Entities
 {
-    public class User: EntityBase
+    public class User : EntityBase
     {
         public string Email { get; set; }
         public string Password { get; set; }
@@ -15,7 +15,7 @@ namespace Meetings.Models.User
         public DateTime BirthDate { get; set; }
     }
 
-    public class UserResource: User
+    public class UserResource : User
     {
         public string PasswordRepeat { get; set; }
     }

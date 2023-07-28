@@ -1,4 +1,4 @@
-﻿using Meetings.Models.User;
+﻿using Meetings.Models.Entities;
 
 namespace Meetings.Authentication
 {

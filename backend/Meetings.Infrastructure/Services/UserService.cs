@@ -1,6 +1,6 @@
 ﻿using Meetings.Database.Repositories;
 using Meetings.Infrastructure.Services.Interfaces;
-using Meetings.Models.User;
+using Meetings.Models.Entities;
 using Meetings.Utils;
 using Meetings.Utils.Extensions;
 using Microsoft.EntityFrameworkCore;

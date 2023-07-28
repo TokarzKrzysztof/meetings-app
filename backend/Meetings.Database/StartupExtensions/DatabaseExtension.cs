@@ -16,7 +16,7 @@ namespace Meetings.Database.StartupExtensions
         public static void AddDatabase(this WebApplicationBuilder builder)
         {
             string connectionString = builder.Configuration.GetConnectionString("db");
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         }
     }

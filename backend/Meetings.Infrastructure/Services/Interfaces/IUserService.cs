@@ -1,4 +1,4 @@
-﻿using Meetings.Models.User;
+﻿using Meetings.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

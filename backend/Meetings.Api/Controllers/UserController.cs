@@ -1,5 +1,5 @@
 ﻿using Meetings.Infrastructure.Services.Interfaces;
-using Meetings.Models.User;
+using Meetings.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

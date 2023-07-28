@@ -1,5 +1,5 @@
 ﻿using Meetings.Models;
-using Meetings.Models.User;
+using Meetings.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Meetings.Database

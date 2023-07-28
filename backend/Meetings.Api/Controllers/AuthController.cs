@@ -1,5 +1,4 @@
 ﻿using Meetings.Infrastructure.Services.Interfaces;
-using Meetings.Models.User;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meetings.Api.Controllers
@@ -15,7 +14,7 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] string email, [FromBody] string password)
+        public async Task<IActionResult> Login([FromQuery] string email, [FromQuery] string password)
         {
             string token = await _authService.Login(email, password);
             return Ok(token);

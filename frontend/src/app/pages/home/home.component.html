@@ -1,5 +1,8 @@
 <header app-header></header>
 <main class="wrapper">
-  <h1 [ngClass]="{ loading: isLoading }" class="title">Znajdź ludzi dzielących Twoje zainteresowania!</h1>
-  <app-home-categories-search [ngClass]="{ loading: isLoading }" class="loading"></app-home-categories-search>
+  <h1 class="title">Znajdź ludzi dzielących Twoje zainteresowania!</h1>
+  <app-home-categories-search
+    [ngClass]="{ loading: !(categories$ | async) }"
+    [categories]="categories$ | async"
+  ></app-home-categories-search>
 </main>
