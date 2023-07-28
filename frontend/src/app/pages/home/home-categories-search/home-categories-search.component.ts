@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocomplete } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
 import { Observable, map, startWith } from 'rxjs';
 import { Category } from 'src/app/models/category';
@@ -18,7 +17,6 @@ import { TypedChanges } from 'src/app/utils/types/typed-changes';
 })
 export class HomeCategoriesSearchComponent {
   @Input({ required: true }) categories!: Category[] | null;
-  @ViewChild(MatAutocomplete) autocomplete!: MatAutocomplete;
 
   searchControl = new FormControl<string>('');
   filteredCategories$?: Observable<Category[]>;
@@ -33,12 +31,12 @@ export class HomeCategoriesSearchComponent {
     if (changes.categories?.currentValue !== null) {
       this.filteredCategories$ = this.searchControl.valueChanges.pipe(
         startWith(''),
-        map((value) => this._filter(value || '', this.categories!))
+        map((value) => this.filter(value || '', this.categories!))
       );
     }
   }
 
-  private _filter(value: string, allCategories: Category[]): Category[] {
+  private filter(value: string, allCategories: Category[]): Category[] {
     const filterValue = value.toLowerCase();
 
     return allCategories.filter((x) => x.name.toLowerCase().includes(filterValue));
