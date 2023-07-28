@@ -1,14 +1,22 @@
-<mat-form-field>
-  <mat-icon matPrefix>search</mat-icon>
-  <input
-    matInput
-    placeholder="Wyszukaj spośród {{ categories?.length }} kategorii..."
-    [formControl]="searchControl"
-    [matAutocomplete]="auto"
-  />
-  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)" (optionSelected)="onSelectOption()">
-    <mat-option *ngFor="let item of filteredCategories | async" [value]="item.id">
-      {{ item.name }}
-    </mat-option>
-  </mat-autocomplete>
-</mat-form-field>
+<div class="search-field-box">
+  <mat-form-field>
+    <mat-icon matPrefix>search</mat-icon>
+    <input
+      matInput
+      placeholder="Wyszukaj spośród {{ categories?.length }} kategorii..."
+      [formControl]="searchControl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)">
+      <mat-option *ngFor="let item of filteredCategories$ | async" [value]="item.id">
+        {{ item.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+<div class="check-btn-wrapper">
+  <button app-button [size]="'lg'" (click)="goToList()" [disabled]="isButtonDisabled$ | async">
+    Sprawdź
+    <mat-icon [inline]="true">arrow_forward</mat-icon>
+  </button>
+</div>
