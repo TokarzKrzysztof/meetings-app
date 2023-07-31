@@ -15,8 +15,14 @@
   </mat-form-field>
 </div>
 <div class="check-btn-wrapper">
-  <button app-button [size]="'lg'" (click)="goToList()" [disabled]="isButtonDisabled$ | async">
+  <a
+    [routerLink]="AppRoutes.Home"
+    [queryParams]="{ categoryId: searchControl.value }"
+    app-button
+    [size]="'lg'"
+    [disabled]="isButtonDisabled$ | async"
+  >
     Sprawdź
     <mat-icon [inline]="true">arrow_forward</mat-icon>
-  </button>
+  </a>
 </div>

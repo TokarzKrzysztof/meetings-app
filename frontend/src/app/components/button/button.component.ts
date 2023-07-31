@@ -11,10 +11,13 @@ import { MatRippleModule } from '@angular/material/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonComponent {
+  @Input() type: 'raised' | 'icon' | 'text' = 'raised';
   @Input() size: 'md' | 'lg' = 'md';
-  @HostBinding('class') class?: string;
+  @HostBinding('class.disabled') @Input() disabled: boolean | null | undefined = false;
+  @HostBinding('class') classes: string[] = [];
 
   ngOnInit() {
-    this.class = this.size === 'md' ? 'size-md' : 'size-lg';
+    this.classes.push(this.size === 'md' ? 'size-md' : 'size-lg');
+    this.classes.push(this.type);
   }
 }

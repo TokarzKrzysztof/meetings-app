@@ -1,7 +1,9 @@
 @import 'src/styles/variables';
 
 :host {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   min-height: 64px;
   background-color: $colorPrimary;
   padding: 0 $spacing2;

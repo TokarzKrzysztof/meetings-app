@@ -37,9 +37,12 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 // Material Data tables
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { RouterLink } from '@angular/router';
 import { ButtonComponent } from 'src/app/components/button/button.component';
 
 const materialModules = [
@@ -80,11 +83,12 @@ const materialModules = [
   MatTableModule,
 ];
 
-const appComponents = [ButtonComponent]
+const appComponents = [ButtonComponent];
+const formsModules = [FormsModule, ReactiveFormsModule];
 
 @NgModule({
   declarations: [],
-  imports: [...materialModules, ...appComponents],
-  exports: [...materialModules, ...appComponents],
+  imports: [CommonModule, RouterLink, ...materialModules, ...appComponents, ...formsModules],
+  exports: [CommonModule, RouterLink, ...materialModules, ...appComponents, ...formsModules],
 })
-export class UiComponents {}
+export class SharedModule {}

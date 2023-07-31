@@ -1,1 +1,13 @@
-<p style="color: white"></p>
+<div>
+  <ng-content select="[leftSlot]"></ng-content>
+</div>
+<div>
+  <ng-content select="[middleSlot]"></ng-content>
+</div>
+<button app-button [type]="'icon'" [matMenuTriggerFor]="menu">
+  <mat-icon>menu</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+  <a mat-menu-item [routerLink]="'/' + AppRoutes.Login">Zaloguj się</a>
+  <a mat-menu-item [routerLink]="'/' + AppRoutes.Register">Zarejestruj się</a>
+</mat-menu>

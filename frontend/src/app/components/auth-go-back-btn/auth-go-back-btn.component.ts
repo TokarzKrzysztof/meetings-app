@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AppRoutes } from 'src/app/utils/enums/app-routes';
 import { SharedModule } from 'src/app/utils/material/material.module';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
-  selector: 'header[app-header]',
+  selector: 'app-auth-go-back-btn',
   standalone: true,
-  imports: [SharedModule],
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
+  imports: [SharedModule, ButtonComponent],
+  templateUrl: './auth-go-back-btn.component.html',
+  styleUrls: ['./auth-go-back-btn.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent {
+export class AuthGoBackBtnComponent {
   AppRoutes = AppRoutes;
 }

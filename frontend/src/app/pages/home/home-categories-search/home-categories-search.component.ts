@@ -1,10 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
 import { Observable, map, startWith } from 'rxjs';
 import { Category } from 'src/app/models/category';
-import { UiComponents } from 'src/app/utils/material/material.module';
+import { AppRoutes } from 'src/app/utils/enums/app-routes';
+import { SharedModule } from 'src/app/utils/material/material.module';
 import { TypedChanges } from 'src/app/utils/types/typed-changes';
 
 @Component({
@@ -13,19 +12,18 @@ import { TypedChanges } from 'src/app/utils/types/typed-changes';
   templateUrl: './home-categories-search.component.html',
   styleUrls: ['./home-categories-search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, UiComponents, ReactiveFormsModule],
+  imports: [SharedModule],
 })
 export class HomeCategoriesSearchComponent {
   @Input({ required: true }) categories!: Category[] | null;
 
+  AppRoutes = AppRoutes;
   searchControl = new FormControl<string>('');
   filteredCategories$?: Observable<Category[]>;
   isButtonDisabled$ = this.searchControl.valueChanges.pipe(
     startWith(this.searchControl.value),
     map((value) => !this.categories?.some((x) => x.id === value))
   );
-
-  constructor(private router: Router) {}
 
   ngOnChanges(changes: TypedChanges<HomeCategoriesSearchComponent>) {
     if (changes.categories?.currentValue !== null) {
@@ -44,9 +42,5 @@ export class HomeCategoriesSearchComponent {
 
   displayFn(id: string) {
     return this.categories?.find((x) => x.id === id)?.name ?? '';
-  }
-
-  goToList() {
-    this.router.navigate(['./'], { queryParams: { categoryId: this.searchControl.value } });
   }
 }

@@ -4,10 +4,16 @@ import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { MAT_AUTOCOMPLETE_DEFAULT_OPTIONS } from '@angular/material/autocomplete';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import { MAT_MENU_DEFAULT_OPTIONS } from '@angular/material/menu';
 import { MAT_SELECT_CONFIG } from '@angular/material/select';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { routes } from './app.routes';
-import { matAutocompleteDefaultOptions, matFormFieldDefaultOptions, matSelectConfig } from './utils/config';
+import {
+  matAutocompleteDefaultOptions,
+  matFormFieldDefaultOptions,
+  matMenuDefaultOptions,
+  matSelectConfig,
+} from './utils/config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,5 +23,6 @@ export const appConfig: ApplicationConfig = {
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: matFormFieldDefaultOptions },
     { provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: matAutocompleteDefaultOptions },
     { provide: MAT_SELECT_CONFIG, useValue: matSelectConfig },
+    { provide: MAT_MENU_DEFAULT_OPTIONS, useValue: matMenuDefaultOptions },
   ],
 };

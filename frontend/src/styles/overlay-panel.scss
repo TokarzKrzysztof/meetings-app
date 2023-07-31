@@ -1,7 +1,15 @@
 .app-overlay-panel {
-   > div {
+  > div {
     margin-top: 5px;
     border-radius: 10px !important;
     padding: 0 !important;
+  }
+  &.app-menu-overlay {
+    > div {
+      margin-top: 0;
+    }
+    .mat-mdc-menu-content {
+      padding: 0;
+    }
   }
 }
