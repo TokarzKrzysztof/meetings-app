@@ -2,8 +2,11 @@
 
 .loading {
   position: relative;
-  box-shadow: none !important;
-  
+  &,
+  & * {
+    box-shadow: none !important;
+  }
+
   &::before {
     content: '';
     position: absolute;
