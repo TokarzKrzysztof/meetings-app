@@ -1,0 +1,34 @@
+{
+  "usesTypeScript": true,
+  "component": {
+    "component": {
+      "customTemplates": {
+        "component": "templates/component/TemplateNamePage.tsx"
+      },
+      "path": "src/components",
+      "withLazy": true
+    },
+    "page": {
+      "customTemplates": {
+        "component": "templates/page/TemplateNamePage.tsx"
+      },
+      "path": "src/pages",
+      "withLazy": true
+    },
+    "ui": {
+      "customTemplates": {
+        "component": "templates/ui/TemplateName.tsx"
+      },
+      "path": "src/components/ui"
+    },
+    "default": {
+      "path": "n",
+      "withStyle": false,
+      "withTest": false,
+      "withStory": false,
+      "withLazy": false
+    }
+  },
+  "usesStyledComponents": true,
+  "testLibrary": "None"
+}
