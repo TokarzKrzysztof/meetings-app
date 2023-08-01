@@ -13,6 +13,7 @@ module.exports = {
     'react/jsx-curly-brace-presence': ['warn', { props: 'always' }],
     'react/react-in-jsx-scope': ['off'],
     '@typescript-eslint/no-empty-function': ['warn'],
+    '@typescript-eslint/ban-types': ['warn']
   },
   ignorePatterns: ['src/**/*.test.ts', 'src/frontend/generated/*'],
 };

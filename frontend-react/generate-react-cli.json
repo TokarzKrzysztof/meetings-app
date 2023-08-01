@@ -10,10 +10,9 @@
     },
     "page": {
       "customTemplates": {
-        "component": "templates/page/TemplateNamePage.tsx"
+        "component": "templates/page/TemplateName.tsx"
       },
-      "path": "src/pages",
-      "withLazy": true
+      "path": "src/pages"
     },
     "ui": {
       "customTemplates": {

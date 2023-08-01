@@ -3,7 +3,7 @@ export async function loader() {
 }
 
 export const Component = () => {
-  return <>TemplateName</>;
+  return <>Home</>;
 };
 
-Component.displayName = 'TemplateName';
+Component.displayName = 'HomePage';

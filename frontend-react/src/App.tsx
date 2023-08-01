@@ -1,5 +1,15 @@
+import { Outlet, useNavigate } from 'react-router-dom';
+
 function App() {
-  return <></>;
+  const navigate = useNavigate();
+  return (
+    <>
+      <button onClick={() => navigate('login')}>login</button>
+      <button onClick={() => navigate('register')}>register</button>
+      <button onClick={() => navigate('/')}>home</button>
+      <Outlet />
+    </>
+  );
 }
 
 export default App;
