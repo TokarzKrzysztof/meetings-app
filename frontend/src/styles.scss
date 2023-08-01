@@ -57,3 +57,9 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+.page-container {
+  padding: 0 $spacing2;
+  margin: 0 auto;
+  max-width: 1440px;
+}
