@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
+import { Category } from 'src/models/category';
 import {
   Autocomplete,
   Box,
@@ -48,19 +49,24 @@ const top100Films = [
   { label: 'Pulp Fiction', year: 1994 },
 ];
 
-export type HomeCategoriesSearchProps = {};
+export type HomeCategoriesSearchProps = {
+  isLoading: boolean;
+  data: Category[] | undefined;
+};
 
 export const HomeCategoriesSearch = ({
-  ...props
+  isLoading,
+  data,
 }: HomeCategoriesSearchProps) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-
+  if (!data) return null;
+  console.log(data);
   return (
     <>
       <StyledSearchFieldBox>
         <StyledAutocomplete
           freeSolo
-          options={top100Films}
+          options={data.map((x) => ({ value: x.id, label: x.name }))}
           PopperComponent={Popper}
           onChange={(_, value) => setIsButtonDisabled(!value)}
           renderInput={(params) => (

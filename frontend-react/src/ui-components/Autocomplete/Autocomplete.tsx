@@ -4,8 +4,13 @@ import {
   AutocompleteProps as MuiAutocompleteProps,
 } from '@mui/material/Autocomplete';
 
+type AutocompleteOption<T = any> = {
+  value: T;
+  label: string;
+};
+
 export const Autocomplete = <
-  T,
+  T extends AutocompleteOption,
   Multiple extends boolean | undefined,
   DisableClearable extends boolean | undefined,
   FreeSolo extends boolean | undefined,
