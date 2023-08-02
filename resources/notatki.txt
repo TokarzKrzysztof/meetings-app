@@ -1,2 +1,5 @@
 https://dribbble.com/resources/web-design-trends-2023
 https://www.angularjswiki.com/angular/angular-material-icons-list-mat-icon-list/
+
+
+https://stackoverflow.com/questions/62642843/typescript-react-forwardref-with-generic-props-from-material-ui

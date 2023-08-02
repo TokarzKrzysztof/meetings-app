@@ -2,8 +2,8 @@ export async function loader() {
   return null;
 }
 
-export const Component = () => {
+export const Register = () => {
   return <>Register</>;
 };
 
-Component.displayName = 'Register';
+Register.displayName = 'Register';

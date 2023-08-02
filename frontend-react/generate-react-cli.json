@@ -3,10 +3,9 @@
   "component": {
     "component": {
       "customTemplates": {
-        "component": "templates/component/TemplateNamePage.tsx"
+        "component": "templates/component/TemplateName.tsx"
       },
-      "path": "src/components",
-      "withLazy": true
+      "path": "src/components"
     },
     "page": {
       "customTemplates": {
@@ -18,7 +17,7 @@
       "customTemplates": {
         "component": "templates/ui/TemplateName.tsx"
       },
-      "path": "src/components/ui"
+      "path": "src/ui-components"
     },
     "default": {
       "path": "n",

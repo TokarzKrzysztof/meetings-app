@@ -1,9 +1,15 @@
+import { useState } from 'react';
+
 export async function loader() {
   return null;
 }
 
-export const Component = () => {
-  return <>Login</>;
+export const Login = () => {
+  const [a, s] = useState();
+
+  return <>
+  
+  </>;
 };
 
-Component.displayName = 'Login';
+Login.displayName = 'Login';

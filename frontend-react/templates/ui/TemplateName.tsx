@@ -1,10 +1,17 @@
 import {
-  default as MuiTemplateName,
-  TemplateNameProps as MuiTemplateNameProps,
-} from "@mui/material/TemplateName";
+    default as MuiTemplateName,
+    TemplateNameProps as MuiTemplateNameProps,
+    TemplateNameTypeMap,
+} from '@mui/material/TemplateName';
 
-export type TemplateNameProps = MuiTemplateNameProps;
+export type TemplateNameProps = {};
 
-export const TemplateName = ({ ...props }: TemplateNameProps) => (
-  <MuiTemplateName {...props}>Text</MuiTemplateName>
+export const TemplateName = <
+  D extends React.ElementType = TemplateNameTypeMap['defaultComponent']
+>({
+  ...props
+}: MuiTemplateNameProps<D, { component?: D }> & TemplateNameProps) => (
+  <MuiTemplateName {...props}></MuiTemplateName>
 );
+
+TemplateName.muiName = MuiTemplateName.muiName;
