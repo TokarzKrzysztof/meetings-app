@@ -5,7 +5,7 @@ import {
 } from '@mui/material/Icon';
 
 export type IconProps = {
-  name: 'menu' | 'star' | 'search';
+  name: 'menu' | 'star' | 'search' | 'arrow_forward';
 };
 
 export const Icon = <

@@ -12,6 +12,7 @@ export * from './IconButton/IconButton';
 export * from './InputLabel/InputLabel';
 export * from './Menu/Menu';
 export * from './MenuItem/MenuItem';
+export * from './Popper/Popper';
 export * from './Select/Select';
 export * from './Slide/Slide';
 export * from './Stack/Stack';
