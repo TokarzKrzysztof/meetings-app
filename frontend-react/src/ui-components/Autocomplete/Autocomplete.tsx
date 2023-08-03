@@ -1,4 +1,4 @@
-import { ChipTypeMap } from '@mui/material';
+import { ChipTypeMap, styled } from '@mui/material';
 import {
   default as MuiAutocomplete,
   AutocompleteProps as MuiAutocompleteProps,
@@ -7,6 +7,19 @@ import {
 import { Box } from 'src/ui-components/Box/Box';
 import { CircularProgress } from 'src/ui-components/CircularProgress/CircularProgress';
 import { Popper } from 'src/ui-components/Popper/Popper';
+
+const StyledPopper = styled(Popper)({
+  '& .MuiPaper-root': {
+    borderRadius: 12,
+    marginTop: 5,
+  },
+  '& .MuiAutocomplete-listbox': {
+    padding: 0,
+  },
+  '& .MuiAutocomplete-option': {
+    fontSize: 13,
+  },
+})
 
 export type AutocompleteProps<T> = {
   optionsAsync: T[] | undefined;
@@ -49,9 +62,9 @@ export const Autocomplete = <
     <MuiAutocomplete
       options={optionsAsync ?? ['loadingDummyOption' as T]}
       renderOption={optionsAsync ? undefined : () => loadingOption}
-      PopperComponent={Popper}
       // fix error with option label as undefined instead of null
       getOptionLabel={(opt) => getOptionLabel(opt as T) ?? ''}
+      PopperComponent={StyledPopper}
       {...props}
     ></MuiAutocomplete>
   );

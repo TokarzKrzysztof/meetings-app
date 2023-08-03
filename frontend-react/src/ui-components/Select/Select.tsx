@@ -5,8 +5,8 @@ import {
 
 export type SelectProps = {};
 
-export const Select = <T = unknown,>({
-  ...props
-}: MuiSelectProps<T> & SelectProps) => <MuiSelect {...props}></MuiSelect>;
+export const Select = <T,>({ ...props }: MuiSelectProps<T> & SelectProps) => (
+  <MuiSelect {...props}></MuiSelect>
+);
 
 Select.muiName = MuiSelect.muiName;
