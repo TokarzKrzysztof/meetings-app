@@ -10,10 +10,10 @@ export async function loader() {
 }
 
 export const Home = () => {
-  const { isLoading, error, data } = useQuery<Category[]>('categories', () =>
+  const { data } = useQuery<Category[]>('categories', () =>
     CategoryService.getAllCategories()
   );
-  console.log(data);
+  
   return (
     <>
       <Header />
@@ -26,10 +26,7 @@ export const Home = () => {
         >
           Znajdź ludzi dzielących Twoje zainteresowania!
         </Typography>
-        <HomeCategoriesSearch
-          isLoading={isLoading}
-          data={data}
-        ></HomeCategoriesSearch>
+        <HomeCategoriesSearch data={data}></HomeCategoriesSearch>
       </Container>
     </>
   );

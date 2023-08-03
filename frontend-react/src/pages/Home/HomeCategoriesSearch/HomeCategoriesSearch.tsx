@@ -1,14 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { Category } from 'src/models/category';
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Icon,
-  Popper,
-  TextField,
-} from 'src/ui-components';
+import { Autocomplete, Box, Button, Icon, TextField } from 'src/ui-components';
 
 const StyledSearchFieldBox = styled(Box)({
   display: 'flex',
@@ -50,24 +43,19 @@ const top100Films = [
 ];
 
 export type HomeCategoriesSearchProps = {
-  isLoading: boolean;
   data: Category[] | undefined;
 };
 
-export const HomeCategoriesSearch = ({
-  isLoading,
-  data,
-}: HomeCategoriesSearchProps) => {
+export const HomeCategoriesSearch = ({ data }: HomeCategoriesSearchProps) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  if (!data) return null;
-  console.log(data);
+
   return (
     <>
       <StyledSearchFieldBox>
         <StyledAutocomplete
           freeSolo
-          options={data.map((x) => ({ value: x.id, label: x.name }))}
-          PopperComponent={Popper}
+          optionsAsync={data}
+          getOptionLabel={(opt) => opt.name}
           onChange={(_, value) => setIsButtonDisabled(!value)}
           renderInput={(params) => (
             <TextField
