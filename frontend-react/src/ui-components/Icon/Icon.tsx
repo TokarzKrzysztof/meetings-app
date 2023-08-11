@@ -5,7 +5,13 @@ import {
 } from '@mui/material/Icon';
 
 export type IconProps = {
-  name: 'menu' | 'star' | 'search' | 'arrow_forward';
+  name:
+    | 'menu'
+    | 'star'
+    | 'search'
+    | 'arrow_forward'
+    | 'account_circle'
+    | 'arrow_back';
 };
 
 export const Icon = <

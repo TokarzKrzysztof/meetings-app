@@ -10,6 +10,7 @@ export * from './FormControl/FormControl';
 export * from './Icon/Icon';
 export * from './IconButton/IconButton';
 export * from './InputLabel/InputLabel';
+export * from './Link/Link';
 export * from './Menu/Menu';
 export * from './MenuItem/MenuItem';
 export * from './Popper/Popper';

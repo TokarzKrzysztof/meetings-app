@@ -1,6 +1,7 @@
 import useScrollTrigger from '@mui/material/useScrollTrigger';
+import { ReactNode } from 'react';
 import { HeaderMenuButton } from 'src/components/Header/HeaderMenuButton/HeaderMenuButton';
-import { AppBar, Slide, Toolbar } from 'src/ui-components';
+import { AppBar, Box, Slide, Toolbar } from 'src/ui-components';
 import { PropsWithReactElement } from 'src/utils/types/props';
 
 const HideOnScroll = ({ children }: PropsWithReactElement) => {
@@ -13,14 +14,17 @@ const HideOnScroll = ({ children }: PropsWithReactElement) => {
   );
 };
 
-export type HeaderProps = {};
+export type HeaderProps = {
+  leftSlot?: ReactNode;
+};
 
-export const Header = ({ ...props }: HeaderProps) => {
+export const Header = ({ leftSlot }: HeaderProps) => {
   return (
     <>
-      <HideOnScroll {...props}>
+      <HideOnScroll>
         <AppBar>
-          <Toolbar sx={{ justifyContent: 'flex-end' }}>
+          <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <Box>{leftSlot}</Box>
             <HeaderMenuButton />
           </Toolbar>
         </AppBar>
