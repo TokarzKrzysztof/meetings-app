@@ -1,7 +1,9 @@
-﻿namespace Meetings.Infrastructure.Services.Interfaces
+﻿using Meetings.Models.Resources;
+
+namespace Meetings.Infrastructure.Services.Interfaces
 {
     public interface IAuthService
     {
-        Task<string> Login(string email, string password);
+        Task<string> Login(LoginCredentials data);
     }
 }

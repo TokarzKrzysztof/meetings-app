@@ -1,32 +1,34 @@
-import { TextField } from 'src/ui-components';
+import { ForwardedRef } from 'react';
+import { UseFormReturn } from 'react-hook-form';
+import { TextField, TextFieldProps } from 'src/ui-components';
+import { typedForwardRef } from 'src/utils/types/forward-ref';
 
-// const StyledTextField = styled(TextField)({
-//   '& .MuiInputBase-root': {
-//     borderRadius: 6,
-//   },
-//   '& .MuiInputBase-input': {
-//     paddingTop: 7,
-//     paddingBottom: 7,
-//   },
-// }) as typeof TextField;
-
-export type FormFieldProps = {
+export type FormFieldProps = Omit<TextFieldProps<'standard'>, 'ref'> & {
+  form: UseFormReturn<any, any, undefined>
   label: string;
 };
-//   | {
-//       isSelect: true;
-//       children: ReactElement;
-//     }
-//   | { isSelect: false };
 
-// export const TextField = <
-//   Variant extends TextFieldVariants = TextFieldVariants
-// >({
-//   ...props
-// }: MuiTextFieldProps<Variant> & TextFieldProps) => (
-//   <MuiTextField {...props}></MuiTextField>
-// );
+const FormFieldInner = (
+  { form, label, type, name, error, ...props }: FormFieldProps,
+  ref: ForwardedRef<HTMLInputElement>
+) => {
+  const {
+    formState: { errors },
+  } = form;
 
-export const FormField = ({ label }: FormFieldProps) => {
-  return <TextField fullWidth variant='standard' label={label} helperText={' '}></TextField>;
+  return (
+    <TextField
+      fullWidth
+      type={type}
+      variant='standard'
+      label={label}
+      ref={ref}
+      name={name}
+      error={error ?? !!errors[name!]}
+      helperText={errors[name!]?.message as string ?? ' '}
+      {...props}
+    ></TextField>
+  );
 };
+
+export const FormField = typedForwardRef(FormFieldInner);

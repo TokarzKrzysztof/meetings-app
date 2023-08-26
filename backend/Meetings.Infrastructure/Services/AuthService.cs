@@ -1,5 +1,6 @@
 ﻿using Meetings.Authentication;
 using Meetings.Infrastructure.Services.Interfaces;
+using Meetings.Models.Resources;
 using Meetings.Utils;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,10 @@ namespace Meetings.Infrastructure.Services
             _userService = userService;
         }
 
-        public async Task<string> Login(string email, string password)
+        public async Task<string> Login(LoginCredentials data)
         {
-            var user = await _userService.TryGetUserByEmail(email);
-            if (user == null || !PasswordHasher.Verify(password, user.Password))
+            var user = await _userService.TryGetUserByEmail(data.Email);
+            if (user == null || !PasswordHasher.Verify(data.Password, user.Password))
             {
                 throw new UnauthorizedAccessException();
             }

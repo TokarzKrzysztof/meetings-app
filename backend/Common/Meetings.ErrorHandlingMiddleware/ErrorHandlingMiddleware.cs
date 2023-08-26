@@ -37,7 +37,7 @@ namespace Meetings.ErrorHandlingMiddleware
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 }
 
-                var result = JsonSerializer.Serialize(new { response.StatusCode, ex.Message, ex.StackTrace });
+                var result = JsonSerializer.Serialize(new { statusCode = response.StatusCode, message = ex.Message, stackTrace = ex.StackTrace });
                 await response.WriteAsync(result);
             }
         }
