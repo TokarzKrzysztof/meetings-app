@@ -39,15 +39,11 @@ export const Login = () => {
     },
   });
 
-  const onSubmit = (data: LoginCredentials) => {
-    mutation.mutate(data);
-  };
-  
   return (
     <>
       <Header leftSlot={<AuthGoBackBtn />} />
       <AuthForm
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit((data) => mutation.mutate(data))}
         onChange={() => mutation.error && mutation.reset()}
       >
         <AuthIcon></AuthIcon>
