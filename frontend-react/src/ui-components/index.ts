@@ -9,6 +9,7 @@ export * from './Container/Container';
 export * from './FormControl/FormControl';
 export * from './Icon/Icon';
 export * from './IconButton/IconButton';
+export * from './InputAdornment/InputAdornment';
 export * from './InputLabel/InputLabel';
 export * from './Link/Link';
 export * from './Menu/Menu';

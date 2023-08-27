@@ -43,6 +43,7 @@ namespace Meetings.Database.Repositories
 
         public async Task Create(TEntity entity)
         {
+            entity.Id = Guid.NewGuid();
             entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedAt = DateTime.UtcNow;
             _db.Add(entity);

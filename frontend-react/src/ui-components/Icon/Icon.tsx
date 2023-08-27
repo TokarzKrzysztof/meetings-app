@@ -11,7 +11,9 @@ export type IconProps = {
     | 'search'
     | 'arrow_forward'
     | 'account_circle'
-    | 'arrow_back';
+    | 'arrow_back'
+    | 'visibility'
+    | 'visibility_off'
 };
 
 export const Icon = <
