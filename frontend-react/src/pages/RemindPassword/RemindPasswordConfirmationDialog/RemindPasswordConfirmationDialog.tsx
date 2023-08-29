@@ -23,7 +23,7 @@ export const RemindPasswordConfirmationDialog = ({
     <Dialog open={show}>
       <DialogContent>
         <DialogContentText align='center'>
-          W ciągu kilku minut na podany adres email powinieneneś otrzymać link dzięki
+          W ciągu kilku minut na podany adres email otrzymasz link dzięki
           któremu będzie można zresetować hasło
         </DialogContentText>
         <DialogContentText align='center' mt={4}>

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthButton } from 'src/components/AuthButton/AuthButton';
@@ -21,10 +20,20 @@ export async function loader() {
   return null;
 }
 
+const setDefaultValues = () => {
+  const storedCredentials = LocalStorage.getObjectValue('login-credentials');
+  if (storedCredentials) {
+    return { ...storedCredentials, rememberCredentials: true }
+  } 
+  return {}
+}
+
 type FormData = LoginCredentials & { rememberCredentials: boolean };
 
 export const Login = () => {
-  const form = useForm<FormData>();
+  const form = useForm<FormData>({
+    defaultValues: setDefaultValues()
+  });
   const { register, handleSubmit, control, reset, getValues } = form;
   const navigate = useNavigate();
   const { login, loginError, loginInProgress, loginReset } = useAuthLogin({
@@ -34,19 +43,12 @@ export const Login = () => {
       if (rememberCredentials) {
         LocalStorage.setObjectValue('login-credentials', { email, password });
       } else {
-        LocalStorage.clearValue('login-credentials')
+        LocalStorage.clearValue('login-credentials');
       }
-      
+
       navigate(AppRoutes.Home);
     },
   });
-
-  useEffect(() => {
-    const storedCredentials = LocalStorage.getObjectValue('login-credentials');
-    if (storedCredentials) {
-      reset({ ...storedCredentials, rememberCredentials: true });
-    }
-  }, []);
 
   return (
     <>
