@@ -10,7 +10,7 @@ import { ControlledFormField } from 'src/components/ControlledFormField/Controll
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { LoginCredentials } from 'src/models/login-credentials';
-import { useLogin } from 'src/queries/auth-queries';
+import { useAuthLogin } from 'src/queries/auth-queries';
 import { Box, Button, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { LocalStorage } from 'src/utils/helpers/local-storage';
@@ -27,13 +27,16 @@ export const Login = () => {
   const form = useForm<FormData>();
   const { register, handleSubmit, control, reset, getValues } = form;
   const navigate = useNavigate();
-  const { login, loginError, loginInProgress, loginReset } = useLogin({
+  const { login, loginError, loginInProgress, loginReset } = useAuthLogin({
     onSuccess: (result) => {
       LocalStorage.setValue('token', result);
       const { email, password, rememberCredentials } = getValues();
       if (rememberCredentials) {
         LocalStorage.setObjectValue('login-credentials', { email, password });
+      } else {
+        LocalStorage.clearValue('login-credentials')
       }
+      
       navigate(AppRoutes.Home);
     },
   });

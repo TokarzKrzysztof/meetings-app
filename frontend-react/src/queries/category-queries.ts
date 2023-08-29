@@ -4,7 +4,7 @@ import { Category } from 'src/models/category';
 import { apiUrl } from 'src/utils/api-url';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
-export const useGetAllCategories = (
+export const useCategoryGetAllCategories = (
   options?: UseQueryOptions<Category[], AxiosError<HttpErrorData, any>>
 ) => {
   const query = useQuery({

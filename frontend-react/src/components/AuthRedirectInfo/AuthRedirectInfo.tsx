@@ -6,6 +6,7 @@ export const AuthRedirectInfo = ({ children }: PropsWithChildren<{}>) => {
     <>
       <Box
         mt={6}
+        mb={2}
         display={'flex'}
         justifyContent={'center'}
         alignItems={'center'}

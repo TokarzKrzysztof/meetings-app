@@ -9,7 +9,7 @@ import { User } from 'src/models/user';
 import { apiUrl } from 'src/utils/api-url';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
-export const useGetPasswordMinLength = (
+export const useUserGetPasswordMinLength = (
   options?: UseQueryOptions<number, AxiosError<HttpErrorData, any>>
 ) => {
   const query = useQuery({
@@ -27,7 +27,7 @@ export const useGetPasswordMinLength = (
   };
 };
 
-export const useRegisterUser = (
+export const useUserRegister = (
   options?: UseMutationOptions<unknown, AxiosError<HttpErrorData>, User>
 ) => {
   const mutation = useMutation({

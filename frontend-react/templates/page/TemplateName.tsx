@@ -2,8 +2,8 @@ export async function loader() {
   return null;
 }
 
-export const Component = () => {
+export const TemplateName = () => {
   return <>TemplateName</>;
 };
 
-Component.displayName = 'TemplateName';
+TemplateName.displayName = 'TemplateName';

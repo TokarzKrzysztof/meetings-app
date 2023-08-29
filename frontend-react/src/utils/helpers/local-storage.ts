@@ -31,4 +31,8 @@ export class LocalStorage {
       return null;
     }
   }
+
+  static clearValue(key: SimpleStorageKey | keyof ObjectStorageKey) {
+    window.localStorage.removeItem(key)
+  }
 }

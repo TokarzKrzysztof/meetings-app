@@ -3,7 +3,7 @@ import { Container } from 'src/ui-components';
 
 export type AuthFormProps = PropsWithChildren<{
   onSubmit: FormHTMLAttributes<HTMLFormElement>['onSubmit'];
-  onChange: FormHTMLAttributes<HTMLFormElement>['onChange'];
+  onChange?: FormHTMLAttributes<HTMLFormElement>['onChange'];
 }>;
 
 export const AuthForm = ({ children, onSubmit, onChange }: AuthFormProps) => {

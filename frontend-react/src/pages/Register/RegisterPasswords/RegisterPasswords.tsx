@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { FormField } from 'src/components/FormField/FormField';
 import { User } from 'src/models/user';
-import { useGetPasswordMinLength } from 'src/queries/user-queries';
+import { useUserGetPasswordMinLength } from 'src/queries/user-queries';
 import { Icon, IconButton, InputAdornment } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 
@@ -20,7 +20,7 @@ export const RegisterPasswords = ({ form }: RegisterPasswordsProps) => {
   } = form;
   const [password, passwordRepeat] = watch(['password', 'passwordRepeat']);
   const [showPassword, setShowPassword] = useState(false);
-  const { passwordMinLength } = useGetPasswordMinLength();
+  const { passwordMinLength } = useUserGetPasswordMinLength();
 
   useEffect(() => {
     if (isSubmitted) trigger('passwordRepeat');

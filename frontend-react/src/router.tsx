@@ -33,6 +33,13 @@ export const router = createBrowserRouter([
           return { Component: Register };
         },
       },
+      {
+        path: AppRoutes.RemindPassword,
+        lazy: async () => {
+          const { RemindPassword } = await import('./pages/RemindPassword/RemindPassword');
+          return { Component: RemindPassword };
+        },
+      },
     ],
   },
   { path: '*', element: <Navigate to={AppRoutes.Home} /> },
