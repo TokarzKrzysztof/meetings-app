@@ -1,5 +1,6 @@
 import { MouseEvent, useState } from 'react';
-import { Icon, IconButton, Link, Menu, MenuItem } from 'src/ui-components';
+import { Link } from 'react-router-dom';
+import { Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type HeaderMenuButtonProps = {};

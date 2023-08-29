@@ -1,15 +1,17 @@
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthButton } from 'src/components/AuthButton/AuthButton';
 import { AuthForm } from 'src/components/AuthForm/AuthForm';
 import { AuthGoBackBtn } from 'src/components/AuthGoBackBtn/AuthGoBackBtn';
 import { AuthIcon } from 'src/components/AuthIcon/AuthIcon';
+import { AuthRedirectInfo } from 'src/components/AuthRedirectInfo/AuthRedirectInfo';
 import { ControlledFormField } from 'src/components/ControlledFormField/ControlledFormField';
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { User } from 'src/models/user';
 import { RegisterPasswords } from 'src/pages/Register/RegisterPasswords/RegisterPasswords';
 import { useRegisterUser } from 'src/queries/user-queries';
+import { Button } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
@@ -79,14 +81,15 @@ export const Register = () => {
             disableFuture: true,
           }}
         ></ControlledFormField>
-        {/* {mutation.error?.response?.data?.statusCode === 401 && (
-          <Typography color={'error'}>
-            Email i/lub hasło są nieprawidłowe
-          </Typography>
-        )} */}
         <AuthButton disabled={registerUserInProgress}>
           Zarejestruj się
         </AuthButton>
+        <AuthRedirectInfo>
+          Masz już konto?{' '}
+          <Button variant='text' component={Link} to={AppRoutes.Login}>
+            Zaloguj się
+          </Button>
+        </AuthRedirectInfo>
       </AuthForm>
     </>
   );

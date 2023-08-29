@@ -1,4 +1,5 @@
-import { Button, Icon, Link } from 'src/ui-components';
+import { Link } from 'react-router-dom';
+import { Button, Icon } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type AuthGoBackBtnProps = {};
@@ -13,7 +14,7 @@ export const AuthGoBackBtn = ({ ...props }: AuthGoBackBtnProps) => {
       component={Link}
       to={AppRoutes.Home}
     >
-      Powrót
+      Strona główna
     </Button>
   );
 };

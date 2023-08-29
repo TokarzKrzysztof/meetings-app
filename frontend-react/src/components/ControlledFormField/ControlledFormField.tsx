@@ -7,13 +7,21 @@ import {
   RegisterOptions,
   useController,
 } from 'react-hook-form';
-import { DatePicker, DatePickerProps } from 'src/ui-components';
+import {
+  Checkbox,
+  CheckboxProps,
+  DatePicker,
+  DatePickerProps,
+  FormControlLabel,
+  FormControlLabelProps,
+} from 'src/ui-components';
 
 export type ControlledFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
   label: string;
+  FormControlLabelProps?: FormControlLabelProps;
   ControllerProps: {
     control: Control<TFieldValues>;
     name: TName;
@@ -28,6 +36,10 @@ export type ControlledFormFieldProps<
   | {
       element: 'datePicker';
       ElementProps?: DatePickerProps<Dayjs>;
+    }
+  | {
+      element: 'checkbox';
+      ElementProps?: CheckboxProps;
     }
   | {
       element: 'sth';
@@ -45,6 +57,7 @@ export const ControlledFormField = <
   element,
   ControllerProps,
   ElementProps,
+  FormControlLabelProps,
   ...props
 }: ControlledFormFieldProps<TFieldValues, TName>) => {
   const { field, fieldState } = useController(ControllerProps);
@@ -69,6 +82,24 @@ export const ControlledFormField = <
           }
         }}
         {...ElementProps}
+      />
+    );
+  }
+
+  if (element === 'checkbox') {
+    return (
+      <FormControlLabel
+        label={label}
+        slotProps={{ typography: { sx: { fontSize: 13 } } }}
+        control={
+          <Checkbox
+            checked={!!field.value}
+            onChange={(e) => field.onChange(e.target.checked)}
+            size={'small'}
+            {...ElementProps}
+          />
+        }
+        {...FormControlLabelProps}
       />
     );
   }

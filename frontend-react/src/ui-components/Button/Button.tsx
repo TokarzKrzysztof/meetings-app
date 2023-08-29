@@ -16,6 +16,11 @@ export const Button = <
   <MuiButton
     {...props}
     variant={variant}
-    sx={{ textTransform: 'none', borderRadius: 25, ...sx }}
+    sx={{
+      textTransform: 'none',
+      borderRadius: 25,
+      fontSize: variant === 'text' ? 13 : undefined,
+      ...sx,
+    }}
   ></MuiButton>
 );
