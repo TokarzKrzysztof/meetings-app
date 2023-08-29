@@ -32,9 +32,13 @@ namespace Meetings.ErrorHandlingMiddleware
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                 }       
-                if (ex.GetType() == typeof(UnauthorizedAccessException))
+                else if (ex.GetType() == typeof(UnauthorizedAccessException))
                 {
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                }
+                else
+                {
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 }
 
                 var result = JsonSerializer.Serialize(new { statusCode = response.StatusCode, message = ex.Message, stackTrace = ex.StackTrace });

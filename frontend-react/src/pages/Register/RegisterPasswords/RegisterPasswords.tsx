@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { FormField } from 'src/components/FormField/FormField';
 import { User } from 'src/models/user';
+import { useGetPasswordMinLength } from 'src/queries/user-queries';
 import { Icon, IconButton, InputAdornment } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 
@@ -19,6 +20,7 @@ export const RegisterPasswords = ({ form }: RegisterPasswordsProps) => {
   } = form;
   const [password, passwordRepeat] = watch(['password', 'passwordRepeat']);
   const [showPassword, setShowPassword] = useState(false);
+  const { passwordMinLength } = useGetPasswordMinLength();
 
   useEffect(() => {
     if (isSubmitted) trigger('passwordRepeat');
@@ -50,6 +52,10 @@ export const RegisterPasswords = ({ form }: RegisterPasswordsProps) => {
         }}
         {...register('password', {
           required: ValidationMessages.required,
+          minLength: {
+            value: passwordMinLength ?? 0,
+            message: `Minimalna długość hasła to ${passwordMinLength} znaków`,
+          },
           validate: (value: string) => {
             if (getValues('passwordRepeat') !== value) {
               return ValidationMessages.passwordsNotMatch;

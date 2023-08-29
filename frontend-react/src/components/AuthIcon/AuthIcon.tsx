@@ -1,12 +1,14 @@
-import { Box, Icon } from 'src/ui-components';
+import { Box, Icon, IconProps } from 'src/ui-components';
 
-export type AuthIconProps = {};
+export type AuthIconProps = {
+  iconName: IconProps['name']
+};
 
-export const AuthIcon = ({ ...props }: AuthIconProps) => {
+export const AuthIcon = ({ iconName }: AuthIconProps) => {
   return (
     <Box display={'flex'} sx={{ my: 3 }} justifyContent={'center'}>
       <Icon
-        name={'account_circle'}
+        name={iconName}
         color='primary'
         sx={{ fontSize: '5rem', my: 3, mx: 'auto' }}
       ></Icon>

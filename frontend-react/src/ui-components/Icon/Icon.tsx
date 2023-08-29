@@ -4,7 +4,9 @@ import {
   IconProps as MuiIconProps,
 } from '@mui/material/Icon';
 
-export type IconProps = {
+export type IconProps<
+  D extends React.ElementType = IconTypeMap['defaultComponent']
+> = MuiIconProps<D, { component?: D }> & {
   name:
     | 'menu'
     | 'star'
@@ -14,6 +16,7 @@ export type IconProps = {
     | 'arrow_back'
     | 'visibility'
     | 'visibility_off'
+    | 'person_add';
 };
 
 export const Icon = <
@@ -21,8 +24,6 @@ export const Icon = <
 >({
   name,
   ...props
-}: MuiIconProps<D, { component?: D }> & IconProps) => (
-  <MuiIcon {...props}>{name}</MuiIcon>
-);
+}: IconProps<D>) => <MuiIcon {...props}>{name}</MuiIcon>;
 
 Icon.muiName = MuiIcon.muiName;

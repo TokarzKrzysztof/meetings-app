@@ -1,8 +1,6 @@
-import { useQuery } from 'react-query';
 import { Header } from 'src/components/Header/Header';
-import { CategoryService } from 'src/http-services/category-service';
-import { Category } from 'src/models/category';
 import { HomeCategoriesSearch } from 'src/pages/Home/HomeCategoriesSearch/HomeCategoriesSearch';
+import { useGetAllCategories } from 'src/queries/category-queries';
 import { Container, Typography } from 'src/ui-components';
 
 export async function loader() {
@@ -10,9 +8,7 @@ export async function loader() {
 }
 
 export const Home = () => {
-  const { data } = useQuery<Category[]>('categories', () =>
-    CategoryService.getAllCategories()
-  );
+  const { categories } = useGetAllCategories();
   
   return (
     <>
@@ -26,7 +22,7 @@ export const Home = () => {
         >
           Znajdź ludzi dzielących Twoje zainteresowania!
         </Typography>
-        <HomeCategoriesSearch data={data}></HomeCategoriesSearch>
+        <HomeCategoriesSearch data={categories}></HomeCategoriesSearch>
       </Container>
     </>
   );

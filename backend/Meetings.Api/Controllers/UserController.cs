@@ -22,5 +22,11 @@ namespace Meetings.Api.Controllers
             await _userService.Register(data);
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPasswordMinLength()
+        {     
+            return Ok(5);
+        }
     }
 }
