@@ -1,3 +1,8 @@
+export enum UserGender {
+  Male,
+  Female
+}
+
 export type User = {
   id: string;
   email: string;
@@ -6,4 +11,5 @@ export type User = {
   lastName: string;
   birthDate: string;
   passwordRepeat: string;
+  gender: UserGender;
 };

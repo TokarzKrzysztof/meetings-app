@@ -8,7 +8,7 @@ import { AuthRedirectInfo } from 'src/components/AuthRedirectInfo/AuthRedirectIn
 import { ControlledFormField } from 'src/components/ControlledFormField/ControlledFormField';
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
-import { User } from 'src/models/user';
+import { User, UserGender } from 'src/models/user';
 import { RegisterPasswords } from 'src/pages/Register/RegisterPasswords/RegisterPasswords';
 import { useUserRegister } from 'src/queries/user-queries';
 import { Button } from 'src/ui-components';
@@ -16,6 +16,17 @@ import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 import { Validators } from 'src/utils/helpers/validators';
+
+const genderOptions = [
+  {
+    value: UserGender.Male,
+    label: 'Mężczyzna',
+  },
+  {
+    value: UserGender.Female,
+    label: 'kobieta',
+  },
+];
 
 export async function loader() {
   return null;
@@ -41,7 +52,7 @@ export const Register = () => {
         onSubmit={handleSubmit((data) => registerUser(data))}
         onChange={() => registerUserError && registerUserReset()}
       >
-        <AuthIcon iconName='person_add'></AuthIcon>
+        <AuthIcon iconName={'person_add'}></AuthIcon>
         <FormField
           form={form}
           label={'Email'}
@@ -67,18 +78,26 @@ export const Register = () => {
         ></FormField>
         <RegisterPasswords form={form} />
         <ControlledFormField
-          element='datePicker'
+          control={control}
+          element={'date-picker'}
+          name={'birthDate'}
           label={'Data urodzenia'}
-          ControllerProps={{
-            control,
-            name: 'birthDate',
-            rules: {
-              required: ValidationMessages.required,
-              validate: Validators.maxDate,
-            },
+          rules={{
+            required: ValidationMessages.required,
+            validate: Validators.maxDate,
           }}
           ElementProps={{
             disableFuture: true,
+          }}
+        ></ControlledFormField>
+        <ControlledFormField
+          control={control}
+          element={'radio-group'}
+          name={'gender'}
+          label={'Płeć'}
+          rules={{ required: ValidationMessages.required }}
+          ElementProps={{
+            options: genderOptions,
           }}
         ></ControlledFormField>
         <AuthButton disabled={registerUserInProgress}>
@@ -86,7 +105,7 @@ export const Register = () => {
         </AuthButton>
         <AuthRedirectInfo>
           Masz już konto?{' '}
-          <Button variant='text' component={Link} to={AppRoutes.Login}>
+          <Button variant={'text'} component={Link} to={AppRoutes.Login}>
             Zaloguj się
           </Button>
         </AuthRedirectInfo>

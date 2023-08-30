@@ -23,16 +23,16 @@ export async function loader() {
 const setDefaultValues = () => {
   const storedCredentials = LocalStorage.getObjectValue('login-credentials');
   if (storedCredentials) {
-    return { ...storedCredentials, rememberCredentials: true }
-  } 
-  return {}
-}
+    return { ...storedCredentials, rememberCredentials: true };
+  }
+  return {};
+};
 
 type FormData = LoginCredentials & { rememberCredentials: boolean };
 
 export const Login = () => {
   const form = useForm<FormData>({
-    defaultValues: setDefaultValues()
+    defaultValues: setDefaultValues(),
   });
   const { register, handleSubmit, control, reset, getValues } = form;
   const navigate = useNavigate();
@@ -84,10 +84,8 @@ export const Login = () => {
           <ControlledFormField
             element='checkbox'
             label={'Zapamiętaj mnie'}
-            ControllerProps={{
-              control,
-              name: 'rememberCredentials',
-            }}
+            control={control}
+            name={'rememberCredentials'}
           ></ControlledFormField>
           <Button variant='text' component={Link} to={AppRoutes.RemindPassword}>
             Zapomniałem hasła

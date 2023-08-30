@@ -1,51 +1,47 @@
-import dayjs, { Dayjs } from 'dayjs';
 import {
   Control,
   FieldPath,
-  FieldPathValue,
   FieldValues,
   RegisterOptions,
   useController,
 } from 'react-hook-form';
 import {
-  Checkbox,
-  CheckboxProps,
-  DatePicker,
-  DatePickerProps,
-  FormControlLabel,
-  FormControlLabelProps,
-} from 'src/ui-components';
+  CheckboxField,
+  CheckboxFieldProps,
+} from 'src/components/ControlledFormField/CheckboxField/CheckboxField';
+import {
+  DatePickerField,
+  DatePickerFieldProps,
+} from 'src/components/ControlledFormField/DatePickerField/DatePickerField';
+import {
+  RadioGroupField,
+  RadioGroupFieldProps,
+} from 'src/components/ControlledFormField/RadioGroupField/RadioGroupField';
 
 export type ControlledFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
   label: string;
-  FormControlLabelProps?: FormControlLabelProps;
-  ControllerProps: {
-    control: Control<TFieldValues>;
-    name: TName;
-    rules?: Omit<
-      RegisterOptions<TFieldValues, TName>,
-      'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-    >;
-    shouldUnregister?: boolean;
-    defaultValue?: FieldPathValue<TFieldValues, TName>;
-  };
+  control: Control<TFieldValues>;
+  name: TName;
+  rules?: Omit<
+    RegisterOptions<TFieldValues, TName>,
+    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
+  >;
+  shouldUnregister?: boolean;
 } & (
   | {
-      element: 'datePicker';
-      ElementProps?: DatePickerProps<Dayjs>;
+      element: 'date-picker';
+      ElementProps?: DatePickerFieldProps;
     }
   | {
       element: 'checkbox';
-      ElementProps?: CheckboxProps;
+      ElementProps?: CheckboxFieldProps;
     }
   | {
-      element: 'sth';
-      ElementProps?: {
-        test: number;
-      };
+      element: 'radio-group';
+      ElementProps: RadioGroupFieldProps<TFieldValues, TName>;
     }
 );
 
@@ -54,52 +50,37 @@ export const ControlledFormField = <
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
   label,
+  control,
+  name,
+  rules,
+  shouldUnregister,
   element,
-  ControllerProps,
   ElementProps,
-  FormControlLabelProps,
-  ...props
 }: ControlledFormFieldProps<TFieldValues, TName>) => {
-  const { field, fieldState } = useController(ControllerProps);
+  const controller = useController({ control, name, rules, shouldUnregister });
 
-  if (element === 'datePicker') {
+  if (element === 'date-picker') {
     return (
-      <DatePicker
-        label={label}
-        value={field.value ? dayjs(field.value) : null}
-        inputRef={field.ref}
-        slotProps={{
-          textField: {
-            error: !!fieldState.error,
-            helperText: fieldState.error?.message ?? ' ',
-          },
-        }}
-        onChange={(date) => {
-          if (date?.isValid()) {
-            field.onChange(date.toISOString());
-          } else {
-            field.onChange(null);
-          }
-        }}
+      <DatePickerField
         {...ElementProps}
+        controller={controller}
+        label={label}
       />
     );
   }
 
   if (element === 'checkbox') {
     return (
-      <FormControlLabel
+      <CheckboxField {...ElementProps} controller={controller} label={label} />
+    );
+  }
+
+  if (element === 'radio-group') {
+    return (
+      <RadioGroupField
+        {...ElementProps}
+        controller={controller}
         label={label}
-        slotProps={{ typography: { sx: { fontSize: 13 } } }}
-        control={
-          <Checkbox
-            checked={!!field.value}
-            onChange={(e) => field.onChange(e.target.checked)}
-            size={'small'}
-            {...ElementProps}
-          />
-        }
-        {...FormControlLabelProps}
       />
     );
   }
