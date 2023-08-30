@@ -1,4 +1,4 @@
-﻿namespace Meetings.Models
+﻿namespace Meetings.Models.Entities
 {
     public class EntityBase
     {

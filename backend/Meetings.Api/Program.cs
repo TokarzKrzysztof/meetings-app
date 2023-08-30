@@ -1,7 +1,10 @@
+using FluentValidation;
 using Meetings.Authentication.StartupExtensions;
 using Meetings.Database.StartupExtensions;
 using Meetings.ErrorHandlingMiddleware.StartupExtensions;
 using Meetings.Infrastructure.StartupExtensions;
+using Meetings.Models.Entities;
+using Meetings.Models.StartupExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,8 @@ builder.Services.AddCors(policyBuilder =>
 builder.AddCustomAuthentication();
 builder.AddDatabase();
 builder.AddServices();
+builder.AddAutoMapper();
+builder.AddValidators();
 
 var app = builder.Build();
 

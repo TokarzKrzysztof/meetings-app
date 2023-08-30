@@ -1,4 +1,5 @@
 ﻿using Meetings.Models;
+using Meetings.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Meetings.Database.Repositories

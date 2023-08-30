@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Meetings.Utils;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -28,9 +29,11 @@ namespace Meetings.ErrorHandlingMiddleware
             catch (Exception ex)
             {
                 var response = context.Response;
-                if (ex.GetType() == typeof(ValidationException))
+                List<string> validationErrors = new List<string>();
+                if (ex.GetType() == typeof(AppValidationException))
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    validationErrors = ((AppValidationException)ex).Errors;
                 }       
                 else if (ex.GetType() == typeof(UnauthorizedAccessException))
                 {
@@ -41,7 +44,7 @@ namespace Meetings.ErrorHandlingMiddleware
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 }
 
-                var result = JsonSerializer.Serialize(new { statusCode = response.StatusCode, message = ex.Message, stackTrace = ex.StackTrace });
+                var result = JsonSerializer.Serialize(new { statusCode = response.StatusCode, validationErrors, message = ex.Message });
                 await response.WriteAsync(result);
             }
         }
