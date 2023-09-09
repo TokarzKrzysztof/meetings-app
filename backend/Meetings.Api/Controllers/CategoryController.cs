@@ -1,8 +1,7 @@
 ﻿using Meetings.Infrastructure.Helpers;
-using Meetings.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Meetings.Api.Controllers
+namespace Meetings.EmailTemplates.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

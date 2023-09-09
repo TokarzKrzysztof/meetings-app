@@ -33,7 +33,7 @@ export const RemindPassword = () => {
       <AuthForm onSubmit={handleSubmit((data) => resetPassword(data.email))}>
         <AuthIcon iconName='email'></AuthIcon>
         <Typography align='center' mb={2}>
-          Wpisz adres email połączony z kontem i postępuj zgodnie z instrukcjami
+          Wpisz adres email powiązany z kontem i postępuj zgodnie z instrukcjami
           aby zresetować swoje hasło
         </Typography>
         <FormField

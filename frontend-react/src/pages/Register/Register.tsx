@@ -10,7 +10,7 @@ import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { User, UserGender } from 'src/models/user';
 import { RegisterPasswords } from 'src/pages/Register/RegisterPasswords/RegisterPasswords';
-import { useUserRegister } from 'src/queries/user-queries';
+import { useAuthRegister } from 'src/queries/auth-queries';
 import { Button } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
@@ -41,7 +41,7 @@ export const Register = () => {
     registerUserError,
     registerUserReset,
     registerUserInProgress,
-  } = useUserRegister({
+  } = useAuthRegister({
     onSuccess: () => navigate(AppRoutes.Login),
   });
 

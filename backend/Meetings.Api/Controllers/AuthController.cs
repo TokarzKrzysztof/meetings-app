@@ -1,15 +1,16 @@
-﻿using Meetings.Infrastructure.Services.Interfaces;
+﻿using Meetings.Infrastructure.Services;
+using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Meetings.Api.Controllers
+namespace Meetings.EmailTemplates.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly AuthService _authService;
+        public AuthController(AuthService authService)
         {
             _authService = authService;
         }
@@ -19,6 +20,19 @@ namespace Meetings.Api.Controllers
         {
             string token = await _authService.Login(data);
             return Ok(token);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register([FromBody] UserResource data)
+        {
+            await _authService.Register(data);
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPasswordMinLength()
+        {
+            return Ok(5);
         }
     }
 }

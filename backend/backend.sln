@@ -17,7 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.Authentication", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.Utils", "Common\Meetings.Utils\Meetings.Utils.csproj", "{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meetings.ErrorHandlingMiddleware", "Common\Meetings.ErrorHandlingMiddleware\Meetings.ErrorHandlingMiddleware.csproj", "{C5551EBB-4083-4867-B261-3A598198335E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.ErrorHandlingMiddleware", "Common\Meetings.ErrorHandlingMiddleware\Meetings.ErrorHandlingMiddleware.csproj", "{C5551EBB-4083-4867-B261-3A598198335E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.EmailSender", "Common\Meetings.MailSender\Meetings.EmailSender.csproj", "{D018C71D-F41A-47EB-9701-D77292CD7E1A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.EmailTemplates", "Common\Meetings.EmailTemplates\Meetings.EmailTemplates.csproj", "{22ACD42D-B6EE-4B59-A983-CA29891D520A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +57,14 @@ Global
 		{C5551EBB-4083-4867-B261-3A598198335E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5551EBB-4083-4867-B261-3A598198335E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5551EBB-4083-4867-B261-3A598198335E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D018C71D-F41A-47EB-9701-D77292CD7E1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D018C71D-F41A-47EB-9701-D77292CD7E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D018C71D-F41A-47EB-9701-D77292CD7E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D018C71D-F41A-47EB-9701-D77292CD7E1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22ACD42D-B6EE-4B59-A983-CA29891D520A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22ACD42D-B6EE-4B59-A983-CA29891D520A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22ACD42D-B6EE-4B59-A983-CA29891D520A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22ACD42D-B6EE-4B59-A983-CA29891D520A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +73,8 @@ Global
 		{9A82C538-24D5-43F5-9CE9-7C01E0AEB128} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 		{C5551EBB-4083-4867-B261-3A598198335E} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
+		{D018C71D-F41A-47EB-9701-D77292CD7E1A} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
+		{22ACD42D-B6EE-4B59-A983-CA29891D520A} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {051323AE-1851-400B-B379-2E6EC46C5D63}

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Meetings.Utils
 {
-    public static class PasswordHasher
+    public static class Hasher
     {
         /// <summary>
         /// Size of salt.
@@ -20,19 +20,19 @@ namespace Meetings.Utils
         private const int HashSize = 20;
 
         /// <summary>
-        /// Creates a hash from a password.
+        /// Creates a hash from a data.
         /// </summary>
-        /// <param name="password">The password.</param>
+        /// <param name="data">The data.</param>
         /// <param name="iterations">Number of iterations.</param>
         /// <returns>The hash.</returns>
-        public static string Hash(string password, int iterations)
+        public static string Hash(string data, int iterations)
         {
             // Create salt
             byte[] salt;
             RandomNumberGenerator.Create().GetBytes(salt = new byte[SaltSize]);
 
             // Create hash
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
+            var pbkdf2 = new Rfc2898DeriveBytes(data, salt, iterations);
             var hash = pbkdf2.GetBytes(HashSize);
 
             // Combine salt and hash
@@ -48,41 +48,41 @@ namespace Meetings.Utils
         }
 
         /// <summary>
-        /// Creates a hash from a password with 10000 iterations
+        /// Creates a hash from a data with 10000 iterations
         /// </summary>
-        /// <param name="password">The password.</param>
+        /// <param name="data">The data.</param>
         /// <returns>The hash.</returns>
-        public static string Hash(string password)
+        public static string Hash(string data)
         {
-            return Hash(password, 10000);
+            return Hash(data, 10000);
         }
 
         /// <summary>
         /// Checks if hash is supported.
         /// </summary>
-        /// <param name="hashString">The hash.</param>
+        /// <param name="hashData">The hash.</param>
         /// <returns>Is supported?</returns>
-        public static bool IsHashSupported(string hashString)
+        public static bool IsHashSupported(string hashData)
         {
-            return hashString.Contains("$MYHASH$V1$");
+            return hashData.Contains("$MYHASH$V1$");
         }
 
         /// <summary>
-        /// Verifies a password against a hash.
+        /// Verifies a data against a hash.
         /// </summary>
-        /// <param name="password">The password.</param>
-        /// <param name="hashedPassword">The hash.</param>
+        /// <param name="data">The data.</param>
+        /// <param name="hashedData">The hash.</param>
         /// <returns>Could be verified?</returns>
-        public static bool Verify(string password, string hashedPassword)
+        public static bool Verify(string data, string hashedData)
         {
             // Check hash
-            if (!IsHashSupported(hashedPassword))
+            if (!IsHashSupported(hashedData))
             {
                 throw new NotSupportedException("The hashtype is not supported");
             }
 
             // Extract iteration and Base64 string
-            var splittedHashString = hashedPassword.Replace("$MYHASH$V1$", "").Split('$');
+            var splittedHashString = hashedData.Replace("$MYHASH$V1$", "").Split('$');
             var iterations = int.Parse(splittedHashString[0]);
             var base64Hash = splittedHashString[1];
 
@@ -94,7 +94,7 @@ namespace Meetings.Utils
             Array.Copy(hashBytes, 0, salt, 0, SaltSize);
 
             // Create hash with given salt
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
+            var pbkdf2 = new Rfc2898DeriveBytes(data, salt, iterations);
             byte[] hash = pbkdf2.GetBytes(HashSize);
 
             // Get result

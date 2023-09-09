@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -7,8 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Nested1\**" />
+    <Content Remove="Nested1\**" />
+    <EmbeddedResource Remove="Nested1\**" />
+    <None Remove="Nested1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.7.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.21" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,7 +26,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Meetings.Authentication\Meetings.Authentication.csproj" />
+    <ProjectReference Include="..\Common\Meetings.EmailTemplates\Meetings.EmailTemplates.csproj" />
     <ProjectReference Include="..\Common\Meetings.ErrorHandlingMiddleware\Meetings.ErrorHandlingMiddleware.csproj" />
+    <ProjectReference Include="..\Common\Meetings.MailSender\Meetings.EmailSender.csproj" />
     <ProjectReference Include="..\Meetings.Database\Meetings.Database.csproj" />
     <ProjectReference Include="..\Meetings.Infrastructure\Meetings.Infrastructure.csproj" />
     <ProjectReference Include="..\Meetings.Models\Meetings.Models.csproj" />

@@ -1,0 +1,13 @@
+﻿@using Meetings.EmailTemplates.Views;
+@using Meetings.EmailTemplates.Views.Shared;
+@model ConfirmAccountModel;
+
+@{
+    ViewData["EmailTitle"] = $"Witaj {Model.UserName}!";
+}
+
+@await Html.PartialAsync("CenteredText", "Dziękujemy za rejestrację w naszym serwisie!")
+<br />
+@await Html.PartialAsync("CenteredText", "Kliknij poniższy przycisk aby aktywować swoje konto")
+<br />
+@await Html.PartialAsync("EmailButton", new EmailButtonModel("Aktywuj konto", Model.ButtonUrl))

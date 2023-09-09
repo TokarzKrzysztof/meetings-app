@@ -1,5 +1,4 @@
 ﻿using Meetings.Infrastructure.Services;
-using Meetings.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -16,8 +15,8 @@ namespace Meetings.Infrastructure.StartupExtensions
     {
         public static void AddServices(this WebApplicationBuilder builder)
         {
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<AuthService>();
         }
         public static void AddAutoMapper(this WebApplicationBuilder builder)
         {

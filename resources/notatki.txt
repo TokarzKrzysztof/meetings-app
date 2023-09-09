@@ -1,5 +1,14 @@
 https://dribbble.com/resources/web-design-trends-2023
 https://www.angularjswiki.com/angular/angular-material-icons-list-mat-icon-list/
 
-
 https://stackoverflow.com/questions/62642843/typescript-react-forwardref-with-generic-props-from-material-ui
+
+meetingsteam0@gmail.com - testowe konto wysyłające maile
+meetingsteam11@gmail.com
+Meet!ings123
+
+gmail hasła do apek:
+https://myaccount.google.com/u/3/apppasswords?rapt=AEjHL4OGEZLeLpe2AJ3jCI0Qs4haJMKME1UQupAZvTItcYzDncZ4E2BljgweBWaWQijC3PqoOO-9oCKgHJuK_Ie6urKhvQELxw
+
+tworzenie razor class library
+https://scottsauber.com/2018/07/07/walkthrough-creating-an-html-email-template-with-razor-and-razor-class-libraries-and-rendering-it-from-a-net-standard-class-library/
