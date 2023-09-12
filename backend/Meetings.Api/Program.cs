@@ -5,7 +5,6 @@ using Meetings.EmailTemplates.StartupExtensions;
 using Meetings.EmailTemplates.Views;
 using Meetings.ErrorHandlingMiddleware.StartupExtensions;
 using Meetings.Infrastructure.StartupExtensions;
-using Meetings.Models.StartupExtensions;
 using Meetings.Utils;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
@@ -35,9 +34,7 @@ builder.Services.AddRazorPages();
 // custom builder extensions
 builder.AddCustomAuthentication();
 builder.AddDatabase();
-builder.AddServices();
-builder.AddAutoMapper();
-builder.AddValidators();
+builder.AddInfrastructure();
 builder.AddEmailSender();
 builder.AddEmailTemplates();
 

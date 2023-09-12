@@ -12,8 +12,8 @@ namespace Meetings.Infrastructure.Mappers
     {
         public MapperProfile()
         {
-            CreateMap<UserResource, User>();
-            CreateMap<User, UserResource>().ForMember(x => x.Password, x => x.Ignore());
+            CreateMap<UserDTO, User>();
+            CreateMap<User, UserDTO>().ForMember(x => x.Password, x => x.Ignore());
         }
     }
 }

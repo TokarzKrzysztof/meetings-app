@@ -1,18 +1,23 @@
-﻿using Meetings.Infrastructure.Services;
+﻿using FluentValidation;
+using Meetings.Api.Controllers;
+using Meetings.Infrastructure.Services;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
+using Meetings.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meetings.EmailTemplates.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : AppControllerBase
     {
         private readonly AuthService _authService;
-        public AuthController(AuthService authService)
+        private readonly IValidator<UserDTO> _userValidator;
+        public AuthController(AuthService authService, IValidator<UserDTO> userValidator)
         {
             _authService = authService;
+            _userValidator = userValidator;
         }
 
         [HttpPost]
@@ -23,9 +28,12 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] UserResource data)
+        public async Task<IActionResult> Register([FromBody] UserDTO data)
         {
-            await _authService.Register(data);
+            var results = await _userValidator.ValidateAsync(data);
+            if (!results.IsValid) throw new AppValidationException(results);
+
+            await _authService.Register(data, GetAppUrl());
             return Ok();
         }
 

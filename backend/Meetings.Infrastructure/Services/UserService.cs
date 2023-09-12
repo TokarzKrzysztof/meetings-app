@@ -13,9 +13,9 @@ namespace Meetings.Infrastructure.Services
     public class UserService
     {
         private readonly IRepository<User> _repository;
-        private readonly IValidator<UserResource> _validator;
+        private readonly IValidator<UserDTO> _validator;
         private readonly IMapper _mapper;
-        public UserService(IRepository<User> repository, IValidator<UserResource> validator, IMapper mapper)
+        public UserService(IRepository<User> repository, IValidator<UserDTO> validator, IMapper mapper)
         {
             _repository = repository;
             _validator = validator;

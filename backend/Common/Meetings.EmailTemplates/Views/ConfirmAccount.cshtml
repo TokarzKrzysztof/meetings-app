@@ -4,6 +4,7 @@
 
 @{
     ViewData["EmailTitle"] = $"Witaj {Model.UserName}!";
+    ViewData["EmailPreHeader"] = $"Cieszymy się że jesteś z nami! Aktywuj swoje konto aby móc w pełni z niego korzystać.";
 }
 
 @await Html.PartialAsync("CenteredText", "Dziękujemy za rejestrację w naszym serwisie!")

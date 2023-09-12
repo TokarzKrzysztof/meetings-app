@@ -8,19 +8,19 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Meetings.Infrastructure.Mappers;
+using FluentValidation;
+using Meetings.Infrastructure.Validators;
 
 namespace Meetings.Infrastructure.StartupExtensions
 {
     public static class InfrastructureExtension
     {
-        public static void AddServices(this WebApplicationBuilder builder)
+        public static void AddInfrastructure(this WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<AuthService>();
-        }
-        public static void AddAutoMapper(this WebApplicationBuilder builder)
-        {
             builder.Services.AddAutoMapper(typeof(MapperProfile));
+            builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
         }
     }
 }

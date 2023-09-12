@@ -4,6 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Meetings.Database.Repositories
 {
+    public interface IRepository<TEntity>
+    {
+        IQueryable<TEntity> Data { get; }
+
+        Task<TEntity> Create(TEntity entity);
+        Task<TEntity?> GetById(Guid id);
+        Task Remove(Guid id);
+        Task Update(TEntity entity);
+    }
+
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
     {
         private readonly ApplicationDbContext _db;
@@ -42,13 +52,15 @@ namespace Meetings.Database.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task Create(TEntity entity)
+        public async Task<TEntity> Create(TEntity entity)
         {
             entity.Id = Guid.NewGuid();
             entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedAt = DateTime.UtcNow;
             _db.Add(entity);
             await _db.SaveChangesAsync();
+
+            return entity;
         }
     }
 }

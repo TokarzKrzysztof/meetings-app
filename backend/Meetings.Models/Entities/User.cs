@@ -25,7 +25,7 @@ namespace Meetings.Models.Entities
         public Gender Gender { get; set; }
     }
 
-    public class UserResource
+    public class UserDTO
     {
         public Guid Id { get; set; }
         public string Email { get; set; }
@@ -35,20 +35,5 @@ namespace Meetings.Models.Entities
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
-    }
-
-
-    public class UserValidator : AbstractValidator<UserResource>
-    {
-        public UserValidator()
-        {
-            RuleFor(x => x.Email).EmailAddress(EmailValidationMode.Net4xRegex).WithErrorCode("EmailIncorrect");
-            RuleFor(x => x.Password).Equal(x => x.PasswordRepeat).WithErrorCode("PasswordsNotMatch");
-            RuleFor(x => x.Password).MinimumLength(5).WithErrorCode("PasswordTooShort");
-            RuleFor(x => x.FirstName).NotEmpty().WithErrorCode("FirstNameEmpty");
-            RuleFor(x => x.LastName).NotEmpty().WithErrorCode("LastNameEmpty");
-            RuleFor(x => x.BirthDate).LessThan(DateTime.UtcNow).WithErrorCode("BirthDateIncorrect");
-            RuleFor(x => x.Gender).IsInEnum().WithErrorCode("GenderIncorrect");
-        }
     }
 }

@@ -2,6 +2,8 @@
 using FluentValidation;
 using Meetings.Authentication;
 using Meetings.Database.Repositories;
+using Meetings.EmailSender;
+using Meetings.EmailTemplates.Views;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Meetings.Utils;
@@ -18,15 +20,17 @@ namespace Meetings.Infrastructure.Services
     public class AuthService
     {
         private readonly ITokenGenerator _tokenGenerator;
-        private readonly IValidator<UserResource> _validator;
         private readonly IRepository<User> _repository;
+        private readonly IRepository<TempData> _tempDataRepository;
         private readonly IMapper _mapper;
-        public AuthService(ITokenGenerator tokenGenerator, IValidator<UserResource> validator, IRepository<User> repository, IMapper mapper)
+        private readonly IEmailSender _emailSender;
+        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository)
         {
             _tokenGenerator = tokenGenerator;
-            _validator = validator;
             _repository = repository;
             _mapper = mapper;
+            _emailSender = emailSender;
+            _tempDataRepository = tempDataRepository;
         }
 
         public async Task<string> Login(LoginCredentials data)
@@ -40,14 +44,20 @@ namespace Meetings.Infrastructure.Services
             return _tokenGenerator.GenerateToken(user);
         }
 
-        public async Task Register(UserResource data)
-        {
-            var results = _validator.Validate(data);
-            if (!results.IsValid) throw new AppValidationException(results);
-
+        public async Task Register(UserDTO data, string appUrl)
+        {         
             data.Password = Hasher.Hash(data.Password);
 
-            await _repository.Create(_mapper.Map(data, new User()));
+            var user = await _repository.Create(_mapper.Map(data, new User()));
+            var tempData = await _tempDataRepository.Create(new TempData(user.Id.ToString()));
+
+            EmailData emailData = new EmailData(
+                new EmailReceiver(user.Email, $"{user.FirstName} {user.LastName}"),
+                "Aktywacja konta",
+                "ConfirmAccount",
+                new ConfirmAccountModel(user.FirstName, $"{appUrl}/api/Email/ConfirmAccount?tempId={tempData.Id}")
+            );
+            _emailSender.Send(emailData);
         }
 
         public async Task<User> TryGetUserByEmail(string email)

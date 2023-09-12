@@ -5,14 +5,18 @@ using RazorHtmlEmails.RazorClassLib.Services;
 namespace Meetings.EmailSender
 {
     public record EmailReceiver(string Email, string Name);
-    public record EmailData(List<EmailReceiver> Receivers, string Subject, string TemplateName, object? Model);
+    public record EmailData(List<EmailReceiver> Receivers, string Subject, string TemplateName, object? Model)
+    {
+        public EmailData(EmailReceiver Receiver, string Subject, string TemplateName, object? Model) :
+            this(new List<EmailReceiver>() { Receiver }, Subject, TemplateName, Model) { }
+    };
 
     public interface IEmailSender
     {
         Task Send(EmailData data);
     }
 
-    internal class EmailSender: IEmailSender
+    internal class EmailSender : IEmailSender
     {
         private readonly IRazorViewToStringRenderer _razorViewToStringRenderer;
         public EmailSender(IRazorViewToStringRenderer razorViewToStringRenderer)
