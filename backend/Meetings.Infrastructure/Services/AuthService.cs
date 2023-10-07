@@ -57,6 +57,8 @@ namespace Meetings.Infrastructure.Services
                 "ConfirmAccount",
                 new ConfirmAccountModel(user.FirstName, $"{appUrl}/api/Email/ConfirmAccount?tempId={tempData.Id}")
             );
+
+            // non blocking action
             _emailSender.Send(emailData);
         }
 

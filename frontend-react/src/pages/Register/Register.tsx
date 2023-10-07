@@ -11,11 +11,15 @@ import { Header } from 'src/components/Header/Header';
 import { User, UserGender } from 'src/models/user';
 import { RegisterPasswords } from 'src/pages/Register/RegisterPasswords/RegisterPasswords';
 import { useAuthRegister } from 'src/queries/auth-queries';
-import { Button } from 'src/ui-components';
+import { Button, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 import { Validators } from 'src/utils/helpers/validators';
+
+export async function loader() {
+  return null;
+}
 
 const genderOptions = [
   {
@@ -27,10 +31,6 @@ const genderOptions = [
     label: 'kobieta',
   },
 ];
-
-export async function loader() {
-  return null;
-}
 
 export const Register = () => {
   const form = useForm<User>();
@@ -100,6 +100,11 @@ export const Register = () => {
             options: genderOptions,
           }}
         ></ControlledFormField>
+        {registerUserError?.validationErrors.includes('EmailTaken') && (
+          <Typography color={'error'}>
+            Użytkownik z podanym adresem email już istnieje
+          </Typography>
+        )}
         <AuthButton disabled={registerUserInProgress}>
           Zarejestruj się
         </AuthButton>

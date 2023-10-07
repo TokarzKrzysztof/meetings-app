@@ -13,13 +13,16 @@ namespace Meetings.Infrastructure.Services
     public class UserService
     {
         private readonly IRepository<User> _repository;
-        private readonly IValidator<UserDTO> _validator;
         private readonly IMapper _mapper;
-        public UserService(IRepository<User> repository, IValidator<UserDTO> validator, IMapper mapper)
+        public UserService(IRepository<User> repository, IMapper mapper)
         {
             _repository = repository;
-            _validator = validator;
             _mapper = mapper;
+        }
+
+        public Task<bool> IsEmailTaken(string email)
+        {
+            return _repository.Data.AnyAsync(x => x.Email == email);
         }
     }
 }

@@ -16,5 +16,12 @@ namespace Meetings.EmailTemplates.Controllers
         {
             _userService = userService;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> IsEmailTaken([FromQuery] string email)
+        {
+            bool result = await _userService.IsEmailTaken(email);
+            return Ok(result);
+        }
     }
 }
