@@ -1,8 +1,8 @@
-﻿using Meetings.Utils;
+﻿using FluentValidation;
+using Meetings.Utils;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -30,10 +30,10 @@ namespace Meetings.ErrorHandlingMiddleware
             {
                 var response = context.Response;
                 List<string> validationErrors = new List<string>();
-                if (ex.GetType() == typeof(AppValidationException))
+                if (ex.GetType() == typeof(ValidationException))
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    validationErrors = ((AppValidationException)ex).Errors;
+                    validationErrors = ((ValidationException)ex).Errors.Select(x => x.ErrorCode).ToList();
                 }       
                 else if (ex.GetType() == typeof(UnauthorizedAccessException))
                 {

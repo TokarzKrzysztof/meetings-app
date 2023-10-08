@@ -28,7 +28,7 @@ const genderOptions = [
   },
   {
     value: UserGender.Female,
-    label: 'kobieta',
+    label: 'Kobieta',
   },
 ];
 

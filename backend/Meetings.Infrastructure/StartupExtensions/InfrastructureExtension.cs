@@ -20,7 +20,8 @@ namespace Meetings.Infrastructure.StartupExtensions
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddAutoMapper(typeof(MapperProfile));
-            builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
+
+            builder.Services.AddScoped<UserValidator>();
         }
     }
 }
