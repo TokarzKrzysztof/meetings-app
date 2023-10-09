@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/pl';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { SnackbarProvider } from 'notistack';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Outlet } from 'react-router-dom';
 
@@ -15,7 +16,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='pl'>
-        <Outlet />
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+        >
+          <Outlet />
+        </SnackbarProvider>
       </LocalizationProvider>
     </QueryClientProvider>
   );

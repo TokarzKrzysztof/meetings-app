@@ -32,14 +32,14 @@ namespace Meetings.EmailTemplates.Controllers
         public async Task<IActionResult> Register([FromBody] UserDTO data)
         {
             await _userValidator.WhenCreate(data);
-            Guid tempDataId = await _authService.Register(data, GetAppUrl());
-            return Ok(tempDataId);
+            await _authService.Register(data, GetAppUrl());
+            return Ok(data.Email);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ResendActivationLink([FromQuery] Guid tempDataId)
+        public async Task<IActionResult> ResendActivationLink([FromQuery] string email)
         {
-            await _authService.ResendActivationLink(tempDataId, GetAppUrl());
+            await _authService.ResendActivationLink(email, GetAppUrl());
             return Ok();
         }
 

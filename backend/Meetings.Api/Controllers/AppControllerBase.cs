@@ -7,6 +7,10 @@ namespace Meetings.Api.Controllers
         protected string GetAppUrl()
         {
             return $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
+        } 
+        protected string GetClientUrl()
+        {
+            return "http://localhost:3000";
         }
     }
 }

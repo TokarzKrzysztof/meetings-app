@@ -41,7 +41,7 @@ export const useAuthRegister = (
   });
 
   return {
-    registerUser: mutation.mutateAsync,
+    registerUser: mutation.mutate,
     registerUserResult: mutation.data,
     registerUserError: mutation.error?.response?.data,
     registerUserInProgress: mutation.isLoading,
@@ -54,8 +54,8 @@ export const useAuthResendActivationLink = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, string>
 ) => {
   const mutation = useMutation({
-    mutationFn: (tempDataId) => {
-      const params = { tempDataId };
+    mutationFn: (email) => {
+      const params = { email };
       return axios
         .post(`${baseUrl}/ResendActivationLink`, null, { params })
         .then((res) => res.data);
@@ -64,7 +64,7 @@ export const useAuthResendActivationLink = (
   });
 
   return {
-    resendActivationLink: mutation.mutateAsync,
+    resendActivationLink: mutation.mutate,
     resendActivationLinkInProgress: mutation.isLoading,
   };
 };
@@ -84,7 +84,7 @@ export const useAuthLogin = (
   });
 
   return {
-    login: mutation.mutateAsync,
+    login: mutation.mutate,
     loginResult: mutation.data,
     loginError: mutation.error?.response?.data,
     loginInProgress: mutation.isLoading,

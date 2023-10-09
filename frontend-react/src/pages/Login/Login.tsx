@@ -1,3 +1,5 @@
+import { useSnackbar } from 'notistack';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthButton } from 'src/components/AuthButton/AuthButton';
@@ -9,7 +11,10 @@ import { ControlledFormField } from 'src/components/ControlledFormField/Controll
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { LoginCredentials } from 'src/models/login-credentials';
-import { useAuthLogin } from 'src/queries/auth-queries';
+import {
+  useAuthLogin,
+  useAuthResendActivationLink,
+} from 'src/queries/auth-queries';
 import { Box, Button, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { LocalStorage } from 'src/utils/helpers/local-storage';
@@ -37,20 +42,40 @@ export const Login = () => {
   const { register, handleSubmit, control, reset, getValues } = form;
   const navigate = useNavigate();
   const { login, loginError, loginInProgress, loginReset } = useAuthLogin();
+  const { resendActivationLink } = useAuthResendActivationLink();
+  const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit = (data: FormData) => {
-    login(data).then((result) => {
-      LocalStorage.setValue('token', result);
-      const { email, password, rememberCredentials } = getValues();
-      if (rememberCredentials) {
-        LocalStorage.setObjectValue('login-credentials', { email, password });
-      } else {
-        LocalStorage.clearValue('login-credentials');
-      }
-
-      navigate(AppRoutes.Home);
-    });
+    login(data, {
+      onSuccess: (result) => {
+        LocalStorage.setValue('token', result);
+        const { email, password, rememberCredentials } = getValues();
+        if (rememberCredentials) {
+          LocalStorage.setObjectValue('login-credentials', { email, password });
+        } else {
+          LocalStorage.clearValue('login-credentials');
+        }
+  
+        navigate(AppRoutes.Home);
+      },
+      onError: (err) => {
+        if (err.response?.data.statusCode === 403) {
+          resendActivationLink(getValues('email'));
+        }
+      },
+    })
   };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('isFromActivation')) {
+      enqueueSnackbar({
+        variant: 'success',
+        message:
+          'Twoje konto zostało pomyślnie aktywowane, możesz się teraz zalogować',
+      });
+    }
+  }, []);
 
   return (
     <>
@@ -96,6 +121,13 @@ export const Login = () => {
         {loginError?.statusCode === 401 && (
           <Typography color={'error'}>
             Email i/lub hasło są nieprawidłowe
+          </Typography>
+        )}
+        {loginError?.statusCode === 403 && (
+          <Typography color={'error'}>
+            Twoje konto nie zostało jeszcze aktywowane. Na adres email podany
+            przy rejestracji wysłaliśmy ponownie instrukcję dotyczącą aktywacji
+            konta.
           </Typography>
         )}
         <AuthButton disabled={loginInProgress}>Zaloguj</AuthButton>

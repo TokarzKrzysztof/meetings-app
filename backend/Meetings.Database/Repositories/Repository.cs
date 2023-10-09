@@ -11,6 +11,9 @@ namespace Meetings.Database.Repositories
         Task<TEntity> Create(TEntity entity);
         Task<TEntity?> GetById(Guid id);
         Task Remove(Guid id);
+        Task Remove(TEntity entity);
+        Task RemovePermanently(Guid id);
+        Task RemovePermanently(TEntity entity);
         Task Update(TEntity entity);
     }
 
@@ -40,8 +43,25 @@ namespace Meetings.Database.Repositories
         public async Task Remove(Guid id)
         {
             TEntity item = await Data.SingleAsync(x => x.Id == id);
-            item.IsDelete = true;
-            _db.Update(item);
+            await Remove(item);
+        }
+        
+        public async Task Remove(TEntity entity)
+        {
+            entity.IsDelete = true;
+            _db.Update(entity);
+            await _db.SaveChangesAsync();
+        }
+        
+        public async Task RemovePermanently(Guid id)
+        {
+            TEntity item = await Data.SingleAsync(x => x.Id == id);
+            await RemovePermanently(item);
+        }    
+        
+        public async Task RemovePermanently(TEntity entity)
+        {
+            _db.Remove(entity);
             await _db.SaveChangesAsync();
         }
 

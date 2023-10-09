@@ -1,4 +1,5 @@
 ﻿using Meetings.Infrastructure.Helpers;
+using Meetings.Infrastructure.Services;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,16 +10,17 @@ namespace Meetings.Api.Controllers
     [ApiController]
     public class EmailController : AppControllerBase
     {
-        public EmailController()
+        private readonly UserService _userService;
+        public EmailController(UserService userService)
         {
+            _userService = userService;
         }
 
         [HttpGet]
-        public IActionResult ConfirmAccount([FromQuery] string tempId)
+        public async Task<IActionResult> ConfirmAccount([FromQuery] Guid tempId)
         {
-            return Ok();
-            //return Redirect("http://localhost:3000/Login?isFromActivation=true");
-            //return Ok(CategoriesGenerator.AllCategories);
+            await _userService.ConfirmAccount(tempId);
+            return Redirect($"{GetClientUrl()}/Login?isFromActivation=true");
         }
     }
 }

@@ -38,6 +38,10 @@ namespace Meetings.ErrorHandlingMiddleware
                 else if (ex.GetType() == typeof(UnauthorizedAccessException))
                 {
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    if (ex.Message == "UserNotActive")
+                    {
+                        response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    }
                 }
                 else
                 {

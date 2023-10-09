@@ -14,10 +14,23 @@ namespace Meetings.Infrastructure.Services
     {
         private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
-        public UserService(IRepository<User> repository, IMapper mapper)
+        private readonly IRepository<TempData> _tempDataRepository;
+        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository)
         {
             _repository = repository;
             _mapper = mapper;
+            _tempDataRepository = tempDataRepository;
+        }
+
+        public async Task ConfirmAccount(Guid tempId)
+        {
+            var tempData = await _tempDataRepository.GetById(tempId);
+            var user = await _repository.GetById(new Guid(tempData.Data));
+
+            user.IsActive = true;
+
+            await _repository.Update(user);
+            await _tempDataRepository.RemovePermanently(tempData);
         }
 
         public Task<bool> IsEmailTaken(string email)

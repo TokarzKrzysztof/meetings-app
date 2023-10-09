@@ -40,11 +40,15 @@ namespace Meetings.Infrastructure.Services
             {
                 throw new UnauthorizedAccessException();
             }
-
+            if (!user.IsActive)
+            {
+                throw new UnauthorizedAccessException("UserNotActive");
+            }
+            
             return _tokenGenerator.GenerateToken(user);
         }
 
-        public async Task<Guid> Register(UserDTO data, string appUrl)
+        public async Task Register(UserDTO data, string appUrl)
         {         
             data.Password = Hasher.Hash(data.Password);
 
@@ -52,14 +56,12 @@ namespace Meetings.Infrastructure.Services
             var tempData = await _tempDataRepository.Create(new TempData(user.Id.ToString()));
 
             SendUserActivationLink(user, appUrl, tempData);
-
-            return tempData.Id;
         }
 
-        public async Task ResendActivationLink(Guid tempDataId, string appUrl)
+        public async Task ResendActivationLink(string email, string appUrl)
         {
-            var tempData = await _tempDataRepository.GetById(tempDataId);
-            var user = await _repository.GetById(new Guid(tempData.Data));
+            var user = await _repository.Data.SingleAsync(x => x.Email == email);
+            var tempData = await _tempDataRepository.Data.SingleAsync(x => x.Data == user.Id.ToString());
 
             SendUserActivationLink(user, appUrl, tempData);
         }

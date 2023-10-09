@@ -35,17 +35,17 @@ const genderOptions = [
 
 export const Register = () => {
   const form = useForm<User>();
-  const { register, handleSubmit, control } = form;
+  const { register, handleSubmit, control, getValues } = form;
   const {
     registerUser,
     registerUserError,
     registerUserReset,
-    registerUserResult,
     registerUserInProgress,
+    registerUserResult,
   } = useAuthRegister();
 
   if (registerUserResult) {
-    return <RegisterSuccess tempDataId={registerUserResult} />;
+    return <RegisterSuccess email={registerUserResult} />;
   }
 
   return (
