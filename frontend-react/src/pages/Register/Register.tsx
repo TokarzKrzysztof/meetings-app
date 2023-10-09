@@ -45,7 +45,7 @@ export const Register = () => {
   } = useAuthRegister();
 
   if (registerUserResult) {
-    return <RegisterSuccess userId={registerUserResult} />;
+    return <RegisterSuccess tempDataId={registerUserResult} />;
   }
 
   return (

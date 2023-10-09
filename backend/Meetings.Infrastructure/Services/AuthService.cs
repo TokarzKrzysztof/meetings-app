@@ -53,13 +53,13 @@ namespace Meetings.Infrastructure.Services
 
             SendUserActivationLink(user, appUrl, tempData);
 
-            return user.Id;
+            return tempData.Id;
         }
 
-        public async Task ResendActivationLink(Guid userId, string appUrl)
+        public async Task ResendActivationLink(Guid tempDataId, string appUrl)
         {
-            var tempData = await _tempDataRepository.Data.SingleAsync(x => x.Data == userId.ToString());
-            var user = await _repository.GetById(userId);
+            var tempData = await _tempDataRepository.GetById(tempDataId);
+            var user = await _repository.GetById(new Guid(tempData.Data));
 
             SendUserActivationLink(user, appUrl, tempData);
         }

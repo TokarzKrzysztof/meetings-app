@@ -54,8 +54,8 @@ export const useAuthResendActivationLink = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, string>
 ) => {
   const mutation = useMutation({
-    mutationFn: (userId) => {
-      const params = { userId };
+    mutationFn: (tempDataId) => {
+      const params = { tempDataId };
       return axios
         .post(`${baseUrl}/ResendActivationLink`, null, { params })
         .then((res) => res.data);

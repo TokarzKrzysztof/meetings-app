@@ -25,10 +25,10 @@ const StyledCheckIconWrapper = styled(Box)(({ theme }) => {
 });
 
 export type RegisterSuccessProps = {
-  userId: string;
+  tempDataId: string;
 };
 
-export const RegisterSuccess = ({ userId }: RegisterSuccessProps) => {
+export const RegisterSuccess = ({ tempDataId }: RegisterSuccessProps) => {
   const { resendActivationLink, resendActivationLinkInProgress } =
     useAuthResendActivationLink();
 
@@ -63,7 +63,7 @@ export const RegisterSuccess = ({ userId }: RegisterSuccessProps) => {
             <Button
               variant='text'
               disabled={resendActivationLinkInProgress}
-              onClick={() => resendActivationLink(userId)}
+              onClick={() => resendActivationLink(tempDataId)}
             >
               Wyślij ponownie
             </Button>
