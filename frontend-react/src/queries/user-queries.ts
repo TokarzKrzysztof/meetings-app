@@ -9,8 +9,8 @@ export const useUserIsEmailTaken = (
   options?: UseMutationOptions<boolean, AxiosError<HttpErrorData>, string>
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => {
-      const params = { email: data };
+    mutationFn: (email) => {
+      const params = { email };
       return axios
         .get(`${baseUrl}/IsEmailTaken`, { params })
         .then((res) => res.data);

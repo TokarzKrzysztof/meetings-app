@@ -36,8 +36,10 @@ export const Login = () => {
   });
   const { register, handleSubmit, control, reset, getValues } = form;
   const navigate = useNavigate();
-  const { login, loginError, loginInProgress, loginReset } = useAuthLogin({
-    onSuccess: (result) => {
+  const { login, loginError, loginInProgress, loginReset } = useAuthLogin();
+
+  const onSubmit = (data: FormData) => {
+    login(data).then((result) => {
       LocalStorage.setValue('token', result);
       const { email, password, rememberCredentials } = getValues();
       if (rememberCredentials) {
@@ -47,14 +49,14 @@ export const Login = () => {
       }
 
       navigate(AppRoutes.Home);
-    },
-  });
+    });
+  };
 
   return (
     <>
       <Header leftSlot={<AuthGoBackBtn />} />
       <AuthForm
-        onSubmit={handleSubmit((data: FormData) => login(data))}
+        onSubmit={handleSubmit(onSubmit)}
         onChange={() => loginError && loginReset()}
       >
         <AuthIcon iconName='account_circle'></AuthIcon>

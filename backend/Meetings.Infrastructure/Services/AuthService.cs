@@ -44,13 +44,33 @@ namespace Meetings.Infrastructure.Services
             return _tokenGenerator.GenerateToken(user);
         }
 
-        public async Task Register(UserDTO data, string appUrl)
+        public async Task<Guid> Register(UserDTO data, string appUrl)
         {         
             data.Password = Hasher.Hash(data.Password);
 
             var user = await _repository.Create(_mapper.Map(data, new User()));
             var tempData = await _tempDataRepository.Create(new TempData(user.Id.ToString()));
 
+            SendUserActivationLink(user, appUrl, tempData);
+
+            return user.Id;
+        }
+
+        public async Task ResendActivationLink(Guid userId, string appUrl)
+        {
+            var tempData = await _tempDataRepository.Data.SingleAsync(x => x.Data == userId.ToString());
+            var user = await _repository.GetById(userId);
+
+            SendUserActivationLink(user, appUrl, tempData);
+        }
+
+        public async Task<User> TryGetUserByEmail(string email)
+        {
+            return await _repository.Data.SingleOrDefaultAsync(x => x.Email == email);
+        }
+
+        private void SendUserActivationLink(User user, string appUrl, TempData tempData)
+        {
             EmailData emailData = new EmailData(
                 new EmailReceiver(user.Email, $"{user.FirstName} {user.LastName}"),
                 "Aktywacja konta",
@@ -60,11 +80,6 @@ namespace Meetings.Infrastructure.Services
 
             // non blocking action
             _emailSender.Send(emailData);
-        }
-
-        public async Task<User> TryGetUserByEmail(string email)
-        {
-            return await _repository.Data.SingleOrDefaultAsync(x => x.Email == email);
         }
     }
 }

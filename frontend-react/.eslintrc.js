@@ -14,7 +14,8 @@ module.exports = {
     'react/react-in-jsx-scope': ['off'],
     '@typescript-eslint/no-empty-function': ['warn'],
     '@typescript-eslint/ban-types': ['warn'],
-    'no-debugger': ['warn']
+    'no-debugger': ['warn'],
+    'no-constant-condition': ['warn']
   },
   ignorePatterns: ['src/**/*.test.ts', 'src/frontend/generated/*'],
 };

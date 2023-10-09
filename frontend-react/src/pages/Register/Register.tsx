@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AuthButton } from 'src/components/AuthButton/AuthButton';
 import { AuthForm } from 'src/components/AuthForm/AuthForm';
 import { AuthGoBackBtn } from 'src/components/AuthGoBackBtn/AuthGoBackBtn';
@@ -10,6 +10,7 @@ import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { User, UserGender } from 'src/models/user';
 import { RegisterPasswords } from 'src/pages/Register/RegisterPasswords/RegisterPasswords';
+import { RegisterSuccess } from 'src/pages/Register/RegisterSuccess/RegisterSuccess';
 import { useAuthRegister } from 'src/queries/auth-queries';
 import { Button, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -35,21 +36,23 @@ const genderOptions = [
 export const Register = () => {
   const form = useForm<User>();
   const { register, handleSubmit, control } = form;
-  const navigate = useNavigate();
   const {
     registerUser,
     registerUserError,
     registerUserReset,
+    registerUserResult,
     registerUserInProgress,
-  } = useAuthRegister({
-    onSuccess: () => navigate(AppRoutes.Login),
-  });
+  } = useAuthRegister();
+
+  if (registerUserResult) {
+    return <RegisterSuccess userId={registerUserResult} />;
+  }
 
   return (
     <>
       <Header leftSlot={<AuthGoBackBtn />} />
       <AuthForm
-        onSubmit={handleSubmit((data) => registerUser(data))}
+        onSubmit={handleSubmit((data: User) => registerUser(data))}
         onChange={() => registerUserError && registerUserReset()}
       >
         <AuthIcon iconName={'person_add'}></AuthIcon>

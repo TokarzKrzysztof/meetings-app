@@ -13,7 +13,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/Auth`;
 
 export const useAuthGetPasswordMinLength = (
-  options?: UseQueryOptions<number, AxiosError<HttpErrorData, any>>
+  options?: UseQueryOptions<number, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
     queryKey: 'GetPasswordMinLength',
@@ -31,7 +31,7 @@ export const useAuthGetPasswordMinLength = (
 };
 
 export const useAuthRegister = (
-  options?: UseMutationOptions<unknown, AxiosError<HttpErrorData>, User>
+  options?: UseMutationOptions<string, AxiosError<HttpErrorData>, User>
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => {
@@ -41,11 +41,31 @@ export const useAuthRegister = (
   });
 
   return {
-    registerUser: mutation.mutate,
+    registerUser: mutation.mutateAsync,
     registerUserResult: mutation.data,
     registerUserError: mutation.error?.response?.data,
     registerUserInProgress: mutation.isLoading,
+    registerUserSuccess: mutation.isSuccess,
     registerUserReset: mutation.reset,
+  };
+};
+
+export const useAuthResendActivationLink = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, string>
+) => {
+  const mutation = useMutation({
+    mutationFn: (userId) => {
+      const params = { userId };
+      return axios
+        .post(`${baseUrl}/ResendActivationLink`, null, { params })
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    resendActivationLink: mutation.mutateAsync,
+    resendActivationLinkInProgress: mutation.isLoading,
   };
 };
 
@@ -64,7 +84,7 @@ export const useAuthLogin = (
   });
 
   return {
-    login: mutation.mutate,
+    login: mutation.mutateAsync,
     loginResult: mutation.data,
     loginError: mutation.error?.response?.data,
     loginInProgress: mutation.isLoading,
