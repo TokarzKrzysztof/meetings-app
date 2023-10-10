@@ -20,7 +20,13 @@ namespace Meetings.Api.Controllers
         public async Task<IActionResult> ConfirmAccount([FromQuery] Guid tempId)
         {
             await _userService.ConfirmAccount(tempId);
-            return Redirect($"{GetClientUrl()}/Login?isFromActivation=true");
+            return Redirect($"{GetClientUrl()}/login?isFromActivation=true");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword([FromQuery] Guid tempId)
+        {
+            return Redirect($"{GetClientUrl()}/reset-password?tempId={tempId}");
         }
     }
 }

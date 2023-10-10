@@ -92,8 +92,35 @@ export const useAuthLogin = (
   };
 };
 
-export const useAuthResetPassword = (
+export const useAuthSendForgotPasswordEmail = (
   options?: UseMutationOptions<unknown, AxiosError<HttpErrorData>, string>
+) => {
+  const mutation = useMutation({
+    mutationFn: (email) => {
+      const params = { email };
+      return axios
+        .post(`${baseUrl}/SendForgotPasswordEmail`, null, { params })
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    sendForgotPasswordEmail: mutation.mutate,
+    sendForgotPasswordEmailSuccess: mutation.isSuccess,
+    sendForgotPasswordEmailResult: mutation.data,
+    sendForgotPasswordEmailError: mutation.error?.response?.data,
+    sendForgotPasswordEmailInProgress: mutation.isLoading,
+    sendForgotPasswordEmailReset: mutation.reset,
+  };
+};
+
+export const useAuthResetPassword = (
+  options?: UseMutationOptions<
+    unknown,
+    AxiosError<HttpErrorData>,
+    { tempId: string; newPassword: string }
+  >
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => {

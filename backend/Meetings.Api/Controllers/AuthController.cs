@@ -48,5 +48,19 @@ namespace Meetings.EmailTemplates.Controllers
         {
             return Ok(5);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SendForgotPasswordEmail([FromQuery] string email)
+        {
+            await _authService.SendForgotPasswordEmail(email, GetAppUrl());
+            return Ok();
+        }  
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordData data)
+        {
+            await _authService.ResetPassword(data);
+            return Ok();
+        }
     }
 }

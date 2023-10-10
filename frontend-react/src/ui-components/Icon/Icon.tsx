@@ -18,7 +18,8 @@ export type IconProps<
     | 'visibility_off'
     | 'person_add'
     | 'email'
-    | 'check';
+    | 'check'
+    | 'key';
 };
 
 export const Icon = <

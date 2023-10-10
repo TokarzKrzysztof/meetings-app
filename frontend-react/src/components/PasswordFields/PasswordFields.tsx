@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { FormField } from 'src/components/FormField/FormField';
-import { User } from 'src/models/user';
 import { useAuthGetPasswordMinLength } from 'src/queries/auth-queries';
 import { Icon, IconButton, InputAdornment } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 
-export type RegisterPasswordsProps = {
-  form: UseFormReturn<User, any, undefined>;
+export type PasswordFieldsFormData = {
+  password: string;
+  passwordRepeat: string;
 };
 
-export const RegisterPasswords = ({ form }: RegisterPasswordsProps) => {
+export type PasswordFieldsProps = {
+  form: UseFormReturn<PasswordFieldsFormData, any, undefined>;
+  labels: [string, string];
+};
+
+export const PasswordFields = ({ form, labels }: PasswordFieldsProps) => {
   const {
     register,
     getValues,
@@ -46,7 +51,7 @@ export const RegisterPasswords = ({ form }: RegisterPasswordsProps) => {
     <>
       <FormField
         form={form}
-        label={'Hasło'}
+        label={labels[0]}
         InputProps={{
           endAdornment: visibilityButton,
         }}
@@ -66,7 +71,7 @@ export const RegisterPasswords = ({ form }: RegisterPasswordsProps) => {
       ></FormField>
       <FormField
         form={form}
-        label={'Powtórz hasło'}
+        label={labels[1]}
         InputProps={{
           endAdornment: visibilityButton,
         }}

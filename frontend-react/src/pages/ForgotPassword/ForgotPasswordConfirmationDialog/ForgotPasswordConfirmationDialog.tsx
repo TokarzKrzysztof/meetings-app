@@ -1,24 +1,24 @@
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
 } from 'src/ui-components';
 
-export type RemindPasswordConfirmationDialogProps = {
+export type ForgotPasswordConfirmationDialogProps = {
   show: boolean;
   onRetry: () => void;
   onClose: () => void;
-  resetPasswordInProgress: boolean;
+  inProgress: boolean;
 };
 
-export const RemindPasswordConfirmationDialog = ({
+export const ForgotPasswordConfirmationDialog = ({
   show,
   onRetry,
   onClose,
-  resetPasswordInProgress,
-}: RemindPasswordConfirmationDialogProps) => {
+  inProgress,
+}: ForgotPasswordConfirmationDialogProps) => {
   return (
     <Dialog open={show}>
       <DialogContent>
@@ -28,7 +28,7 @@ export const RemindPasswordConfirmationDialog = ({
         </DialogContentText>
         <DialogContentText align='center' mt={4}>
           Link nie dotarł?
-          <Button onClick={onRetry} disabled={resetPasswordInProgress} variant='text'>
+          <Button onClick={onRetry} disabled={inProgress} variant='text'>
             Wyślij ponownie
           </Button>
         </DialogContentText>

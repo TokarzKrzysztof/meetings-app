@@ -34,10 +34,17 @@ export const router = createBrowserRouter([
         },
       },
       {
-        path: AppRoutes.RemindPassword,
+        path: AppRoutes.ForgotPassword,
         lazy: async () => {
-          const { RemindPassword } = await import('./pages/RemindPassword/RemindPassword');
-          return { Component: RemindPassword };
+          const { ForgotPassword } = await import('./pages/ForgotPassword/ForgotPassword');
+          return { Component: ForgotPassword };
+        },
+      },
+      {
+        path: AppRoutes.ResetPassword,
+        lazy: async () => {
+          const { ResetPassword } = await import('./pages/ResetPassword/ResetPassword');
+          return { Component: ResetPassword };
         },
       },
     ],

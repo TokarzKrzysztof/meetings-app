@@ -66,6 +66,30 @@ namespace Meetings.Infrastructure.Services
             SendUserActivationLink(user, appUrl, tempData);
         }
 
+        public async Task ResetPassword(ResetPasswordData data)
+        {
+            var tempData = await _tempDataRepository.GetById(data.TempId);
+            var user = await _repository.Data.SingleAsync(x => x.Email == tempData.Data);
+
+            user.Password = Hasher.Hash(data.NewPassword);
+
+            await _repository.Update(user);
+        }
+
+        public async Task SendForgotPasswordEmail(string email, string appUrl)
+        {
+            var tempData = await _tempDataRepository.Create(new TempData(email));
+            EmailData emailData = new EmailData(
+               new EmailReceiver(email, email),
+               "Reset hasła",
+               "ResetPassword",
+               new ResetPasswordModel($"{appUrl}/api/Email/ResetPassword?tempId={tempData.Id}")
+           );
+
+            // non blocking action
+            _emailSender.Send(emailData);
+        }
+
         public async Task<User> TryGetUserByEmail(string email)
         {
             return await _repository.Data.SingleOrDefaultAsync(x => x.Email == email);

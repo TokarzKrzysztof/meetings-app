@@ -55,7 +55,7 @@ export const Login = () => {
         } else {
           LocalStorage.clearValue('login-credentials');
         }
-  
+
         navigate(AppRoutes.Home);
       },
       onError: (err) => {
@@ -63,7 +63,7 @@ export const Login = () => {
           resendActivationLink(getValues('email'));
         }
       },
-    })
+    });
   };
 
   useEffect(() => {
@@ -73,6 +73,12 @@ export const Login = () => {
         variant: 'success',
         message:
           'Twoje konto zostało pomyślnie aktywowane, możesz się teraz zalogować',
+      });
+    }
+    if (params.get('isFromResetPassword')) {
+      enqueueSnackbar({
+        variant: 'success',
+        message: 'Twoje hasło zostało zmienione',
       });
     }
   }, []);
@@ -114,7 +120,7 @@ export const Login = () => {
             control={control}
             name={'rememberCredentials'}
           ></ControlledFormField>
-          <Button variant='text' component={Link} to={AppRoutes.RemindPassword}>
+          <Button variant='text' component={Link} to={AppRoutes.ForgotPassword}>
             Zapomniałem hasła
           </Button>
         </Box>
