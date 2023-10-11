@@ -7,6 +7,7 @@ using Meetings.EmailTemplates.Views;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Meetings.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,16 +25,18 @@ namespace Meetings.Infrastructure.Services
         private readonly IRepository<TempData> _tempDataRepository;
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
-        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor)
         {
             _tokenGenerator = tokenGenerator;
             _repository = repository;
             _mapper = mapper;
             _emailSender = emailSender;
             _tempDataRepository = tempDataRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<string> Login(LoginCredentials data)
+        public async Task<UserDTO> Login(LoginCredentials data)
         {
             var user = await TryGetUserByEmail(data.Email);
             if (user == null || !Hasher.Verify(data.Password, user.Password))
@@ -44,12 +47,20 @@ namespace Meetings.Infrastructure.Services
             {
                 throw new UnauthorizedAccessException("UserNotActive");
             }
-            
-            return _tokenGenerator.GenerateToken(user);
+
+            var token = _tokenGenerator.GenerateToken(user);
+            UpdateAuthCookie(token, DateTime.UtcNow.AddDays(7));
+
+            return _mapper.Map<UserDTO>(user);
+        }
+
+        public async Task Logout()
+        {
+            UpdateAuthCookie("", DateTime.UtcNow.AddDays(-1));
         }
 
         public async Task Register(UserDTO data, string appUrl)
-        {         
+        {
             data.Password = Hasher.Hash(data.Password);
 
             var user = await _repository.Create(_mapper.Map(data, new User()));
@@ -106,6 +117,11 @@ namespace Meetings.Infrastructure.Services
 
             // non blocking action
             _emailSender.Send(emailData);
+        }
+
+        private void UpdateAuthCookie(string token, DateTime expires)
+        {
+            _httpContextAccessor.HttpContext.Response.Cookies.Append(CookieList.AccessToken, token, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.None, Secure = true, Expires = expires });
         }
     }
 }

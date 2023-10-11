@@ -6,10 +6,10 @@ export enum UserGender {
 export type User = {
   id: string;
   email: string;
-  password: string;
+  password: string | null;
   firstName: string;
   lastName: string;
   birthDate: string;
-  passwordRepeat: string;
+  passwordRepeat: string | null;
   gender: UserGender;
 };

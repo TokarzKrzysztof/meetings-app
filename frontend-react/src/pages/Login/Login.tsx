@@ -1,3 +1,4 @@
+import { useAtom } from 'jotai';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -7,7 +8,6 @@ import { AuthForm } from 'src/components/AuthForm/AuthForm';
 import { AuthGoBackBtn } from 'src/components/AuthGoBackBtn/AuthGoBackBtn';
 import { AuthIcon } from 'src/components/AuthIcon/AuthIcon';
 import { AuthRedirectInfo } from 'src/components/AuthRedirectInfo/AuthRedirectInfo';
-import { ControlledFormField } from 'src/components/ControlledFormField/ControlledFormField';
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { LoginCredentials } from 'src/models/login-credentials';
@@ -15,9 +15,9 @@ import {
   useAuthLogin,
   useAuthResendActivationLink,
 } from 'src/queries/auth-queries';
-import { Box, Button, Typography } from 'src/ui-components';
+import { currentUserAtom } from 'src/store/store';
+import { Button, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
-import { LocalStorage } from 'src/utils/helpers/local-storage';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 
@@ -25,37 +25,19 @@ export async function loader() {
   return null;
 }
 
-const setDefaultValues = () => {
-  const storedCredentials = LocalStorage.getObjectValue('login-credentials');
-  if (storedCredentials) {
-    return { ...storedCredentials, rememberCredentials: true };
-  }
-  return {};
-};
-
-type FormData = LoginCredentials & { rememberCredentials: boolean };
-
 export const Login = () => {
-  const form = useForm<FormData>({
-    defaultValues: setDefaultValues(),
-  });
-  const { register, handleSubmit, control, reset, getValues } = form;
+  const form = useForm<LoginCredentials>();
+  const { register, handleSubmit, getValues } = form;
   const navigate = useNavigate();
+  const [_, setCurrentUser] = useAtom(currentUserAtom);
   const { login, loginError, loginInProgress, loginReset } = useAuthLogin();
   const { resendActivationLink } = useAuthResendActivationLink();
   const { enqueueSnackbar } = useSnackbar();
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: LoginCredentials) => {
     login(data, {
-      onSuccess: (result) => {
-        LocalStorage.setValue('token', result);
-        const { email, password, rememberCredentials } = getValues();
-        if (rememberCredentials) {
-          LocalStorage.setObjectValue('login-credentials', { email, password });
-        } else {
-          LocalStorage.clearValue('login-credentials');
-        }
-
+      onSuccess: (user) => {
+        setCurrentUser(user);
         navigate(AppRoutes.Home);
       },
       onError: (err) => {
@@ -107,23 +89,19 @@ export const Login = () => {
           label={'Hasło'}
           {...register('password', { required: ValidationMessages.required })}
           type='password'
+          InputProps={{
+            endAdornment: (
+              <Button
+                variant='text'
+                component={Link}
+                sx={{ whiteSpace: 'nowrap', minWidth: 'auto', fontSize: 11 }}
+                to={AppRoutes.ForgotPassword}
+              >
+                Zapomniałem hasła
+              </Button>
+            ),
+          }}
         ></FormField>
-        <Box
-          display={'flex'}
-          justifyContent={'space-between'}
-          flexWrap={'wrap'}
-          alignItems={'center'}
-        >
-          <ControlledFormField
-            element='checkbox'
-            label={'Zapamiętaj mnie'}
-            control={control}
-            name={'rememberCredentials'}
-          ></ControlledFormField>
-          <Button variant='text' component={Link} to={AppRoutes.ForgotPassword}>
-            Zapomniałem hasła
-          </Button>
-        </Box>
         {loginError?.statusCode === 401 && (
           <Typography color={'error'}>
             Email i/lub hasło są nieprawidłowe

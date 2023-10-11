@@ -8,6 +8,7 @@ using Meetings.Infrastructure.StartupExtensions;
 using Meetings.Utils;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using RazorHtmlEmails.RazorClassLib.Services;
 using System.Security.Cryptography;
@@ -26,10 +27,14 @@ builder.Services.AddSwaggerGen();
 //services cors
 builder.Services.AddCors(policyBuilder =>
     policyBuilder.AddDefaultPolicy(policy =>
-        policy.WithOrigins("*").AllowAnyHeader().AllowAnyHeader())
+        policy.WithOrigins("http://localhost:3000")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials())
 );
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 // custom builder extensions
 builder.AddCustomAuthentication();

@@ -1,30 +1,15 @@
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
-import 'dayjs/locale/pl';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
-import { SnackbarProvider } from 'notistack';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { useAtom } from 'jotai';
 import { Outlet } from 'react-router-dom';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-const queryClient = new QueryClient();
+import { useUserGetCurrentUser } from 'src/queries/user-queries';
+import { currentUserAtom } from 'src/store/store';
 
 function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='pl'>
-        <SnackbarProvider
-          maxSnack={3}
-          anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
-        >
-          <Outlet />
-        </SnackbarProvider>
-      </LocalizationProvider>
-    </QueryClientProvider>
-  );
+  const [_, setCurrentUser] = useAtom(currentUserAtom);
+  useUserGetCurrentUser({
+    onSuccess: (user) => setCurrentUser(user),
+  });
+
+  return <Outlet />;
 }
 
 export default App;

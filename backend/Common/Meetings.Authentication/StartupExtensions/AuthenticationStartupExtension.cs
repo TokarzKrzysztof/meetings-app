@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Meetings.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -33,9 +35,20 @@ namespace Meetings.Authentication.StartupExtensions
                     ValidateLifetime = false,
                     ValidateIssuerSigningKey = true
                 };
+                o.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        if (context.Request.Cookies.ContainsKey(CookieList.AccessToken))
+                        {
+                            context.Token = context.Request.Cookies[CookieList.AccessToken];
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             builder.Services.AddAuthorization();
         }
-    }
+}
 }

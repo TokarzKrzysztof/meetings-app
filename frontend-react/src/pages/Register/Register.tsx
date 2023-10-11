@@ -35,7 +35,7 @@ const genderOptions = [
 
 export const Register = () => {
   const form = useForm<User>();
-  const { register, handleSubmit, control, getValues } = form;
+  const { register, handleSubmit, control } = form;
   const {
     registerUser,
     registerUserError,
@@ -79,7 +79,10 @@ export const Register = () => {
           label={'Nazwisko'}
           {...register('lastName', { required: ValidationMessages.required })}
         ></FormField>
-        <PasswordFields form={form as any} labels={['Hasło', 'Powtórz hasło']} />
+        <PasswordFields
+          form={form as any}
+          labels={['Hasło', 'Powtórz hasło']}
+        />
         <ControlledFormField
           control={control}
           element={'date-picker'}

@@ -12,3 +12,10 @@ https://myaccount.google.com/u/3/apppasswords?rapt=AEjHL4OGEZLeLpe2AJ3jCI0Qs4haJ
 
 tworzenie razor class library
 https://scottsauber.com/2018/07/07/walkthrough-creating-an-html-email-template-with-razor-and-razor-class-libraries-and-rendering-it-from-a-net-standard-class-library/
+
+cookies
+https://alimozdemir.medium.com/asp-net-core-jwt-and-refresh-token-with-httponly-cookies-b1b96c849742
+
+TODO
+- sprawdzić czy trzeba pokazywać prompt użytkownikom o używaniu cookie
+- usunąć zapamiętaj mnie checkbox

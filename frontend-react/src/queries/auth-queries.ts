@@ -71,7 +71,7 @@ export const useAuthResendActivationLink = (
 
 export const useAuthLogin = (
   options?: UseMutationOptions<
-    string,
+    User,
     AxiosError<HttpErrorData>,
     LoginCredentials
   >
@@ -89,6 +89,25 @@ export const useAuthLogin = (
     loginError: mutation.error?.response?.data,
     loginInProgress: mutation.isLoading,
     loginReset: mutation.reset,
+  };
+};
+
+export const useAuthLogout = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, void>
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return axios.post(`${baseUrl}/Logout`, data).then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    logout: mutation.mutate,
+    logoutResult: mutation.data,
+    logoutError: mutation.error?.response?.data,
+    logoutInProgress: mutation.isLoading,
+    logoutReset: mutation.reset,
   };
 };
 

@@ -29,12 +29,11 @@ namespace Meetings.Authentication
             {
                 Subject = new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim("id",  user.Id.ToString()),
-                    new Claim("firstName",  user.FirstName),
-                    new Claim("lastName",  user.LastName),
+                    new Claim(UserClaims.Id,  user.Id.ToString()),
+                    new Claim(UserClaims.FirstName,  user.FirstName),
+                    new Claim(UserClaims.LastName,  user.LastName),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 }),
-                //Expires = DateTime.UtcNow.AddMinutes(5),
                 Issuer = issuer,
                 Audience = audience,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)

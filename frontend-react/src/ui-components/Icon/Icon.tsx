@@ -16,10 +16,12 @@ export type IconProps<
     | 'arrow_back'
     | 'visibility'
     | 'visibility_off'
+    | 'person'
     | 'person_add'
     | 'email'
     | 'check'
-    | 'key';
+    | 'key'
+    | 'person_outline';
 };
 
 export const Icon = <
