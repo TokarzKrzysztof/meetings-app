@@ -1,7 +1,15 @@
+import { ThemeProvider, createTheme } from '@mui/material';
+import { deepPurple } from '@mui/material/colors';
 import { useAtom } from 'jotai';
 import { Outlet } from 'react-router-dom';
 import { useUserGetCurrentUser } from 'src/queries/user-queries';
 import { currentUserAtom } from 'src/store/store';
+
+const theme = createTheme({
+  palette: {
+    primary: deepPurple,
+  },
+});
 
 function App() {
   const [_, setCurrentUser] = useAtom(currentUserAtom);
@@ -9,7 +17,11 @@ function App() {
     onSuccess: (user) => setCurrentUser(user),
   });
 
-  return <Outlet />;
+  return (
+    <ThemeProvider theme={theme}>
+      <Outlet />
+    </ThemeProvider>
+  );
 }
 
 export default App;
