@@ -1,7 +1,8 @@
 import { ThemeProvider, createTheme } from '@mui/material';
 import { deepPurple } from '@mui/material/colors';
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { Outlet } from 'react-router-dom';
+import { ConfirmationDialogProvider } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import { useUserGetCurrentUser } from 'src/queries/user-queries';
 import { currentUserAtom } from 'src/store/store';
 
@@ -12,14 +13,16 @@ const theme = createTheme({
 });
 
 function App() {
-  const [_, setCurrentUser] = useAtom(currentUserAtom);
+  const setCurrentUser = useSetAtom(currentUserAtom);
   useUserGetCurrentUser({
     onSuccess: (user) => setCurrentUser(user),
   });
 
   return (
     <ThemeProvider theme={theme}>
-      <Outlet />
+      <ConfirmationDialogProvider>
+        <Outlet />
+      </ConfirmationDialogProvider>
     </ThemeProvider>
   );
 }

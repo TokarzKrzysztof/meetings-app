@@ -1,8 +1,8 @@
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { MouseEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthLogout } from 'src/queries/auth-queries';
-import { currentUserAtom } from 'src/store/store';
+import { confirmationDialogAtom, currentUserAtom } from 'src/store/store';
 import { Box, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
@@ -10,9 +10,9 @@ export type HeaderMenuButtonProps = {};
 
 export const HeaderMenuButton = ({ ...props }: HeaderMenuButtonProps) => {
   const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const confirm = useSetAtom(confirmationDialogAtom);
   const { logout } = useAuthLogout();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
 
   const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -23,9 +23,14 @@ export const HeaderMenuButton = ({ ...props }: HeaderMenuButtonProps) => {
   };
 
   const handleLogout = () => {
-    logout(undefined, {
-      onSuccess: () => {
-        setCurrentUser(null);
+    confirm({
+      message: 'Czy na pewno chcesz się wylogować?',
+      onAccept: () => {
+        logout(undefined, {
+          onSuccess: () => {
+            setCurrentUser(null);
+          },
+        });
       },
     });
   };
@@ -45,9 +50,7 @@ export const HeaderMenuButton = ({ ...props }: HeaderMenuButtonProps) => {
       <MenuItem component={Link} to={AppRoutes.Home}>
         Wiadomości
       </MenuItem>
-      <MenuItem onClick={handleLogout}>
-        Wyloguj się
-      </MenuItem>
+      <MenuItem onClick={handleLogout}>Wyloguj się</MenuItem>
     </>
   ) : (
     <>
@@ -74,7 +77,7 @@ export const HeaderMenuButton = ({ ...props }: HeaderMenuButtonProps) => {
       <Menu
         id='basic-menu'
         anchorEl={anchorEl}
-        open={open}
+        open={!!anchorEl}
         onClose={handleClose}
       >
         <Box onClick={handleClose}>{menuOptions}</Box>
