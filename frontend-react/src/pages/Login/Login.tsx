@@ -1,4 +1,4 @@
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -29,7 +29,7 @@ export const Login = () => {
   const form = useForm<LoginCredentials>();
   const { register, handleSubmit, getValues } = form;
   const navigate = useNavigate();
-  const [_, setCurrentUser] = useAtom(currentUserAtom);
+  const setCurrentUser = useSetAtom(currentUserAtom);
   const { login, loginError, loginInProgress, loginReset } = useAuthLogin();
   const { resendActivationLink } = useAuthResendActivationLink();
   const { enqueueSnackbar } = useSnackbar();
