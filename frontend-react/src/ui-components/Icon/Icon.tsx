@@ -21,7 +21,8 @@ export type IconProps<
     | 'email'
     | 'check'
     | 'key'
-    | 'person_outline';
+    | 'person_outline'
+    | 'question_answer';
 };
 
 export const Icon = <

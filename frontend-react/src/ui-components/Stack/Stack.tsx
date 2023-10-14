@@ -12,5 +12,5 @@ export const Stack = <
   direction = 'row',
   ...props
 }: MuiStackProps<D, { component?: D }> & StackProps) => (
-  <MuiStack {...props}></MuiStack>
+  <MuiStack direction={direction} {...props}></MuiStack>
 );

@@ -1,38 +1,26 @@
-import { useAtom, useSetAtom } from 'jotai';
 import { MouseEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuthLogout } from 'src/queries/auth-queries';
-import { confirmationDialogAtom, currentUserAtom } from 'src/store/store';
+import { User } from 'src/models/user';
 import { Box, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
-export type HeaderMenuButtonProps = {};
+export type HeaderMenuAccountButtonProps = {
+  currentUser: User | null;
+  onLogout: () => void;
+};
 
-export const HeaderMenuButton = ({ ...props }: HeaderMenuButtonProps) => {
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
-  const confirm = useSetAtom(confirmationDialogAtom);
-  const { logout } = useAuthLogout();
+export const HeaderMenuAccountButton = ({
+  currentUser,
+  onLogout,
+}: HeaderMenuAccountButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
+  
   const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    confirm({
-      message: 'Czy na pewno chcesz się wylogować?',
-      onAccept: () => {
-        logout(undefined, {
-          onSuccess: () => {
-            setCurrentUser(null);
-          },
-        });
-      },
-    });
   };
 
   const menuOptions = currentUser ? (
@@ -45,12 +33,12 @@ export const HeaderMenuButton = ({ ...props }: HeaderMenuButtonProps) => {
         Dodaj ogłoszenie
       </MenuItem>
       <MenuItem component={Link} to={AppRoutes.Home}>
-        Moje konto
+        Moje ogłoszenia
       </MenuItem>
       <MenuItem component={Link} to={AppRoutes.Home}>
-        Wiadomości
+        Ustawienia
       </MenuItem>
-      <MenuItem onClick={handleLogout}>Wyloguj się</MenuItem>
+      <MenuItem onClick={onLogout}>Wyloguj się</MenuItem>
     </>
   ) : (
     <>
@@ -65,21 +53,10 @@ export const HeaderMenuButton = ({ ...props }: HeaderMenuButtonProps) => {
 
   return (
     <>
-      <IconButton
-        size='large'
-        slot='end'
-        color='inherit'
-        aria-label='menu'
-        onClick={handleOpen}
-      >
+      <IconButton size='large' slot='end' color='inherit' onClick={handleOpen}>
         <Icon name={'person_outline'} />
       </IconButton>
-      <Menu
-        id='basic-menu'
-        anchorEl={anchorEl}
-        open={!!anchorEl}
-        onClose={handleClose}
-      >
+      <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
         <Box onClick={handleClose}>{menuOptions}</Box>
       </Menu>
     </>

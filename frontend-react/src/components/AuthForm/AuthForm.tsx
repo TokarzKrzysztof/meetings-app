@@ -8,7 +8,7 @@ export type AuthFormProps = PropsWithChildren<{
 
 export const AuthForm = ({ children, onSubmit, onChange }: AuthFormProps) => {
   return (
-    <Container component='form' onSubmit={onSubmit} onChange={onChange}>
+    <Container component='form' onSubmit={onSubmit} onChange={onChange} maxWidth="sm">
       {children}
     </Container>
   );
