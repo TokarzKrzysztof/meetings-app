@@ -36,15 +36,28 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.ForgotPassword,
         lazy: async () => {
-          const { ForgotPassword } = await import('./pages/ForgotPassword/ForgotPassword');
+          const { ForgotPassword } = await import(
+            './pages/ForgotPassword/ForgotPassword'
+          );
           return { Component: ForgotPassword };
         },
       },
       {
         path: AppRoutes.ResetPassword,
         lazy: async () => {
-          const { ResetPassword } = await import('./pages/ResetPassword/ResetPassword');
+          const { ResetPassword } = await import(
+            './pages/ResetPassword/ResetPassword'
+          );
           return { Component: ResetPassword };
+        },
+      },
+      {
+        path: AppRoutes.NewAnnouncement,
+        lazy: async () => {
+          const { NewAnnouncement } = await import(
+            './pages/NewAnnouncement/NewAnnouncement'
+          );
+          return { Component: NewAnnouncement };
         },
       },
     ],

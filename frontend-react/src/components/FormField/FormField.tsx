@@ -4,7 +4,7 @@ import { TextField, TextFieldProps } from 'src/ui-components';
 import { typedForwardRef } from 'src/utils/types/forward-ref';
 
 export type FormFieldProps = Omit<TextFieldProps<'standard'>, 'ref'> & {
-  form: UseFormReturn<any, any, undefined>
+  form: UseFormReturn<any, any, undefined>;
   label: string;
 };
 
@@ -25,7 +25,7 @@ const FormFieldInner = (
       ref={ref}
       name={name}
       error={error ?? !!errors[name!]}
-      helperText={errors[name!]?.message as string ?? ' '}
+      helperText={(errors[name!]?.message as string) ?? ' '}
       {...props}
     ></TextField>
   );

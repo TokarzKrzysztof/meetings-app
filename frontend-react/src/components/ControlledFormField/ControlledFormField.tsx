@@ -6,6 +6,10 @@ import {
   useController,
 } from 'react-hook-form';
 import {
+  AutocompleteField,
+  AutocompleteFieldProps,
+} from 'src/components/ControlledFormField/AutocompleteField/AutocompleteField';
+import {
   CheckboxField,
   CheckboxFieldProps,
 } from 'src/components/ControlledFormField/CheckboxField/CheckboxField';
@@ -43,6 +47,10 @@ export type ControlledFormFieldProps<
       element: 'radio-group';
       ElementProps: RadioGroupFieldProps<TFieldValues, TName>;
     }
+  | {
+      element: 'autocomplete';
+      ElementProps: AutocompleteFieldProps<TFieldValues, TName>;
+    }
 );
 
 export const ControlledFormField = <
@@ -78,6 +86,16 @@ export const ControlledFormField = <
   if (element === 'radio-group') {
     return (
       <RadioGroupField
+        {...ElementProps}
+        controller={controller}
+        label={label}
+      />
+    );
+  }
+
+  if (element === 'autocomplete') {
+    return (
+      <AutocompleteField
         {...ElementProps}
         controller={controller}
         label={label}

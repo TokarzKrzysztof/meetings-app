@@ -4,7 +4,7 @@ import { Category } from 'src/models/category';
 import { apiUrl } from 'src/utils/api-url';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
-const baseUrl = `${apiUrl}/Category`
+const baseUrl = `${apiUrl}/Category`;
 
 export const useCategoryGetAllCategories = (
   options?: UseQueryOptions<Category[], AxiosError<HttpErrorData>>
@@ -13,6 +13,7 @@ export const useCategoryGetAllCategories = (
     queryKey: 'GetAllCategories',
     queryFn: () =>
       axios.get(`${baseUrl}/GetAllCategories`).then((res) => res.data),
+    staleTime: Infinity,
     ...options,
   });
 

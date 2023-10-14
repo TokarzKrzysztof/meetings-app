@@ -27,7 +27,7 @@ export const HeaderMenuAccountButton = ({
     <>
       <MenuItem
         component={Link}
-        to={AppRoutes.Home}
+        to={AppRoutes.NewAnnouncement}
         sx={{ fontWeight: 'bold' }}
       >
         Dodaj ogłoszenie

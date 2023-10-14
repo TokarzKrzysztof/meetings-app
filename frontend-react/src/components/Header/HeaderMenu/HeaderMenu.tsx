@@ -59,11 +59,11 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
         <>
           {isDesktop && (
             <Button
-              sx={{ textTransform: 'uppercase', mr: 2 }}
+              sx={{ mr: 2 }}
               color='inherit'
               variant='outlined'
               component={Link}
-              to={AppRoutes.Register}
+              to={AppRoutes.NewAnnouncement}
             >
               Dodaj ogłoszenie
             </Button>
