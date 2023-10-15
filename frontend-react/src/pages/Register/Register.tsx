@@ -11,7 +11,7 @@ import { Header } from 'src/components/Header/Header';
 import { PasswordFields } from 'src/components/PasswordFields/PasswordFields';
 import { User, UserGender } from 'src/models/user';
 import { RegisterSuccess } from 'src/pages/Register/RegisterSuccess/RegisterSuccess';
-import { useAuthRegister } from 'src/queries/auth-queries';
+import { useRegister } from 'src/queries/auth-queries';
 import { Button, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
@@ -42,7 +42,7 @@ export const Register = () => {
     registerUserReset,
     registerUserInProgress,
     registerUserResult,
-  } = useAuthRegister();
+  } = useRegister();
 
   if (registerUserResult) {
     return <RegisterSuccess email={registerUserResult} />;

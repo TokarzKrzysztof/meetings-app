@@ -12,8 +12,8 @@ import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { LoginCredentials } from 'src/models/login-credentials';
 import {
-  useAuthLogin,
-  useAuthResendActivationLink,
+    useLogin,
+    useResendActivationLink,
 } from 'src/queries/auth-queries';
 import { currentUserAtom } from 'src/store/store';
 import { Button, Typography } from 'src/ui-components';
@@ -30,8 +30,8 @@ export const Login = () => {
   const { register, handleSubmit, getValues } = form;
   const navigate = useNavigate();
   const setCurrentUser = useSetAtom(currentUserAtom);
-  const { login, loginError, loginInProgress, loginReset } = useAuthLogin();
-  const { resendActivationLink } = useAuthResendActivationLink();
+  const { login, loginError, loginInProgress, loginReset } = useLogin();
+  const { resendActivationLink } = useResendActivationLink();
   const { enqueueSnackbar } = useSnackbar();
 
   const onSubmit = (data: LoginCredentials) => {

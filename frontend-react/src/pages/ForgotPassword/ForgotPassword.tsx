@@ -9,7 +9,7 @@ import { AuthRedirectInfo } from 'src/components/AuthRedirectInfo/AuthRedirectIn
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { ForgotPasswordConfirmationDialog } from 'src/pages/ForgotPassword/ForgotPasswordConfirmationDialog/ForgotPasswordConfirmationDialog';
-import { useAuthSendForgotPasswordEmail } from 'src/queries/auth-queries';
+import { useSendForgotPasswordEmail } from 'src/queries/auth-queries';
 import { Button, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
@@ -24,7 +24,7 @@ export const ForgotPassword = () => {
   const { register, handleSubmit, control, getValues } = form;
   const [showDialog, setShowDialog] = useState(false);
   const { sendForgotPasswordEmail, sendForgotPasswordEmailInProgress } =
-    useAuthSendForgotPasswordEmail();
+    useSendForgotPasswordEmail();
 
   const onSubmit = (data: { email: string }) => {
     sendForgotPasswordEmail(data.email, {

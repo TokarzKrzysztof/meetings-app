@@ -2,7 +2,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import { Link } from 'react-router-dom';
 import { HeaderMenuAccountButton } from 'src/components/Header/HeaderMenu/HeaderMenuAccountButton/HeaderMenuAccountButton';
 import { useDeviceMediaQuery } from 'src/hooks/useDeviceMediaQuery';
-import { useAuthLogout } from 'src/queries/auth-queries';
+import { useLogout } from 'src/queries/auth-queries';
 import { confirmationDialogAtom, currentUserAtom } from 'src/store/store';
 import { Button, Icon, IconButton } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -13,7 +13,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
   const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
   const confirm = useSetAtom(confirmationDialogAtom);
   const { isDesktop } = useDeviceMediaQuery();
-  const { logout } = useAuthLogout();
+  const { logout } = useLogout();
 
   const handleLogout = () => {
     confirm({

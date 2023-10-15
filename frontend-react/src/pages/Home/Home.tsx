@@ -1,6 +1,6 @@
 import { Header } from 'src/components/Header/Header';
 import { HomeCategoriesSearch } from 'src/pages/Home/HomeCategoriesSearch/HomeCategoriesSearch';
-import { useCategoryGetAllCategories } from 'src/queries/category-queries';
+import { useGetAllCategories } from 'src/queries/category-queries';
 import { Container, Typography } from 'src/ui-components';
 
 export async function loader() {
@@ -8,7 +8,7 @@ export async function loader() {
 }
 
 export const Home = () => {
-  const { categories } = useCategoryGetAllCategories();
+  const { categories } = useGetAllCategories();
   
   return (
     <>

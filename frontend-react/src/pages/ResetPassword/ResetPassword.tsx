@@ -10,7 +10,7 @@ import {
   PasswordFields,
   PasswordFieldsFormData,
 } from 'src/components/PasswordFields/PasswordFields';
-import { useAuthResetPassword } from 'src/queries/auth-queries';
+import { useResetPassword } from 'src/queries/auth-queries';
 import { Button } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
@@ -21,7 +21,7 @@ export async function loader() {
 export const ResetPassword = () => {
   const form = useForm<PasswordFieldsFormData>();
   const { handleSubmit } = form;
-  const { resetPassword, resetPasswordInProgress } = useAuthResetPassword();
+  const { resetPassword, resetPasswordInProgress } = useResetPassword();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 

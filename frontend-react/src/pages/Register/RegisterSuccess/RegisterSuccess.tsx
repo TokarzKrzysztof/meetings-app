@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { useAuthResendActivationLink } from 'src/queries/auth-queries';
+import { useResendActivationLink } from 'src/queries/auth-queries';
 import {
     Box,
     Button,
@@ -30,7 +30,7 @@ export type RegisterSuccessProps = {
 
 export const RegisterSuccess = ({ email }: RegisterSuccessProps) => {
   const { resendActivationLink, resendActivationLinkInProgress } =
-    useAuthResendActivationLink();
+    useResendActivationLink();
 
   return (
     <Container

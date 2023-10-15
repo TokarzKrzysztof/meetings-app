@@ -11,7 +11,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/User`;
 
-export const useUserIsEmailTaken = (
+export const useIsEmailTaken = (
   options?: UseMutationOptions<boolean, AxiosError<HttpErrorData>, string>
 ) => {
   const mutation = useMutation({
@@ -33,7 +33,7 @@ export const useUserIsEmailTaken = (
   };
 };
 
-export const useUserGetCurrentUser = (
+export const useGetCurrentUser = (
   options?: UseQueryOptions<User | null, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({

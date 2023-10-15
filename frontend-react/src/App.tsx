@@ -3,7 +3,7 @@ import { deepPurple } from '@mui/material/colors';
 import { useSetAtom } from 'jotai';
 import { Outlet } from 'react-router-dom';
 import { ConfirmationDialogProvider } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
-import { useUserGetCurrentUser } from 'src/queries/user-queries';
+import { useGetCurrentUser } from 'src/queries/user-queries';
 import { currentUserAtom } from 'src/store/store';
 
 const theme = createTheme({
@@ -14,7 +14,7 @@ const theme = createTheme({
 
 function App() {
   const setCurrentUser = useSetAtom(currentUserAtom);
-  useUserGetCurrentUser({
+  useGetCurrentUser({
     onSuccess: (user) => setCurrentUser(user),
   });
 

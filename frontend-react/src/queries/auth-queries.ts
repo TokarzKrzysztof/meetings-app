@@ -12,7 +12,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Auth`;
 
-export const useAuthGetPasswordMinLength = (
+export const useGetPasswordMinLength = (
   options?: UseQueryOptions<number, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
@@ -30,7 +30,7 @@ export const useAuthGetPasswordMinLength = (
   };
 };
 
-export const useAuthRegister = (
+export const useRegister = (
   options?: UseMutationOptions<string, AxiosError<HttpErrorData>, User>
 ) => {
   const mutation = useMutation({
@@ -50,7 +50,7 @@ export const useAuthRegister = (
   };
 };
 
-export const useAuthResendActivationLink = (
+export const useResendActivationLink = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, string>
 ) => {
   const mutation = useMutation({
@@ -69,7 +69,7 @@ export const useAuthResendActivationLink = (
   };
 };
 
-export const useAuthLogin = (
+export const useLogin = (
   options?: UseMutationOptions<
     User,
     AxiosError<HttpErrorData>,
@@ -92,7 +92,7 @@ export const useAuthLogin = (
   };
 };
 
-export const useAuthLogout = (
+export const useLogout = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, void>
 ) => {
   const mutation = useMutation({
@@ -111,7 +111,7 @@ export const useAuthLogout = (
   };
 };
 
-export const useAuthSendForgotPasswordEmail = (
+export const useSendForgotPasswordEmail = (
   options?: UseMutationOptions<unknown, AxiosError<HttpErrorData>, string>
 ) => {
   const mutation = useMutation({
@@ -134,7 +134,7 @@ export const useAuthSendForgotPasswordEmail = (
   };
 };
 
-export const useAuthResetPassword = (
+export const useResetPassword = (
   options?: UseMutationOptions<
     unknown,
     AxiosError<HttpErrorData>,

@@ -6,7 +6,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Category`;
 
-export const useCategoryGetAllCategories = (
+export const useGetAllCategories = (
   options?: UseQueryOptions<Category[], AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
