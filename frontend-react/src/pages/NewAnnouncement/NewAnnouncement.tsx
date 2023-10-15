@@ -24,11 +24,11 @@ export async function loader() {
 
 export const NewAnnouncement = () => {
   const form = useForm<FormData>();
-  const { register, control, handleSubmit } = form;
+  const { register, control, handleSubmit, getValues, watch } = form;
   const { categories } = useCategoryGetAllCategories();
 
   const onSubmit = (data: FormData) => {
-    console.log(data)
+    console.log(data);
     // login(data, {
     //   onSuccess: (user) => {
     //     setCurrentUser(user);
@@ -41,7 +41,7 @@ export const NewAnnouncement = () => {
     //   },
     // });
   };
-
+  console.log(getValues());
   return (
     <>
       <Header />
@@ -58,6 +58,7 @@ export const NewAnnouncement = () => {
         >
           Nowe ogłoszenie
         </Typography>
+
         <ControlledFormField
           control={control}
           element={'autocomplete'}
@@ -70,28 +71,19 @@ export const NewAnnouncement = () => {
             optionsAsync: categories,
             getOptionLabel: (opt) => opt.name,
           }}
-        ></ControlledFormField>
-        <Box display={'flex'} justifyContent={'flex-end'}>
-          <Button type='submit'>Dodaj</Button>
-        </Box>
-        {/* <FormField
-          form={form}
-          select
-          label={'Kategoria'}
-          // InputProps={{
-          //   endAdornment: visibilityButton,
-          // }}
-          {...register('categoryId', {
+        />
+        <ControlledFormField
+          control={control}
+          element='textarea'
+          name={'description'}
+          label={'Opis'}
+          rules={{
             required: ValidationMessages.required,
-          })}
-          // validate: (value: string) => {
-          //   if (getValues('password') !== value) {
-          //     return ValidationMessages.passwordsNotMatch;
-          //   }
-          // },
-          // })}
-        ></FormField> */}
-        {/* <HomeCategoriesSearch data={categories}></HomeCategoriesSearch> */}
+          }}
+        />
+        <Box display={'flex'} justifyContent={'flex-end'}>
+          <Button type='submit'>Dodaj ogłoszenie</Button>
+        </Box>
       </Container>
     </>
   );

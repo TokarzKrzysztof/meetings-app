@@ -22,7 +22,8 @@ export type IconProps<
     | 'check'
     | 'key'
     | 'person_outline'
-    | 'question_answer';
+    | 'question_answer'
+    | 'tag_faces';
 };
 
 export const Icon = <

@@ -21,6 +21,10 @@ import {
   RadioGroupField,
   RadioGroupFieldProps,
 } from 'src/components/ControlledFormField/RadioGroupField/RadioGroupField';
+import {
+  TextareaField,
+  TextareaFieldProps,
+} from 'src/components/ControlledFormField/TextareaField/TextareaField';
 
 export type ControlledFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -50,6 +54,10 @@ export type ControlledFormFieldProps<
   | {
       element: 'autocomplete';
       ElementProps: AutocompleteFieldProps<TFieldValues, TName>;
+    }
+  | {
+      element: 'textarea';
+      ElementProps?: TextareaFieldProps;
     }
 );
 
@@ -100,6 +108,12 @@ export const ControlledFormField = <
         controller={controller}
         label={label}
       />
+    );
+  }
+
+  if (element === 'textarea') {
+    return (
+      <TextareaField {...ElementProps} controller={controller} label={label} />
     );
   }
 

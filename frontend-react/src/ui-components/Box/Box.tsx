@@ -1,12 +1,17 @@
 import { default as MuiBox, BoxProps as MuiBoxProps } from '@mui/material/Box';
 import { BoxTypeMap } from '@mui/system';
+import { ForwardedRef } from 'react';
+import { typedForwardRef } from 'src/utils/types/forward-ref';
 
 export type BoxProps<
   D extends React.ElementType = BoxTypeMap['defaultComponent']
 > = MuiBoxProps<D, { component?: D }> & {};
 
-export const Box = <
+export const BoxInner = <
   D extends React.ElementType = BoxTypeMap['defaultComponent']
->({
-  ...props
-}: BoxProps<D>) => <MuiBox {...props}></MuiBox>;
+>(
+  { ...props }: BoxProps<D>,
+  ref: ForwardedRef<HTMLElement>
+) => <MuiBox {...props} ref={ref}></MuiBox>;
+
+export const Box = typedForwardRef(BoxInner);

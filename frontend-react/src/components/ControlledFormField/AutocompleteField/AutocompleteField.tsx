@@ -35,7 +35,7 @@ export const AutocompleteField = <
           {...params}
           variant='standard'
           label={label}
-          ref={field.ref}
+          inputRef={field.ref}
           fullWidth
           name={field.name}
           error={!!fieldState.error}
