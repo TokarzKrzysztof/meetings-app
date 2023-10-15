@@ -5,6 +5,7 @@ import { Category } from 'src/models/category';
 import { useCategoryGetAllCategories } from 'src/queries/category-queries';
 import { Box, Button, Container, Typography } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
+import { Validators } from 'src/utils/helpers/validators';
 
 export type Announcement = {
   id: string;
@@ -79,9 +80,10 @@ export const NewAnnouncement = () => {
           label={'Opis'}
           rules={{
             required: ValidationMessages.required,
+            maxLength: Validators.maxStringLength,
           }}
         />
-        <Box display={'flex'} justifyContent={'flex-end'}>
+        <Box display={'flex'} justifyContent={'flex-end'} mt={2}>
           <Button type='submit'>Dodaj ogłoszenie</Button>
         </Box>
       </Container>

@@ -4,6 +4,7 @@ import { FieldPath, FieldValues } from 'react-hook-form';
 import { mergeRefs } from 'react-merge-refs';
 import { EmojiPicker } from 'src/components/EmojiPicker/EmojiPicker';
 import { InputAdornment, TextField, TextFieldProps } from 'src/ui-components';
+import { Validators } from 'src/utils/helpers/validators';
 import { ControlledFieldProps } from 'src/utils/types/controlled-field-props';
 
 const insertAtIndex = (str: string, toInsert: string, index: number) => {
@@ -41,6 +42,11 @@ export const TextareaField = <
     }
   };
 
+  const helperText = fieldState.error
+    ? fieldState.error.message
+    : `Ilość znaków ${(field.value ?? '').length}/${
+        Validators.maxStringLength.value
+      }`;
   return (
     <TextField
       fullWidth
@@ -49,11 +55,11 @@ export const TextareaField = <
       inputRef={mergeRefs([fieldRef, field.ref])}
       name={field.name}
       error={!!fieldState.error}
-      helperText={fieldState.error?.message ?? ' '}
+      helperText={helperText}
       value={field.value ?? ''}
       onChange={(value) => field.onChange(value)}
       minRows={5}
-      maxRows={10}
+      maxRows={20}
       sx={{ mt: 2, ...sx }}
       InputProps={{
         sx: { pr: 0 },
