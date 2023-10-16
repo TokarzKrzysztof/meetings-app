@@ -1,6 +1,7 @@
 ﻿using Meetings.Api.Controllers;
 using Meetings.Infrastructure.Services;
 using Meetings.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,15 +21,16 @@ namespace Meetings.EmailTemplates.Controllers
         [HttpGet]
         public async Task<IActionResult> IsEmailTaken([FromQuery] string email)
         {
-            bool result = await _userService.IsEmailTaken(email);
-            return Ok(result);
+            bool isTaken = await _userService.IsEmailTaken(email);
+            return Ok(isTaken);
         }
         
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {
-            UserDTO result = await _userService.GetCurrentUser();
-            return Ok(result);
+            UserDTO currentUser = await _userService.GetCurrentUser();
+            return Ok(currentUser);
         }
     }
 }

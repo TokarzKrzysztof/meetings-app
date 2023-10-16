@@ -5,6 +5,7 @@ using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Meetings.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meetings.EmailTemplates.Controllers
@@ -29,6 +30,7 @@ namespace Meetings.EmailTemplates.Controllers
         } 
         
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _authService.Logout();

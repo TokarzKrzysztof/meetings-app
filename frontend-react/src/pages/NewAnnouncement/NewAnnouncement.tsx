@@ -1,9 +1,13 @@
+import { useSnackbar } from 'notistack';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { ControlledFormField } from 'src/components/ControlledFormField/ControlledFormField';
 import { Header } from 'src/components/Header/Header';
 import { Category } from 'src/models/category';
+import { useCreateNewAnnouncement } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Box, Button, Container, Typography } from 'src/ui-components';
+import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
 
@@ -20,9 +24,28 @@ export const NewAnnouncement = () => {
   const form = useForm<FormData>();
   const { control, handleSubmit } = form;
   const { categories } = useGetAllCategories();
+  const { createNewAnnouncement, createNewAnnouncementInProgress } =
+    useCreateNewAnnouncement();
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    createNewAnnouncement(
+      {
+        categoryId: data.category.id,
+        description: data.description,
+      },
+      {
+        onSuccess: () => {
+          enqueueSnackbar({
+            variant: 'success',
+            message: 'Ogłoszenie zostało dodane',
+          });
+          // redirect to my announcements in the future
+          navigate(AppRoutes.Home);
+        },
+      }
+    );
   };
 
   return (
@@ -66,7 +89,9 @@ export const NewAnnouncement = () => {
           }}
         />
         <Box display={'flex'} justifyContent={'flex-end'} mt={2}>
-          <Button type='submit'>Dodaj ogłoszenie</Button>
+          <Button type='submit' disabled={createNewAnnouncementInProgress}>
+            Dodaj ogłoszenie
+          </Button>
         </Box>
       </Container>
     </>

@@ -1,5 +1,7 @@
 ﻿using Meetings.Api.Controllers;
 using Meetings.Infrastructure.Helpers;
+using Meetings.Infrastructure.Services;
+using Meetings.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meetings.EmailTemplates.Controllers
@@ -8,14 +10,17 @@ namespace Meetings.EmailTemplates.Controllers
     [ApiController]
     public class CategoryController : AppControllerBase
     {
-        public CategoryController()
+        private readonly CategoryService _categoryService;
+        public CategoryController(CategoryService categoryService)
         {
+            _categoryService = categoryService;
         }
 
         [HttpGet]
-        public IActionResult GetAllCategories()
+        public async Task<IActionResult> GetAllCategories()
         {
-            return Ok(CategoriesGenerator.AllCategories);
+            List<CategoryDTO> categories = await _categoryService.GetAllCategories();
+            return Ok(categories);
         }
     }
 }

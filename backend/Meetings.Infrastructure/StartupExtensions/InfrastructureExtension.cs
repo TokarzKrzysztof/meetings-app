@@ -17,11 +17,15 @@ namespace Meetings.Infrastructure.StartupExtensions
     {
         public static void AddInfrastructure(this WebApplicationBuilder builder)
         {
+            builder.Services.AddScoped<CategoryService>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<AuthService>();
-            builder.Services.AddAutoMapper(typeof(MapperProfile));
+            builder.Services.AddScoped<AnnouncementService>();
 
             builder.Services.AddScoped<UserValidator>();
+            builder.Services.AddScoped<AnnouncementValidator>();
+
+            builder.Services.AddAutoMapper(typeof(MapperProfile));
         }
     }
 }

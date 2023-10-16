@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="AutoMapper" Version="12.0.1" />
+	<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	<ProjectReference Include="..\Common\Meetings.Authentication\Meetings.Authentication.csproj" />
+	<ProjectReference Include="..\Common\Meetings.MailSender\Meetings.EmailSender.csproj" />
+	<ProjectReference Include="..\Common\Meetings.Utils\Meetings.Utils.csproj" />
+	<ProjectReference Include="..\Meetings.Database\Meetings.Database.csproj" />
+    <ProjectReference Include="..\Meetings.Models\Meetings.Models.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -14,6 +14,12 @@ namespace Meetings.Infrastructure.Mappers
         {
             CreateMap<UserDTO, User>();
             CreateMap<User, UserDTO>().ForMember(x => x.Password, x => x.Ignore());
+
+            CreateMap<Announcement, AnnouncementDTO>();
+            CreateMap<AnnouncementDTO, Announcement>();
+            
+            CreateMap<Category, CategoryDTO>();
+            CreateMap<CategoryDTO, Category>();
         }
     }
 }
