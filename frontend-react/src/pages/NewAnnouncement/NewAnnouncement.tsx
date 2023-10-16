@@ -19,7 +19,7 @@ type FormData = {
 export const NewAnnouncement = () => {
   const form = useForm<FormData>();
   const { control, handleSubmit } = form;
-  const { categories } = useGetAllCategories();
+  const { allCategories } = useGetAllCategories();
   const { createNewAnnouncement, createNewAnnouncementInProgress } =
     useCreateNewAnnouncement();
   const { enqueueSnackbar } = useSnackbar();
@@ -69,7 +69,7 @@ export const NewAnnouncement = () => {
             required: ValidationMessages.required,
           }}
           ElementProps={{
-            optionsAsync: categories,
+            optionsAsync: allCategories,
             getOptionLabel: (opt) => opt.name,
           }}
         />

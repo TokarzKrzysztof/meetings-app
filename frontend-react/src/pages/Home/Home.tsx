@@ -4,7 +4,7 @@ import { useGetAllCategories } from 'src/queries/category-queries';
 import { Container, Typography } from 'src/ui-components';
 
 export const Home = () => {
-  const { categories } = useGetAllCategories();
+  const { allCategories } = useGetAllCategories();
 
   return (
     <>
@@ -18,7 +18,7 @@ export const Home = () => {
         >
           Znajdź ludzi dzielących Twoje zainteresowania!
         </Typography>
-        <HomeCategoriesSearch data={categories}></HomeCategoriesSearch>
+        <HomeCategoriesSearch data={allCategories}></HomeCategoriesSearch>
       </Container>
     </>
   );

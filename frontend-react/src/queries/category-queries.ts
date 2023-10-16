@@ -18,8 +18,8 @@ export const useGetAllCategories = (
   });
 
   return {
-    categories: query.data,
-    categoriesFetching: query.isFetching,
-    categoriesFetchingError: query.error,
+    allCategories: query.data,
+    allCategoriesFetching: query.isFetching,
+    allCategoriesFetchingError: query.error,
   };
 };

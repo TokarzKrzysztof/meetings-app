@@ -1,14 +1,25 @@
 import { Navigate, createBrowserRouter, redirect } from 'react-router-dom';
 import { queryClient } from 'src/config/query-config';
 import { User } from 'src/models/user';
-import { getCurrentUserQueryKey } from 'src/queries/user-queries';
+import {
+  getCurrentUserQueryFn,
+  getCurrentUserQueryKey,
+} from 'src/queries/user-queries';
 import App from './App';
 import { AppRoutes } from './utils/enums/app-routes';
 
-const protectedLoader = () => {
-  const currentUser: User | null | undefined = queryClient.getQueryData(
+const protectedLoader = async () => {
+  // undefined when user is not yet getched, null when user is not logged in
+  let currentUser: User | null | undefined = queryClient.getQueryData(
     getCurrentUserQueryKey
   );
+  if (currentUser === undefined) {
+    currentUser = await queryClient.fetchQuery(
+      getCurrentUserQueryKey,
+      getCurrentUserQueryFn
+    );
+  }
+
   return currentUser ? null : redirect(AppRoutes.Login);
 };
 
