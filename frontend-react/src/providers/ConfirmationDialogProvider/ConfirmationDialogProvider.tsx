@@ -1,13 +1,13 @@
 import { useAtom } from 'jotai';
 import { ReactElement } from 'react';
-import { confirmationDialogAtom } from 'src/store/store';
+import { confirmationDialogAtom } from 'src/store/atoms';
 import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from 'src/ui-components';
 
 export type ConfirmationDialogProviderProps = {

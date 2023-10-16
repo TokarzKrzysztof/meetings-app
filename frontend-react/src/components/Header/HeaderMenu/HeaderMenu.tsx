@@ -7,7 +7,7 @@ import { useLogout } from 'src/queries/auth-queries';
 import {
   useGetCurrentUser
 } from 'src/queries/user-queries';
-import { confirmationDialogAtom } from 'src/store/store';
+import { confirmationDialogAtom } from 'src/store/atoms';
 import { Button, Icon, IconButton } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
