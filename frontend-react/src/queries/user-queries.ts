@@ -33,11 +33,12 @@ export const useIsEmailTaken = (
   };
 };
 
+export const getCurrentUserQueryKey = 'GetCurrentUser';
 export const useGetCurrentUser = (
   options?: UseQueryOptions<User | null, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
-    queryKey: 'GetCurrentUser',
+    queryKey: getCurrentUserQueryKey,
     queryFn: () =>
       axios.get(`${baseUrl}/GetCurrentUser`).then((res) => res.data),
     staleTime: Infinity,

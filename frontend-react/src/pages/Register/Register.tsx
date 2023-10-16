@@ -18,10 +18,6 @@ import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 import { Validators } from 'src/utils/helpers/validators';
 
-export async function loader() {
-  return null;
-}
-
 const genderOptions = [
   {
     value: UserGender.Male,

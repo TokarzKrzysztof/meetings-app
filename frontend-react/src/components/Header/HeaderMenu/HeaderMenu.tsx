@@ -1,19 +1,25 @@
-import { useAtom, useSetAtom } from 'jotai';
-import { Link } from 'react-router-dom';
+import { useSetAtom } from 'jotai';
+import { Link, useNavigate } from 'react-router-dom';
 import { HeaderMenuAccountButton } from 'src/components/Header/HeaderMenu/HeaderMenuAccountButton/HeaderMenuAccountButton';
 import { useDeviceMediaQuery } from 'src/hooks/useDeviceMediaQuery';
+import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { useLogout } from 'src/queries/auth-queries';
-import { confirmationDialogAtom, currentUserAtom } from 'src/store/store';
+import {
+  useGetCurrentUser
+} from 'src/queries/user-queries';
+import { confirmationDialogAtom } from 'src/store/store';
 import { Button, Icon, IconButton } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type HeaderMenuProps = {};
 
 export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const { setCurrentUser } = useSetQueryData();
+  const { currentUser } = useGetCurrentUser();
   const confirm = useSetAtom(confirmationDialogAtom);
   const { isDesktop } = useDeviceMediaQuery();
   const { logout } = useLogout();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     confirm({
@@ -22,6 +28,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
         logout(undefined, {
           onSuccess: () => {
             setCurrentUser(null);
+            navigate(AppRoutes.Home)
           },
         });
       },

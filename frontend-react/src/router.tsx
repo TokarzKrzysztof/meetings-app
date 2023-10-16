@@ -1,11 +1,16 @@
-// const ProtectedRoute = ({ element }: { element: ReactNode }) => {
-//   const [isLogged] = useState(false);
-//   return <>{isLogged ? element : <Navigate to={'/login'} />}</>;
-// };
-
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { Navigate, createBrowserRouter, redirect } from 'react-router-dom';
+import { queryClient } from 'src/config/query-config';
+import { User } from 'src/models/user';
+import { getCurrentUserQueryKey } from 'src/queries/user-queries';
 import App from './App';
 import { AppRoutes } from './utils/enums/app-routes';
+
+const protectedLoader = () => {
+  const currentUser: User | null | undefined = queryClient.getQueryData(
+    getCurrentUserQueryKey
+  );
+  return currentUser ? null : redirect(AppRoutes.Login);
+};
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +23,7 @@ export const router = createBrowserRouter([
           const { Home } = await import('./pages/Home/Home');
           return { Component: Home };
         },
+        loader: () => null,
       },
       {
         path: AppRoutes.Login,
@@ -25,6 +31,7 @@ export const router = createBrowserRouter([
           const { Login } = await import('./pages/Login/Login');
           return { Component: Login };
         },
+        loader: () => null,
       },
       {
         path: AppRoutes.Register,
@@ -32,6 +39,7 @@ export const router = createBrowserRouter([
           const { Register } = await import('./pages/Register/Register');
           return { Component: Register };
         },
+        loader: () => null,
       },
       {
         path: AppRoutes.ForgotPassword,
@@ -41,6 +49,7 @@ export const router = createBrowserRouter([
           );
           return { Component: ForgotPassword };
         },
+        loader: () => null,
       },
       {
         path: AppRoutes.ResetPassword,
@@ -50,6 +59,7 @@ export const router = createBrowserRouter([
           );
           return { Component: ResetPassword };
         },
+        loader: () => null,
       },
       {
         path: AppRoutes.NewAnnouncement,
@@ -59,6 +69,17 @@ export const router = createBrowserRouter([
           );
           return { Component: NewAnnouncement };
         },
+        loader: protectedLoader,
+      },
+      {
+        path: AppRoutes.MyAnnouncements,
+        lazy: async () => {
+          const { MyAnnouncements } = await import(
+            './pages/MyAnnouncements/MyAnnouncements'
+          );
+          return { Component: MyAnnouncements };
+        },
+        loader: protectedLoader,
       },
     ],
   },

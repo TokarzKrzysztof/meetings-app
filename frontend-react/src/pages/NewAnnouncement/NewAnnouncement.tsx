@@ -16,10 +16,6 @@ type FormData = {
   description: string;
 };
 
-export async function loader() {
-  return null;
-}
-
 export const NewAnnouncement = () => {
   const form = useForm<FormData>();
   const { control, handleSubmit } = form;
@@ -41,8 +37,7 @@ export const NewAnnouncement = () => {
             variant: 'success',
             message: 'Ogłoszenie zostało dodane',
           });
-          // redirect to my announcements in the future
-          navigate(AppRoutes.Home);
+          navigate(AppRoutes.MyAnnouncements);
         },
       }
     );

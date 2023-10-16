@@ -6,6 +6,7 @@ using Meetings.EmailTemplates.Views;
 using Meetings.ErrorHandlingMiddleware.StartupExtensions;
 using Meetings.Infrastructure.StartupExtensions;
 using Meetings.Utils;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -20,7 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    // allow to return null from requests
+    options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

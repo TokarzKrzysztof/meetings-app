@@ -1,4 +1,3 @@
-import { useSetAtom } from 'jotai';
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,26 +9,19 @@ import { AuthIcon } from 'src/components/AuthIcon/AuthIcon';
 import { AuthRedirectInfo } from 'src/components/AuthRedirectInfo/AuthRedirectInfo';
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
+import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { LoginCredentials } from 'src/models/login-credentials';
-import {
-    useLogin,
-    useResendActivationLink,
-} from 'src/queries/auth-queries';
-import { currentUserAtom } from 'src/store/store';
+import { useLogin, useResendActivationLink } from 'src/queries/auth-queries';
 import { Button, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 
-export async function loader() {
-  return null;
-}
-
 export const Login = () => {
   const form = useForm<LoginCredentials>();
   const { register, handleSubmit, getValues } = form;
   const navigate = useNavigate();
-  const setCurrentUser = useSetAtom(currentUserAtom);
+  const { setCurrentUser } = useSetQueryData();
   const { login, loginError, loginInProgress, loginReset } = useLogin();
   const { resendActivationLink } = useResendActivationLink();
   const { enqueueSnackbar } = useSnackbar();

@@ -3,13 +3,9 @@ import { HomeCategoriesSearch } from 'src/pages/Home/HomeCategoriesSearch/HomeCa
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Container, Typography } from 'src/ui-components';
 
-export async function loader() {
-  return null;
-}
-
 export const Home = () => {
   const { categories } = useGetAllCategories();
-  
+
   return (
     <>
       <Header />

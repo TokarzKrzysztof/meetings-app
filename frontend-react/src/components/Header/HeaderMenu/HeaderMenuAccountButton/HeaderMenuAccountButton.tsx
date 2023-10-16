@@ -5,7 +5,7 @@ import { Box, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type HeaderMenuAccountButtonProps = {
-  currentUser: User | null;
+  currentUser: User | null | undefined;
   onLogout: () => void;
 };
 
@@ -32,7 +32,7 @@ export const HeaderMenuAccountButton = ({
       >
         Dodaj ogłoszenie
       </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.Home}>
+      <MenuItem component={Link} to={AppRoutes.MyAnnouncements}>
         Moje ogłoszenia
       </MenuItem>
       <MenuItem component={Link} to={AppRoutes.Home}>

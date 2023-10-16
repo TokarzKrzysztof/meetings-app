@@ -14,10 +14,6 @@ import { useResetPassword } from 'src/queries/auth-queries';
 import { Button } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
-export async function loader() {
-  return null;
-}
-
 export const ResetPassword = () => {
   const form = useForm<PasswordFieldsFormData>();
   const { handleSubmit } = form;

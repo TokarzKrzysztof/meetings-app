@@ -15,10 +15,6 @@ import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 
-export async function loader() {
-  return null;
-}
-
 export const ForgotPassword = () => {
   const form = useForm<{ email: string }>();
   const { register, handleSubmit, control, getValues } = form;

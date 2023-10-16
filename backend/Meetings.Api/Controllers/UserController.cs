@@ -24,9 +24,8 @@ namespace Meetings.EmailTemplates.Controllers
             bool isTaken = await _userService.IsEmailTaken(email);
             return Ok(isTaken);
         }
-        
+
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetCurrentUser()
         {
             UserDTO currentUser = await _userService.GetCurrentUser();

@@ -5,4 +5,5 @@ export enum AppRoutes {
   ForgotPassword = '/forgot-password',
   ResetPassword = '/reset-password',
   NewAnnouncement = '/new-announcement',
+  MyAnnouncements = '/my-announcements',
 }
