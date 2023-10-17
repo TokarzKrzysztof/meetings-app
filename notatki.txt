@@ -23,3 +23,14 @@ TODO
 - obsłużyć ładowanie danych
 - ogarnąć responsywność
 - przy edycji danych sprawdzać czy ten konkretny użytkownik edytuje 
+- dodać captcha przy rejestracji
+
+Mój profil:
+po zalogowaniu widoczny mój profil (?)
+w headerze ikonka avatar ze strony mui header
+dodawanie zdjęcia po rejestracji
+okrągła miniaturka zdjęcia, na dole ikonka edycji i menu w możliwościami: Wyświetl zdjęcie, zmnień zdjęcie
+po prawej od zdjęcia imię i nazwisko
+poniżej dane osobowe ustawione podczas rejestracji
+
+https://www.npmjs.com/package/react-easy-crop

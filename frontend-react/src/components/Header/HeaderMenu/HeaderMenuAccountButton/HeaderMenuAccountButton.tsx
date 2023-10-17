@@ -14,7 +14,7 @@ export const HeaderMenuAccountButton = ({
   onLogout,
 }: HeaderMenuAccountButtonProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  
+
   const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -32,11 +32,11 @@ export const HeaderMenuAccountButton = ({
       >
         Dodaj ogłoszenie
       </MenuItem>
+      <MenuItem component={Link} to={AppRoutes.Home}>
+        Mój profil
+      </MenuItem>
       <MenuItem component={Link} to={AppRoutes.MyAnnouncements}>
         Moje ogłoszenia
-      </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.Home}>
-        Ustawienia
       </MenuItem>
       <MenuItem onClick={onLogout}>Wyloguj się</MenuItem>
     </>
