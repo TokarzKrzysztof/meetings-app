@@ -28,7 +28,8 @@ import {
 
 export type ControlledFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TOther = any
 > = {
   label: string;
   control: Control<TFieldValues>;
@@ -53,7 +54,7 @@ export type ControlledFormFieldProps<
     }
   | {
       element: 'autocomplete';
-      ElementProps: AutocompleteFieldProps<TFieldValues, TName>;
+      ElementProps: AutocompleteFieldProps<TOther>;
     }
   | {
       element: 'textarea';
@@ -63,7 +64,8 @@ export type ControlledFormFieldProps<
 
 export const ControlledFormField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TOther = any
 >({
   label,
   control,
@@ -72,7 +74,7 @@ export const ControlledFormField = <
   shouldUnregister,
   element,
   ElementProps,
-}: ControlledFormFieldProps<TFieldValues, TName>) => {
+}: ControlledFormFieldProps<TFieldValues, TName, TOther>) => {
   const controller = useController({ control, name, rules, shouldUnregister });
 
   if (element === 'date-picker') {

@@ -2,22 +2,16 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ControlledFormField } from 'src/components/ControlledFormField/ControlledFormField';
 import { Announcement } from 'src/models/announcement';
-import { Category } from 'src/models/category';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Button, Container, Stack, Typography } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
 
-export type AnnouncementFormData = {
-  category: Category;
-  description: string;
-};
-
 export type AnnouncementFormProps = {
   data?: Announcement;
   onCancel?: () => void;
   disabledWhenUntouched?: boolean;
-  onSubmit: (data: AnnouncementFormData) => void;
+  onSubmit: (data: Announcement) => void;
   title: string;
   inProgress: boolean;
   buttonText: string;
@@ -32,7 +26,7 @@ export const AnnouncementForm = ({
   inProgress,
   buttonText,
 }: AnnouncementFormProps) => {
-  const form = useForm<AnnouncementFormData>();
+  const form = useForm<Announcement>();
   const {
     control,
     handleSubmit,
@@ -43,10 +37,7 @@ export const AnnouncementForm = ({
 
   useEffect(() => {
     if (allCategories && data) {
-      reset({
-        category: allCategories.find((x) => x.id === data.categoryId),
-        description: data.description,
-      });
+      reset(data);
     }
   }, [allCategories, data]);
 
@@ -64,7 +55,7 @@ export const AnnouncementForm = ({
       <ControlledFormField
         control={control}
         element={'autocomplete'}
-        name={'category'}
+        name={'categoryId'}
         label={'Kategoria'}
         rules={{
           required: ValidationMessages.required,

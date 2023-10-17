@@ -30,7 +30,7 @@ export const MyAnnouncements = () => {
   return (
     <>
       <Header />
-      <Container sx={{ py: 2 }}>
+      <Container sx={{ py: 2 }} maxWidth='sm'>
         <Typography
           variant={'h5'}
           mb={2}

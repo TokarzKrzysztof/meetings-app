@@ -23,8 +23,17 @@ namespace Meetings.Api.Controllers
         [Authorize]
         public async Task<IActionResult> CreateNewAnnouncement([FromBody] AnnouncementDTO data)
         {
-            _announcementValidator.WhenCreate(data);
+            _announcementValidator.WhenCreateOrEdit(data);
             await _announcementService.CreateNewAnnouncement(data);
+            return Ok();
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> EditAnnouncement([FromBody] AnnouncementDTO data)
+        {
+            _announcementValidator.WhenCreateOrEdit(data);
+            await _announcementService.EditAnnouncement(data);
             return Ok();
         }
         

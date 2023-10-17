@@ -9,7 +9,7 @@ import App from './App';
 import { AppRoutes } from './utils/enums/app-routes';
 
 const protectedLoader = async () => {
-  // undefined when user is not yet getched, null when user is not logged in
+  // undefined when user is not yet fetched, null when user is not logged in
   let currentUser: User | null | undefined = queryClient.getQueryData(
     getCurrentUserQueryKey
   );

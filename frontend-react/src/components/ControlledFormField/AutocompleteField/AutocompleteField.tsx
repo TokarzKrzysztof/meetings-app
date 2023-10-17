@@ -1,35 +1,54 @@
+import { useEffect, useState } from 'react';
 import { FieldPath, FieldValues } from 'react-hook-form';
-import { Autocomplete, AutocompleteProps, TextField } from 'src/ui-components';
+import { Autocomplete, TextField } from 'src/ui-components';
 import { ControlledFieldProps } from 'src/utils/types/controlled-field-props';
 
-export type AutocompleteFieldProps<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-> = AutocompleteProps<TFieldValues[TName]> & {
-  compareKey?: keyof TFieldValues[TName];
+export type AutocompleteFieldProps<TOption> = {
+  valueKey?: keyof TOption;
+  optionsAsync: TOption[] | undefined;
+  getOptionLabel: (opt: TOption) => string;
 };
+
+type AutcompleteOption = { label: string; value: string };
 
 export const AutocompleteField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TOption = any
 >({
   label,
   controller: { field, fieldState },
   optionsAsync,
   getOptionLabel,
-  compareKey = 'id',
+  valueKey = 'id' as keyof TOption,
   ...props
-}: AutocompleteFieldProps<TFieldValues, TName> &
+}: AutocompleteFieldProps<TOption> &
   ControlledFieldProps<TFieldValues, TName>) => {
+  const [options, setOptions] = useState<AutcompleteOption[]>();
+
+  useEffect(() => {
+    if (optionsAsync) {
+      setOptions(
+        optionsAsync.map((x) => ({
+          label: getOptionLabel(x),
+          value: x[valueKey] as string,
+        }))
+      );
+    }
+  }, [optionsAsync]);
+
+  const selectedOption = options?.find((x) => x.value === field.value) ?? null;
   return (
     <Autocomplete
-      optionsAsync={optionsAsync}
-      getOptionLabel={getOptionLabel}
-      value={field.value ?? null}
-      isOptionEqualToValue={(opt, current) =>
-        opt[compareKey] === current[compareKey]
-      }
-      onChange={(_, value) => field.onChange(value)}
+      optionsAsync={options}
+      getOptionLabel={(x) => x.label}
+      value={selectedOption}
+      isOptionEqualToValue={(opt, current) => opt.value === current.value}
+      onChange={(_, option) => {
+        return field.onChange(
+          option ? (option as AutcompleteOption).value : null
+        );
+      }}
       renderInput={(params) => (
         <TextField
           {...params}

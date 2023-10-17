@@ -37,6 +37,17 @@ namespace Meetings.Infrastructure.Services
             await _repository.Create(newAnnouncement);
         }
 
+
+        public async Task EditAnnouncement(AnnouncementDTO data)
+        {
+            var item = await _repository.GetById(data.Id);
+            item.Description = data.Description;
+            item.CategoryId = data.CategoryId;
+            item.Status = AnnoucementStatus.Pending;
+
+            await _repository.Update(item);
+        }
+
         public async Task<List<AnnouncementDTO>> GetCurrentUserAnnouncements()
         {
             Guid userId = GetCurrentUserId();

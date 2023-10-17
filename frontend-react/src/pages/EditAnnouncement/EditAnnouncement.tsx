@@ -1,10 +1,8 @@
 import { useSnackbar } from 'notistack';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import {
-  AnnouncementForm,
-  AnnouncementFormData,
-} from 'src/components/AnnouncementForm/AnnouncementForm';
+import { AnnouncementForm } from 'src/components/AnnouncementForm/AnnouncementForm';
 import { Header } from 'src/components/Header/Header';
+import { Announcement } from 'src/models/announcement';
 import {
   useEditAnnouncement,
   useGetAnnouncement,
@@ -19,23 +17,16 @@ export const EditAnnouncement = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  const onSubmit = (data: AnnouncementFormData) => {
-    editAnnouncement(
-      {
-        ...announcement!,
-        description: data.description,
-        categoryId: data.category.id,
+  const onSubmit = (data: Announcement) => {
+    editAnnouncement(data, {
+      onSuccess: () => {
+        enqueueSnackbar({
+          variant: 'success',
+          message: 'Ogłoszenie zostało zmienione',
+        });
+        navigate(AppRoutes.MyAnnouncements);
       },
-      {
-        onSuccess: () => {
-          enqueueSnackbar({
-            variant: 'success',
-            message: 'Ogłoszenie zostało zmienione',
-          });
-          navigate(AppRoutes.MyAnnouncements);
-        },
-      }
-    );
+    });
   };
 
   const handleCancel = () => {

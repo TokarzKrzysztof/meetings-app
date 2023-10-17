@@ -12,11 +12,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/Announcement`;
 
 export const useCreateNewAnnouncement = (
-  options?: UseMutationOptions<
-    void,
-    AxiosError<HttpErrorData>,
-    Pick<Announcement, 'categoryId' | 'description'>
-  >
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement>
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => {
@@ -43,7 +39,7 @@ export const useEditAnnouncement = (
   const mutation = useMutation({
     mutationFn: (data) => {
       return axios
-        .post(`${baseUrl}/EditAnnouncement`, data)
+        .put(`${baseUrl}/EditAnnouncement`, data)
         .then((res) => res.data);
     },
     ...options,

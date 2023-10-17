@@ -1,10 +1,8 @@
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import {
-  AnnouncementForm,
-  AnnouncementFormData,
-} from 'src/components/AnnouncementForm/AnnouncementForm';
+import { AnnouncementForm } from 'src/components/AnnouncementForm/AnnouncementForm';
 import { Header } from 'src/components/Header/Header';
+import { Announcement } from 'src/models/announcement';
 import { useCreateNewAnnouncement } from 'src/queries/announcement-queries';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
@@ -14,22 +12,16 @@ export const NewAnnouncement = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  const onSubmit = (data: AnnouncementFormData) => {
-    createNewAnnouncement(
-      {
-        categoryId: data.category.id,
-        description: data.description,
+  const onSubmit = (data: Announcement) => {
+    createNewAnnouncement(data, {
+      onSuccess: () => {
+        enqueueSnackbar({
+          variant: 'success',
+          message: 'Ogłoszenie zostało dodane',
+        });
+        navigate(AppRoutes.MyAnnouncements);
       },
-      {
-        onSuccess: () => {
-          enqueueSnackbar({
-            variant: 'success',
-            message: 'Ogłoszenie zostało dodane',
-          });
-          navigate(AppRoutes.MyAnnouncements);
-        },
-      }
-    );
+    });
   };
 
   return (

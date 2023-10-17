@@ -20,3 +20,6 @@ TODO
 - sprawdzić czy trzeba pokazywać prompt użytkownikom o używaniu cookie
 - usunąć zapamiętaj mnie checkbox
 - przy zmienianiu statusu ogłoszenia na aktywne sprawdzić czy użytkownik może to wykonać
+- obsłużyć ładowanie danych
+- ogarnąć responsywność
+- przy edycji danych sprawdzać czy ten konkretny użytkownik edytuje 
