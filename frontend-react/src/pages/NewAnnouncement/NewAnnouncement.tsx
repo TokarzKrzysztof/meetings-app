@@ -83,7 +83,7 @@ export const NewAnnouncement = () => {
             maxLength: Validators.maxStringLength,
           }}
         />
-        <Box display={'flex'} justifyContent={'flex-end'} mt={2}>
+        <Box textAlign={'right'} mt={2}>
           <Button type='submit' disabled={createNewAnnouncementInProgress}>
             Dodaj ogłoszenie
           </Button>

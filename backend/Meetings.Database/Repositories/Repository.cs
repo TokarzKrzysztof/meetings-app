@@ -36,7 +36,7 @@ namespace Meetings.Database.Repositories
 
         public async Task<TEntity?> GetById(Guid id)
         {
-            TEntity? item = await Data.SingleOrDefaultAsync(x => x.Id == id);
+            TEntity? item = await Data.SingleOrDefaultAsync(x => x.Id == id && !x.IsDelete);
             return item;
         }
 

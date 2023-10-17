@@ -23,7 +23,8 @@ export type IconProps<
     | 'key'
     | 'person_outline'
     | 'question_answer'
-    | 'tag_faces';
+    | 'tag_faces'
+    | 'close';
 };
 
 export const Icon = <

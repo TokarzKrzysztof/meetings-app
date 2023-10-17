@@ -19,3 +19,4 @@ https://alimozdemir.medium.com/asp-net-core-jwt-and-refresh-token-with-httponly-
 TODO
 - sprawdzić czy trzeba pokazywać prompt użytkownikom o używaniu cookie
 - usunąć zapamiętaj mnie checkbox
+- przy zmienianiu statusu ogłoszenia na aktywne sprawdzić czy użytkownik może to wykonać

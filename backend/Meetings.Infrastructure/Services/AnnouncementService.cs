@@ -31,6 +31,7 @@ namespace Meetings.Infrastructure.Services
         public async Task CreateNewAnnouncement(AnnouncementDTO data)
         {
             data.UserId = GetCurrentUserId();
+            data.Status = AnnoucementStatus.Pending;
 
             var newAnnouncement = _mapper.Map<Announcement>(data);
             await _repository.Create(newAnnouncement);
@@ -42,6 +43,19 @@ namespace Meetings.Infrastructure.Services
             var data = await _repository.Data.Where(x => x.UserId == userId).ToListAsync();
 
             return _mapper.Map<List<AnnouncementDTO>>(data);
+        }
+
+        public async Task SetAnnouncementStatus(Guid id, AnnoucementStatus newStatus)
+        {
+            var item = await _repository.GetById(id);
+            item.Status = newStatus;
+
+            await _repository.Update(item);
+        }
+
+        public async Task RemoveAnnouncement(Guid id)
+        {
+            await _repository.Remove(id);
         }
 
         private Guid GetCurrentUserId()

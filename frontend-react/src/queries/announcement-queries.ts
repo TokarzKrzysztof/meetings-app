@@ -1,6 +1,11 @@
 import axios, { AxiosError } from 'axios';
-import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
-import { Announcement } from 'src/models/announcement';
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+} from 'react-query';
+import { Announcement, AnnouncementStatus } from 'src/models/announcement';
 import { apiUrl } from 'src/utils/api-url';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
@@ -10,7 +15,7 @@ export const useCreateNewAnnouncement = (
   options?: UseMutationOptions<
     void,
     AxiosError<HttpErrorData>,
-    Omit<Announcement, 'id' | 'userId'>
+    Pick<Announcement, 'categoryId' | 'description'>
   >
 ) => {
   const mutation = useMutation({
@@ -33,19 +38,74 @@ export const useCreateNewAnnouncement = (
 };
 
 export const useGetCurrentUserAnnouncements = (
-    options?: UseQueryOptions<Announcement[], AxiosError<HttpErrorData>>
-  ) => {
-    const query = useQuery({
-      queryKey: 'GetCurrentUserAnnouncements',
-      queryFn: () =>
-        axios.get(`${baseUrl}/GetCurrentUserAnnouncements`).then((res) => res.data),
-      ...options,
-    });
-  
-    return {
-      currentUserAnnoucements: query.data,
-      currentUserAnnoucementsFetching: query.isFetching,
-      currentUserAnnoucementsFetchingError: query.error,
-    };
+  options?: UseQueryOptions<Announcement[], AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: 'GetCurrentUserAnnouncements',
+    queryFn: () =>
+      axios
+        .get(`${baseUrl}/GetCurrentUserAnnouncements`)
+        .then((res) => res.data),
+    ...options,
+  });
+
+  return {
+    currentUserAnnoucements: query.data,
+    currentUserAnnoucementsFetching: query.isFetching,
+    currentUserAnnoucementsFetchingError: query.error,
+    currentUserAnnoucementsRefetch: query.refetch,
   };
-  
+};
+
+export const useSetAnnouncementStatus = (
+  options?: UseMutationOptions<
+    void,
+    AxiosError<HttpErrorData>,
+    { id: string; newStatus: AnnouncementStatus }
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return axios
+        .patch(`${baseUrl}/SetAnnouncementStatus`, data)
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    setAnnouncementStatus: mutation.mutate,
+    setAnnouncementStatusResult: mutation.data,
+    setAnnouncementStatusError: mutation.error?.response?.data,
+    setAnnouncementStatusInProgress: mutation.isLoading,
+    setAnnouncementStatusSuccess: mutation.isSuccess,
+    setAnnouncementStatusReset: mutation.reset,
+  };
+};
+
+export const useRemoveAnnouncement = (
+  options?: UseMutationOptions<
+    void,
+    AxiosError<HttpErrorData>,
+    Announcement['id']
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: (id) => {
+      const params = { id };
+      return axios
+        .delete(`${baseUrl}/RemoveAnnouncement`, { params })
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    removeAnnouncement: mutation.mutate,
+    removeAnnouncementResult: mutation.data,
+    removeAnnouncementError: mutation.error?.response?.data,
+    removeAnnouncementInProgress: mutation.isLoading,
+    removeAnnouncementSuccess: mutation.isSuccess,
+    removeAnnouncementReset: mutation.reset,
+  };
+};

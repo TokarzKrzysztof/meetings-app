@@ -65,6 +65,7 @@ export const Autocomplete = <
       // fix error with option label as undefined instead of null
       getOptionLabel={(opt) => getOptionLabel(opt as T) ?? ''}
       PopperComponent={StyledPopper}
+      noOptionsText={"Brak opcji"}
       {...props}
     ></MuiAutocomplete>
   );

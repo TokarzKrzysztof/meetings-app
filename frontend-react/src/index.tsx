@@ -9,6 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClientProvider } from 'react-query';
 import { RouterProvider } from 'react-router-dom';
+import { SnackbarCloseButton } from 'src/components/SnackbarCloseButton/SnackbarCloseButton';
 import { queryClient } from 'src/config/query-config';
 import './config/axios-config';
 import './index.css';
@@ -28,6 +29,8 @@ root.render(
         <SnackbarProvider
           maxSnack={3}
           anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
+          action={snackbarKey => <SnackbarCloseButton snackbarKey={snackbarKey}/>}
+          preventDuplicate
         >
           <RouterProvider router={router} />
         </SnackbarProvider>

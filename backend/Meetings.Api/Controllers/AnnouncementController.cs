@@ -1,6 +1,7 @@
 ﻿using Meetings.Infrastructure.Services;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
+using Meetings.Models.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,22 @@ namespace Meetings.Api.Controllers
         {
             List<AnnouncementDTO> currentUserAnnouncements = await _announcementService.GetCurrentUserAnnouncements();
             return Ok(currentUserAnnouncements);
+        }
+        
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> SetAnnouncementStatus([FromBody] SetAnnouncementStatusData data)
+        {
+            await _announcementService.SetAnnouncementStatus(data.Id, data.NewStatus);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> RemoveAnnouncement([FromQuery] Guid id)
+        {
+            await _announcementService.RemoveAnnouncement(id);
+            return Ok();
         }
     }
 }
