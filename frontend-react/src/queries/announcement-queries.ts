@@ -37,6 +37,28 @@ export const useCreateNewAnnouncement = (
   };
 };
 
+export const useEditAnnouncement = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement>
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return axios
+        .post(`${baseUrl}/EditAnnouncement`, data)
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    editAnnouncement: mutation.mutate,
+    editAnnouncementResult: mutation.data,
+    editAnnouncementError: mutation.error?.response?.data,
+    editAnnouncementInProgress: mutation.isLoading,
+    editAnnouncementSuccess: mutation.isSuccess,
+    editAnnouncementReset: mutation.reset,
+  };
+};
+
 export const useGetCurrentUserAnnouncements = (
   options?: UseQueryOptions<Announcement[], AxiosError<HttpErrorData>>
 ) => {
@@ -107,5 +129,27 @@ export const useRemoveAnnouncement = (
     removeAnnouncementInProgress: mutation.isLoading,
     removeAnnouncementSuccess: mutation.isSuccess,
     removeAnnouncementReset: mutation.reset,
+  };
+};
+
+export const useGetAnnouncement = (
+  id: Announcement['id'],
+  options?: UseQueryOptions<Announcement, AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: ['GetAnnouncement', id],
+    queryFn: () => {
+      const params = { id };
+      return axios
+        .get(`${baseUrl}/GetAnnouncement`, { params })
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    announcement: query.data,
+    announcementFetching: query.isFetching,
+    announcementFetchingError: query.error,
   };
 };

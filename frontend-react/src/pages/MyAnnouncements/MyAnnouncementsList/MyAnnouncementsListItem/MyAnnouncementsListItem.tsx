@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { useSetAtom } from 'jotai';
 import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Announcement, AnnouncementStatus } from 'src/models/announcement';
 import {
   useGetCurrentUserAnnouncements,
@@ -12,6 +13,7 @@ import {
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { confirmationDialogAtom } from 'src/store/atoms';
 import { Box, Button, Card, Stack, Typography } from 'src/ui-components';
+import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type MyAnnouncementsListItemProps = {
   announcement: Announcement;
@@ -21,11 +23,14 @@ export const MyAnnouncementsListItem = ({
   announcement,
 }: MyAnnouncementsListItemProps) => {
   const { allCategories } = useGetAllCategories();
-  const { currentUserAnnoucementsRefetch } = useGetCurrentUserAnnouncements();
+  const { currentUserAnnoucementsRefetch } = useGetCurrentUserAnnouncements({
+    enabled: false,
+  });
   const { setAnnouncementStatus } = useSetAnnouncementStatus();
   const { removeAnnouncement } = useRemoveAnnouncement();
   const confirm = useSetAtom(confirmationDialogAtom);
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const categoryName = allCategories!.find(
     (x) => x.id === announcement.categoryId
@@ -99,6 +104,10 @@ export const MyAnnouncementsListItem = ({
     });
   };
 
+  const handleEdit = () => {
+    navigate(`${AppRoutes.EditAnnouncement}?id=${announcement.id}`);
+  };
+
   return (
     <Card>
       <Stack justifyContent={'space-between'} alignItems={'center'} p={1}>
@@ -125,7 +134,7 @@ export const MyAnnouncementsListItem = ({
           {announcement.status === AnnouncementStatus.Active ||
           announcement.status === AnnouncementStatus.Pending ? (
             <>
-              <Button size='small' variant='text'>
+              <Button size='small' variant='text' onClick={handleEdit}>
                 Edytuj
               </Button>
               <Button

@@ -31,7 +31,7 @@ export const MyAnnouncementsList = ({
         {title}
       </Typography>
       {data.length ? (
-        <Stack direction={'column'} gap={3}>
+        <Stack direction={'column'} gap={2}>
           {data.map((x) => (
             <MyAnnouncementsListItem
               key={x.id}

@@ -34,6 +34,14 @@ namespace Meetings.Api.Controllers
         {
             List<AnnouncementDTO> currentUserAnnouncements = await _announcementService.GetCurrentUserAnnouncements();
             return Ok(currentUserAnnouncements);
+        }  
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAnnouncement([FromQuery] Guid id)
+        {
+            AnnouncementDTO announcement = await _announcementService.GetAnnouncement(id);
+            return Ok(announcement);
         }
         
         [HttpPatch]

@@ -83,6 +83,16 @@ export const router = createBrowserRouter([
         loader: protectedLoader,
       },
       {
+        path: AppRoutes.EditAnnouncement,
+        lazy: async () => {
+          const { EditAnnouncement } = await import(
+            './pages/EditAnnouncement/EditAnnouncement'
+          );
+          return { Component: EditAnnouncement };
+        },
+        loader: protectedLoader,
+      },
+      {
         path: AppRoutes.MyAnnouncements,
         lazy: async () => {
           const { MyAnnouncements } = await import(

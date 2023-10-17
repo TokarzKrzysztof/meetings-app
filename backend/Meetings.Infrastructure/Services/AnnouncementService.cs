@@ -64,5 +64,11 @@ namespace Meetings.Infrastructure.Services
             Guid userId = new Guid(claims.Single(x => x.Type == UserClaims.Id).Value);
             return userId;
         }
+
+        public async Task<AnnouncementDTO> GetAnnouncement(Guid id)
+        {
+            var item = await _repository.GetById(id);
+            return _mapper.Map<AnnouncementDTO>(item);
+        }
     }
 }
