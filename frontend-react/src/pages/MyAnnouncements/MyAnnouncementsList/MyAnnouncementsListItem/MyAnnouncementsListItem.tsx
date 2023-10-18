@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useSetAtom } from 'jotai';
 import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Announcement, AnnouncementStatus } from 'src/models/announcement';
 import {
   useGetCurrentUserAnnouncements,
@@ -104,10 +104,6 @@ export const MyAnnouncementsListItem = ({
     });
   };
 
-  const handleEdit = () => {
-    navigate(`${AppRoutes.EditAnnouncement}?id=${announcement.id}`);
-  };
-
   return (
     <Card>
       <Stack justifyContent={'space-between'} alignItems={'center'} p={1}>
@@ -134,7 +130,12 @@ export const MyAnnouncementsListItem = ({
           {announcement.status === AnnouncementStatus.Active ||
           announcement.status === AnnouncementStatus.Pending ? (
             <>
-              <Button size='small' variant='text' onClick={handleEdit}>
+              <Button
+                size='small'
+                variant='text'
+                component={Link}
+                to={`${AppRoutes.EditAnnouncement}?id=${announcement.id}`}
+              >
                 Edytuj
               </Button>
               <Button

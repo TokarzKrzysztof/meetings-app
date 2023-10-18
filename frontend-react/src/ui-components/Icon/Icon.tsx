@@ -24,7 +24,8 @@ export type IconProps<
     | 'person_outline'
     | 'question_answer'
     | 'tag_faces'
-    | 'close';
+    | 'close'
+    | 'edit';
 };
 
 export const Icon = <

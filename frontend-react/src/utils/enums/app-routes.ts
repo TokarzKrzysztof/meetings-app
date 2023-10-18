@@ -7,4 +7,5 @@ export enum AppRoutes {
   NewAnnouncement = '/new-announcement',
   EditAnnouncement = '/edit-announcement',
   MyAnnouncements = '/my-announcements',
+  MyProfile = '/my-profile'
 }

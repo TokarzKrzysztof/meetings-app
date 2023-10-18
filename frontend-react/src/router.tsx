@@ -102,6 +102,16 @@ export const router = createBrowserRouter([
         },
         loader: protectedLoader,
       },
+      {
+        path: AppRoutes.MyProfile,
+        lazy: async () => {
+          const { MyProfile } = await import(
+            './pages/MyProfile/MyProfile'
+          );
+          return { Component: MyProfile };
+        },
+        loader: protectedLoader,
+      },
     ],
   },
   { path: '*', element: <Navigate to={AppRoutes.Home} /> },

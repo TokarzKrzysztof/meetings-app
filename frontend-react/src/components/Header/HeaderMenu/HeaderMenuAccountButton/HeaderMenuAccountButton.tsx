@@ -40,7 +40,7 @@ export const HeaderMenuAccountButton = ({
       >
         Dodaj ogłoszenie
       </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.Home}>
+      <MenuItem component={Link} to={AppRoutes.MyProfile}>
         Mój profil
       </MenuItem>
       <MenuItem component={Link} to={AppRoutes.MyAnnouncements}>
@@ -61,7 +61,7 @@ export const HeaderMenuAccountButton = ({
 
   return (
     <>
-      <IconButton size='large' slot='end' color='inherit' onClick={handleOpen}>
+      <IconButton color='inherit' onClick={handleOpen}>
         {currentUser ? (
           <Avatar src={avatarPlaceholder} sx={{ width: 35, height: 35 }} />
         ) : (
