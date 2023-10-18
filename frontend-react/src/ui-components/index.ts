@@ -1,5 +1,6 @@
 export * from './AppBar/AppBar';
 export * from './Autocomplete/Autocomplete';
+export * from './Avatar/Avatar';
 export * from './Badge/Badge';
 export * from './Box/Box';
 export * from './Button/Button';

@@ -1,7 +1,15 @@
 import { MouseEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
+import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { User } from 'src/models/user';
-import { Box, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
+import {
+  Avatar,
+  Box,
+  Icon,
+  IconButton,
+  Menu,
+  MenuItem,
+} from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type HeaderMenuAccountButtonProps = {
@@ -54,7 +62,11 @@ export const HeaderMenuAccountButton = ({
   return (
     <>
       <IconButton size='large' slot='end' color='inherit' onClick={handleOpen}>
-        <Icon name={'person_outline'} />
+        {currentUser ? (
+          <Avatar src={avatarPlaceholder} sx={{ width: 35, height: 35 }} />
+        ) : (
+          <Icon name={'person_outline'} />
+        )}
       </IconButton>
       <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
         <Box onClick={handleClose}>{menuOptions}</Box>

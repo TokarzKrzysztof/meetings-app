@@ -1,5 +1,4 @@
 import { useAtom } from 'jotai';
-import { ReactElement } from 'react';
 import { confirmationDialogAtom } from 'src/store/atoms';
 import {
   Button,
@@ -9,10 +8,9 @@ import {
   DialogContentText,
   DialogTitle,
 } from 'src/ui-components';
+import { PropsWithReactElement } from 'src/utils/types/props';
 
-export type ConfirmationDialogProviderProps = {
-  children: ReactElement;
-};
+export type ConfirmationDialogProviderProps = PropsWithReactElement;
 
 export const ConfirmationDialogProvider = ({
   children,

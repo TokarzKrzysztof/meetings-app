@@ -34,3 +34,10 @@ po prawej od zdjęcia imię i nazwisko
 poniżej dane osobowe ustawione podczas rejestracji
 
 https://www.npmjs.com/package/react-easy-crop
+
+pamiętać o ComponentProps
+
+zdjęcia:
+https://depositphotos.com/pl/vectors/person-placeholder.html?qview=225976914
+https://pixabay.com/vectors/blank-profile-picture-mystery-man-973460/
+https://www.freepik.com/free-vector/anonymous-avatars-grey-circles_44471922.htm#query=user%20profile&position=0&from_view=keyword&track=ais

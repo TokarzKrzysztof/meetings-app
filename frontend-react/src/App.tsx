@@ -10,8 +10,6 @@ const theme = createTheme({
 });
 
 function App() {
-  // const {currentUser} = useGetCurrentUser();
-  // console.log(currentUser)
   return (
     <ThemeProvider theme={theme}>
       <ConfirmationDialogProvider>
