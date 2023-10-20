@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
-using Meetings.Authentication;
+using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
 using Meetings.EmailSender;
 using Meetings.EmailTemplates.Views;

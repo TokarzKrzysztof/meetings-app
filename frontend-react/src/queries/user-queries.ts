@@ -50,5 +50,33 @@ export const useGetCurrentUser = (
     currentUser: query.data,
     currentUserFetching: query.isLoading,
     currentUserFetchingError: query.error,
+    currentUserRefetch: query.refetch,
+  };
+};
+
+export const useUploadProfileImage = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Blob>
+) => {
+  const mutation = useMutation({
+    mutationFn: (image) => {
+      const formData = new FormData();
+      formData.append('image', image);
+      return axios
+        .post(`${baseUrl}/UploadProfileImage`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    uploadProfileImage: mutation.mutate,
+    uploadProfileImageResult: mutation.data,
+    uploadProfileImageError: mutation.error?.response?.data,
+    uploadProfileImageInProgress: mutation.isLoading,
+    uploadProfileImageReset: mutation.reset,
   };
 };

@@ -3,6 +3,10 @@ import { useRef } from 'react';
 import { ImageCropDialog } from 'src/components/ImageCropDialog/ImageCropDialog';
 import { useFilePicker } from 'src/hooks/useFilePicker';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
+import {
+  useGetCurrentUser,
+  useUploadProfileImage,
+} from 'src/queries/user-queries';
 import { Box, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 
 const StyledImageWrapper = styled(Box)({
@@ -26,11 +30,22 @@ export type MyProfileImageProps = {};
 export const MyProfileImage = ({ ...props }: MyProfileImageProps) => {
   const menuAnchorRef = useRef<HTMLButtonElement>(null);
   const { file, showPicker, clearFile } = useFilePicker();
+  const { uploadProfileImage } = useUploadProfileImage();
+  const { currentUser, currentUserRefetch } = useGetCurrentUser();
+
+  const handleUploadProfileImage = (croppedImage: Blob) => {
+    uploadProfileImage(croppedImage, {
+      onSuccess: () => {
+        currentUserRefetch();
+        clearFile();
+      },
+    });
+  };
 
   return (
     <>
       <StyledImageWrapper>
-        <img src={avatarPlaceholder} />
+        <img src={currentUser?.profileImage ?? avatarPlaceholder} />
         <StyledEditButton color='primary' filled ref={menuAnchorRef}>
           <Icon name={'edit'} />
         </StyledEditButton>
@@ -50,9 +65,7 @@ export const MyProfileImage = ({ ...props }: MyProfileImageProps) => {
       {file && (
         <ImageCropDialog
           image={file}
-          onAccept={(src) => {
-            console.log(src);
-          }}
+          onAccept={handleUploadProfileImage}
           onClose={clearFile}
         />
       )}

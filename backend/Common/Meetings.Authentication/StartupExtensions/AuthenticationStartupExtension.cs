@@ -1,4 +1,5 @@
-﻿using Meetings.Utils;
+﻿using Meetings.Authentication.Services;
+using Meetings.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ namespace Meetings.Authentication.StartupExtensions
         {
             builder.Services.Configure<TokenConfig>(builder.Configuration.GetSection("Jwt"));
             builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
+            builder.Services.AddScoped<IClaimsReader, ClaimsReader>();
 
             var tokenConfig = new TokenConfig();
             builder.Configuration.GetSection("Jwt").Bind(tokenConfig);

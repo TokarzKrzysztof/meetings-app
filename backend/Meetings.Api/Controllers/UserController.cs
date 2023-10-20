@@ -28,8 +28,16 @@ namespace Meetings.EmailTemplates.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCurrentUser()
         {
-            UserDTO currentUser = await _userService.GetCurrentUser();
+            UserDTO? currentUser = await _userService.GetCurrentUser();
             return Ok(currentUser);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile image)
+        {
+            await _userService.UploadProfileImage(image);
+            return Ok();
         }
     }
 }

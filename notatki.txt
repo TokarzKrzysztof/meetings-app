@@ -27,6 +27,8 @@ TODO
 - sprawdzić forgot password dialog otwieranie
 - poprawki do dialogu dodawania zdjec
 - dodac menu po kliknieciu na przycisk edycji i usunąć step 1
+- zrobic file service
+- zrobic claimsReader
 
 
 Mój profil:

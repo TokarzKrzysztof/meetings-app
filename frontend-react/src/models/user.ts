@@ -12,4 +12,5 @@ export type User = {
   birthDate: string;
   passwordRepeat: string | null;
   gender: UserGender;
+  profileImage: string | null;
 };

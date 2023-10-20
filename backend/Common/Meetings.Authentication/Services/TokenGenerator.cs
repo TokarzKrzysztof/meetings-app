@@ -10,9 +10,13 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Meetings.Authentication
+namespace Meetings.Authentication.Services
 {
-    public class TokenGenerator : ITokenGenerator
+    public interface ITokenGenerator
+    {
+        string GenerateToken(User user);
+    }
+    internal class TokenGenerator : ITokenGenerator
     {
         private readonly IConfiguration _configuration;
         public TokenGenerator(IConfiguration configuration)

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Meetings.Authentication;
+using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
 using Meetings.EmailSender;
 using Meetings.Models.Entities;
@@ -21,16 +22,18 @@ namespace Meetings.Infrastructure.Services
         private readonly IRepository<Announcement> _repository;
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        private readonly IClaimsReader _claimsReader;
+        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IHttpContextAccessor httpContextAccessor, IClaimsReader claimsReader)
         {
             _repository = repository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
+            _claimsReader = claimsReader;
         }
 
         public async Task CreateNewAnnouncement(AnnouncementDTO data)
         {
-            data.UserId = GetCurrentUserId();
+            data.UserId = _claimsReader.GetCurrentUserId();
             data.Status = AnnoucementStatus.Pending;
 
             var newAnnouncement = _mapper.Map<Announcement>(data);
@@ -50,7 +53,7 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<List<AnnouncementDTO>> GetCurrentUserAnnouncements()
         {
-            Guid userId = GetCurrentUserId();
+            Guid userId = _claimsReader.GetCurrentUserId();
             var data = await _repository.Data.Where(x => x.UserId == userId).ToListAsync();
 
             return _mapper.Map<List<AnnouncementDTO>>(data);
@@ -67,13 +70,6 @@ namespace Meetings.Infrastructure.Services
         public async Task RemoveAnnouncement(Guid id)
         {
             await _repository.Remove(id);
-        }
-
-        private Guid GetCurrentUserId()
-        {
-            IEnumerable<Claim> claims = _httpContextAccessor.HttpContext.User.Claims;
-            Guid userId = new Guid(claims.Single(x => x.Type == UserClaims.Id).Value);
-            return userId;
         }
 
         public async Task<AnnouncementDTO> GetAnnouncement(Guid id)
