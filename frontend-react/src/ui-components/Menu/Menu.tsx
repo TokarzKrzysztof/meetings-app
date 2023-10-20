@@ -3,6 +3,7 @@ import {
   MenuProps as MuiMenuProps,
 } from '@mui/material/Menu';
 import { styled } from '@mui/material/styles';
+import { RefObject, useEffect, useState } from 'react';
 
 const StyledMenu = styled(MuiMenu)({
   '& .MuiList-root': {
@@ -13,8 +14,33 @@ const StyledMenu = styled(MuiMenu)({
   },
 });
 
-export type MenuProps = {};
+type MenuProps = Omit<MuiMenuProps, 'open'> & {
+  anchorRef: RefObject<HTMLButtonElement>;
+};
+export const Menu = ({ children, anchorRef, ...props }: MenuProps) => {
+  const [open, setOpen] = useState(false);
 
-export const Menu = ({ ...props }: MuiMenuProps & MenuProps) => (
-  <StyledMenu {...props}></StyledMenu>
-);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (anchorRef.current) {
+      anchorRef.current.addEventListener('click', () => {
+        setOpen(true);
+      });
+    }
+  }, [anchorRef]);
+
+  if (!anchorRef.current) return null;
+  return (
+    <StyledMenu
+      anchorEl={anchorRef.current}
+      open={open}
+      onClose={handleClose}
+      {...props}
+    >
+      <div onClick={handleClose}>{children}</div>
+    </StyledMenu>
+  );
+};

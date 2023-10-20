@@ -24,6 +24,10 @@ TODO
 - ogarnąć responsywność
 - przy edycji danych sprawdzać czy ten konkretny użytkownik edytuje 
 - dodać captcha przy rejestracji
+- sprawdzić forgot password dialog otwieranie
+- poprawki do dialogu dodawania zdjec
+- dodac menu po kliknieciu na przycisk edycji i usunąć step 1
+
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)

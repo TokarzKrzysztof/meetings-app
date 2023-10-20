@@ -1,15 +1,8 @@
-import { MouseEvent, useState } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { User } from 'src/models/user';
-import {
-  Avatar,
-  Box,
-  Icon,
-  IconButton,
-  Menu,
-  MenuItem,
-} from 'src/ui-components';
+import { Avatar, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type HeaderMenuAccountButtonProps = {
@@ -21,15 +14,7 @@ export const HeaderMenuAccountButton = ({
   currentUser,
   onLogout,
 }: HeaderMenuAccountButtonProps) => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const handleOpen = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const menuAnchorRef = useRef<HTMLButtonElement>(null);
 
   const menuOptions = currentUser ? (
     <>
@@ -61,16 +46,14 @@ export const HeaderMenuAccountButton = ({
 
   return (
     <>
-      <IconButton color='inherit' onClick={handleOpen}>
+      <IconButton color='inherit' ref={menuAnchorRef}>
         {currentUser ? (
           <Avatar src={avatarPlaceholder} sx={{ width: 35, height: 35 }} />
         ) : (
           <Icon name={'person_outline'} />
         )}
       </IconButton>
-      <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={handleClose}>
-        <Box onClick={handleClose}>{menuOptions}</Box>
-      </Menu>
+      <Menu anchorRef={menuAnchorRef}>{menuOptions}</Menu>
     </>
   );
 };

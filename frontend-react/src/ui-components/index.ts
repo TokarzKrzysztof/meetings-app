@@ -32,6 +32,7 @@ export * from './RadioGroup/RadioGroup';
 export * from './Select/Select';
 export * from './Skeleton/Skeleton';
 export * from './Slide/Slide';
+export * from './Slider/Slider';
 export * from './Stack/Stack';
 export * from './Table/Table';
 export * from './TableCell/TableCell';

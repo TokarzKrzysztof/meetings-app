@@ -25,7 +25,8 @@ export type IconProps<
     | 'question_answer'
     | 'tag_faces'
     | 'close'
-    | 'edit';
+    | 'edit'
+    | 'cloud_upload';
 };
 
 export const Icon = <
