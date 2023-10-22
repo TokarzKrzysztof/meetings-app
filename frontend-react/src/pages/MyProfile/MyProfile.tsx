@@ -1,4 +1,5 @@
 import { Header } from 'src/components/Header/Header';
+import { MyProfileActionList } from 'src/pages/MyProfile/MyProfileActionList/MyProfileActionList';
 import { MyProfileImage } from 'src/pages/MyProfile/MyProfileImage/MyProfileImage';
 import { useGetCurrentUser } from 'src/queries/user-queries';
 import { Container, Stack, Typography } from 'src/ui-components';
@@ -17,6 +18,7 @@ export const MyProfile = () => {
             {currentUser.firstName} {currentUser.lastName}
           </Typography>
         </Stack>
+        <MyProfileActionList />
       </Container>
     </>
   );

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Meetings.Authentication;
 using Meetings.Authentication.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -52,15 +53,18 @@ namespace Meetings.Infrastructure.Services
             var user = await _repository.GetById((Guid)userId);
 
             var result = _mapper.Map<UserDTO>(user);
-
-            var filePath = GetProfileImageFilePath((Guid)userId);
-            if (File.Exists(filePath))
-            {
-                byte[] bytes = await File.ReadAllBytesAsync(filePath);
-                result.ProfileImage = $"data:image/jpeg;base64, {Convert.ToBase64String(bytes)}";
-            }
-
+            result.ProfileImage = await GetConnectedProfileImage((Guid)userId);
             return result;
+        }
+
+        public async Task<string> GetConnectedProfileImage(Guid userId)
+        {
+            var filePath = GetProfileImageFilePath(userId);
+
+            if (!File.Exists(filePath)) return null;
+
+            byte[] bytes = await File.ReadAllBytesAsync(filePath);
+            return $"data:image/jpeg;base64, {Convert.ToBase64String(bytes)}";
         }
 
         public Task<bool> IsEmailTaken(string email)

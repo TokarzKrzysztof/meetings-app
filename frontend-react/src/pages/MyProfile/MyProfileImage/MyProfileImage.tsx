@@ -58,7 +58,7 @@ export const MyProfileImage = ({ ...props }: MyProfileImageProps) => {
         }}
       >
         <MenuItem onClick={() => showPicker('image/*')}>
-          Dodaj zdjęcie profilowe
+          {currentUser?.profileImage ? 'Zmień' : 'Dodaj'} zdjęcie profilowe
         </MenuItem>
         <MenuItem>Wyświetl zdjęcie profilowe</MenuItem>
       </Menu>

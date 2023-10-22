@@ -26,7 +26,8 @@ namespace Meetings.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor)
+        private readonly UserService _userService;
+        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _tokenGenerator = tokenGenerator;
             _repository = repository;
@@ -34,6 +35,7 @@ namespace Meetings.Infrastructure.Services
             _emailSender = emailSender;
             _tempDataRepository = tempDataRepository;
             _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
         }
 
         public async Task<UserDTO> Login(LoginCredentials data)
@@ -51,7 +53,9 @@ namespace Meetings.Infrastructure.Services
             var token = _tokenGenerator.GenerateToken(user);
             UpdateAuthCookie(token, DateTime.UtcNow.AddDays(7));
 
-            return _mapper.Map<UserDTO>(user);
+            var result = _mapper.Map<UserDTO>(user);
+            result.ProfileImage = await _userService.GetConnectedProfileImage(user.Id);
+            return result;
         }
 
         public async Task Logout()
