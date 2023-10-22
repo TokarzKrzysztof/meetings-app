@@ -41,9 +41,26 @@ namespace Meetings.Infrastructure.Services
             var user = await _repository.GetById(userId);
 
             await _userValidator.WhenChangePassword(data, user);
-            
+
             user.Password = Hasher.Hash(data.NewPassword);
             await _repository.Update(user);
+        }
+
+        public async Task<UserDTO> ChangePersonalData(UserDTO data)
+        {
+            await _userValidator.WhenChangePersonalData(data);
+
+            Guid userId = _claimsReader.GetCurrentUserId();
+            var user = await _repository.GetById(userId);
+
+            user.FirstName = data.FirstName;
+            user.LastName = data.LastName;
+            user.Gender = data.Gender;
+            user.BirthDate = data.BirthDate;
+
+            await _repository.Update(user);
+
+            return await GetUser(userId);
         }
 
         public async Task ConfirmAccount(Guid tempId)

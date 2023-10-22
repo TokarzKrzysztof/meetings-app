@@ -105,3 +105,28 @@ export const useChangePassword = (
     changePasswordReset: mutation.reset,
   };
 };
+
+export const useChangePersonalData = (
+  options?: UseMutationOptions<
+    User,
+    AxiosError<HttpErrorData>,
+    Pick<User, 'firstName' | 'lastName' | 'birthDate' | 'gender'>
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return axios
+        .put(`${baseUrl}/ChangePersonalData`, data)
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    changePersonalData: mutation.mutate,
+    changePersonalDataResult: mutation.data,
+    changePersonalDataError: mutation.error?.response?.data,
+    changePersonalDataInProgress: mutation.isLoading,
+    changePersonalDataReset: mutation.reset,
+  };
+};

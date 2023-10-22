@@ -1,6 +1,6 @@
 ﻿namespace Meetings.Models.Entities
 {
-    public class EntityBase
+    public interface IEntityBase
     {
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }

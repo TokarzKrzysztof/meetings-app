@@ -17,7 +17,7 @@ namespace Meetings.Database.Repositories
         Task Update(TEntity entity);
     }
 
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : EntityBase
+    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntityBase
     {
         private readonly ApplicationDbContext _db;
 

@@ -71,7 +71,7 @@ export const MyProfileChangePassword = () => {
           labels={['Nowe hasło', 'Powtórz nowe hasło']}
         ></PasswordFields>
         <MyProfileActionButtons
-          inProgress={changePasswordInProgress}
+          isSaveDisabled={changePasswordInProgress}
         ></MyProfileActionButtons>
       </MyProfileForm>
     </>

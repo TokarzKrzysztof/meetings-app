@@ -9,7 +9,7 @@ import { ControlledFormField } from 'src/components/ControlledFormField/Controll
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { PasswordFields } from 'src/components/PasswordFields/PasswordFields';
-import { User, UserGender } from 'src/models/user';
+import { User } from 'src/models/user';
 import { RegisterSuccess } from 'src/pages/Register/RegisterSuccess/RegisterSuccess';
 import { useRegister } from 'src/queries/auth-queries';
 import { Button, Typography } from 'src/ui-components';
@@ -17,17 +17,7 @@ import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 import { Validators } from 'src/utils/helpers/validators';
-
-const genderOptions = [
-  {
-    value: UserGender.Male,
-    label: 'Mężczyzna',
-  },
-  {
-    value: UserGender.Female,
-    label: 'Kobieta',
-  },
-];
+import { genderOptions } from 'src/utils/user-utils';
 
 export const Register = () => {
   const form = useForm<User>();

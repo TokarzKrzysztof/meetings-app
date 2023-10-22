@@ -49,5 +49,13 @@ namespace Meetings.EmailTemplates.Controllers
             await _userService.ChangePassword(data);
             return Ok();
         }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> ChangePersonalData([FromBody] UserDTO data)
+        {
+            UserDTO user = await _userService.ChangePersonalData(data);
+            return Ok(user);
+        }
     }
 }

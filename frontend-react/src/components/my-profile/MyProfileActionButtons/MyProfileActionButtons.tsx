@@ -3,11 +3,11 @@ import { Button, Stack } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type MyProfileActionButtonsProps = {
-  inProgress: boolean;
+  isSaveDisabled: boolean;
 };
 
 export const MyProfileActionButtons = ({
-  inProgress,
+  isSaveDisabled,
 }: MyProfileActionButtonsProps) => {
   return (
     <Stack mt={4} justifyContent={'space-between'}>
@@ -20,7 +20,7 @@ export const MyProfileActionButtons = ({
         Anuluj
       </Button>
 
-      <Button type='submit' disabled={inProgress}>
+      <Button type='submit' disabled={isSaveDisabled}>
         Zapisz zmiany
       </Button>
     </Stack>

@@ -15,8 +15,12 @@ namespace Meetings.Models.Entities
         Female
     }
 
-    public class User : EntityBase
+    public class User : IEntityBase
     {
+        public Guid Id { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public bool IsDelete { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string FirstName { get; set; }
@@ -31,12 +35,12 @@ namespace Meetings.Models.Entities
     {
         public Guid Id { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
-        public string PasswordRepeat { get; set; }
+        public string? Password { get; set; }
+        public string? PasswordRepeat { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
-        public string ProfileImage { get; set; }
+        public string? ProfileImage { get; set; }
     }
 }

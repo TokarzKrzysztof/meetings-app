@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Entities
 {
-    public class Category : EntityBase
+    public class Category : IEntityBase
     {
+        public Guid Id { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public bool IsDelete { get; set; }
         public string Name { get; set; }
     }
     public class CategoryDTO

@@ -31,12 +31,16 @@ namespace Meetings.Infrastructure.Validators
             validator.RuleFor(x => x.Email).EmailAddress(EmailValidationMode.Net4xRegex).WithErrorCode("EmailIncorrect");
             validator.RuleFor(x => x.Email).MustAsync(BeUnique).WithErrorCode("EmailTaken");
             validator.RuleFor(x => x.Password).Equal(x => x.PasswordRepeat).WithErrorCode("PasswordsNotMatch");
-            validator.RuleFor(x => x.FirstName).NotEmpty().WithErrorCode("FirstNameEmpty");
-            validator.RuleFor(x => x.LastName).NotEmpty().WithErrorCode("LastNameEmpty");
-            validator.RuleFor(x => x.BirthDate).LessThan(DateTime.UtcNow).WithErrorCode("BirthDateIncorrect");
-            validator.RuleFor(x => x.Gender).IsInEnum().WithErrorCode("GenderIncorrect");
+            AddPersonalDataRules(validator);
             AddPasswordMinLengthRule(validator, data.Password);
             
+            await validator.ValidateAndThrowAsync(data);
+        }
+
+        internal async Task WhenChangePersonalData(UserDTO data)
+        {
+            var validator = new InlineValidator<UserDTO>();
+            AddPersonalDataRules(validator);
             await validator.ValidateAndThrowAsync(data);
         }
 
@@ -87,6 +91,14 @@ namespace Meetings.Infrastructure.Validators
         private void AddPasswordMinLengthRule<T>(InlineValidator<T> validator, string password)
         {
             validator.RuleFor(x => password).MinimumLength(PasswordMinLength).WithErrorCode("PasswordTooShort");
+        } 
+        
+        private void AddPersonalDataRules(InlineValidator<UserDTO> validator)
+        {
+            validator.RuleFor(x => x.FirstName).NotEmpty().WithErrorCode("FirstNameEmpty");
+            validator.RuleFor(x => x.LastName).NotEmpty().WithErrorCode("LastNameEmpty");
+            validator.RuleFor(x => x.BirthDate).LessThan(DateTime.UtcNow).WithErrorCode("BirthDateIncorrect");
+            validator.RuleFor(x => x.Gender).IsInEnum().WithErrorCode("GenderIncorrect");
         }
     }
 }
