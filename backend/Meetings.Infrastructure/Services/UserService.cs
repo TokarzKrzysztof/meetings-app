@@ -12,6 +12,8 @@ using System.Security.Claims;
 using Meetings.Authentication;
 using Meetings.Authentication.Services;
 using Microsoft.AspNetCore.Mvc;
+using Meetings.Models.Resources;
+using Meetings.Infrastructure.Validators;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -22,13 +24,26 @@ namespace Meetings.Infrastructure.Services
         private readonly IRepository<TempData> _tempDataRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IClaimsReader _claimsReader;
-        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, IClaimsReader claimsReader)
+        private readonly UserValidator _userValidator;
+        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, IClaimsReader claimsReader, UserValidator userValidator)
         {
             _repository = repository;
             _mapper = mapper;
             _tempDataRepository = tempDataRepository;
             _httpContextAccessor = httpContextAccessor;
             _claimsReader = claimsReader;
+            _userValidator = userValidator;
+        }
+
+        public async Task ChangePassword(ChangePasswordData data)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+            var user = await _repository.GetById(userId);
+
+            await _userValidator.WhenChangePassword(data, user);
+            
+            user.Password = Hasher.Hash(data.NewPassword);
+            await _repository.Update(user);
         }
 
         public async Task ConfirmAccount(Guid tempId)
@@ -50,21 +65,16 @@ namespace Meetings.Infrastructure.Services
                 return null;
             }
 
-            var user = await _repository.GetById((Guid)userId);
-
-            var result = _mapper.Map<UserDTO>(user);
-            result.ProfileImage = await GetConnectedProfileImage((Guid)userId);
-            return result;
+            return await GetUser((Guid)userId);
         }
 
-        public async Task<string> GetConnectedProfileImage(Guid userId)
+        public async Task<UserDTO> GetUser(Guid id)
         {
-            var filePath = GetProfileImageFilePath(userId);
+            var user = await _repository.GetById(id);
 
-            if (!File.Exists(filePath)) return null;
-
-            byte[] bytes = await File.ReadAllBytesAsync(filePath);
-            return $"data:image/jpeg;base64, {Convert.ToBase64String(bytes)}";
+            var result = _mapper.Map<UserDTO>(user);
+            result.ProfileImage = await GetConnectedProfileImage(id);
+            return result;
         }
 
         public Task<bool> IsEmailTaken(string email)
@@ -83,6 +93,15 @@ namespace Meetings.Infrastructure.Services
             }
         }
 
+        private async Task<string> GetConnectedProfileImage(Guid userId)
+        {
+            var filePath = GetProfileImageFilePath(userId);
+
+            if (!File.Exists(filePath)) return null;
+
+            byte[] bytes = await File.ReadAllBytesAsync(filePath);
+            return $"data:image/jpeg;base64, {Convert.ToBase64String(bytes)}";
+        }
         private string GetProfileImageFilePath(Guid userId)
         {
             return Path.Combine(Directory.GetCurrentDirectory(), "Files", $"profile image - {userId}.jpg");

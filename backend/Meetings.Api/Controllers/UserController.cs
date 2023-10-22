@@ -1,6 +1,8 @@
 ﻿using Meetings.Api.Controllers;
 using Meetings.Infrastructure.Services;
+using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
+using Meetings.Models.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +39,14 @@ namespace Meetings.EmailTemplates.Controllers
         public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile image)
         {
             await _userService.UploadProfileImage(image);
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordData data)
+        {
+            await _userService.ChangePassword(data);
             return Ok();
         }
     }

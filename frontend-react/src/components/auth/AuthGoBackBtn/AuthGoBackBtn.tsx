@@ -7,7 +7,7 @@ export type AuthGoBackBtnProps = {};
 export const AuthGoBackBtn = ({ ...props }: AuthGoBackBtnProps) => {
   return (
     <Button
-      sx={{ color: 'white' }}
+      sx={{ color: 'inherit' }}
       variant='text'
       startIcon={<Icon name='arrow_back' />}
       size='small'

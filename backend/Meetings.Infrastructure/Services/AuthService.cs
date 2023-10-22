@@ -4,6 +4,7 @@ using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
 using Meetings.EmailSender;
 using Meetings.EmailTemplates.Views;
+using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Meetings.Utils;
@@ -27,7 +28,8 @@ namespace Meetings.Infrastructure.Services
         private readonly IEmailSender _emailSender;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserService _userService;
-        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, UserService userService)
+        private readonly UserValidator _userValidator;
+        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, UserService userService, UserValidator userValidator)
         {
             _tokenGenerator = tokenGenerator;
             _repository = repository;
@@ -36,26 +38,18 @@ namespace Meetings.Infrastructure.Services
             _tempDataRepository = tempDataRepository;
             _httpContextAccessor = httpContextAccessor;
             _userService = userService;
+            _userValidator = userValidator;
         }
 
         public async Task<UserDTO> Login(LoginCredentials data)
         {
             var user = await TryGetUserByEmail(data.Email);
-            if (user == null || !Hasher.Verify(data.Password, user.Password))
-            {
-                throw new UnauthorizedAccessException();
-            }
-            if (!user.IsActive)
-            {
-                throw new UnauthorizedAccessException("UserNotActive");
-            }
+            _userValidator.WhenLogin(data, user);
 
             var token = _tokenGenerator.GenerateToken(user);
             UpdateAuthCookie(token, DateTime.UtcNow.AddDays(7));
 
-            var result = _mapper.Map<UserDTO>(user);
-            result.ProfileImage = await _userService.GetConnectedProfileImage(user.Id);
-            return result;
+            return await _userService.GetUser(user.Id);
         }
 
         public async Task Logout()
@@ -65,6 +59,8 @@ namespace Meetings.Infrastructure.Services
 
         public async Task Register(UserDTO data, string appUrl)
         {
+            await _userValidator.WhenRegister(data);
+
             data.Password = Hasher.Hash(data.Password);
 
             var user = await _repository.Create(_mapper.Map(data, new User()));
@@ -83,11 +79,12 @@ namespace Meetings.Infrastructure.Services
 
         public async Task ResetPassword(ResetPasswordData data)
         {
+            await _userValidator.WhenResetPassword(data);
+
             var tempData = await _tempDataRepository.GetById(data.TempId);
             var user = await _repository.Data.SingleAsync(x => x.Email == tempData.Data);
 
             user.Password = Hasher.Hash(data.NewPassword);
-
             await _repository.Update(user);
         }
 

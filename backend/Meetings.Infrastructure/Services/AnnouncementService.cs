@@ -3,6 +3,7 @@ using Meetings.Authentication;
 using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
 using Meetings.EmailSender;
+using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Meetings.Utils;
@@ -21,18 +22,21 @@ namespace Meetings.Infrastructure.Services
     {
         private readonly IRepository<Announcement> _repository;
         private readonly IMapper _mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IClaimsReader _claimsReader;
-        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IHttpContextAccessor httpContextAccessor, IClaimsReader claimsReader)
+        private readonly AnnouncementValidator _announcementValidator;
+
+        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IClaimsReader claimsReader, AnnouncementValidator announcementValidator)
         {
             _repository = repository;
             _mapper = mapper;
-            _httpContextAccessor = httpContextAccessor;
             _claimsReader = claimsReader;
+            _announcementValidator = announcementValidator;
         }
 
         public async Task CreateNewAnnouncement(AnnouncementDTO data)
         {
+            _announcementValidator.WhenCreateOrEdit(data);
+
             data.UserId = _claimsReader.GetCurrentUserId();
             data.Status = AnnoucementStatus.Pending;
 
@@ -43,6 +47,8 @@ namespace Meetings.Infrastructure.Services
 
         public async Task EditAnnouncement(AnnouncementDTO data)
         {
+            _announcementValidator.WhenCreateOrEdit(data);
+
             var item = await _repository.GetById(data.Id);
             item.Description = data.Description;
             item.CategoryId = data.CategoryId;

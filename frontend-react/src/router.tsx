@@ -105,12 +105,42 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.MyProfile,
         lazy: async () => {
-          const { MyProfile } = await import(
-            './pages/MyProfile/MyProfile'
-          );
+          const { MyProfile } = await import('./pages/MyProfile/MyProfile');
           return { Component: MyProfile };
         },
         loader: protectedLoader,
+        children: [
+          {
+            path: AppRoutes.MyProfileChangeData,
+            lazy: async () => {
+              const { MyProfileChangeData } = await import(
+                './pages/MyProfile/pages/MyProfileChangeData/MyProfileChangeData'
+              );
+              return { Component: MyProfileChangeData };
+            },
+            loader: protectedLoader,
+          },
+          {
+            path: AppRoutes.MyProfileChangeEmail,
+            lazy: async () => {
+              const { MyProfileChangeEmail } = await import(
+                './pages/MyProfile/pages/MyProfileChangeEmail/MyProfileChangeEmail'
+              );
+              return { Component: MyProfileChangeEmail };
+            },
+            loader: protectedLoader,
+          },
+          {
+            path: AppRoutes.MyProfileChangePassword,
+            lazy: async () => {
+              const { MyProfileChangePassword } = await import(
+                './pages/MyProfile/pages/MyProfileChangePassword/MyProfileChangePassword'
+              );
+              return { Component: MyProfileChangePassword };
+            },
+            loader: protectedLoader,
+          },
+        ],
       },
     ],
   },

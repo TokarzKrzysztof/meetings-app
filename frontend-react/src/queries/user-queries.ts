@@ -80,3 +80,28 @@ export const useUploadProfileImage = (
     uploadProfileImageReset: mutation.reset,
   };
 };
+
+export const useChangePassword = (
+  options?: UseMutationOptions<
+    void,
+    AxiosError<HttpErrorData>,
+    { existingPassword: string; newPassword: string }
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return axios
+        .patch(`${baseUrl}/ChangePassword`, data)
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    changePassword: mutation.mutate,
+    changePasswordResult: mutation.data,
+    changePasswordError: mutation.error?.response?.data,
+    changePasswordInProgress: mutation.isLoading,
+    changePasswordReset: mutation.reset,
+  };
+};

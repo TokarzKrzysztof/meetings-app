@@ -12,7 +12,7 @@ namespace Meetings.Infrastructure.Validators
 {
     public class AnnouncementValidator
     {
-        public void WhenCreateOrEdit(AnnouncementDTO data)
+        internal void WhenCreateOrEdit(AnnouncementDTO data)
         {
             var validator = new InlineValidator<AnnouncementDTO>();
             validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");

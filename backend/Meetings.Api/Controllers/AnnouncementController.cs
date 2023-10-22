@@ -12,18 +12,15 @@ namespace Meetings.Api.Controllers
     public class AnnouncementController : AppControllerBase
     {
         private readonly AnnouncementService _announcementService;
-        private readonly AnnouncementValidator _announcementValidator;
-        public AnnouncementController(AnnouncementService announcementService, AnnouncementValidator announcementValidator)
+        public AnnouncementController(AnnouncementService announcementService)
         {
             _announcementService = announcementService;
-            _announcementValidator = announcementValidator;
         }
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateNewAnnouncement([FromBody] AnnouncementDTO data)
         {
-            _announcementValidator.WhenCreateOrEdit(data);
             await _announcementService.CreateNewAnnouncement(data);
             return Ok();
         }
@@ -32,18 +29,17 @@ namespace Meetings.Api.Controllers
         [Authorize]
         public async Task<IActionResult> EditAnnouncement([FromBody] AnnouncementDTO data)
         {
-            _announcementValidator.WhenCreateOrEdit(data);
             await _announcementService.EditAnnouncement(data);
             return Ok();
         }
-        
+
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetCurrentUserAnnouncements()
         {
             List<AnnouncementDTO> currentUserAnnouncements = await _announcementService.GetCurrentUserAnnouncements();
             return Ok(currentUserAnnouncements);
-        }  
+        }
 
         [HttpGet]
         [Authorize]
@@ -52,7 +48,7 @@ namespace Meetings.Api.Controllers
             AnnouncementDTO announcement = await _announcementService.GetAnnouncement(id);
             return Ok(announcement);
         }
-        
+
         [HttpPatch]
         [Authorize]
         public async Task<IActionResult> SetAnnouncementStatus([FromBody] SetAnnouncementStatusData data)

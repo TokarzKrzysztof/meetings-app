@@ -1,9 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import {
   UseMutationOptions,
-  UseQueryOptions,
-  useMutation,
-  useQuery,
+  useMutation
 } from 'react-query';
 import { LoginCredentials } from 'src/models/login-credentials';
 import { User } from 'src/models/user';
@@ -11,24 +9,6 @@ import { apiUrl } from 'src/utils/api-url';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Auth`;
-
-export const useGetPasswordMinLength = (
-  options?: UseQueryOptions<number, AxiosError<HttpErrorData>>
-) => {
-  const query = useQuery({
-    queryKey: 'GetPasswordMinLength',
-    queryFn: () =>
-      axios.get(`${baseUrl}/GetPasswordMinLength`).then((res) => res.data),
-    staleTime: Infinity,
-    ...options,
-  });
-
-  return {
-    passwordMinLength: query.data,
-    passwordMinLengthFetching: query.isLoading,
-    passwordMinLengthFetchingError: query.error,
-  };
-};
 
 export const useRegister = (
   options?: UseMutationOptions<string, AxiosError<HttpErrorData>, User>
@@ -144,7 +124,7 @@ export const useResetPassword = (
   const mutation = useMutation({
     mutationFn: (data) => {
       return axios
-        .post(`${baseUrl}/ResetPassword`, data)
+        .patch(`${baseUrl}/ResetPassword`, data)
         .then((res) => res.data);
     },
     ...options,

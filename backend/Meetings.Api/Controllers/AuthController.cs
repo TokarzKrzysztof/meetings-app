@@ -15,11 +15,11 @@ namespace Meetings.EmailTemplates.Controllers
     public class AuthController : AppControllerBase
     {
         private readonly AuthService _authService;
-        private readonly UserValidator _userValidator;
-        public AuthController(AuthService authService, UserValidator userValidator)
+        private readonly UserService _userService;
+        public AuthController(AuthService authService, UserService userService)
         {
             _authService = authService;
-            _userValidator = userValidator;
+            _userService = userService;
         }
 
         [HttpPost]
@@ -40,7 +40,6 @@ namespace Meetings.EmailTemplates.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserDTO data)
         {
-            await _userValidator.WhenCreate(data);
             await _authService.Register(data, GetAppUrl());
             return Ok(data.Email);
         }
@@ -52,12 +51,6 @@ namespace Meetings.EmailTemplates.Controllers
             return Ok();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetPasswordMinLength()
-        {
-            return Ok(5);
-        }
-
         [HttpPost]
         public async Task<IActionResult> SendForgotPasswordEmail([FromQuery] string email)
         {
@@ -65,7 +58,7 @@ namespace Meetings.EmailTemplates.Controllers
             return Ok();
         }  
 
-        [HttpPost]
+        [HttpPatch]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordData data)
         {
             await _authService.ResetPassword(data);

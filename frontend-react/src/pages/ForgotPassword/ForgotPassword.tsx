@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { AuthButton } from 'src/components/AuthButton/AuthButton';
-import { AuthForm } from 'src/components/AuthForm/AuthForm';
-import { AuthGoBackBtn } from 'src/components/AuthGoBackBtn/AuthGoBackBtn';
-import { AuthIcon } from 'src/components/AuthIcon/AuthIcon';
-import { AuthRedirectInfo } from 'src/components/AuthRedirectInfo/AuthRedirectInfo';
+import { AuthButton } from 'src/components/auth/AuthButton/AuthButton';
+import { AuthForm } from 'src/components/auth/AuthForm/AuthForm';
+import { AuthGoBackBtn } from 'src/components/auth/AuthGoBackBtn/AuthGoBackBtn';
+import { AuthIcon } from 'src/components/auth/AuthIcon/AuthIcon';
+import { AuthRedirectInfo } from 'src/components/auth/AuthRedirectInfo/AuthRedirectInfo';
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
 import { ForgotPasswordConfirmationDialog } from 'src/pages/ForgotPassword/ForgotPasswordConfirmationDialog/ForgotPasswordConfirmationDialog';

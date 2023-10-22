@@ -7,5 +7,8 @@ export enum AppRoutes {
   NewAnnouncement = '/new-announcement',
   EditAnnouncement = '/edit-announcement',
   MyAnnouncements = '/my-announcements',
-  MyProfile = '/my-profile'
+  MyProfile = '/my-profile',
+  MyProfileChangeData = '/my-profile/change-data',
+  MyProfileChangePassword = '/my-profile/change-password',
+  MyProfileChangeEmail = '/my-profile/change-email',
 }
