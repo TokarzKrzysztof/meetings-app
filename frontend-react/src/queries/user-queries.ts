@@ -7,6 +7,10 @@ import {
 } from 'react-query';
 import { User } from 'src/models/user';
 import { apiUrl } from 'src/utils/api-url';
+import {
+  genericUseMutationMethods,
+  genericUseQueryMethods,
+} from 'src/utils/types/generic-query-methods';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/User`;
@@ -24,13 +28,7 @@ export const useIsEmailTaken = (
     ...options,
   });
 
-  return {
-    isEmailTaken: mutation.mutate,
-    isEmailTakenResult: mutation.data,
-    isEmailTakenError: mutation.error?.response?.data,
-    isEmailTakenInProgress: mutation.isLoading,
-    isEmailTakenReset: mutation.reset,
-  };
+  return genericUseMutationMethods('isEmailTaken', mutation);
 };
 
 export const getCurrentUserQueryKey = 'GetCurrentUser';
@@ -46,12 +44,7 @@ export const useGetCurrentUser = (
     ...options,
   });
 
-  return {
-    currentUser: query.data,
-    currentUserFetching: query.isLoading,
-    currentUserFetchingError: query.error,
-    currentUserRefetch: query.refetch,
-  };
+  return genericUseQueryMethods('currentUser', query);
 };
 
 export const useUploadProfileImage = (
@@ -72,13 +65,7 @@ export const useUploadProfileImage = (
     ...options,
   });
 
-  return {
-    uploadProfileImage: mutation.mutate,
-    uploadProfileImageResult: mutation.data,
-    uploadProfileImageError: mutation.error?.response?.data,
-    uploadProfileImageInProgress: mutation.isLoading,
-    uploadProfileImageReset: mutation.reset,
-  };
+  return genericUseMutationMethods('uploadProfileImage', mutation);
 };
 
 export const useChangePassword = (
@@ -97,13 +84,7 @@ export const useChangePassword = (
     ...options,
   });
 
-  return {
-    changePassword: mutation.mutate,
-    changePasswordResult: mutation.data,
-    changePasswordError: mutation.error?.response?.data,
-    changePasswordInProgress: mutation.isLoading,
-    changePasswordReset: mutation.reset,
-  };
+  return genericUseMutationMethods('changePassword', mutation);
 };
 
 export const useChangePersonalData = (
@@ -122,13 +103,7 @@ export const useChangePersonalData = (
     ...options,
   });
 
-  return {
-    changePersonalData: mutation.mutate,
-    changePersonalDataResult: mutation.data,
-    changePersonalDataError: mutation.error?.response?.data,
-    changePersonalDataInProgress: mutation.isLoading,
-    changePersonalDataReset: mutation.reset,
-  };
+  return genericUseMutationMethods('changePersonalData', mutation);
 };
 
 export const useSendChangeEmailAddressEmail = (
@@ -147,11 +122,5 @@ export const useSendChangeEmailAddressEmail = (
     ...options,
   });
 
-  return {
-    sendChangeEmailAddressEmail: mutation.mutate,
-    sendChangeEmailAddressEmailResult: mutation.data,
-    sendChangeEmailAddressEmailError: mutation.error?.response?.data,
-    sendChangeEmailAddressEmailInProgress: mutation.isLoading,
-    sendChangeEmailAddressEmailReset: mutation.reset,
-  };
+  return genericUseMutationMethods('sendChangeEmailAddressEmail', mutation);
 };

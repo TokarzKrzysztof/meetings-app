@@ -1,11 +1,9 @@
 import axios, { AxiosError } from 'axios';
-import {
-  UseMutationOptions,
-  useMutation
-} from 'react-query';
+import { UseMutationOptions, useMutation } from 'react-query';
 import { LoginCredentials } from 'src/models/login-credentials';
 import { User } from 'src/models/user';
 import { apiUrl } from 'src/utils/api-url';
+import { genericUseMutationMethods } from 'src/utils/types/generic-query-methods';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Auth`;
@@ -20,14 +18,7 @@ export const useRegister = (
     ...options,
   });
 
-  return {
-    registerUser: mutation.mutate,
-    registerUserResult: mutation.data,
-    registerUserError: mutation.error?.response?.data,
-    registerUserInProgress: mutation.isLoading,
-    registerUserSuccess: mutation.isSuccess,
-    registerUserReset: mutation.reset,
-  };
+  return genericUseMutationMethods('registerUser', mutation);
 };
 
 export const useResendActivationLink = (
@@ -43,10 +34,7 @@ export const useResendActivationLink = (
     ...options,
   });
 
-  return {
-    resendActivationLink: mutation.mutate,
-    resendActivationLinkInProgress: mutation.isLoading,
-  };
+  return genericUseMutationMethods('resendActivationLink', mutation);
 };
 
 export const useLogin = (
@@ -63,13 +51,7 @@ export const useLogin = (
     ...options,
   });
 
-  return {
-    login: mutation.mutate,
-    loginResult: mutation.data,
-    loginError: mutation.error?.response?.data,
-    loginInProgress: mutation.isLoading,
-    loginReset: mutation.reset,
-  };
+  return genericUseMutationMethods('login', mutation);
 };
 
 export const useLogout = (
@@ -82,13 +64,7 @@ export const useLogout = (
     ...options,
   });
 
-  return {
-    logout: mutation.mutate,
-    logoutResult: mutation.data,
-    logoutError: mutation.error?.response?.data,
-    logoutInProgress: mutation.isLoading,
-    logoutReset: mutation.reset,
-  };
+  return genericUseMutationMethods('logout', mutation);
 };
 
 export const useSendForgotPasswordEmail = (
@@ -104,14 +80,7 @@ export const useSendForgotPasswordEmail = (
     ...options,
   });
 
-  return {
-    sendForgotPasswordEmail: mutation.mutate,
-    sendForgotPasswordEmailSuccess: mutation.isSuccess,
-    sendForgotPasswordEmailResult: mutation.data,
-    sendForgotPasswordEmailError: mutation.error?.response?.data,
-    sendForgotPasswordEmailInProgress: mutation.isLoading,
-    sendForgotPasswordEmailReset: mutation.reset,
-  };
+  return genericUseMutationMethods('sendForgotPasswordEmail', mutation);
 };
 
 export const useResetPassword = (
@@ -130,12 +99,5 @@ export const useResetPassword = (
     ...options,
   });
 
-  return {
-    resetPassword: mutation.mutate,
-    resetPasswordSuccess: mutation.isSuccess,
-    resetPasswordResult: mutation.data,
-    resetPasswordError: mutation.error?.response?.data,
-    resetPasswordInProgress: mutation.isLoading,
-    resetPasswordReset: mutation.reset,
-  };
+  return genericUseMutationMethods('resetPassword', mutation);
 };

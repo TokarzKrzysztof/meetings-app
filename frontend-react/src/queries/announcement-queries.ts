@@ -7,6 +7,7 @@ import {
 } from 'react-query';
 import { Announcement, AnnouncementStatus } from 'src/models/announcement';
 import { apiUrl } from 'src/utils/api-url';
+import { genericUseMutationMethods, genericUseQueryMethods } from 'src/utils/types/generic-query-methods';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Announcement`;
@@ -23,14 +24,7 @@ export const useCreateNewAnnouncement = (
     ...options,
   });
 
-  return {
-    createNewAnnouncement: mutation.mutate,
-    createNewAnnouncementResult: mutation.data,
-    createNewAnnouncementError: mutation.error?.response?.data,
-    createNewAnnouncementInProgress: mutation.isLoading,
-    createNewAnnouncementSuccess: mutation.isSuccess,
-    createNewAnnouncementReset: mutation.reset,
-  };
+  return genericUseMutationMethods('createNewAnnouncement', mutation);
 };
 
 export const useEditAnnouncement = (
@@ -45,14 +39,7 @@ export const useEditAnnouncement = (
     ...options,
   });
 
-  return {
-    editAnnouncement: mutation.mutate,
-    editAnnouncementResult: mutation.data,
-    editAnnouncementError: mutation.error?.response?.data,
-    editAnnouncementInProgress: mutation.isLoading,
-    editAnnouncementSuccess: mutation.isSuccess,
-    editAnnouncementReset: mutation.reset,
-  };
+  return genericUseMutationMethods('editAnnouncement', mutation);
 };
 
 export const useGetCurrentUserAnnouncements = (
@@ -67,12 +54,7 @@ export const useGetCurrentUserAnnouncements = (
     ...options,
   });
 
-  return {
-    currentUserAnnoucements: query.data,
-    currentUserAnnoucementsFetching: query.isFetching,
-    currentUserAnnoucementsFetchingError: query.error,
-    currentUserAnnoucementsRefetch: query.refetch,
-  };
+  return genericUseQueryMethods('currentUserAnnoucements', query);
 };
 
 export const useSetAnnouncementStatus = (
@@ -91,14 +73,7 @@ export const useSetAnnouncementStatus = (
     ...options,
   });
 
-  return {
-    setAnnouncementStatus: mutation.mutate,
-    setAnnouncementStatusResult: mutation.data,
-    setAnnouncementStatusError: mutation.error?.response?.data,
-    setAnnouncementStatusInProgress: mutation.isLoading,
-    setAnnouncementStatusSuccess: mutation.isSuccess,
-    setAnnouncementStatusReset: mutation.reset,
-  };
+  return genericUseMutationMethods('setAnnouncementStatus', mutation);
 };
 
 export const useRemoveAnnouncement = (
@@ -118,14 +93,7 @@ export const useRemoveAnnouncement = (
     ...options,
   });
 
-  return {
-    removeAnnouncement: mutation.mutate,
-    removeAnnouncementResult: mutation.data,
-    removeAnnouncementError: mutation.error?.response?.data,
-    removeAnnouncementInProgress: mutation.isLoading,
-    removeAnnouncementSuccess: mutation.isSuccess,
-    removeAnnouncementReset: mutation.reset,
-  };
+  return genericUseMutationMethods('removeAnnouncement', mutation);
 };
 
 export const useGetAnnouncement = (
@@ -143,9 +111,5 @@ export const useGetAnnouncement = (
     ...options,
   });
 
-  return {
-    announcement: query.data,
-    announcementFetching: query.isFetching,
-    announcementFetchingError: query.error,
-  };
+  return genericUseQueryMethods('announcement', query);
 };
