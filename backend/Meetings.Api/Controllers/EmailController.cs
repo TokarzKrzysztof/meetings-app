@@ -24,6 +24,13 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> ChangeEmailAddress([FromQuery] Guid tempId)
+        {
+            await _userService.ChangeEmailAddress(tempId);
+            return Redirect($"{GetClientUrl()}?isFromChangeEmailAddress=true");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> ResetPassword([FromQuery] Guid tempId)
         {
             return Redirect($"{GetClientUrl()}/reset-password?tempId={tempId}");

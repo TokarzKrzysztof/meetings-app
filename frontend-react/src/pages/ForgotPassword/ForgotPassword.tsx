@@ -61,7 +61,7 @@ export const ForgotPassword = () => {
       </AuthForm>
       <ForgotPasswordConfirmationDialog
         show={showDialog}
-        onRetry={() => sendForgotPasswordEmail(getValues('email'))}
+        onRetry={() => onSubmit(getValues())}
         onClose={() => setShowDialog(false)}
         inProgress={sendForgotPasswordEmailInProgress}
       />

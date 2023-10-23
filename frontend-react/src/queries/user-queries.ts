@@ -130,3 +130,28 @@ export const useChangePersonalData = (
     changePersonalDataReset: mutation.reset,
   };
 };
+
+export const useSendChangeEmailAddressEmail = (
+  options?: UseMutationOptions<
+    void,
+    AxiosError<HttpErrorData>,
+    { password: string; email: string }
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      return axios
+        .patch(`${baseUrl}/SendChangeEmailAddressEmail`, data)
+        .then((res) => res.data);
+    },
+    ...options,
+  });
+
+  return {
+    sendChangeEmailAddressEmail: mutation.mutate,
+    sendChangeEmailAddressEmailResult: mutation.data,
+    sendChangeEmailAddressEmailError: mutation.error?.response?.data,
+    sendChangeEmailAddressEmailInProgress: mutation.isLoading,
+    sendChangeEmailAddressEmailReset: mutation.reset,
+  };
+};

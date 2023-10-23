@@ -57,5 +57,13 @@ namespace Meetings.EmailTemplates.Controllers
             UserDTO user = await _userService.ChangePersonalData(data);
             return Ok(user);
         }
+
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> SendChangeEmailAddressEmail([FromBody] ChangeEmailAddressData data)
+        {
+            await _userService.SendChangeEmailAddressEmail(data, GetAppUrl());
+            return Ok();
+        }
     }
 }

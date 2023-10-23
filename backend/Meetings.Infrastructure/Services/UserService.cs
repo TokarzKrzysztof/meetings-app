@@ -14,6 +14,10 @@ using Meetings.Authentication.Services;
 using Microsoft.AspNetCore.Mvc;
 using Meetings.Models.Resources;
 using Meetings.Infrastructure.Validators;
+using Meetings.EmailSender;
+using Meetings.EmailTemplates.Views;
+using System.Text.Json;
+using Meetings.Models.TempDataModels;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -25,7 +29,8 @@ namespace Meetings.Infrastructure.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IClaimsReader _claimsReader;
         private readonly UserValidator _userValidator;
-        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, IClaimsReader claimsReader, UserValidator userValidator)
+        private readonly IEmailSender _emailSender;
+        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, IClaimsReader claimsReader, UserValidator userValidator, IEmailSender emailSender)
         {
             _repository = repository;
             _mapper = mapper;
@@ -33,6 +38,38 @@ namespace Meetings.Infrastructure.Services
             _httpContextAccessor = httpContextAccessor;
             _claimsReader = claimsReader;
             _userValidator = userValidator;
+            _emailSender = emailSender;
+        }
+
+        public async Task SendChangeEmailAddressEmail(ChangeEmailAddressData data, string appUrl)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+            var user = await _repository.GetById(userId);
+
+            await _userValidator.WhenChangeEmailAddress(data, user);
+
+            var serializedData = JsonSerializer.Serialize(new ChangeEmailAddressTempData(data.Email, userId));
+            var tempData = await _tempDataRepository.Create(new TempData(serializedData));
+            EmailData emailData = new EmailData(
+               new EmailReceiver(data.Email, data.Email),
+               "Zmiana adresu email",
+               "ChangeEmailAddress",
+               new ChangeEmailAddressModel($"{appUrl}/api/Email/ChangeEmailAddress?tempId={tempData.Id}")
+           );
+
+            // non blocking action
+            _emailSender.Send(emailData);
+        }
+
+        public async Task ChangeEmailAddress(Guid tempId)
+        {
+            var tempData = await _tempDataRepository.GetById(tempId);
+            var data = JsonSerializer.Deserialize<ChangeEmailAddressTempData>(tempData.Data);
+
+            var user = await _repository.GetById(data.UserId);
+            user.Email = data.Email;
+
+            await _repository.Update(user);
         }
 
         public async Task ChangePassword(ChangePasswordData data)

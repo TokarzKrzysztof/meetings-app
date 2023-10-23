@@ -1,0 +1,16 @@
+﻿@using Meetings.EmailTemplates.Views;
+@using Meetings.EmailTemplates.Views.Shared;
+@model ChangeEmailAddressModel;
+
+@{
+    ViewData["EmailTitle"] = "Witaj!";
+    ViewData["EmailPreHeader"] = "Zmiana adresu email";
+}
+
+@await Html.PartialAsync("CenteredText", "Otrzymaliśmy Twoją prośbę o zmianę adresu email w naszej aplikacji.")
+<br />
+@await Html.PartialAsync("CenteredText", "Kliknij poniższy link aby potwierdzić tą zmianę")
+<br />
+@await Html.PartialAsync("EmailButton", new EmailButtonModel("Potwierdź adres email", Model.ButtonUrl))
+<br />
+@await Html.PartialAsync("CenteredText", "Jeśli to nie Ty wysyłałeś/aś tą prośbę to jak najszybciej skontaktuj się z nami, ktoś mógł przejąć dostęp do Twojego konta!")

@@ -3,5 +3,5 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Meetings.EmailTemplates.Views
 {
-    public record ResetPasswordModel(string ButtonUrl);
+    public record ChangeEmailAddressModel(string ButtonUrl);
 }

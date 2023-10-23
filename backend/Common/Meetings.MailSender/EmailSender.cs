@@ -8,7 +8,8 @@ namespace Meetings.EmailSender
     public record EmailData(List<EmailReceiver> Receivers, string Subject, string TemplateName, object? Model)
     {
         public EmailData(EmailReceiver Receiver, string Subject, string TemplateName, object? Model) :
-            this(new List<EmailReceiver>() { Receiver }, Subject, TemplateName, Model) { }
+            this(new List<EmailReceiver>() { Receiver }, Subject, TemplateName, Model)
+        { }
     };
 
     public interface IEmailSender
@@ -24,6 +25,18 @@ namespace Meetings.EmailSender
             _razorViewToStringRenderer = razorViewToStringRenderer;
         }
         public async Task Send(EmailData data)
+        {
+            try
+            {
+                await SendInternal(data);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private async Task SendInternal(EmailData data)
         {
             var message = new MailMessage();
             message.From = new MailAddress("meetingsteam0@gmail.com");

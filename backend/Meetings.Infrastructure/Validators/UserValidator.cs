@@ -16,6 +16,44 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Meetings.Infrastructure.Validators
 {
+    public static class UserRuleBuilderExtensions
+    {
+        private const int _passwordMinLength = 5;
+
+        public static void AddPersonalDataRules(this InlineValidator<UserDTO> validator)
+        {
+            validator.RuleFor(x => x.FirstName).NotEmpty().WithErrorCode("FirstNameEmpty");
+            validator.RuleFor(x => x.LastName).NotEmpty().WithErrorCode("LastNameEmpty");
+            validator.RuleFor(x => x.BirthDate).LessThan(DateTime.UtcNow).WithErrorCode("BirthDateIncorrect");
+            validator.RuleFor(x => x.Gender).IsInEnum().WithErrorCode("GenderIncorrect");
+        }
+
+        public static IRuleBuilder<T, string> PasswordMinLength<T>(this IRuleBuilder<T, string> ruleBuilder)
+        {
+            return ruleBuilder.MinimumLength(_passwordMinLength).WithErrorCode("PasswordTooShort");
+        }
+        
+        public static IRuleBuilder<T, string> PasswordCorrect<T>(this IRuleBuilder<T, string> ruleBuilder, User user)
+        {
+            return ruleBuilder.Must((password) => Hasher.Verify(password, user.Password)).WithErrorCode("PasswordIncorrect");
+        }
+
+        public static IRuleBuilder<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder, Guid? userId, IRepository<User> repository)
+        {
+            return ruleBuilder
+                .EmailAddress(EmailValidationMode.Net4xRegex).WithErrorCode("EmailIncorrect")
+                .MustAsync(async (email, _) =>
+                {
+                    var userWithEmail = await repository.Data.SingleOrDefaultAsync(x => x.Email == email);
+                    if (userWithEmail == null || userWithEmail.Id == userId)
+                    {
+                        return true;
+                    }
+                    return userWithEmail.Email != email;
+                }).WithErrorCode("EmailTaken");
+        }
+    }
+
     public class UserValidator
     {
         public const int PasswordMinLength = 5;
@@ -28,26 +66,34 @@ namespace Meetings.Infrastructure.Validators
         internal async Task WhenRegister(UserDTO data)
         {
             var validator = new InlineValidator<UserDTO>();
-            validator.RuleFor(x => x.Email).EmailAddress(EmailValidationMode.Net4xRegex).WithErrorCode("EmailIncorrect");
-            validator.RuleFor(x => x.Email).MustAsync(BeUnique).WithErrorCode("EmailTaken");
+            validator.AddPersonalDataRules();
             validator.RuleFor(x => x.Password).Equal(x => x.PasswordRepeat).WithErrorCode("PasswordsNotMatch");
-            AddPersonalDataRules(validator);
-            AddPasswordMinLengthRule(validator, data.Password);
-            
+            validator.RuleFor(x => x.Password).PasswordMinLength();
+            validator.RuleFor(x => x.Email).Email(null, _repository);
+
+            await validator.ValidateAndThrowAsync(data);
+        }
+
+        internal async Task WhenChangeEmailAddress(ChangeEmailAddressData data, User user)
+        {
+            var validator = new InlineValidator<ChangeEmailAddressData>();
+            validator.RuleFor(x => x.Password).PasswordCorrect(user);
+            validator.RuleFor(x => x.Email).Email(user.Id, _repository);
+
             await validator.ValidateAndThrowAsync(data);
         }
 
         internal async Task WhenChangePersonalData(UserDTO data)
         {
             var validator = new InlineValidator<UserDTO>();
-            AddPersonalDataRules(validator);
+            validator.AddPersonalDataRules();
             await validator.ValidateAndThrowAsync(data);
         }
 
         internal async Task WhenResetPassword(ResetPasswordData data)
         {
             var validator = new InlineValidator<ResetPasswordData>();
-            AddPasswordMinLengthRule(validator, data.NewPassword);
+            validator.RuleFor(x => x.NewPassword).PasswordMinLength();
 
             await validator.ValidateAndThrowAsync(data);
         }
@@ -55,8 +101,8 @@ namespace Meetings.Infrastructure.Validators
         internal async Task WhenChangePassword(ChangePasswordData data, User user)
         {
             var validator = new InlineValidator<ChangePasswordData>();
-            validator.RuleFor(x => x.ExistingPassword).Must((instance, value) => BeCorrect(value, user)).WithErrorCode("PasswordIncorrect");
-            AddPasswordMinLengthRule(validator, data.NewPassword);
+            validator.RuleFor(x => x.ExistingPassword).PasswordCorrect(user);
+            validator.RuleFor(x => x.NewPassword).PasswordMinLength();
 
             await validator.ValidateAndThrowAsync(data);
         }
@@ -73,32 +119,44 @@ namespace Meetings.Infrastructure.Validators
             }
         }
 
-        private async Task<bool> BeUnique(UserDTO instance, string value, CancellationToken token)
-        {
-            var userWithEmail = await _repository.Data.SingleOrDefaultAsync(x => x.Email == value);
-            if (userWithEmail == null || userWithEmail.Id == instance.Id)
-            {
-                return true;
-            }
-            return userWithEmail.Email != value;
-        }
+        //private void AddPasswordCorrectRule<T>(InlineValidator<T> validator, string password, User user)
+        //{
+        //    validator.RuleFor(x => password).Must((_, _) => BeCorrect(password, user)).WithErrorCode("PasswordIncorrect");
+        //}
+
+        //private void AddPasswordMinLengthRule<T>(InlineValidator<T> validator, string password)
+        //{
+        //    validator.RuleFor(x => password).MinimumLength(PasswordMinLength).WithErrorCode("PasswordTooShort");
+        //}
+
+        //private void AddEmailRules<T>(InlineValidator<T> validator, Guid? userId, string email)
+        //{
+        //    validator.RuleFor(x => email).EmailAddress(EmailValidationMode.Net4xRegex).WithErrorCode("EmailIncorrect");
+        //    validator.RuleFor(x => email).MustAsync((_, _, _) => BeUnique(userId, email)).WithErrorCode("EmailTaken");
+        //}
+
+        //private void AddPersonalDataRules(InlineValidator<UserDTO> validator)
+        //{
+        //    validator.RuleFor(x => x.FirstName).NotEmpty().WithErrorCode("FirstNameEmpty");
+        //    validator.RuleFor(x => x.LastName).NotEmpty().WithErrorCode("LastNameEmpty");
+        //    validator.RuleFor(x => x.BirthDate).LessThan(DateTime.UtcNow).WithErrorCode("BirthDateIncorrect");
+        //    validator.RuleFor(x => x.Gender).IsInEnum().WithErrorCode("GenderIncorrect");
+        //}
+
+
+        //private async Task<bool> BeUnique(Guid? userId, string email)
+        //{
+        //    var userWithEmail = await _repository.Data.SingleOrDefaultAsync(x => x.Email == email);
+        //    if (userWithEmail == null || userWithEmail.Id == userId)
+        //    {
+        //        return true;
+        //    }
+        //    return userWithEmail.Email != email;
+        //}
 
         private bool BeCorrect(string password, User user)
         {
             return Hasher.Verify(password, user.Password);
-        } 
-
-        private void AddPasswordMinLengthRule<T>(InlineValidator<T> validator, string password)
-        {
-            validator.RuleFor(x => password).MinimumLength(PasswordMinLength).WithErrorCode("PasswordTooShort");
-        } 
-        
-        private void AddPersonalDataRules(InlineValidator<UserDTO> validator)
-        {
-            validator.RuleFor(x => x.FirstName).NotEmpty().WithErrorCode("FirstNameEmpty");
-            validator.RuleFor(x => x.LastName).NotEmpty().WithErrorCode("LastNameEmpty");
-            validator.RuleFor(x => x.BirthDate).LessThan(DateTime.UtcNow).WithErrorCode("BirthDateIncorrect");
-            validator.RuleFor(x => x.Gender).IsInEnum().WithErrorCode("GenderIncorrect");
         }
     }
 }
