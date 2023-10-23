@@ -42,13 +42,13 @@ export const Autocomplete = <
 > &
   AutocompleteProps<T>) => {
     const loadingOption = (<Box
-      component={'li'}
+      component='li'
       // this is the list item so it has to have unique key
-      key={'loading-option'}
+      key='loading-option'
       className={autocompleteClasses.option}
       sx={{
         // improve CSS specifity
-        "&&": {
+        '&&': {
           pointerEvents: 'none',
           display: 'flex',
           justifyContent: 'center',
@@ -65,7 +65,7 @@ export const Autocomplete = <
       // fix error with option label as undefined instead of null
       getOptionLabel={(opt) => getOptionLabel(opt as T) ?? ''}
       PopperComponent={StyledPopper}
-      noOptionsText={"Brak opcji"}
+      noOptionsText='Brak opcji'
       {...props}
     ></MuiAutocomplete>
   );

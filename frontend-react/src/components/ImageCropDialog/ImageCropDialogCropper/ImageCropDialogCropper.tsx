@@ -20,7 +20,7 @@ export const ImageCropDialogCropper = ({
 }: ImageCropDialogCropperProps) => {
   return (
     <>
-      <Box position={'relative'}>
+      <Box position='relative'>
         {/* image added for expand purpose */}
         <img
           src={imageSrc}

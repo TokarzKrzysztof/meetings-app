@@ -10,7 +10,7 @@ export const MyProfileActionButtons = ({
   isSaveDisabled,
 }: MyProfileActionButtonsProps) => {
   return (
-    <Stack mt={4} justifyContent={'space-between'}>
+    <Stack mt={4} justifyContent='space-between'>
       <Button
         type='button'
         variant='outlined'

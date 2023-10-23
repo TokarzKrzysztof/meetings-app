@@ -50,7 +50,7 @@ export const HeaderMenuAccountButton = ({
         {currentUser ? (
           <Avatar src={currentUser.profileImage ?? avatarPlaceholder} sx={{ width: 35, height: 35 }} />
         ) : (
-          <Icon name={'person_outline'} />
+          <Icon name='person_outline' />
         )}
       </IconButton>
       <Menu anchorRef={menuAnchorRef}>{menuOptions}</Menu>

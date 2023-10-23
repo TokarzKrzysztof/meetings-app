@@ -17,7 +17,7 @@ import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 
 export const ForgotPassword = () => {
   const form = useForm<{ email: string }>();
-  const { register, handleSubmit, control, getValues } = form;
+  const { register, handleSubmit, getValues } = form;
   const [showDialog, setShowDialog] = useState(false);
   const { sendForgotPasswordEmail, sendForgotPasswordEmailInProgress } =
     useSendForgotPasswordEmail();
@@ -41,7 +41,7 @@ export const ForgotPassword = () => {
         </Typography>
         <FormField
           form={form}
-          label={'Email'}
+          label='Email'
           {...register('email', {
             required: ValidationMessages.required,
             pattern: {

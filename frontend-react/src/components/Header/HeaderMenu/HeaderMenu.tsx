@@ -76,7 +76,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
             </Button>
           )}
           <IconButton size='large' slot='end' color='inherit'>
-            <Icon name={'question_answer'} />
+            <Icon name='question_answer' />
           </IconButton>
         </>
       )}

@@ -18,9 +18,9 @@ export const MyProfile = () => {
       <>
         <Header />
         <Container sx={{ pt: 4 }}>
-          <Stack gap={3} alignItems={'center'}>
+          <Stack gap={3} alignItems='center'>
             <MyProfileImage />
-            <Typography fontSize={'large'}>
+            <Typography fontSize='large'>
               {currentUser.firstName} {currentUser.lastName}
             </Typography>
           </Stack>

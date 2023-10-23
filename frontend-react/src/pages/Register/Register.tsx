@@ -41,10 +41,10 @@ export const Register = () => {
         onSubmit={handleSubmit((data: User) => registerUser(data))}
         onChange={() => registerUserError && registerUserReset()}
       >
-        <AuthIcon iconName={'person_add'}></AuthIcon>
+        <AuthIcon iconName='person_add'></AuthIcon>
         <FormField
           form={form}
-          label={'Email'}
+          label='Email'
           {...register('email', {
             required: ValidationMessages.required,
             pattern: {
@@ -55,25 +55,26 @@ export const Register = () => {
         ></FormField>
         <FormField
           form={form}
-          label={'Imię'}
+          label='Imię'
           {...register('firstName', {
             required: ValidationMessages.required,
           })}
         ></FormField>
         <FormField
           form={form}
-          label={'Nazwisko'}
+          label='Nazwisko'
           {...register('lastName', { required: ValidationMessages.required })}
         ></FormField>
         <PasswordFields
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           form={form as any}
           labels={['Hasło', 'Powtórz hasło']}
         />
         <ControlledFormField
           control={control}
-          element={'date-picker'}
-          name={'birthDate'}
-          label={'Data urodzenia'}
+          element='date-picker'
+          name='birthDate'
+          label='Data urodzenia'
           rules={{
             required: ValidationMessages.required,
             validate: Validators.maxDate,
@@ -84,16 +85,16 @@ export const Register = () => {
         ></ControlledFormField>
         <ControlledFormField
           control={control}
-          element={'radio-group'}
-          name={'gender'}
-          label={'Płeć'}
+          element='radio-group'
+          name='gender'
+          label='Płeć'
           rules={{ required: ValidationMessages.required }}
           ElementProps={{
             options: genderOptions,
           }}
         ></ControlledFormField>
         {registerUserError?.validationErrors.includes('EmailTaken') && (
-          <Typography color={'error'}>
+          <Typography color='error'>
             Użytkownik z podanym adresem email już istnieje
           </Typography>
         )}
@@ -102,7 +103,7 @@ export const Register = () => {
         </AuthButton>
         <AuthRedirectInfo>
           Masz już konto?{' '}
-          <Button variant={'text'} component={Link} to={AppRoutes.Login}>
+          <Button variant='text' component={Link} to={AppRoutes.Login}>
             Zaloguj się
           </Button>
         </AuthRedirectInfo>

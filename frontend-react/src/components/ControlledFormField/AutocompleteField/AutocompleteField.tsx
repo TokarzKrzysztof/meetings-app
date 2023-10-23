@@ -14,7 +14,7 @@ type AutcompleteOption = { label: string; value: string };
 export const AutocompleteField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-  TOption = any
+  TOption = unknown
 >({
   label,
   controller: { field, fieldState },

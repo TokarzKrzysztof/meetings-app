@@ -27,11 +27,11 @@ export const MyAnnouncementsList = ({
 
   return (
     <Box my={3}>
-      <Typography variant='h6' textAlign={'center'} mb={1}>
+      <Typography variant='h6' textAlign='center' mb={1}>
         {title}
       </Typography>
       {data.length ? (
-        <Stack direction={'column'} gap={2}>
+        <Stack direction='column' gap={2}>
           {data.map((x) => (
             <MyAnnouncementsListItem
               key={x.id}
@@ -40,7 +40,7 @@ export const MyAnnouncementsList = ({
           ))}
         </Stack>
       ) : (
-        <Typography textAlign={'center'} color={'grey'}>
+        <Typography textAlign='center' color='grey'>
           {noAnnoucementsText}
         </Typography>
       )}

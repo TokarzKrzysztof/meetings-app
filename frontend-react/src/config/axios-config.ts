@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // eslint-disable-next-line no-restricted-imports
 import axios, { Axios, AxiosRequestConfig } from 'axios';
 

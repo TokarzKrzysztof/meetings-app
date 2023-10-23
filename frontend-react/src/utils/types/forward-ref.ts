@@ -4,9 +4,9 @@ export const typedForwardRef = <T, P = {}>(
   render: (
     props: P,
     ref: React.ForwardedRef<T>
-  ) => ReactElement<any, string | JSXElementConstructor<any>> | null
+  ) => ReactElement<P, string | JSXElementConstructor<P>> | null
 ) => {
   return forwardRef(render) as (
     props: P & React.RefAttributes<T>
-  ) => ReactElement<any, string | JSXElementConstructor<any>> | null;
+  ) => ReactElement<P, string | JSXElementConstructor<P>> | null;
 };

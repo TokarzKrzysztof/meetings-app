@@ -47,7 +47,7 @@ export const MyProfileImage = ({ ...props }: MyProfileImageProps) => {
       <StyledImageWrapper>
         <img src={currentUser?.profileImage ?? avatarPlaceholder} />
         <StyledEditButton color='primary' filled ref={menuAnchorRef}>
-          <Icon name={'edit'} />
+          <Icon name='edit' />
         </StyledEditButton>
       </StyledImageWrapper>
       <Menu

@@ -1,13 +1,13 @@
 import { styled } from '@mui/material';
 import { useResendActivationLink } from 'src/queries/auth-queries';
 import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Container,
-    Icon,
-    Typography,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Icon,
+  Typography,
 } from 'src/ui-components';
 
 const StyledCheckIconWrapper = styled(Box)(({ theme }) => {
@@ -47,18 +47,18 @@ export const RegisterSuccess = ({ email }: RegisterSuccessProps) => {
             <Icon name='check' color='success' />
           </StyledCheckIconWrapper>
           <Typography
-            variant={'h5'}
+            variant='h5'
             mt={5}
-            textAlign={'center'}
-            fontWeight={'bold'}
+            textAlign='center'
+            fontWeight='bold'
           >
             Gratulacje!
           </Typography>
-          <Typography textAlign={'center'} mt={2}>
+          <Typography textAlign='center' mt={2}>
             Twoje konto zostało utworzone. <br /> Sprawdź adres e-mail i
             postępuj zgodnie z instrukcjami aby aktywować swoje konto.
           </Typography>
-          <Box textAlign={'center'} mt={8}>
+          <Box textAlign='center' mt={8}>
             <Typography>Link nie dotarł?</Typography>
             <Button
               variant='text'

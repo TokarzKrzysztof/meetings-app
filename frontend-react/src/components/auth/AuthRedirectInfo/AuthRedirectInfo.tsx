@@ -7,10 +7,10 @@ export const AuthRedirectInfo = ({ children }: PropsWithChildren<{}>) => {
       <Box
         mt={6}
         mb={2}
-        display={'flex'}
-        justifyContent={'center'}
-        alignItems={'center'}
-        flexWrap={'wrap'}
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        flexWrap='wrap'
         fontSize={13}
       >
         {children}

@@ -67,7 +67,7 @@ export const Login = () => {
         <AuthIcon iconName='account_circle'></AuthIcon>
         <FormField
           form={form}
-          label={'Email'}
+          label='Email'
           {...register('email', {
             required: ValidationMessages.required,
             pattern: {
@@ -78,7 +78,7 @@ export const Login = () => {
         ></FormField>
         <FormField
           form={form}
-          label={'Hasło'}
+          label='Hasło'
           {...register('password', { required: ValidationMessages.required })}
           type='password'
           InputProps={{
@@ -95,12 +95,12 @@ export const Login = () => {
           }}
         ></FormField>
         {loginError?.statusCode === 401 && (
-          <Typography color={'error'}>
+          <Typography color='error'>
             Email i/lub hasło są nieprawidłowe
           </Typography>
         )}
         {loginError?.statusCode === 403 && (
-          <Typography color={'error'}>
+          <Typography color='error'>
             Twoje konto nie zostało jeszcze aktywowane. Na adres email podany
             przy rejestracji wysłaliśmy ponownie instrukcję dotyczącą aktywacji
             konta.

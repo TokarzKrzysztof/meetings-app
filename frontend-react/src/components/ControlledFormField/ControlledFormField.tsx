@@ -29,7 +29,7 @@ import {
 export type ControlledFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-  TOther = any
+  TOther = unknown
 > = {
   label: string;
   control: Control<TFieldValues>;
@@ -65,7 +65,7 @@ export type ControlledFormFieldProps<
 export const ControlledFormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-  TOther = any
+  TOther = unknown
 >({
   label,
   control,

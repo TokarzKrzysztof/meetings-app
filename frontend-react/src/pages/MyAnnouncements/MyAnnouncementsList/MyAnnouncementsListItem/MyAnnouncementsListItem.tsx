@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { useSetAtom } from 'jotai';
 import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Announcement, AnnouncementStatus } from 'src/models/announcement';
 import {
   useGetCurrentUserAnnouncements,
@@ -30,7 +30,6 @@ export const MyAnnouncementsListItem = ({
   const { removeAnnouncement } = useRemoveAnnouncement();
   const confirm = useSetAtom(confirmationDialogAtom);
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
 
   const categoryName = allCategories!.find(
     (x) => x.id === announcement.categoryId
@@ -38,10 +37,10 @@ export const MyAnnouncementsListItem = ({
 
   const announcementStatus = useMemo(() => {
     if (announcement.status === AnnouncementStatus.Active)
-      return <Typography color={'green'}>Aktywne</Typography>;
+      return <Typography color='green'>Aktywne</Typography>;
     if (announcement.status === AnnouncementStatus.Pending)
-      return <Typography color={'orange'}>Oczekujące</Typography>;
-    return <Typography color={'grey'}>Zakończone</Typography>;
+      return <Typography color='orange'>Oczekujące</Typography>;
+    return <Typography color='grey'>Zakończone</Typography>;
   }, [announcement]);
 
   const handleConfirmSetAnnouncementAsClosed = () => {
@@ -106,8 +105,8 @@ export const MyAnnouncementsListItem = ({
 
   return (
     <Card>
-      <Stack justifyContent={'space-between'} alignItems={'center'} p={1}>
-        <Typography fontWeight={'bold'}>{categoryName}</Typography>
+      <Stack justifyContent='space-between' alignItems='center' p={1}>
+        <Typography fontWeight='bold'>{categoryName}</Typography>
         {announcementStatus}
       </Stack>
       <Typography
@@ -122,7 +121,7 @@ export const MyAnnouncementsListItem = ({
         {announcement.description}
       </Typography>
       <Divider />
-      <Stack pl={1} justifyContent={'space-between'} alignItems={'center'}>
+      <Stack pl={1} justifyContent='space-between' alignItems='center'>
         <Typography fontSize={12}>
           {dayjs(announcement.createdAt).format('DD.MM.YYYY')}
         </Typography>

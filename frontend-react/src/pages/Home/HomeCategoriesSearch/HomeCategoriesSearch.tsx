@@ -59,7 +59,7 @@ export const HomeCategoriesSearch = ({ data }: HomeCategoriesSearchProps) => {
           )}
         />
       </StyledSearchFieldBox>
-      <Box display={'flex'} justifyContent={'center'} mt={6}>
+      <Box display='flex' justifyContent='center' mt={6}>
         <Button
           disabled={isButtonDisabled}
           size='large'

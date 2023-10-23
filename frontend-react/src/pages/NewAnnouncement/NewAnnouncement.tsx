@@ -29,9 +29,9 @@ export const NewAnnouncement = () => {
       <Header />
       <AnnouncementForm
         onSubmit={onSubmit}
-        title={'Nowe ogłoszenie'}
+        title='Nowe ogłoszenie'
         inProgress={createNewAnnouncementInProgress}
-        buttonText={'Dodaj ogłoszenie'}
+        buttonText='Dodaj ogłoszenie'
       />
     </>
   );

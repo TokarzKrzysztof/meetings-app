@@ -24,10 +24,10 @@ export const Home = () => {
       <Header />
       <Container>
         <Typography
-          variant={'h4'}
+          variant='h4'
           sx={{ my: 8 }}
-          textAlign={'center'}
-          fontWeight={'bold'}
+          textAlign='center'
+          fontWeight='bold'
         >
           Znajdź ludzi dzielących Twoje zainteresowania!
         </Typography>

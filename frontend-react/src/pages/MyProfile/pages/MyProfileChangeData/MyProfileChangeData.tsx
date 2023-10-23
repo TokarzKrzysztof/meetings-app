@@ -60,25 +60,25 @@ export const MyProfileChangeData = () => {
     <>
       <Header />
       <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
-        <MyProfileTitle title={'Edycja danych osobowych'}></MyProfileTitle>
+        <MyProfileTitle title='Edycja danych osobowych'></MyProfileTitle>
 
         <FormField
           form={form}
-          label={'Imię'}
+          label='Imię'
           {...register('firstName', {
             required: ValidationMessages.required,
           })}
         ></FormField>
         <FormField
           form={form}
-          label={'Nazwisko'}
+          label='Nazwisko'
           {...register('lastName', { required: ValidationMessages.required })}
         ></FormField>
         <ControlledFormField
           control={control}
-          element={'date-picker'}
-          name={'birthDate'}
-          label={'Data urodzenia'}
+          element='date-picker'
+          name='birthDate'
+          label='Data urodzenia'
           rules={{
             required: ValidationMessages.required,
             validate: Validators.maxDate,
@@ -89,9 +89,9 @@ export const MyProfileChangeData = () => {
         ></ControlledFormField>
         <ControlledFormField
           control={control}
-          element={'radio-group'}
-          name={'gender'}
-          label={'Płeć'}
+          element='radio-group'
+          name='gender'
+          label='Płeć'
           rules={{ required: ValidationMessages.required }}
           ElementProps={{
             options: genderOptions,

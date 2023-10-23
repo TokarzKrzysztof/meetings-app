@@ -1,7 +1,7 @@
 import {
+  CardTypeMap,
   default as MuiCard,
   CardProps as MuiCardProps,
-  CardTypeMap,
 } from '@mui/material/Card';
 
 export type CardProps<

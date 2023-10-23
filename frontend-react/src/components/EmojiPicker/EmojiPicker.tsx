@@ -20,7 +20,7 @@ export const EmojiPicker = ({ onEmojiSelected }: EmojiPickerProps) => {
   return (
     <>
       <IconButton disableRipple onClick={handleClick}>
-        <Icon name={'tag_faces'} />
+        <Icon name='tag_faces' />
       </IconButton>
       <Popper open={!!anchorEl} anchorEl={anchorEl} placement='bottom-end'>
         <ClickAwayListener onClickAway={handleClose}>

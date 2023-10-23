@@ -32,7 +32,7 @@ export const RadioGroupField = <
     [options]
   );
   return (
-    <FormControl error={!!fieldState.error} variant={'standard'}>
+    <FormControl error={!!fieldState.error} variant='standard'>
       <FormLabel>{label}</FormLabel>
       <RadioGroup
         row

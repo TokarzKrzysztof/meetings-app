@@ -54,21 +54,21 @@ export const MyProfileChangeEmail = () => {
     <>
       <Header />
       <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
-        <MyProfileTitle title={'Zmiana adresu email'}></MyProfileTitle>
+        <MyProfileTitle title='Zmiana adresu email'></MyProfileTitle>
         <Typography mb={2}>
           Twój obecny adres email: <b>{currentUser?.email}</b>
         </Typography>
         <FormField
           form={form}
-          label={'Hasło'}
+          label='Hasło'
           {...register('password', {
             required: ValidationMessages.required,
           })}
-          type={'password'}
+          type='password'
         ></FormField>
         <FormField
           form={form}
-          label={'Nowy adres email'}
+          label='Nowy adres email'
           {...register('email', {
             required: ValidationMessages.required,
             pattern: {

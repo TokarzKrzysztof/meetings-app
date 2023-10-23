@@ -57,16 +57,17 @@ export const MyProfileChangePassword = () => {
     <>
       <Header />
       <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
-        <MyProfileTitle title={'Zmiana hasła'}></MyProfileTitle>
+        <MyProfileTitle title='Zmiana hasła'></MyProfileTitle>
         <FormField
           form={form}
-          label={'Aktualne hasło'}
+          label='Aktualne hasło'
           {...register('existingPassword', {
             required: ValidationMessages.required,
           })}
-          type={'password'}
+          type='password'
         ></FormField>
         <PasswordFields
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           form={form as any}
           labels={['Nowe hasło', 'Powtórz nowe hasło']}
         ></PasswordFields>

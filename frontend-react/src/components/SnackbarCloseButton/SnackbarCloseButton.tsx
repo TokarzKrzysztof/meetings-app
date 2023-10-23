@@ -12,7 +12,7 @@ export const SnackbarCloseButton = ({
 
   return (
     <IconButton onClick={() => closeSnackbar(snackbarKey)} color='inherit'>
-      <Icon name={'close'} />
+      <Icon name='close' />
     </IconButton>
   );
 };

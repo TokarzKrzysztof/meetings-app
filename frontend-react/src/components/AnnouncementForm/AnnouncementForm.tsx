@@ -44,19 +44,19 @@ export const AnnouncementForm = ({
   return (
     <Container maxWidth='sm' component='form' onSubmit={handleSubmit(onSubmit)}>
       <Typography
-        variant={'h5'}
+        variant='h5'
         sx={{ my: 8 }}
-        textAlign={'center'}
-        fontWeight={'bold'}
+        textAlign='center'
+        fontWeight='bold'
       >
         {title}
       </Typography>
 
       <ControlledFormField
         control={control}
-        element={'autocomplete'}
-        name={'categoryId'}
-        label={'Kategoria'}
+        element='autocomplete'
+        name='categoryId'
+        label='Kategoria'
         rules={{
           required: ValidationMessages.required,
         }}
@@ -68,8 +68,8 @@ export const AnnouncementForm = ({
       <ControlledFormField
         control={control}
         element='textarea'
-        name={'description'}
-        label={'Opis'}
+        name='description'
+        label='Opis'
         rules={{
           required: ValidationMessages.required,
           maxLength: Validators.maxStringLength,

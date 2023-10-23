@@ -6,7 +6,7 @@ export type AuthIconProps = {
 
 export const AuthIcon = ({ iconName }: AuthIconProps) => {
   return (
-    <Box display={'flex'} sx={{ my: 3 }} justifyContent={'center'}>
+    <Box display='flex' sx={{ my: 3 }} justifyContent='center'>
       <Icon
         name={iconName}
         color='primary'

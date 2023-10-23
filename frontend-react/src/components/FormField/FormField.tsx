@@ -4,6 +4,7 @@ import { TextField, TextFieldProps } from 'src/ui-components';
 import { typedForwardRef } from 'src/utils/types/forward-ref';
 
 export type FormFieldProps = Omit<TextFieldProps<'standard'>, 'ref'> & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any, any, undefined>;
   label: string;
 };

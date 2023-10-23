@@ -39,9 +39,9 @@ export const EditAnnouncement = () => {
       <AnnouncementForm
         data={announcement}
         onSubmit={onSubmit}
-        title={'Edycja ogłoszenia'}
+        title='Edycja ogłoszenia'
         inProgress={editAnnouncementInProgress}
-        buttonText={'Zapisz zmiany'}
+        buttonText='Zapisz zmiany'
         onCancel={handleCancel}
         disabledWhenUntouched
       />

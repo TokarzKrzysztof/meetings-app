@@ -10,7 +10,7 @@ export type PasswordFieldsFormData = {
 };
 
 export type PasswordFieldsProps = {
-  form: UseFormReturn<PasswordFieldsFormData, any, undefined>;
+  form: UseFormReturn<PasswordFieldsFormData, unknown, undefined>;
   labels: [string, string];
 };
 
