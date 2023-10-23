@@ -1,5 +1,6 @@
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { UseQueryOptions, useQuery } from 'react-query';
+import axios from 'src/config/axios-config';
 import { Category } from 'src/models/category';
 import { apiUrl } from 'src/utils/api-url';
 import { genericUseQueryMethods } from 'src/utils/types/generic-query-methods';
@@ -12,8 +13,7 @@ export const useGetAllCategories = (
 ) => {
   const query = useQuery({
     queryKey: 'GetAllCategories',
-    queryFn: () =>
-      axios.get(`${baseUrl}/GetAllCategories`).then((res) => res.data),
+    queryFn: () => axios.get(`${baseUrl}/GetAllCategories`),
     staleTime: Infinity,
     ...options,
   });

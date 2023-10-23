@@ -1,13 +1,17 @@
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import {
   UseMutationOptions,
   UseQueryOptions,
   useMutation,
   useQuery,
 } from 'react-query';
+import axios from 'src/config/axios-config';
 import { Announcement, AnnouncementStatus } from 'src/models/announcement';
 import { apiUrl } from 'src/utils/api-url';
-import { genericUseMutationMethods, genericUseQueryMethods } from 'src/utils/types/generic-query-methods';
+import {
+  genericUseMutationMethods,
+  genericUseQueryMethods,
+} from 'src/utils/types/generic-query-methods';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Announcement`;
@@ -16,11 +20,7 @@ export const useCreateNewAnnouncement = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement>
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return axios
-        .post(`${baseUrl}/CreateNewAnnouncement`, data)
-        .then((res) => res.data);
-    },
+    mutationFn: (data) => axios.post(`${baseUrl}/CreateNewAnnouncement`, data),
     ...options,
   });
 
@@ -31,11 +31,7 @@ export const useEditAnnouncement = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement>
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return axios
-        .put(`${baseUrl}/EditAnnouncement`, data)
-        .then((res) => res.data);
-    },
+    mutationFn: (data) => axios.put(`${baseUrl}/EditAnnouncement`, data),
     ...options,
   });
 
@@ -47,10 +43,7 @@ export const useGetCurrentUserAnnouncements = (
 ) => {
   const query = useQuery({
     queryKey: 'GetCurrentUserAnnouncements',
-    queryFn: () =>
-      axios
-        .get(`${baseUrl}/GetCurrentUserAnnouncements`)
-        .then((res) => res.data),
+    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserAnnouncements`),
     ...options,
   });
 
@@ -65,11 +58,7 @@ export const useSetAnnouncementStatus = (
   >
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return axios
-        .patch(`${baseUrl}/SetAnnouncementStatus`, data)
-        .then((res) => res.data);
-    },
+    mutationFn: (data) => axios.patch(`${baseUrl}/SetAnnouncementStatus`, data),
     ...options,
   });
 
@@ -86,9 +75,7 @@ export const useRemoveAnnouncement = (
   const mutation = useMutation({
     mutationFn: (id) => {
       const params = { id };
-      return axios
-        .delete(`${baseUrl}/RemoveAnnouncement`, { params })
-        .then((res) => res.data);
+      return axios.delete(`${baseUrl}/RemoveAnnouncement`, { params });
     },
     ...options,
   });
@@ -104,9 +91,7 @@ export const useGetAnnouncement = (
     queryKey: ['GetAnnouncement', id],
     queryFn: () => {
       const params = { id };
-      return axios
-        .get(`${baseUrl}/GetAnnouncement`, { params })
-        .then((res) => res.data);
+      return axios.get(`${baseUrl}/GetAnnouncement`, { params });
     },
     ...options,
   });

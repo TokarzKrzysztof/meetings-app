@@ -1,10 +1,11 @@
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import {
   UseMutationOptions,
   UseQueryOptions,
   useMutation,
   useQuery,
 } from 'react-query';
+import axios from 'src/config/axios-config';
 import { User } from 'src/models/user';
 import { apiUrl } from 'src/utils/api-url';
 import {
@@ -21,9 +22,7 @@ export const useIsEmailTaken = (
   const mutation = useMutation({
     mutationFn: (email) => {
       const params = { email };
-      return axios
-        .get(`${baseUrl}/IsEmailTaken`, { params })
-        .then((res) => res.data);
+      return axios.get(`${baseUrl}/IsEmailTaken`, { params });
     },
     ...options,
   });
@@ -33,7 +32,7 @@ export const useIsEmailTaken = (
 
 export const getCurrentUserQueryKey = 'GetCurrentUser';
 export const getCurrentUserQueryFn = () =>
-  axios.get(`${baseUrl}/GetCurrentUser`).then((res) => res.data);
+  axios.get(`${baseUrl}/GetCurrentUser`);
 export const useGetCurrentUser = (
   options?: UseQueryOptions<User | null, AxiosError<HttpErrorData>>
 ) => {
@@ -54,13 +53,11 @@ export const useUploadProfileImage = (
     mutationFn: (image) => {
       const formData = new FormData();
       formData.append('image', image);
-      return axios
-        .post(`${baseUrl}/UploadProfileImage`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        .then((res) => res.data);
+      return axios.post(`${baseUrl}/UploadProfileImage`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
     },
     ...options,
   });
@@ -76,11 +73,7 @@ export const useChangePassword = (
   >
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return axios
-        .patch(`${baseUrl}/ChangePassword`, data)
-        .then((res) => res.data);
-    },
+    mutationFn: (data) => axios.patch(`${baseUrl}/ChangePassword`, data),
     ...options,
   });
 
@@ -95,11 +88,7 @@ export const useChangePersonalData = (
   >
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return axios
-        .put(`${baseUrl}/ChangePersonalData`, data)
-        .then((res) => res.data);
-    },
+    mutationFn: (data) => axios.put(`${baseUrl}/ChangePersonalData`, data),
     ...options,
   });
 
@@ -114,11 +103,8 @@ export const useSendChangeEmailAddressEmail = (
   >
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => {
-      return axios
-        .patch(`${baseUrl}/SendChangeEmailAddressEmail`, data)
-        .then((res) => res.data);
-    },
+    mutationFn: (data) =>
+      axios.patch(`${baseUrl}/SendChangeEmailAddressEmail`, data),
     ...options,
   });
 
