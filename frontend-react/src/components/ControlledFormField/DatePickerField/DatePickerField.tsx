@@ -7,7 +7,7 @@ export type DatePickerFieldProps = DatePickerProps<Dayjs>;
 
 export const DatePickerField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   label,
   controller: { field, fieldState },

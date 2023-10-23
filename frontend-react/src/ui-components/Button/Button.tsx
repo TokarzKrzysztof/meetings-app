@@ -6,9 +6,7 @@ import {
 
 export type ButtonProps = {};
 
-export const Button = <
-  D extends React.ElementType = ButtonTypeMap['defaultComponent']
->({
+export const Button = <D extends React.ElementType = ButtonTypeMap['defaultComponent']>({
   variant = 'contained',
   sx,
   ...props

@@ -94,13 +94,9 @@ export const Register = () => {
           }}
         ></ControlledFormField>
         {registerUserError?.validationErrors.includes('EmailTaken') && (
-          <Typography color='error'>
-            Użytkownik z podanym adresem email już istnieje
-          </Typography>
+          <Typography color='error'>Użytkownik z podanym adresem email już istnieje</Typography>
         )}
-        <AuthButton disabled={registerUserInProgress}>
-          Zarejestruj się
-        </AuthButton>
+        <AuthButton disabled={registerUserInProgress}>Zarejestruj się</AuthButton>
         <AuthRedirectInfo>
           Masz już konto?{' '}
           <Button variant='text' component={Link} to={AppRoutes.Login}>

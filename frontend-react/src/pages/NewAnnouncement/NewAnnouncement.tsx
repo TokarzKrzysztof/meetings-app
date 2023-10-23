@@ -7,8 +7,7 @@ import { useCreateNewAnnouncement } from 'src/queries/announcement-queries';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export const NewAnnouncement = () => {
-  const { createNewAnnouncement, createNewAnnouncementInProgress } =
-    useCreateNewAnnouncement();
+  const { createNewAnnouncement, createNewAnnouncementInProgress } = useCreateNewAnnouncement();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 

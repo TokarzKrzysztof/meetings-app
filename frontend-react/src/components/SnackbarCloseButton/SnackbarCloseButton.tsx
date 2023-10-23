@@ -5,9 +5,7 @@ export type SnackbarCloseButtonProps = {
   snackbarKey: SnackbarKey;
 };
 
-export const SnackbarCloseButton = ({
-  snackbarKey,
-}: SnackbarCloseButtonProps) => {
+export const SnackbarCloseButton = ({ snackbarKey }: SnackbarCloseButtonProps) => {
   const { closeSnackbar } = useSnackbar();
 
   return (

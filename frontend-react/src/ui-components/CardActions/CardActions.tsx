@@ -1,6 +1,6 @@
 import {
   default as MuiCardActions,
-  CardActionsProps as MuiCardActionsProps
+  CardActionsProps as MuiCardActionsProps,
 } from '@mui/material/CardActions';
 
 export type CardActionsProps = MuiCardActionsProps & {};

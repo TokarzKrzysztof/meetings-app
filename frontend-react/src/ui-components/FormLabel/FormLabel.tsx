@@ -4,14 +4,9 @@ import {
   FormLabelTypeMap,
 } from '@mui/material/FormLabel';
 
-export type FormLabelProps<
-  D extends React.ElementType = FormLabelTypeMap['defaultComponent']
-> = MuiFormLabelProps<D, { component?: D }> & {};
+export type FormLabelProps<D extends React.ElementType = FormLabelTypeMap['defaultComponent']> =
+  MuiFormLabelProps<D, { component?: D }> & {};
 
-export const FormLabel = <
-  D extends React.ElementType = FormLabelTypeMap['defaultComponent']
->({
+export const FormLabel = <D extends React.ElementType = FormLabelTypeMap['defaultComponent']>({
   ...props
-}: FormLabelProps<D>) => (
-  <MuiFormLabel {...props}></MuiFormLabel>
-);
+}: FormLabelProps<D>) => <MuiFormLabel {...props}></MuiFormLabel>;

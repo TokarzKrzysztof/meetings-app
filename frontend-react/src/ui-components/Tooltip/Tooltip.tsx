@@ -1,7 +1,4 @@
-import {
-  default as MuiTooltip,
-  TooltipProps as MuiTooltipProps,
-} from '@mui/material/Tooltip';
+import { default as MuiTooltip, TooltipProps as MuiTooltipProps } from '@mui/material/Tooltip';
 
 export type TooltipProps = {};
 

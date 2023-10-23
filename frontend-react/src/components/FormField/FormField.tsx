@@ -11,7 +11,7 @@ export type FormFieldProps = Omit<TextFieldProps<'standard'>, 'ref'> & {
 
 const FormFieldInner = (
   { form, label, type, name, error, ...props }: FormFieldProps,
-  ref: ForwardedRef<HTMLInputElement>
+  ref: ForwardedRef<HTMLInputElement>,
 ) => {
   const {
     formState: { errors },

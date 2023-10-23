@@ -1,6 +1,6 @@
 export enum UserGender {
   Male,
-  Female
+  Female,
 }
 
 export type User = {

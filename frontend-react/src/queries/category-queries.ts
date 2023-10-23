@@ -9,7 +9,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/Category`;
 
 export const useGetAllCategories = (
-  options?: UseQueryOptions<Category[], AxiosError<HttpErrorData>>
+  options?: UseQueryOptions<Category[], AxiosError<HttpErrorData>>,
 ) => {
   const query = useQuery({
     queryKey: 'GetAllCategories',

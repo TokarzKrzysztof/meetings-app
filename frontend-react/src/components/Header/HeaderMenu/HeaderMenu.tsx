@@ -4,9 +4,7 @@ import { HeaderMenuAccountButton } from 'src/components/Header/HeaderMenu/Header
 import { useDeviceMediaQuery } from 'src/hooks/useDeviceMediaQuery';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { useLogout } from 'src/queries/auth-queries';
-import {
-  useGetCurrentUser
-} from 'src/queries/user-queries';
+import { useGetCurrentUser } from 'src/queries/user-queries';
 import { confirmationDialogAtom } from 'src/store/atoms';
 import { Button, Icon, IconButton } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -28,7 +26,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
         logout(undefined, {
           onSuccess: () => {
             setCurrentUser(null);
-            navigate(AppRoutes.Home)
+            navigate(AppRoutes.Home);
           },
         });
       },
@@ -80,10 +78,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
           </IconButton>
         </>
       )}
-      <HeaderMenuAccountButton
-        currentUser={currentUser}
-        onLogout={handleLogout}
-      />
+      <HeaderMenuAccountButton currentUser={currentUser} onLogout={handleLogout} />
     </>
   );
 };

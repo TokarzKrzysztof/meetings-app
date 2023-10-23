@@ -10,7 +10,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/Auth`;
 
 export const useRegister = (
-  options?: UseMutationOptions<string, AxiosError<HttpErrorData>, User>
+  options?: UseMutationOptions<string, AxiosError<HttpErrorData>, User>,
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.post(`${baseUrl}/Register`, data),
@@ -21,7 +21,7 @@ export const useRegister = (
 };
 
 export const useResendActivationLink = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, string>
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, string>,
 ) => {
   const mutation = useMutation({
     mutationFn: (email) => {
@@ -35,11 +35,7 @@ export const useResendActivationLink = (
 };
 
 export const useLogin = (
-  options?: UseMutationOptions<
-    User,
-    AxiosError<HttpErrorData>,
-    LoginCredentials
-  >
+  options?: UseMutationOptions<User, AxiosError<HttpErrorData>, LoginCredentials>,
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.post(`${baseUrl}/Login`, data),
@@ -49,9 +45,7 @@ export const useLogin = (
   return genericUseMutationMethods('login', mutation);
 };
 
-export const useLogout = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, void>
-) => {
+export const useLogout = (options?: UseMutationOptions<void, AxiosError<HttpErrorData>, void>) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.post(`${baseUrl}/Logout`, data),
     ...options,
@@ -61,7 +55,7 @@ export const useLogout = (
 };
 
 export const useSendForgotPasswordEmail = (
-  options?: UseMutationOptions<unknown, AxiosError<HttpErrorData>, string>
+  options?: UseMutationOptions<unknown, AxiosError<HttpErrorData>, string>,
 ) => {
   const mutation = useMutation({
     mutationFn: (email) => {
@@ -79,7 +73,7 @@ export const useResetPassword = (
     unknown,
     AxiosError<HttpErrorData>,
     { tempId: string; newPassword: string }
-  >
+  >,
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.patch(`${baseUrl}/ResetPassword`, data),

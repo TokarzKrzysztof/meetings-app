@@ -3,10 +3,7 @@ import { useRef } from 'react';
 import { ImageCropDialog } from 'src/components/ImageCropDialog/ImageCropDialog';
 import { useFilePicker } from 'src/hooks/useFilePicker';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
-import {
-  useGetCurrentUser,
-  useUploadProfileImage,
-} from 'src/queries/user-queries';
+import { useGetCurrentUser, useUploadProfileImage } from 'src/queries/user-queries';
 import { Box, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 
 const StyledImageWrapper = styled(Box)({
@@ -63,11 +60,7 @@ export const MyProfileImage = ({ ...props }: MyProfileImageProps) => {
         <MenuItem>Wyświetl zdjęcie profilowe</MenuItem>
       </Menu>
       {file && (
-        <ImageCropDialog
-          image={file}
-          onAccept={handleUploadProfileImage}
-          onClose={clearFile}
-        />
+        <ImageCropDialog image={file} onAccept={handleUploadProfileImage} onClose={clearFile} />
       )}
     </>
   );

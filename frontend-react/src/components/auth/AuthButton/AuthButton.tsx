@@ -8,12 +8,7 @@ export type AuthButtonProps = PropsWithChildren<{
 export const AuthButton = ({ children, disabled }: AuthButtonProps) => {
   return (
     <Box display='flex' sx={{ my: 3 }} justifyContent='center'>
-      <Button
-        type='submit'
-        size='large'
-        sx={{ minWidth: 200 }}
-        disabled={disabled}
-      >
+      <Button type='submit' size='large' sx={{ minWidth: 200 }} disabled={disabled}>
         {children}
       </Button>
     </Box>

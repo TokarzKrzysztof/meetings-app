@@ -1,10 +1,5 @@
 import { AxiosError } from 'axios';
-import {
-  UseMutationOptions,
-  UseQueryOptions,
-  useMutation,
-  useQuery,
-} from 'react-query';
+import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
 import { Announcement, AnnouncementStatus } from 'src/models/announcement';
 import { apiUrl } from 'src/utils/api-url';
@@ -17,7 +12,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/Announcement`;
 
 export const useCreateNewAnnouncement = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement>
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement>,
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.post(`${baseUrl}/CreateNewAnnouncement`, data),
@@ -28,7 +23,7 @@ export const useCreateNewAnnouncement = (
 };
 
 export const useEditAnnouncement = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement>
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement>,
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.put(`${baseUrl}/EditAnnouncement`, data),
@@ -39,7 +34,7 @@ export const useEditAnnouncement = (
 };
 
 export const useGetCurrentUserAnnouncements = (
-  options?: UseQueryOptions<Announcement[], AxiosError<HttpErrorData>>
+  options?: UseQueryOptions<Announcement[], AxiosError<HttpErrorData>>,
 ) => {
   const query = useQuery({
     queryKey: 'GetCurrentUserAnnouncements',
@@ -55,7 +50,7 @@ export const useSetAnnouncementStatus = (
     void,
     AxiosError<HttpErrorData>,
     { id: string; newStatus: AnnouncementStatus }
-  >
+  >,
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.patch(`${baseUrl}/SetAnnouncementStatus`, data),
@@ -66,11 +61,7 @@ export const useSetAnnouncementStatus = (
 };
 
 export const useRemoveAnnouncement = (
-  options?: UseMutationOptions<
-    void,
-    AxiosError<HttpErrorData>,
-    Announcement['id']
-  >
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement['id']>,
 ) => {
   const mutation = useMutation({
     mutationFn: (id) => {
@@ -85,7 +76,7 @@ export const useRemoveAnnouncement = (
 
 export const useGetAnnouncement = (
   id: Announcement['id'],
-  options?: UseQueryOptions<Announcement, AxiosError<HttpErrorData>>
+  options?: UseQueryOptions<Announcement, AxiosError<HttpErrorData>>,
 ) => {
   const query = useQuery({
     queryKey: ['GetAnnouncement', id],

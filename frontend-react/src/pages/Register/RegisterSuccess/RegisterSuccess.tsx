@@ -1,14 +1,6 @@
 import { styled } from '@mui/material';
 import { useResendActivationLink } from 'src/queries/auth-queries';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Icon,
-  Typography,
-} from 'src/ui-components';
+import { Box, Button, Card, CardContent, Container, Icon, Typography } from 'src/ui-components';
 
 const StyledCheckIconWrapper = styled(Box)(({ theme }) => {
   const size = 50;
@@ -29,8 +21,7 @@ export type RegisterSuccessProps = {
 };
 
 export const RegisterSuccess = ({ email }: RegisterSuccessProps) => {
-  const { resendActivationLink, resendActivationLinkInProgress } =
-    useResendActivationLink();
+  const { resendActivationLink, resendActivationLinkInProgress } = useResendActivationLink();
 
   return (
     <Container
@@ -46,17 +37,12 @@ export const RegisterSuccess = ({ email }: RegisterSuccessProps) => {
           <StyledCheckIconWrapper>
             <Icon name='check' color='success' />
           </StyledCheckIconWrapper>
-          <Typography
-            variant='h5'
-            mt={5}
-            textAlign='center'
-            fontWeight='bold'
-          >
+          <Typography variant='h5' mt={5} textAlign='center' fontWeight='bold'>
             Gratulacje!
           </Typography>
           <Typography textAlign='center' mt={2}>
-            Twoje konto zostało utworzone. <br /> Sprawdź adres e-mail i
-            postępuj zgodnie z instrukcjami aby aktywować swoje konto.
+            Twoje konto zostało utworzone. <br /> Sprawdź adres e-mail i postępuj zgodnie z
+            instrukcjami aby aktywować swoje konto.
           </Typography>
           <Box textAlign='center' mt={8}>
             <Typography>Link nie dotarł?</Typography>

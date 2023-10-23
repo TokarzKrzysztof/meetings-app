@@ -8,10 +8,7 @@ export type MyAnnouncementsListProps = {
   status: AnnouncementStatus;
 };
 
-export const MyAnnouncementsList = ({
-  data,
-  status,
-}: MyAnnouncementsListProps) => {
+export const MyAnnouncementsList = ({ data, status }: MyAnnouncementsListProps) => {
   const title = useMemo(() => {
     if (status === AnnouncementStatus.Active) return 'Aktywne';
     if (status === AnnouncementStatus.Pending) return 'Oczekujące';
@@ -20,8 +17,7 @@ export const MyAnnouncementsList = ({
 
   const noAnnoucementsText = useMemo(() => {
     if (status === AnnouncementStatus.Active) return 'Brak aktywnych ogłoszeń';
-    if (status === AnnouncementStatus.Pending)
-      return 'Brak oczekujących ogłoszeń';
+    if (status === AnnouncementStatus.Pending) return 'Brak oczekujących ogłoszeń';
     return 'Brak zakończonych ogłoszeń';
   }, [status]);
 
@@ -33,10 +29,7 @@ export const MyAnnouncementsList = ({
       {data.length ? (
         <Stack direction='column' gap={2}>
           {data.map((x) => (
-            <MyAnnouncementsListItem
-              key={x.id}
-              announcement={x}
-            ></MyAnnouncementsListItem>
+            <MyAnnouncementsListItem key={x.id} announcement={x}></MyAnnouncementsListItem>
           ))}
         </Stack>
       ) : (

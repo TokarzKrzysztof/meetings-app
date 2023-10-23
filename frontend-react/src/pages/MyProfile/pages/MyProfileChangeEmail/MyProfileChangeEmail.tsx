@@ -6,10 +6,7 @@ import { MyProfileActionButtons } from 'src/components/my-profile/MyProfileActio
 import { MyProfileForm } from 'src/components/my-profile/MyProfileForm/MyProfileForm';
 import { MyProfileTitle } from 'src/components/my-profile/MyProfileTitle/MyProfileTitle';
 import { MyProfileChangeEmailConfirmationDialog } from 'src/pages/MyProfile/pages/MyProfileChangeEmail/MyProfileChangeEmailConfirmationDialog/MyProfileChangeEmailConfirmationDialog';
-import {
-  useGetCurrentUser,
-  useSendChangeEmailAddressEmail,
-} from 'src/queries/user-queries';
+import { useGetCurrentUser, useSendChangeEmailAddressEmail } from 'src/queries/user-queries';
 import { Typography } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
@@ -31,11 +28,7 @@ export const MyProfileChangeEmail = () => {
   } = useSendChangeEmailAddressEmail();
 
   useEffect(() => {
-    if (
-      sendChangeEmailAddressEmailError?.validationErrors.includes(
-        'PasswordIncorrect'
-      )
-    ) {
+    if (sendChangeEmailAddressEmailError?.validationErrors.includes('PasswordIncorrect')) {
       setError('password', {
         message: 'Hasło jest nieprawidłowe',
       });

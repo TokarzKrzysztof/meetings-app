@@ -1,6 +1,6 @@
 import {
   default as MuiListItemIcon,
-  ListItemIconProps as MuiListItemIconProps
+  ListItemIconProps as MuiListItemIconProps,
 } from '@mui/material/ListItemIcon';
 
 export type ListItemIconProps = MuiListItemIconProps & {};

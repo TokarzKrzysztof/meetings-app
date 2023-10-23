@@ -1,11 +1,5 @@
 import { Link } from 'react-router-dom';
-import {
-  Icon,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from 'src/ui-components';
+import { Icon, List, ListItemButton, ListItemIcon, ListItemText } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type MyProfileActionListProps = {};

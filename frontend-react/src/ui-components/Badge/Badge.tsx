@@ -6,10 +6,6 @@ import {
 
 export type BadgeProps = {};
 
-export const Badge = <
-  D extends React.ElementType = BadgeTypeMap['defaultComponent']
->({
+export const Badge = <D extends React.ElementType = BadgeTypeMap['defaultComponent']>({
   ...props
-}: MuiBadgeProps<D, { component?: D }> & BadgeProps) => (
-  <MuiBadge {...props}></MuiBadge>
-);
+}: MuiBadgeProps<D, { component?: D }> & BadgeProps) => <MuiBadge {...props}></MuiBadge>;

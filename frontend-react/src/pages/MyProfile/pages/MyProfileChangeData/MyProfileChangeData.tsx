@@ -10,10 +10,7 @@ import { MyProfileForm } from 'src/components/my-profile/MyProfileForm/MyProfile
 import { MyProfileTitle } from 'src/components/my-profile/MyProfileTitle/MyProfileTitle';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { User } from 'src/models/user';
-import {
-  useChangePersonalData,
-  useGetCurrentUser,
-} from 'src/queries/user-queries';
+import { useChangePersonalData, useGetCurrentUser } from 'src/queries/user-queries';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
@@ -34,8 +31,7 @@ export const MyProfileChangeData = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { currentUser } = useGetCurrentUser();
   const { setCurrentUser } = useSetQueryData();
-  const { changePersonalData, changePersonalDataInProgress } =
-    useChangePersonalData();
+  const { changePersonalData, changePersonalDataInProgress } = useChangePersonalData();
 
   useEffect(() => {
     if (currentUser) {
@@ -61,7 +57,6 @@ export const MyProfileChangeData = () => {
       <Header />
       <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
         <MyProfileTitle title='Edycja danych osobowych'></MyProfileTitle>
-
         <FormField
           form={form}
           label='Imię'

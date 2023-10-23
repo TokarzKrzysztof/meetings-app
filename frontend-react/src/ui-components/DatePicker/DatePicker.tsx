@@ -5,10 +5,7 @@ import {
 
 export type DatePickerProps<TDate> = MuiDatePickerProps<TDate> & {};
 
-export const DatePicker = <TDate,>({
-  slotProps,
-  ...props
-}: DatePickerProps<TDate>) => (
+export const DatePicker = <TDate,>({ slotProps, ...props }: DatePickerProps<TDate>) => (
   <MuiDatePicker
     slotProps={{
       textField: {

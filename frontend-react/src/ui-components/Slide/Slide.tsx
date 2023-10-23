@@ -1,10 +1,5 @@
-import {
-  default as MuiSlide,
-  SlideProps as MuiSlideProps,
-} from '@mui/material/Slide';
+import { default as MuiSlide, SlideProps as MuiSlideProps } from '@mui/material/Slide';
 
 export type SlideProps = {};
 
-export const Slide = ({ ...props }: MuiSlideProps & SlideProps) => (
-  <MuiSlide {...props}></MuiSlide>
-);
+export const Slide = ({ ...props }: MuiSlideProps & SlideProps) => <MuiSlide {...props}></MuiSlide>;

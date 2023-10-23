@@ -11,14 +11,11 @@ const insertAtIndex = (str: string, toInsert: string, index: number) => {
   return str.slice(0, index) + toInsert + str.slice(index);
 };
 
-export type TextareaFieldProps = Omit<
-  TextFieldProps<'outlined'>,
-  'variant' | 'ref'
->;
+export type TextareaFieldProps = Omit<TextFieldProps<'outlined'>, 'variant' | 'ref'>;
 
 export const TextareaField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   label,
   controller: { field, fieldState },
@@ -32,21 +29,13 @@ export const TextareaField = <
     if (!field.value) {
       field.onChange(emoji.emoji);
     } else {
-      field.onChange(
-        insertAtIndex(
-          field.value,
-          emoji.emoji,
-          fieldRef.current!.selectionStart
-        )
-      );
+      field.onChange(insertAtIndex(field.value, emoji.emoji, fieldRef.current!.selectionStart));
     }
   };
 
   const helperText = fieldState.error
     ? fieldState.error.message
-    : `Ilość znaków ${(field.value ?? '').length}/${
-        Validators.maxStringLength.value
-      }`;
+    : `Ilość znaków ${(field.value ?? '').length}/${Validators.maxStringLength.value}`;
   return (
     <TextField
       fullWidth
@@ -64,10 +53,7 @@ export const TextareaField = <
       InputProps={{
         sx: { pr: 0 },
         endAdornment: (
-          <InputAdornment
-            position='end'
-            sx={{ alignSelf: 'flex-start', mt: 1 }}
-          >
+          <InputAdornment position='end' sx={{ alignSelf: 'flex-start', mt: 1 }}>
             <EmojiPicker onEmojiSelected={handleEmojiSelected} />
           </InputAdornment>
         ),

@@ -14,7 +14,7 @@ type AutcompleteOption = { label: string; value: string };
 export const AutocompleteField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-  TOption = unknown
+  TOption = unknown,
 >({
   label,
   controller: { field, fieldState },
@@ -22,8 +22,7 @@ export const AutocompleteField = <
   getOptionLabel,
   valueKey = 'id' as keyof TOption,
   ...props
-}: AutocompleteFieldProps<TOption> &
-  ControlledFieldProps<TFieldValues, TName>) => {
+}: AutocompleteFieldProps<TOption> & ControlledFieldProps<TFieldValues, TName>) => {
   const [options, setOptions] = useState<AutcompleteOption[]>();
 
   useEffect(() => {
@@ -32,7 +31,7 @@ export const AutocompleteField = <
         optionsAsync.map((x) => ({
           label: getOptionLabel(x),
           value: x[valueKey] as string,
-        }))
+        })),
       );
     }
   }, [optionsAsync]);
@@ -45,9 +44,7 @@ export const AutocompleteField = <
       value={selectedOption}
       isOptionEqualToValue={(opt, current) => opt.value === current.value}
       onChange={(_, option) => {
-        return field.onChange(
-          option ? (option as AutcompleteOption).value : null
-        );
+        return field.onChange(option ? (option as AutcompleteOption).value : null);
       }}
       renderInput={(params) => (
         <TextField

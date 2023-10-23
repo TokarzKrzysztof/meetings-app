@@ -5,13 +5,11 @@ import {
 } from '@mui/material/FormHelperText';
 
 export type FormHelperTextProps<
-  D extends React.ElementType = FormHelperTextTypeMap['defaultComponent']
+  D extends React.ElementType = FormHelperTextTypeMap['defaultComponent'],
 > = MuiFormHelperTextProps<D, { component?: D }> & {};
 
 export const FormHelperText = <
-  D extends React.ElementType = FormHelperTextTypeMap['defaultComponent']
+  D extends React.ElementType = FormHelperTextTypeMap['defaultComponent'],
 >({
   ...props
-}: FormHelperTextProps<D>) => (
-  <MuiFormHelperText {...props}></MuiFormHelperText>
-);
+}: FormHelperTextProps<D>) => <MuiFormHelperText {...props}></MuiFormHelperText>;

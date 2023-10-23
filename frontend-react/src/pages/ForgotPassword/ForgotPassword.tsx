@@ -31,13 +31,11 @@ export const ForgotPassword = () => {
   return (
     <>
       <Header leftSlot={<AuthGoBackBtn />} />
-      <AuthForm
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <AuthForm onSubmit={handleSubmit(onSubmit)}>
         <AuthIcon iconName='email'></AuthIcon>
         <Typography align='center' mb={2}>
-          Wpisz adres email powiązany z kontem i postępuj zgodnie z instrukcjami
-          aby zresetować swoje hasło
+          Wpisz adres email powiązany z kontem i postępuj zgodnie z instrukcjami aby zresetować
+          swoje hasło
         </Typography>
         <FormField
           form={form}
@@ -50,9 +48,7 @@ export const ForgotPassword = () => {
             },
           })}
         ></FormField>
-        <AuthButton disabled={sendForgotPasswordEmailInProgress}>
-          Wyślij
-        </AuthButton>
+        <AuthButton disabled={sendForgotPasswordEmailInProgress}>Wyślij</AuthButton>
         <AuthRedirectInfo>
           <Button variant='text' component={Link} to={AppRoutes.Login}>
             Wróć do logowania

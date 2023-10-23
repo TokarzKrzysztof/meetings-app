@@ -1,10 +1,4 @@
-import {
-  Control,
-  FieldPath,
-  FieldValues,
-  RegisterOptions,
-  useController,
-} from 'react-hook-form';
+import { Control, FieldPath, FieldValues, RegisterOptions, useController } from 'react-hook-form';
 import {
   AutocompleteField,
   AutocompleteFieldProps,
@@ -29,7 +23,7 @@ import {
 export type ControlledFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-  TOther = unknown
+  TOther = unknown,
 > = {
   label: string;
   control: Control<TFieldValues>;
@@ -65,7 +59,7 @@ export type ControlledFormFieldProps<
 export const ControlledFormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-  TOther = unknown
+  TOther = unknown,
 >({
   label,
   control,
@@ -78,45 +72,23 @@ export const ControlledFormField = <
   const controller = useController({ control, name, rules, shouldUnregister });
 
   if (element === 'date-picker') {
-    return (
-      <DatePickerField
-        {...ElementProps}
-        controller={controller}
-        label={label}
-      />
-    );
+    return <DatePickerField {...ElementProps} controller={controller} label={label} />;
   }
 
   if (element === 'checkbox') {
-    return (
-      <CheckboxField {...ElementProps} controller={controller} label={label} />
-    );
+    return <CheckboxField {...ElementProps} controller={controller} label={label} />;
   }
 
   if (element === 'radio-group') {
-    return (
-      <RadioGroupField
-        {...ElementProps}
-        controller={controller}
-        label={label}
-      />
-    );
+    return <RadioGroupField {...ElementProps} controller={controller} label={label} />;
   }
 
   if (element === 'autocomplete') {
-    return (
-      <AutocompleteField
-        {...ElementProps}
-        controller={controller}
-        label={label}
-      />
-    );
+    return <AutocompleteField {...ElementProps} controller={controller} label={label} />;
   }
 
   if (element === 'textarea') {
-    return (
-      <TextareaField {...ElementProps} controller={controller} label={label} />
-    );
+    return <TextareaField {...ElementProps} controller={controller} label={label} />;
   }
 
   return null;

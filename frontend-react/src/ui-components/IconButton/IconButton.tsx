@@ -29,13 +29,10 @@ export type IconButtonProps = {
 };
 
 export const IconButtonInner = <
-  D extends React.ElementType = IconButtonTypeMap['defaultComponent']
+  D extends React.ElementType = IconButtonTypeMap['defaultComponent'],
 >(
-  {
-    filled,
-    ...props
-  }: MuiIconButtonProps<D, { component?: D }> & IconButtonProps,
-  ref: ForwardedRef<HTMLButtonElement>
+  { filled, ...props }: MuiIconButtonProps<D, { component?: D }> & IconButtonProps,
+  ref: ForwardedRef<HTMLButtonElement>,
 ) => <StyledMuiIconButton filled={filled} ref={ref} {...props}></StyledMuiIconButton>;
 
 export const IconButton = typedForwardRef(IconButtonInner);

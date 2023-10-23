@@ -19,9 +19,7 @@ import { router } from './router';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
@@ -29,14 +27,14 @@ root.render(
         <SnackbarProvider
           maxSnack={3}
           anchorOrigin={{ horizontal: 'center', vertical: 'top' }}
-          action={snackbarKey => <SnackbarCloseButton snackbarKey={snackbarKey}/>}
+          action={(snackbarKey) => <SnackbarCloseButton snackbarKey={snackbarKey} />}
           preventDuplicate
         >
           <RouterProvider router={router} />
         </SnackbarProvider>
       </LocalizationProvider>
     </QueryClientProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

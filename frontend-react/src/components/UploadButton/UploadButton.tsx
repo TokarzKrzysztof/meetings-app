@@ -19,11 +19,7 @@ export type UploadButtonProps = PropsWithChildren<{
   onUpload: (file: File) => void;
 }>;
 
-export const UploadButton = ({
-  children,
-  onUpload,
-  accept,
-}: UploadButtonProps) => {
+export const UploadButton = ({ children, onUpload, accept }: UploadButtonProps) => {
   const onFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       onUpload(e.target.files[0]);
@@ -33,11 +29,7 @@ export const UploadButton = ({
   return (
     <Button component='label' startIcon={<Icon name='cloud_upload' />}>
       {children}
-      <VisuallyHiddenInput
-        type='file'
-        onChange={onFileInputChange}
-        accept={accept}
-      />
+      <VisuallyHiddenInput type='file' onChange={onFileInputChange} accept={accept} />
     </Button>
   );
 };

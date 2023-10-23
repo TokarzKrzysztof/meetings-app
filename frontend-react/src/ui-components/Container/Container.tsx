@@ -6,9 +6,7 @@ import {
 
 export type ContainerProps = {};
 
-export const Container = <
-  D extends React.ElementType = ContainerTypeMap['defaultComponent']
->({
+export const Container = <D extends React.ElementType = ContainerTypeMap['defaultComponent']>({
   ...props
 }: MuiContainerProps<D, { component?: D }> & ContainerProps) => (
   <MuiContainer {...props}></MuiContainer>

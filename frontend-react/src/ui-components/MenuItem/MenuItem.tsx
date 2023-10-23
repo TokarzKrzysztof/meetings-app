@@ -6,9 +6,7 @@ import {
 
 export type MenuItemProps = {};
 
-export const MenuItem = <
-  D extends React.ElementType = MenuItemTypeMap['defaultComponent']
->({
+export const MenuItem = <D extends React.ElementType = MenuItemTypeMap['defaultComponent']>({
   ...props
 }: MuiMenuItemProps<D, { component?: D }> & MenuItemProps) => (
   <MuiMenuItem {...props}></MuiMenuItem>

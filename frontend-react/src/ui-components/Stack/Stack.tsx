@@ -6,9 +6,7 @@ import {
 
 export type StackProps = {};
 
-export const Stack = <
-  D extends React.ElementType = StackTypeMap['defaultComponent']
->({
+export const Stack = <D extends React.ElementType = StackTypeMap['defaultComponent']>({
   direction = 'row',
   ...props
 }: MuiStackProps<D, { component?: D }> & StackProps) => (

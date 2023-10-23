@@ -1,7 +1,4 @@
-import {
-  default as MuiMenu,
-  MenuProps as MuiMenuProps,
-} from '@mui/material/Menu';
+import { default as MuiMenu, MenuProps as MuiMenuProps } from '@mui/material/Menu';
 import { styled } from '@mui/material/styles';
 import { RefObject, useEffect, useState } from 'react';
 
@@ -34,12 +31,7 @@ export const Menu = ({ children, anchorRef, ...props }: MenuProps) => {
 
   if (!anchorRef.current) return null;
   return (
-    <StyledMenu
-      anchorEl={anchorRef.current}
-      open={open}
-      onClose={handleClose}
-      {...props}
-    >
+    <StyledMenu anchorEl={anchorRef.current} open={open} onClose={handleClose} {...props}>
       <div onClick={handleClose}>{children}</div>
     </StyledMenu>
   );

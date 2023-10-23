@@ -24,8 +24,7 @@ export const MyProfileChangePassword = () => {
   const { register, handleSubmit, setError } = form;
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { changePassword, changePasswordInProgress, changePasswordError } =
-    useChangePassword();
+  const { changePassword, changePasswordInProgress, changePasswordError } = useChangePassword();
 
   useEffect(() => {
     if (changePasswordError?.validationErrors.includes('PasswordIncorrect')) {
@@ -49,7 +48,7 @@ export const MyProfileChangePassword = () => {
           });
           navigate(AppRoutes.MyProfile);
         },
-      }
+      },
     );
   };
 
@@ -71,9 +70,7 @@ export const MyProfileChangePassword = () => {
           form={form as any}
           labels={['Nowe hasło', 'Powtórz nowe hasło']}
         ></PasswordFields>
-        <MyProfileActionButtons
-          isSaveDisabled={changePasswordInProgress}
-        ></MyProfileActionButtons>
+        <MyProfileActionButtons isSaveDisabled={changePasswordInProgress}></MyProfileActionButtons>
       </MyProfileForm>
     </>
   );

@@ -45,8 +45,7 @@ export const Login = () => {
     if (params.get('isFromActivation')) {
       enqueueSnackbar({
         variant: 'success',
-        message:
-          'Twoje konto zostało pomyślnie aktywowane, możesz się teraz zalogować',
+        message: 'Twoje konto zostało pomyślnie aktywowane, możesz się teraz zalogować',
       });
     }
     if (params.get('isFromResetPassword')) {
@@ -60,10 +59,7 @@ export const Login = () => {
   return (
     <>
       <Header leftSlot={<AuthGoBackBtn />} />
-      <AuthForm
-        onSubmit={handleSubmit(onSubmit)}
-        onChange={() => loginError && loginReset()}
-      >
+      <AuthForm onSubmit={handleSubmit(onSubmit)} onChange={() => loginError && loginReset()}>
         <AuthIcon iconName='account_circle'></AuthIcon>
         <FormField
           form={form}
@@ -95,15 +91,12 @@ export const Login = () => {
           }}
         ></FormField>
         {loginError?.statusCode === 401 && (
-          <Typography color='error'>
-            Email i/lub hasło są nieprawidłowe
-          </Typography>
+          <Typography color='error'>Email i/lub hasło są nieprawidłowe</Typography>
         )}
         {loginError?.statusCode === 403 && (
           <Typography color='error'>
-            Twoje konto nie zostało jeszcze aktywowane. Na adres email podany
-            przy rejestracji wysłaliśmy ponownie instrukcję dotyczącą aktywacji
-            konta.
+            Twoje konto nie zostało jeszcze aktywowane. Na adres email podany przy rejestracji
+            wysłaliśmy ponownie instrukcję dotyczącą aktywacji konta.
           </Typography>
         )}
         <AuthButton disabled={loginInProgress}>Zaloguj</AuthButton>

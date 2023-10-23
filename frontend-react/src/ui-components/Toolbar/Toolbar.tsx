@@ -6,10 +6,6 @@ import {
 
 export type ToolbarProps = {};
 
-export const Toolbar = <
-  D extends React.ElementType = ToolbarTypeMap['defaultComponent']
->({
+export const Toolbar = <D extends React.ElementType = ToolbarTypeMap['defaultComponent']>({
   ...props
-}: MuiToolbarProps<D, { component?: D }> & ToolbarProps) => (
-  <MuiToolbar {...props}></MuiToolbar>
-);
+}: MuiToolbarProps<D, { component?: D }> & ToolbarProps) => <MuiToolbar {...props}></MuiToolbar>;

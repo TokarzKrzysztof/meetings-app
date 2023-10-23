@@ -7,7 +7,7 @@ import {
 export type TableContainerProps = {};
 
 export const TableContainer = <
-  D extends React.ElementType = TableContainerTypeMap['defaultComponent']
+  D extends React.ElementType = TableContainerTypeMap['defaultComponent'],
 >({
   ...props
 }: MuiTableContainerProps<D, { component?: D }> & TableContainerProps) => (

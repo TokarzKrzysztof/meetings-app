@@ -15,13 +15,13 @@ export const MyAnnouncements = () => {
     if (!currentUserAnnoucements) return null;
     return {
       activeAnnouncements: currentUserAnnoucements.filter(
-        (x) => x.status === AnnouncementStatus.Active
+        (x) => x.status === AnnouncementStatus.Active,
       ),
       pendingAnnouncements: currentUserAnnoucements.filter(
-        (x) => x.status === AnnouncementStatus.Pending
+        (x) => x.status === AnnouncementStatus.Pending,
       ),
       closedAnnouncements: currentUserAnnoucements.filter(
-        (x) => x.status === AnnouncementStatus.Closed
+        (x) => x.status === AnnouncementStatus.Closed,
       ),
     };
   }, [currentUserAnnoucements]);
@@ -31,27 +31,13 @@ export const MyAnnouncements = () => {
     <>
       <Header />
       <Container sx={{ py: 2 }} maxWidth='sm'>
-        <Typography
-          variant='h5'
-          mb={2}
-          textAlign='center'
-          fontWeight='bold'
-        >
+        <Typography variant='h5' mb={2} textAlign='center' fontWeight='bold'>
           Moje ogłoszenia
         </Typography>
         <Divider></Divider>
-        <MyAnnouncementsList
-          data={data.activeAnnouncements}
-          status={AnnouncementStatus.Active}
-        />
-        <MyAnnouncementsList
-          data={data.pendingAnnouncements}
-          status={AnnouncementStatus.Pending}
-        />
-        <MyAnnouncementsList
-          data={data.closedAnnouncements}
-          status={AnnouncementStatus.Closed}
-        />
+        <MyAnnouncementsList data={data.activeAnnouncements} status={AnnouncementStatus.Active} />
+        <MyAnnouncementsList data={data.pendingAnnouncements} status={AnnouncementStatus.Pending} />
+        <MyAnnouncementsList data={data.closedAnnouncements} status={AnnouncementStatus.Closed} />
       </Container>
     </>
   );

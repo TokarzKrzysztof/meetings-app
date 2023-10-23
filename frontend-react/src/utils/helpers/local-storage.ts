@@ -16,13 +16,13 @@ export class LocalStorage {
 
   static setObjectValue<TKey extends keyof ObjectStorageKey>(
     key: TKey,
-    value: ObjectStorageKey[TKey]
+    value: ObjectStorageKey[TKey],
   ) {
     window.localStorage.setItem(key, JSON.stringify(value));
   }
 
   static getObjectValue<TKey extends keyof ObjectStorageKey>(
-    key: keyof ObjectStorageKey
+    key: keyof ObjectStorageKey,
   ): ObjectStorageKey[TKey] | null {
     const data = window.localStorage.getItem(key);
     if (data !== null) {
@@ -33,6 +33,6 @@ export class LocalStorage {
   }
 
   static clearValue(key: SimpleStorageKey | keyof ObjectStorageKey) {
-    window.localStorage.removeItem(key)
+    window.localStorage.removeItem(key);
   }
 }

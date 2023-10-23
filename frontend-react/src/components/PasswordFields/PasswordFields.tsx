@@ -36,11 +36,7 @@ export const PasswordFields = ({ form, labels }: PasswordFieldsProps) => {
   const visibilityButton = (
     <InputAdornment position='end'>
       <IconButton onClick={() => setShowPassword((show) => !show)} edge='end'>
-        {showPassword ? (
-          <Icon name='visibility_off' />
-        ) : (
-          <Icon name='visibility' />
-        )}
+        {showPassword ? <Icon name='visibility_off' /> : <Icon name='visibility' />}
       </IconButton>
     </InputAdornment>
   );

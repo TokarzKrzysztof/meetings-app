@@ -13,7 +13,7 @@ export type CheckboxFieldProps = CheckboxProps & {
 
 export const CheckboxField = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   label,
   controller: { field },

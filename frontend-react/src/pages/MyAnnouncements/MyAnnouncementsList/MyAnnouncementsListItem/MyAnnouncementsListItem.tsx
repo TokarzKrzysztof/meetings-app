@@ -19,9 +19,7 @@ export type MyAnnouncementsListItemProps = {
   announcement: Announcement;
 };
 
-export const MyAnnouncementsListItem = ({
-  announcement,
-}: MyAnnouncementsListItemProps) => {
+export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListItemProps) => {
   const { allCategories } = useGetAllCategories();
   const { currentUserAnnoucementsRefetch } = useGetCurrentUserAnnouncements({
     enabled: false,
@@ -31,9 +29,7 @@ export const MyAnnouncementsListItem = ({
   const confirm = useSetAtom(confirmationDialogAtom);
   const { enqueueSnackbar } = useSnackbar();
 
-  const categoryName = allCategories!.find(
-    (x) => x.id === announcement.categoryId
-  )!.name;
+  const categoryName = allCategories!.find((x) => x.id === announcement.categoryId)!.name;
 
   const announcementStatus = useMemo(() => {
     if (announcement.status === AnnouncementStatus.Active)
@@ -60,7 +56,7 @@ export const MyAnnouncementsListItem = ({
           });
           currentUserAnnoucementsRefetch();
         },
-      }
+      },
     );
   };
 
@@ -81,7 +77,7 @@ export const MyAnnouncementsListItem = ({
           });
           currentUserAnnoucementsRefetch();
         },
-      }
+      },
     );
   };
 
@@ -122,9 +118,7 @@ export const MyAnnouncementsListItem = ({
       </Typography>
       <Divider />
       <Stack pl={1} justifyContent='space-between' alignItems='center'>
-        <Typography fontSize={12}>
-          {dayjs(announcement.createdAt).format('DD.MM.YYYY')}
-        </Typography>
+        <Typography fontSize={12}>{dayjs(announcement.createdAt).format('DD.MM.YYYY')}</Typography>
         <Box>
           {announcement.status === AnnouncementStatus.Active ||
           announcement.status === AnnouncementStatus.Pending ? (
@@ -148,11 +142,7 @@ export const MyAnnouncementsListItem = ({
             </>
           ) : (
             <>
-              <Button
-                size='small'
-                variant='text'
-                onClick={handleConfirmSetAnnouncementAsPending}
-              >
+              <Button size='small' variant='text' onClick={handleConfirmSetAnnouncementAsPending}>
                 Aktywuj
               </Button>
               <Button

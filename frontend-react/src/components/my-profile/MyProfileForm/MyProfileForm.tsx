@@ -8,12 +8,7 @@ export type MyProfileFormProps = PropsWithChildren<{
 
 export const MyProfileForm = ({ children, onSubmit, onChange }: MyProfileFormProps) => {
   return (
-    <Container
-      component='form'
-      onSubmit={onSubmit}
-      onChange={onChange}
-      maxWidth='sm'
-    >
+    <Container component='form' onSubmit={onSubmit} onChange={onChange} maxWidth='sm'>
       {children}
     </Container>
   );

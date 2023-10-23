@@ -1,17 +1,10 @@
-import {
-  CardTypeMap,
-  default as MuiCard,
-  CardProps as MuiCardProps,
-} from '@mui/material/Card';
+import { CardTypeMap, default as MuiCard, CardProps as MuiCardProps } from '@mui/material/Card';
 
-export type CardProps<
-  D extends React.ElementType = CardTypeMap['defaultComponent']
-> = MuiCardProps<D, { component?: D }> & {};
+export type CardProps<D extends React.ElementType = CardTypeMap['defaultComponent']> = MuiCardProps<
+  D,
+  { component?: D }
+> & {};
 
-export const Card = <
-  D extends React.ElementType = CardTypeMap['defaultComponent']
->({
+export const Card = <D extends React.ElementType = CardTypeMap['defaultComponent']>({
   ...props
-}: CardProps<D>) => (
-  <MuiCard {...props}></MuiCard>
-);
+}: CardProps<D>) => <MuiCard {...props}></MuiCard>;

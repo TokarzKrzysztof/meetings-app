@@ -6,9 +6,7 @@ import {
 
 export type FormControlProps = {};
 
-export const FormControl = <
-  D extends React.ElementType = FormControlTypeMap['defaultComponent']
->({
+export const FormControl = <D extends React.ElementType = FormControlTypeMap['defaultComponent']>({
   ...props
 }: MuiFormControlProps<D, { component?: D }> & FormControlProps) => (
   <MuiFormControl {...props}></MuiFormControl>

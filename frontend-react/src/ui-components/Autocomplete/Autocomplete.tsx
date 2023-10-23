@@ -2,7 +2,7 @@ import { ChipTypeMap, styled } from '@mui/material';
 import {
   default as MuiAutocomplete,
   AutocompleteProps as MuiAutocompleteProps,
-  autocompleteClasses
+  autocompleteClasses,
 } from '@mui/material/Autocomplete';
 import { Box } from 'src/ui-components/Box/Box';
 import { CircularProgress } from 'src/ui-components/CircularProgress/CircularProgress';
@@ -19,7 +19,7 @@ const StyledPopper = styled(Popper)({
   '& .MuiAutocomplete-option': {
     fontSize: 13,
   },
-})
+});
 
 export type AutocompleteProps<T> = {
   optionsAsync: T[] | undefined;
@@ -31,7 +31,7 @@ export const Autocomplete = <
   Multiple extends boolean | undefined,
   DisableClearable extends boolean | undefined,
   FreeSolo extends boolean | undefined,
-  ChipComponent extends React.ElementType = ChipTypeMap['defaultComponent']
+  ChipComponent extends React.ElementType = ChipTypeMap['defaultComponent'],
 >({
   optionsAsync,
   getOptionLabel,
@@ -41,7 +41,8 @@ export const Autocomplete = <
   'options' | 'getOptionLabel'
 > &
   AutocompleteProps<T>) => {
-    const loadingOption = (<Box
+  const loadingOption = (
+    <Box
       component='li'
       // this is the list item so it has to have unique key
       key='loading-option'
@@ -52,11 +53,12 @@ export const Autocomplete = <
           pointerEvents: 'none',
           display: 'flex',
           justifyContent: 'center',
-        }
+        },
       }}
     >
       <CircularProgress size={25} />
-    </Box>)
+    </Box>
+  );
 
   return (
     <MuiAutocomplete

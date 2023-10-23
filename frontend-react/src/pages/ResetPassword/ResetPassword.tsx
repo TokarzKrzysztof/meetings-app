@@ -31,7 +31,7 @@ export const ResetPassword = () => {
         onSuccess: () => {
           navigate(`${AppRoutes.Login}?isFromResetPassword=true`);
         },
-      }
+      },
     );
   };
 
@@ -40,10 +40,7 @@ export const ResetPassword = () => {
       <Header leftSlot={<AuthGoBackBtn />} />
       <AuthForm onSubmit={handleSubmit(onSubmit)}>
         <AuthIcon iconName='key'></AuthIcon>
-        <PasswordFields
-          form={form}
-          labels={['Nowe hasło', 'Powtórz nowe hasło']}
-        />
+        <PasswordFields form={form} labels={['Nowe hasło', 'Powtórz nowe hasło']} />
         <AuthButton disabled={resetPasswordInProgress}>Gotowe</AuthButton>
         <AuthRedirectInfo>
           <Button variant='text' component={Link} to={AppRoutes.Login}>

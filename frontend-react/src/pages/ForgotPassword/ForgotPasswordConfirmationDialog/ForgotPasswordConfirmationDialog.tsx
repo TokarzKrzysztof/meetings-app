@@ -1,10 +1,4 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-} from 'src/ui-components';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from 'src/ui-components';
 
 export type ForgotPasswordConfirmationDialogProps = {
   show: boolean;
@@ -23,8 +17,8 @@ export const ForgotPasswordConfirmationDialog = ({
     <Dialog open={show}>
       <DialogContent>
         <DialogContentText align='center'>
-          W ciągu kilku minut na podany adres email otrzymasz link dzięki
-          któremu będzie można zresetować hasło
+          W ciągu kilku minut na podany adres email otrzymasz link dzięki któremu będzie można
+          zresetować hasło
         </DialogContentText>
         <DialogContentText align='center' mt={4}>
           Link nie dotarł?

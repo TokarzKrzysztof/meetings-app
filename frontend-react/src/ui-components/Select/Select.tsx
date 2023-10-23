@@ -1,7 +1,4 @@
-import {
-  default as MuiSelect,
-  SelectProps as MuiSelectProps,
-} from '@mui/material/Select';
+import { default as MuiSelect, SelectProps as MuiSelectProps } from '@mui/material/Select';
 
 export type SelectProps = {};
 

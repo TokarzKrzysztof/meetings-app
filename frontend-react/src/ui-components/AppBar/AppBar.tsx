@@ -8,11 +8,9 @@ import { typedForwardRef } from 'src/utils/types/forward-ref';
 
 export type AppBarProps = {};
 
-const AppBarInner = <
-  D extends React.ElementType = AppBarTypeMap['defaultComponent']
->(
+const AppBarInner = <D extends React.ElementType = AppBarTypeMap['defaultComponent']>(
   { ...props }: MuiAppBarProps<D, { component?: D }> & AppBarProps,
-  ref: ForwardedRef<HTMLElement>
+  ref: ForwardedRef<HTMLElement>,
 ) => <MuiAppBar {...props} ref={ref}></MuiAppBar>;
 
 export const AppBar = typedForwardRef(AppBarInner);

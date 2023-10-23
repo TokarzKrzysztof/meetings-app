@@ -12,9 +12,7 @@ import { PropsWithReactElement } from 'src/utils/types/props';
 
 export type ConfirmationDialogProviderProps = PropsWithReactElement;
 
-export const ConfirmationDialogProvider = ({
-  children,
-}: ConfirmationDialogProviderProps) => {
+export const ConfirmationDialogProvider = ({ children }: ConfirmationDialogProviderProps) => {
   const [dialog, setDialog] = useAtom(confirmationDialogAtom);
 
   if (!dialog) return children;

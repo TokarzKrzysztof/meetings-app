@@ -19,11 +19,7 @@ export type ImageCropDialogProps = {
   onClose: () => void;
 };
 
-export const ImageCropDialog = ({
-  image,
-  onAccept,
-  onClose,
-}: ImageCropDialogProps) => {
+export const ImageCropDialog = ({ image, onAccept, onClose }: ImageCropDialogProps) => {
   const [croppedImage, setCroppedImage] = useState<{
     file: Blob;
     src: string;
@@ -37,10 +33,7 @@ export const ImageCropDialog = ({
 
   const generateCroppedImage = async () => {
     try {
-      const croppedImage = await getCroppedImg(
-        sourceImageSrc!,
-        croppedAreaPixelsRef.current!
-      );
+      const croppedImage = await getCroppedImg(sourceImageSrc!, croppedAreaPixelsRef.current!);
       setCroppedImage(croppedImage);
     } catch (e) {
       console.error(e);
@@ -65,9 +58,7 @@ export const ImageCropDialog = ({
             <DialogContent sx={{ p: 1 }}>
               <ImageCropDialogCropper
                 imageSrc={sourceImageSrc}
-                onCrop={(areaPixels) =>
-                  (croppedAreaPixelsRef.current = areaPixels)
-                }
+                onCrop={(areaPixels) => (croppedAreaPixelsRef.current = areaPixels)}
                 crop={crop}
                 setCrop={setCrop}
                 zoom={zoom}
@@ -85,10 +76,7 @@ export const ImageCropDialog = ({
           <>
             <DialogContent>
               <Box maxWidth={300} margin='0 auto'>
-                <img
-                  style={{ borderRadius: '50%', maxWidth: '100%' }}
-                  src={croppedImage.src}
-                />
+                <img style={{ borderRadius: '50%', maxWidth: '100%' }} src={croppedImage.src} />
               </Box>
               <Typography textAlign='center' my={2}>
                 Czy chcesz ustawić to zdjęcie jako swoje nowe zdjęcie profilowe?
@@ -98,9 +86,7 @@ export const ImageCropDialog = ({
               <Button variant='outlined' onClick={() => setCroppedImage(null)}>
                 Edytuj
               </Button>
-              <Button onClick={() => onAccept(croppedImage.file)}>
-                Zapisz
-              </Button>
+              <Button onClick={() => onAccept(croppedImage.file)}>Zapisz</Button>
             </DialogActions>
           </>
         )}

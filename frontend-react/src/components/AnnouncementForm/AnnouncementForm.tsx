@@ -43,12 +43,7 @@ export const AnnouncementForm = ({
 
   return (
     <Container maxWidth='sm' component='form' onSubmit={handleSubmit(onSubmit)}>
-      <Typography
-        variant='h5'
-        sx={{ my: 8 }}
-        textAlign='center'
-        fontWeight='bold'
-      >
+      <Typography variant='h5' sx={{ my: 8 }} textAlign='center' fontWeight='bold'>
         {title}
       </Typography>
 

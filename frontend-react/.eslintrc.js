@@ -31,7 +31,7 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-unused-vars': ['warn', { args: 'none' }],
-    'quotes': ['warn', 'single'],
+    quotes: ['warn', 'single'],
     'jsx-quotes': ['warn', 'prefer-single'],
     'no-unused-vars': ['off'],
     'no-debugger': ['warn'],
@@ -49,5 +49,5 @@ module.exports = {
       },
     ],
   },
-  ignorePatterns: ['src/**/*.test.ts', 'src/frontend/generated/*', "**.css", "**.png"],
+  ignorePatterns: ['src/**/*.test.ts', 'src/frontend/generated/*', '**.css', '**.png'],
 };

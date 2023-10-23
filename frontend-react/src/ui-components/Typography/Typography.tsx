@@ -6,9 +6,7 @@ import {
 
 export type TypographyProps = {};
 
-export const Typography = <
-  D extends React.ElementType = TypographyTypeMap['defaultComponent']
->({
+export const Typography = <D extends React.ElementType = TypographyTypeMap['defaultComponent']>({
   ...props
 }: MuiTypographyProps<D, { component?: D }> & TypographyProps) => (
   <MuiTypography {...props}></MuiTypography>

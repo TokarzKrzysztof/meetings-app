@@ -1,6 +1,6 @@
 import {
   default as MuiRadioGroup,
-  RadioGroupProps as MuiRadioGroupProps
+  RadioGroupProps as MuiRadioGroupProps,
 } from '@mui/material/RadioGroup';
 
 export type RadioGroupProps = MuiRadioGroupProps & {};

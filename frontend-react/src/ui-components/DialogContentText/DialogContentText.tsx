@@ -5,13 +5,11 @@ import {
 } from '@mui/material/DialogContentText';
 
 export type DialogContentTextProps<
-  D extends React.ElementType = DialogContentTextTypeMap['defaultComponent']
+  D extends React.ElementType = DialogContentTextTypeMap['defaultComponent'],
 > = MuiDialogContentTextProps<D, { component?: D }> & {};
 
 export const DialogContentText = <
-  D extends React.ElementType = DialogContentTextTypeMap['defaultComponent']
+  D extends React.ElementType = DialogContentTextTypeMap['defaultComponent'],
 >({
   ...props
-}: DialogContentTextProps<D>) => (
-  <MuiDialogContentText {...props}></MuiDialogContentText>
-);
+}: DialogContentTextProps<D>) => <MuiDialogContentText {...props}></MuiDialogContentText>;

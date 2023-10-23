@@ -18,11 +18,7 @@ export const HeaderMenuAccountButton = ({
 
   const menuOptions = currentUser ? (
     <>
-      <MenuItem
-        component={Link}
-        to={AppRoutes.NewAnnouncement}
-        sx={{ fontWeight: 'bold' }}
-      >
+      <MenuItem component={Link} to={AppRoutes.NewAnnouncement} sx={{ fontWeight: 'bold' }}>
         Dodaj ogłoszenie
       </MenuItem>
       <MenuItem component={Link} to={AppRoutes.MyProfile}>
@@ -48,7 +44,10 @@ export const HeaderMenuAccountButton = ({
     <>
       <IconButton color='inherit' ref={menuAnchorRef}>
         {currentUser ? (
-          <Avatar src={currentUser.profileImage ?? avatarPlaceholder} sx={{ width: 35, height: 35 }} />
+          <Avatar
+            src={currentUser.profileImage ?? avatarPlaceholder}
+            sx={{ width: 35, height: 35 }}
+          />
         ) : (
           <Icon name='person_outline' />
         )}
