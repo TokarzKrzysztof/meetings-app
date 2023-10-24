@@ -41,10 +41,18 @@ namespace Meetings.Infrastructure.Services
             _userValidator = userValidator;
         }
 
-        public async Task<UserDTO> Login(LoginCredentials data)
+        public async Task<UserDTO> Login(LoginCredentials data, string appUrl)
         {
             var user = await TryGetUserByEmail(data.Email);
-            _userValidator.WhenLogin(data, user);
+            if (user == null || !UserRuleBuilderExtensions.BeCorrect(data.Password, user))
+            {
+                throw new UnauthorizedAccessException();
+            }
+            if (!user.IsActive)
+            {
+                ResendActivationLink(user.Email, appUrl);
+                throw new UnauthorizedAccessException("UserNotActive");
+            }
 
             var token = _tokenGenerator.GenerateToken(user);
             UpdateAuthCookie(token, DateTime.UtcNow.AddDays(7));

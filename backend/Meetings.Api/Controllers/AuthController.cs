@@ -25,7 +25,7 @@ namespace Meetings.EmailTemplates.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginCredentials data)
         {
-            UserDTO user = await _authService.Login(data);
+            UserDTO user = await _authService.Login(data, GetAppUrl());
             return Ok(user);
         } 
         

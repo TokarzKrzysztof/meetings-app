@@ -28,17 +28,17 @@ namespace Meetings.Infrastructure.Validators
             validator.RuleFor(x => x.Gender).IsInEnum().WithErrorCode("GenderIncorrect");
         }
 
-        public static IRuleBuilder<T, string> PasswordMinLength<T>(this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilderOptions<T, string> PasswordMinLength<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             return ruleBuilder.MinimumLength(_passwordMinLength).WithErrorCode("PasswordTooShort");
         }
         
-        public static IRuleBuilder<T, string> PasswordCorrect<T>(this IRuleBuilder<T, string> ruleBuilder, User user)
+        public static IRuleBuilderOptions<T, string> PasswordCorrect<T>(this IRuleBuilder<T, string> ruleBuilder, User user)
         {
             return ruleBuilder.Must((password) => BeCorrect(password, user)).WithErrorCode("PasswordIncorrect");
         }
 
-        public static IRuleBuilder<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder, Guid? userId, IRepository<User> repository)
+        public static IRuleBuilderOptions<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder, Guid? userId, IRepository<User> repository)
         {
             return ruleBuilder
                 .EmailAddress(EmailValidationMode.Net4xRegex).WithErrorCode("EmailIncorrect")
@@ -110,20 +110,6 @@ namespace Meetings.Infrastructure.Validators
             validator.RuleFor(x => x.NewPassword).PasswordMinLength();
 
             await validator.ValidateAndThrowAsync(data);
-        }
-
-        internal void WhenLogin(LoginCredentials data, User user)
-        {
-            if (user == null || !UserRuleBuilderExtensions.BeCorrect(data.Password, user))
-            {
-                throw new UnauthorizedAccessException();
-            }
-            if (!user.IsActive)
-            {
-                throw new UnauthorizedAccessException("UserNotActive");
-            }
-        }
-
-        
+        }   
     }
 }
