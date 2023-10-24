@@ -1,15 +1,16 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { ControlledFormField } from 'src/components/ControlledFormField/ControlledFormField';
 import { Announcement } from 'src/models/announcement';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Button, Container, Stack, Typography } from 'src/ui-components';
+import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
 
 export type AnnouncementFormProps = {
   data?: Announcement;
-  onCancel?: () => void;
   disabledWhenUntouched?: boolean;
   onSubmit: (data: Announcement) => void;
   title: string;
@@ -20,7 +21,6 @@ export type AnnouncementFormProps = {
 export const AnnouncementForm = ({
   data,
   onSubmit,
-  onCancel,
   disabledWhenUntouched,
   title,
   inProgress,
@@ -71,11 +71,9 @@ export const AnnouncementForm = ({
         }}
       />
       <Stack mt={4}>
-        {onCancel && (
-          <Button type='button' variant='outlined' onClick={onCancel}>
-            Anuluj
-          </Button>
-        )}
+        <Button type='button' variant='outlined' component={Link} to={AppRoutes.MyAnnouncements}>
+          Anuluj
+        </Button>
         <Button
           type='submit'
           disabled={(disabledWhenUntouched && !isDirty) || inProgress}

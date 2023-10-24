@@ -25,10 +25,6 @@ export const EditAnnouncement = () => {
     });
   };
 
-  const handleCancel = () => {
-    navigate(AppRoutes.MyAnnouncements);
-  };
-
   return (
     <>
       <Header />
@@ -38,7 +34,6 @@ export const EditAnnouncement = () => {
         title='Edycja ogłoszenia'
         inProgress={editAnnouncementInProgress}
         buttonText='Zapisz zmiany'
-        onCancel={handleCancel}
         disabledWhenUntouched
       />
     </>
