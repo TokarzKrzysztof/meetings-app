@@ -61,6 +61,14 @@ export const router = createBrowserRouter([
         loader: () => null,
       },
       {
+        path: AppRoutes.AnnouncementResultList,
+        lazy: async () => {
+          const { AnnouncementResultList } = await import('./pages/AnnouncementResultList/AnnouncementResultList');
+          return { Component: AnnouncementResultList };
+        },
+        loader: protectedLoader,
+      },
+      {
         path: AppRoutes.NewAnnouncement,
         lazy: async () => {
           const { NewAnnouncement } = await import('./pages/NewAnnouncement/NewAnnouncement');

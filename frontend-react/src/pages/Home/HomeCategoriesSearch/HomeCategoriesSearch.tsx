@@ -1,7 +1,9 @@
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Category } from 'src/models/category';
 import { Autocomplete, Box, Button, Icon, TextField } from 'src/ui-components';
+import { AppRoutes } from 'src/utils/enums/app-routes';
 
 const StyledSearchFieldBox = styled(Box)({
   display: 'flex',
@@ -37,7 +39,7 @@ export type HomeCategoriesSearchProps = {
 };
 
 export const HomeCategoriesSearch = ({ data }: HomeCategoriesSearchProps) => {
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
   return (
     <>
@@ -46,7 +48,7 @@ export const HomeCategoriesSearch = ({ data }: HomeCategoriesSearchProps) => {
           freeSolo
           optionsAsync={data}
           getOptionLabel={(opt) => opt.name}
-          onChange={(_, value) => setIsButtonDisabled(!value)}
+          onChange={(_, value) => setSelectedCategory(value as Category)}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -60,7 +62,13 @@ export const HomeCategoriesSearch = ({ data }: HomeCategoriesSearchProps) => {
         />
       </StyledSearchFieldBox>
       <Box display='flex' justifyContent='center' mt={6}>
-        <Button disabled={isButtonDisabled} size='large' endIcon={<Icon name='arrow_forward' />}>
+        <Button
+          disabled={!selectedCategory}
+          size='large'
+          endIcon={<Icon name='arrow_forward' />}
+          component={Link}
+          to={`${AppRoutes.AnnouncementResultList}?categoryId=${selectedCategory?.id}`}
+        >
           Sprawdź
         </Button>
       </Box>

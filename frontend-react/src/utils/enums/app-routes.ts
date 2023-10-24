@@ -4,6 +4,7 @@ export enum AppRoutes {
   Register = '/register',
   ForgotPassword = '/forgot-password',
   ResetPassword = '/reset-password',
+  AnnouncementResultList = '/announcement-result-list',
   NewAnnouncement = '/new-announcement',
   EditAnnouncement = '/edit-announcement',
   MyAnnouncements = '/my-announcements',

@@ -38,8 +38,11 @@ namespace Meetings.Infrastructure.Services
             _announcementValidator.WhenCreateOrEdit(data);
 
             data.UserId = _claimsReader.GetCurrentUserId();
+#if DEBUG
+            data.Status = AnnoucementStatus.Active;
+#else
             data.Status = AnnoucementStatus.Pending;
-
+#endif
             var newAnnouncement = _mapper.Map<Announcement>(data);
             await _repository.Create(newAnnouncement);
         }
