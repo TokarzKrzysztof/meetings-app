@@ -70,6 +70,7 @@ namespace Meetings.Infrastructure.Services
             user.Email = data.Email;
 
             await _repository.Update(user);
+            await _tempDataRepository.RemovePermanently(tempData);
         }
 
         public async Task ChangePassword(ChangePasswordData data)

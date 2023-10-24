@@ -35,7 +35,7 @@ namespace Meetings.Infrastructure.Validators
         
         public static IRuleBuilder<T, string> PasswordCorrect<T>(this IRuleBuilder<T, string> ruleBuilder, User user)
         {
-            return ruleBuilder.Must((password) => Hasher.Verify(password, user.Password)).WithErrorCode("PasswordIncorrect");
+            return ruleBuilder.Must((password) => BeCorrect(password, user)).WithErrorCode("PasswordIncorrect");
         }
 
         public static IRuleBuilder<T, string> Email<T>(this IRuleBuilder<T, string> ruleBuilder, Guid? userId, IRepository<User> repository)
@@ -51,6 +51,11 @@ namespace Meetings.Infrastructure.Validators
                     }
                     return userWithEmail.Email != email;
                 }).WithErrorCode("EmailTaken");
+        }
+
+        public static bool BeCorrect(string password, User user)
+        {
+            return Hasher.Verify(password, user.Password);
         }
     }
 
@@ -109,7 +114,7 @@ namespace Meetings.Infrastructure.Validators
 
         internal void WhenLogin(LoginCredentials data, User user)
         {
-            if (user == null || !BeCorrect(data.Password, user))
+            if (user == null || !UserRuleBuilderExtensions.BeCorrect(data.Password, user))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -119,44 +124,6 @@ namespace Meetings.Infrastructure.Validators
             }
         }
 
-        //private void AddPasswordCorrectRule<T>(InlineValidator<T> validator, string password, User user)
-        //{
-        //    validator.RuleFor(x => password).Must((_, _) => BeCorrect(password, user)).WithErrorCode("PasswordIncorrect");
-        //}
-
-        //private void AddPasswordMinLengthRule<T>(InlineValidator<T> validator, string password)
-        //{
-        //    validator.RuleFor(x => password).MinimumLength(PasswordMinLength).WithErrorCode("PasswordTooShort");
-        //}
-
-        //private void AddEmailRules<T>(InlineValidator<T> validator, Guid? userId, string email)
-        //{
-        //    validator.RuleFor(x => email).EmailAddress(EmailValidationMode.Net4xRegex).WithErrorCode("EmailIncorrect");
-        //    validator.RuleFor(x => email).MustAsync((_, _, _) => BeUnique(userId, email)).WithErrorCode("EmailTaken");
-        //}
-
-        //private void AddPersonalDataRules(InlineValidator<UserDTO> validator)
-        //{
-        //    validator.RuleFor(x => x.FirstName).NotEmpty().WithErrorCode("FirstNameEmpty");
-        //    validator.RuleFor(x => x.LastName).NotEmpty().WithErrorCode("LastNameEmpty");
-        //    validator.RuleFor(x => x.BirthDate).LessThan(DateTime.UtcNow).WithErrorCode("BirthDateIncorrect");
-        //    validator.RuleFor(x => x.Gender).IsInEnum().WithErrorCode("GenderIncorrect");
-        //}
-
-
-        //private async Task<bool> BeUnique(Guid? userId, string email)
-        //{
-        //    var userWithEmail = await _repository.Data.SingleOrDefaultAsync(x => x.Email == email);
-        //    if (userWithEmail == null || userWithEmail.Id == userId)
-        //    {
-        //        return true;
-        //    }
-        //    return userWithEmail.Email != email;
-        //}
-
-        private bool BeCorrect(string password, User user)
-        {
-            return Hasher.Verify(password, user.Password);
-        }
+        
     }
 }
