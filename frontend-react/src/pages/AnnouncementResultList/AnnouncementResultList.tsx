@@ -1,8 +1,9 @@
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Header } from 'src/components/Header/Header';
 import { AnnouncementResultListItem } from 'src/pages/AnnouncementResultList/AnnouncementResultListItem/AnnouncementResultListItem';
 import { useGetAllCategories } from 'src/queries/category-queries';
-import { Container, Stack, Typography } from 'src/ui-components';
+import { Button, Container, Icon, Stack, Typography } from 'src/ui-components';
+import { AppRoutes } from 'src/utils/enums/app-routes';
 
 const nameOf = <T,>(name: keyof T) => name;
 type SearchParams = {
@@ -46,10 +47,25 @@ export const AnnouncementResultList = () => {
     <>
       <Header />
       <Container>
-        <Typography my={2}>
-          Ogłoszenia z kategorii:{' '}
-          <span style={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>{categoryName}</span>
-        </Typography>
+        <Button
+          variant='text'
+          startIcon={<Icon name='arrow_back' />}
+          size='small'
+          component={Link}
+          to={AppRoutes.Home}
+          sx={{ mt: 1 }}
+        >
+          Wyszukaj ogłoszenia z innej kategorii
+        </Button>
+        <Stack justifyContent={'space-between'} alignItems={'center'}>
+          <Typography my={2}>
+            Ogłoszenia z kategorii:{' '}
+            <span style={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>{categoryName}</span>
+          </Typography>
+          <Button size='small' variant='outlined'>
+            Filtruj
+          </Button>
+        </Stack>
         <Stack direction='column' gap={2}>
           <AnnouncementResultListItem />
           <AnnouncementResultListItem />
