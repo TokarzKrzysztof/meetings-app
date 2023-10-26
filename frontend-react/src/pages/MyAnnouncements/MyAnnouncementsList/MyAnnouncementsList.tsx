@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Announcement, AnnouncementStatus } from 'src/models/announcement';
+import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { MyAnnouncementsListItem } from 'src/pages/MyAnnouncements/MyAnnouncementsList/MyAnnouncementsListItem/MyAnnouncementsListItem';
 import { Box, Stack, Typography } from 'src/ui-components';
 

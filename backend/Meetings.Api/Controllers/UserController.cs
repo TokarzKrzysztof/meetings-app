@@ -34,6 +34,13 @@ namespace Meetings.EmailTemplates.Controllers
             return Ok(currentUser);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetProfileImages([FromQuery] Guid[] userIds)
+        {
+            List<UserDTO> profileImages = await _userService.GetProfileImages(userIds);
+            return Ok(profileImages.Select(x => new { x.Id, x.ProfileImage }));
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile image)

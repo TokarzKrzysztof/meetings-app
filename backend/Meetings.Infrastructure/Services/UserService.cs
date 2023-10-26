@@ -18,6 +18,7 @@ using Meetings.EmailSender;
 using Meetings.EmailTemplates.Views;
 using System.Text.Json;
 using Meetings.Models.TempDataModels;
+using System.Collections.Generic;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -160,6 +161,20 @@ namespace Meetings.Infrastructure.Services
         private string GetProfileImageFilePath(Guid userId)
         {
             return Path.Combine(Directory.GetCurrentDirectory(), "Files", $"profile image - {userId}.jpg");
+        }
+
+        public async Task<List<UserDTO>> GetProfileImages(Guid[] userIds)
+        {
+            List<UserDTO> result = new List<UserDTO>();
+            foreach (var id in userIds)
+            {
+                result.Add(new UserDTO()
+                {
+                    Id = id,
+                    ProfileImage = await GetConnectedProfileImage(id)
+                });
+            }
+            return result;
         }
     }
 }

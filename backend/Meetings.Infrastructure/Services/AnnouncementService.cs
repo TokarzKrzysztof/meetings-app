@@ -38,11 +38,8 @@ namespace Meetings.Infrastructure.Services
             _announcementValidator.WhenCreateOrEdit(data);
 
             data.UserId = _claimsReader.GetCurrentUserId();
-#if DEBUG
-            data.Status = AnnoucementStatus.Active;
-#else
-            data.Status = AnnoucementStatus.Pending;
-#endif
+            data.Status = Utilities.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
+
             var newAnnouncement = _mapper.Map<Announcement>(data);
             await _repository.Create(newAnnouncement);
         }
@@ -55,7 +52,7 @@ namespace Meetings.Infrastructure.Services
             var item = await _repository.GetById(data.Id);
             item.Description = data.Description;
             item.CategoryId = data.CategoryId;
-            item.Status = AnnoucementStatus.Pending;
+            data.Status = Utilities.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
 
             await _repository.Update(item);
         }
@@ -85,6 +82,29 @@ namespace Meetings.Infrastructure.Services
         {
             var item = await _repository.GetById(id);
             return _mapper.Map<AnnouncementDTO>(item);
+        }
+
+        public async Task<List<UserAnnouncement>> GetAnnouncementResultList(AnnouncementQueryParams data)
+        {
+            var query = _repository.Data.Where(x => x.CategoryId == data.CategoryId && x.Status == AnnoucementStatus.Active);
+
+            Guid? userId = _claimsReader.TryGetCurrentUserId();
+            if (userId != null)
+            {
+                query = query.Where(x => x.UserId != userId);
+            }
+
+            var dateNow = DateTime.UtcNow;
+            var result = await query.Select(x => new UserAnnouncement()
+            {
+                AnnouncementId = x.Id,
+                UserId = x.UserId,
+                Description = x.Description,
+                UserBirthDate = x.User.BirthDate,
+                UserFirstName = x.User.FirstName
+            }).ToListAsync();
+
+            return result;
         }
     }
 }

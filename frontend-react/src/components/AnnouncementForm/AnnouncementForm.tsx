@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { ControlledFormField } from 'src/components/ControlledFormField/ControlledFormField';
-import { Announcement } from 'src/models/announcement';
+import { Announcement } from 'src/models/annoucement/announcement';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Button, Container, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';

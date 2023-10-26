@@ -2,7 +2,7 @@ import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { AnnouncementForm } from 'src/components/AnnouncementForm/AnnouncementForm';
 import { Header } from 'src/components/Header/Header';
-import { Announcement } from 'src/models/announcement';
+import { Announcement } from 'src/models/annoucement/announcement';
 import { useCreateNewAnnouncement } from 'src/queries/announcement-queries';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 

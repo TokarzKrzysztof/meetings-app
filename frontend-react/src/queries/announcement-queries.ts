@@ -1,7 +1,8 @@
 import { AxiosError } from 'axios';
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
-import { Announcement, AnnouncementStatus } from 'src/models/announcement';
+import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
+import { UserAnnouncement } from 'src/models/annoucement/user-announcement';
 import { apiUrl } from 'src/utils/api-url';
 import {
   genericUseMutationMethods,
@@ -10,6 +11,19 @@ import {
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Announcement`;
+
+export const useGetAnnouncementResultList = (
+  queryParams: Record<string, any>,
+  options?: UseQueryOptions<UserAnnouncement[], AxiosError<HttpErrorData>>,
+) => {
+  const query = useQuery({
+    queryKey: ['GetAnnouncementResultList', queryParams],
+    queryFn: () => axios.get(`${baseUrl}/GetAnnouncementResultList`, { params: queryParams }),
+    ...options,
+  });
+
+  return genericUseQueryMethods('announcementResultList', query);
+};
 
 export const useCreateNewAnnouncement = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Announcement>,

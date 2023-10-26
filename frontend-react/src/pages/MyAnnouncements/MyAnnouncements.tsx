@@ -1,7 +1,7 @@
 import { Divider } from '@mui/material';
 import { useMemo } from 'react';
 import { Header } from 'src/components/Header/Header';
-import { AnnouncementStatus } from 'src/models/announcement';
+import { AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { MyAnnouncementsList } from 'src/pages/MyAnnouncements/MyAnnouncementsList/MyAnnouncementsList';
 import { useGetCurrentUserAnnouncements } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';

@@ -12,7 +12,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/User`;
 
 export const useIsEmailTaken = (
-  options?: UseMutationOptions<boolean, AxiosError<HttpErrorData>, string>,
+  options?: UseMutationOptions<boolean, AxiosError<HttpErrorData>, string>
 ) => {
   const mutation = useMutation({
     mutationFn: (email) => {
@@ -28,7 +28,7 @@ export const useIsEmailTaken = (
 export const getCurrentUserQueryKey = 'GetCurrentUser';
 export const getCurrentUserQueryFn = () => axios.get(`${baseUrl}/GetCurrentUser`);
 export const useGetCurrentUser = (
-  options?: UseQueryOptions<User | null, AxiosError<HttpErrorData>>,
+  options?: UseQueryOptions<User | null, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
     queryKey: getCurrentUserQueryKey,
@@ -40,8 +40,27 @@ export const useGetCurrentUser = (
   return genericUseQueryMethods('currentUser', query);
 };
 
+export const useGetProfileImages = (
+  userIds: string[],
+  options?: UseQueryOptions<Pick<User, 'id' | 'profileImage'>[], AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: ['GetProfileImages', userIds],
+    queryFn: () => {
+      const params = { userIds };
+      return axios.get(`${baseUrl}/GetProfileImages`, {
+        params,
+        paramsSerializer: { indexes: true },
+      });
+    },
+    ...options,
+  });
+
+  return genericUseQueryMethods('profileImages', query);
+};
+
 export const useUploadProfileImage = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Blob>,
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Blob>
 ) => {
   const mutation = useMutation({
     mutationFn: (image) => {
@@ -64,7 +83,7 @@ export const useChangePassword = (
     void,
     AxiosError<HttpErrorData>,
     { existingPassword: string; newPassword: string }
-  >,
+  >
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.patch(`${baseUrl}/ChangePassword`, data),
@@ -79,7 +98,7 @@ export const useChangePersonalData = (
     User,
     AxiosError<HttpErrorData>,
     Pick<User, 'firstName' | 'lastName' | 'birthDate' | 'gender'>
-  >,
+  >
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.put(`${baseUrl}/ChangePersonalData`, data),
@@ -90,11 +109,7 @@ export const useChangePersonalData = (
 };
 
 export const useSendChangeEmailAddressEmail = (
-  options?: UseMutationOptions<
-    void,
-    AxiosError<HttpErrorData>,
-    { password: string; email: string }
-  >,
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, { password: string; email: string }>
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.patch(`${baseUrl}/SendChangeEmailAddressEmail`, data),

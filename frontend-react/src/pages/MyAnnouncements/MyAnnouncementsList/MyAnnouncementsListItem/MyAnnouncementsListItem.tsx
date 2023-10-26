@@ -4,7 +4,7 @@ import { useSetAtom } from 'jotai';
 import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Announcement, AnnouncementStatus } from 'src/models/announcement';
+import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
 import {
   useGetCurrentUserAnnouncements,
   useRemoveAnnouncement,

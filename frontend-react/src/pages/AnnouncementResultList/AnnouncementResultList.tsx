@@ -1,7 +1,10 @@
+import _ from 'lodash';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Header } from 'src/components/Header/Header';
 import { AnnouncementResultListItem } from 'src/pages/AnnouncementResultList/AnnouncementResultListItem/AnnouncementResultListItem';
+import { useGetAnnouncementResultList } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
+import { useGetProfileImages } from 'src/queries/user-queries';
 import { Button, Container, Icon, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
@@ -12,8 +15,7 @@ type SearchParams = {
 };
 
 const useAnnouncementResultListSearchParams = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
+  const [searchParams, setSearchParams] = useSearchParams({ maxAge: '23' });
   const setParams = (params: SearchParams) => {
     setSearchParams(params);
   };
@@ -28,21 +30,24 @@ const useAnnouncementResultListSearchParams = () => {
   return [
     {
       categoryId: stringParam('categoryId')!,
-      maxAge: numberParam('maxAge'),
+      maxAge: stringParam('maxAge'),
     },
     setParams,
   ] as const;
 };
 
 export const AnnouncementResultList = () => {
-  const [{ categoryId, maxAge }, setParams] = useAnnouncementResultListSearchParams();
+  const [params, setParams] = useAnnouncementResultListSearchParams();
   const { allCategories } = useGetAllCategories();
-  // useEffect(() => {
-  //   if(searchParams?.get())
-  // }, [searchParams])
-  console.log(maxAge);
+  const { announcementResultList } = useGetAnnouncementResultList(params);
+  const { profileImages } = useGetProfileImages(
+    _.uniq(announcementResultList?.map((x) => x.userId)),
+    {
+      enabled: !!announcementResultList,
+    }
+  );
 
-  const categoryName = allCategories?.find((x) => x.id === categoryId)?.name;
+  const categoryName = allCategories?.find((x) => x.id === params.categoryId)?.name;
   return (
     <>
       <Header />
@@ -67,8 +72,23 @@ export const AnnouncementResultList = () => {
           </Button>
         </Stack>
         <Stack direction='column' gap={2}>
-          <AnnouncementResultListItem />
-          <AnnouncementResultListItem />
+          {announcementResultList?.length ? (
+            announcementResultList.map((announcement) => (
+              <AnnouncementResultListItem
+                key={announcement.announcementId}
+                data={announcement}
+                imgSrc={
+                  profileImages?.find((x) => x.id === announcement.userId)?.profileImage ?? null
+                }
+              />
+            ))
+          ) : (
+            <Typography mt={6} textAlign={'center'} color={'grey'}>
+              Brak ogłoszeń z kategorii <br />
+              <b>{categoryName}</b> <br />
+              <Typography mt={2}>Spróbuj zmnienić kryteria wyszukiwania</Typography>
+            </Typography>
+          )}
         </Stack>
       </Container>
     </>
