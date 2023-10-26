@@ -29,6 +29,14 @@ namespace Meetings.Models.Entities
         public Gender Gender { get; set; }
         public bool IsActive { get; set; }
         public ICollection<Announcement> Announcements { get; set; }
+
+        public User()
+        {
+            if (Utilities.IsDebug())
+            {
+                IsActive = true;
+            }
+        }
     }
 
     public class UserDTO

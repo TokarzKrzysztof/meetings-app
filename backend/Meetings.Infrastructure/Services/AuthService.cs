@@ -74,14 +74,7 @@ namespace Meetings.Infrastructure.Services
             var user = await _repository.Create(_mapper.Map(data, new User()));
             var tempData = await _tempDataRepository.Create(new TempData(user.Id.ToString()));
 
-            if (Utilities.IsDebug())
-            {
-                user.IsActive = true;
-            }
-            else
-            {
-                SendUserActivationLink(user, appUrl, tempData);
-            }
+            SendUserActivationLink(user, appUrl, tempData);
         }
 
         public async Task ResendActivationLink(string email, string appUrl)
