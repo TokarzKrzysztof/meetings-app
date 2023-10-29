@@ -4,6 +4,7 @@ using Meetings.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meetings.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231027222601_add-conversation-and-message-entities")]
+    partial class addconversationandmessageentities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +58,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Announcements", (string)null);
+                    b.ToTable("Announcements");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.Category", b =>
@@ -80,7 +82,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -202,7 +204,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Conversations", (string)null);
+                    b.ToTable("Conversations");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.Message", b =>
@@ -236,7 +238,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasIndex("ConversationId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.TempData", b =>
@@ -260,7 +262,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempDatas", (string)null);
+                    b.ToTable("TempDatas");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.User", b =>
@@ -305,7 +307,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.Announcement", b =>

@@ -8,6 +8,7 @@ export * from './Card/Card';
 export * from './CardActions/CardActions';
 export * from './CardContent/CardContent';
 export * from './Checkbox/Checkbox';
+export * from './Chip/Chip';
 export * from './CircularProgress/CircularProgress';
 export * from './Container/Container';
 export * from './DatePicker/DatePicker';
@@ -42,7 +43,9 @@ export * from './Table/Table';
 export * from './TableCell/TableCell';
 export * from './TableContainer/TableContainer';
 export * from './TableRow/TableRow';
+export * from './TextArea/TextArea';
 export * from './TextField/TextField';
 export * from './Toolbar/Toolbar';
 export * from './Tooltip/Tooltip';
 export * from './Typography/Typography';
+

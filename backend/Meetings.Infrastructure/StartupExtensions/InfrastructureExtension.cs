@@ -21,6 +21,7 @@ namespace Meetings.Infrastructure.StartupExtensions
             builder.Services.AddScoped<UserService>();
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<AnnouncementService>();
+            builder.Services.AddScoped<ConversationService>();
 
             builder.Services.AddScoped<UserValidator>();
             builder.Services.AddScoped<AnnouncementValidator>();

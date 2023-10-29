@@ -1,11 +1,12 @@
 import _ from 'lodash';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { GoBackBtn } from 'src/components/GoBackBtn/GoBackBtn';
 import { Header } from 'src/components/Header/Header';
 import { AnnouncementResultListItem } from 'src/pages/AnnouncementResultList/AnnouncementResultListItem/AnnouncementResultListItem';
 import { useGetAnnouncementResultList } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { useGetProfileImages } from 'src/queries/user-queries';
-import { Button, Container, Icon, Stack, Typography } from 'src/ui-components';
+import { Box, Button, Container, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 const nameOf = <T,>(name: keyof T) => name;
@@ -52,16 +53,7 @@ export const AnnouncementResultList = () => {
     <>
       <Header />
       <Container>
-        <Button
-          variant='text'
-          startIcon={<Icon name='arrow_back' />}
-          size='small'
-          component={Link}
-          to={AppRoutes.Home}
-          sx={{ mt: 1 }}
-        >
-          Wyszukaj ogłoszenia z innej kategorii
-        </Button>
+        <GoBackBtn to={AppRoutes.Home}>Wyszukaj ogłoszenia z innej kategorii</GoBackBtn>
         <Stack justifyContent={'space-between'} alignItems={'center'}>
           <Typography my={2}>
             Ogłoszenia z kategorii:{' '}
@@ -83,11 +75,15 @@ export const AnnouncementResultList = () => {
               />
             ))
           ) : (
-            <Typography mt={6} textAlign={'center'} color={'grey'}>
-              Brak ogłoszeń z kategorii <br />
-              <b>{categoryName}</b> <br />
-              <Typography mt={2}>Spróbuj zmnienić kryteria wyszukiwania</Typography>
-            </Typography>
+            <Box mt={6} textAlign={'center'} color={'grey'}>
+              <Typography>
+                Brak ogłoszeń z kategorii <br />
+                <b>{categoryName}</b>
+              </Typography>
+              <Typography mt={1} fontSize={12}>
+                Spróbuj zmnienić kryteria wyszukiwania
+              </Typography>
+            </Box>
           )}
         </Stack>
       </Container>

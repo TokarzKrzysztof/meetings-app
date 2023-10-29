@@ -40,6 +40,23 @@ export const useGetCurrentUser = (
   return genericUseQueryMethods('currentUser', query);
 };
 
+export const useGetUser = (
+  id: string,
+  options?: UseQueryOptions<User | null, AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: ['GetUser', id],
+    queryFn: () => {
+      const params = { id };
+      return axios.get(`${baseUrl}/GetUser`, { params });
+    },
+    staleTime: Infinity,
+    ...options,
+  });
+
+  return genericUseQueryMethods('user', query);
+};
+
 export const useGetProfileImages = (
   userIds: string[],
   options?: UseQueryOptions<Pick<User, 'id' | 'profileImage'>[], AxiosError<HttpErrorData>>
@@ -53,6 +70,7 @@ export const useGetProfileImages = (
         paramsSerializer: { indexes: true },
       });
     },
+    staleTime: Infinity,
     ...options,
   });
 

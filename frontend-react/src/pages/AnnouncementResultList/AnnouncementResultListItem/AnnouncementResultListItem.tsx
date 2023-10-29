@@ -1,8 +1,11 @@
 import { Divider } from '@mui/material';
 import { useMemo } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { UserAnnouncement } from 'src/models/annoucement/user-announcement';
 import { Avatar, Box, Button, Card, Stack, Typography } from 'src/ui-components';
+import { AppRoutes } from 'src/utils/enums/app-routes';
+import { calculateAge } from 'src/utils/user-utils';
 
 export type AnnouncementResultListItemProps = {
   data: UserAnnouncement;
@@ -10,16 +13,8 @@ export type AnnouncementResultListItemProps = {
 };
 
 export const AnnouncementResultListItem = ({ data, imgSrc }: AnnouncementResultListItemProps) => {
-  const age = useMemo(() => {
-    const today = new Date();
-    const birthDate = new Date(data.userBirthDate);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  }, [data]);
+  const location = useLocation();
+  const age = useMemo(() => calculateAge(data.userBirthDate), [data]);
 
   return (
     <Card>
@@ -40,7 +35,14 @@ export const AnnouncementResultListItem = ({ data, imgSrc }: AnnouncementResultL
       </Typography>
       <Divider />
       <Box textAlign='right'>
-        <Button size='small' variant='text'>
+        <Button
+          size='small'
+          variant='text'
+          component={Link}
+          to={`${AppRoutes.Conversation}?userId=${data.userId}&returnUrl=${
+            location.pathname + location.search
+          }`}
+        >
           Wyślij wiadomość
         </Button>
       </Box>

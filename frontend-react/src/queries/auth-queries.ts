@@ -10,7 +10,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/Auth`;
 
 export const useRegister = (
-  options?: UseMutationOptions<string, AxiosError<HttpErrorData>, User>,
+  options?: UseMutationOptions<User['email'], AxiosError<HttpErrorData>, User>,
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => axios.post(`${baseUrl}/Register`, data),
@@ -21,7 +21,7 @@ export const useRegister = (
 };
 
 export const useResendActivationLink = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, string>,
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, User['email']>,
 ) => {
   const mutation = useMutation({
     mutationFn: (email) => {
@@ -55,7 +55,7 @@ export const useLogout = (options?: UseMutationOptions<void, AxiosError<HttpErro
 };
 
 export const useSendForgotPasswordEmail = (
-  options?: UseMutationOptions<unknown, AxiosError<HttpErrorData>, string>,
+  options?: UseMutationOptions<unknown, AxiosError<HttpErrorData>, User['email']>,
 ) => {
   const mutation = useMutation({
     mutationFn: (email) => {

@@ -5,12 +5,14 @@ import { Box, Icon, Popper } from 'src/ui-components';
 
 export type EmojiPickerProps = {
   onEmojiSelected: (emoji: EmojiClickData, event: MouseEvent) => void;
+  onOpen: () => void;
 };
 
-export const EmojiPicker = ({ onEmojiSelected }: EmojiPickerProps) => {
+export const EmojiPicker = ({ onEmojiSelected, onOpen }: EmojiPickerProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+    onOpen();
   };
 
   const handleClose = () => {
@@ -29,10 +31,7 @@ export const EmojiPicker = ({ onEmojiSelected }: EmojiPickerProps) => {
             <Picker
               searchPlaceholder='Wyszukaj'
               emojiStyle={EmojiStyle.NATIVE}
-              onEmojiClick={(emoji, event) => {
-                handleClose();
-                onEmojiSelected(emoji, event);
-              }}
+              onEmojiClick={onEmojiSelected}
             />
           </Box>
         </ClickAwayListener>

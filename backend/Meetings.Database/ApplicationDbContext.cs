@@ -16,11 +16,15 @@ namespace Meetings.Database
         public DbSet<User> Users { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<TempData> TempDatas { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.Entity<Category>().HasData(CategoriesGenerator.AllCategories);
+            builder.Entity<Conversation>().Property(x => x.ParticipantIds)
+                .HasConversion(value => string.Join(",", value), dbValue => dbValue.Split(",", StringSplitOptions.None).ToList());
         }
     }
 }

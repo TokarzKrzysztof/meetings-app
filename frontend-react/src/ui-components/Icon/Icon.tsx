@@ -24,7 +24,8 @@ export type IconProps<D extends React.ElementType = IconTypeMap['defaultComponen
     | 'close'
     | 'edit'
     | 'cloud_upload'
-    | 'add';
+    | 'add'
+    | 'send';
 };
 
 export const Icon = <D extends React.ElementType = IconTypeMap['defaultComponent']>({
