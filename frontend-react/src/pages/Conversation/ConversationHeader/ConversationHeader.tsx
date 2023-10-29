@@ -11,7 +11,7 @@ export const ConversationHeader = ({ user }: ConversationHeaderProps) => {
   const [searchParams] = useSearchParams();
 
   return (
-    <AppBar position='sticky'>
+    <AppBar position='static'>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Button
           variant='text'

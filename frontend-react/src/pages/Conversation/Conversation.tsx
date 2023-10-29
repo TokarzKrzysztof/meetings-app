@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { Message } from 'src/models/conversation/message';
@@ -12,23 +12,27 @@ import {
   useSendMessage,
 } from 'src/queries/conversation-queries';
 import { useGetUser } from 'src/queries/user-queries';
-import { Avatar, Box, Container, Stack, Typography } from 'src/ui-components';
+import { Avatar, Container, Stack, Typography } from 'src/ui-components';
 import { calculateAge } from 'src/utils/user-utils';
 
 export const Conversation = () => {
+  const scrollableRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [searchParams] = useSearchParams();
-  const { user } = useGetUser(searchParams.get('userId')!);
-  const { conversation } = useGetConversation(user?.id as string, {
-    enabled: !!user,
-    onSuccess: (conversation) => setMessages(conversation.messages),
+  const { user, userFetching } = useGetUser(searchParams.get('userId')!);
+  const { conversation, conversationFetching } = useGetConversation(user?.id as string, {
+    enabled: !userFetching,
+    onSuccess: (conversation) => {
+      setMessages(conversation.messages);
+      scrollToBottom();
+    },
   });
 
   const lastMessageDate = _.last(messages)?.createdAt ?? null;
   const { latestConversationMessagesRefetch } = useGetLatestConversationMessages(
     { conversationId: conversation?.id as string, lastMessageDate },
     {
-      enabled: !!conversation,
+      enabled: !conversationFetching,
       refetchInterval: 5000,
       onSuccess: (messages) => {
         if (messages.length) {
@@ -38,30 +42,43 @@ export const Conversation = () => {
     }
   );
 
-  // getIsUserTyping
   const { sendMessage } = useSendMessage();
-  const age = useMemo(() => (user ? calculateAge(user.birthDate) : null), [user]);
-
-  useEffect(() => {
-    window.scrollTo(0, document.body.scrollHeight);
-  }, [messages]);
+  // getIsUserTyping
 
   const handleSend = (message: string) => {
     sendMessage(
       { text: message, conversationId: conversation!.id },
       {
-        onSuccess: () => latestConversationMessagesRefetch(),
+        onSuccess: () => latestConversationMessagesRefetch().then(scrollToBottom),
       }
     );
   };
 
-  const newMessageBoxHeight = 50;
+  const scrollToBottom = () => {
+    // wait for messages state to be updated
+    setTimeout(() => {
+      scrollableRef.current!.scrollTo(0, scrollableRef.current!.scrollHeight);
+    });
+  };
+
+  const age = useMemo(() => (user ? calculateAge(user.birthDate) : null), [user]);
+
   if (!user) return null;
   return (
-    <>
+    <Stack height={'100vh'} direction={'column'}>
       <ConversationHeader user={user} />
-      <Container sx={{ pt: 3, pb: `${newMessageBoxHeight}px` }}>
-        <Stack flexDirection={'column'} alignItems={'center'}>
+      <Container
+        ref={scrollableRef}
+        sx={{
+          pt: 3,
+          overflow: 'auto',
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          mx: 'auto',
+        }}
+      >
+        <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
           <Avatar
             src={user.profileImage ?? avatarPlaceholder}
             sx={{ width: 100, height: 100, mb: 2 }}
@@ -73,19 +90,8 @@ export const Conversation = () => {
         </Stack>
         <ConversationMessages messages={messages} />
       </Container>
-      <Box
-        sx={{
-          position: 'fixed',
-          width: '100%',
-          px: 1,
-          backgroundColor: 'white',
-          height: newMessageBoxHeight,
-          bottom: 0,
-        }}
-      >
-        <ConversationNewMessage onSend={handleSend} />
-      </Box>
-    </>
+      <ConversationNewMessage onSend={handleSend} />
+    </Stack>
   );
 };
 

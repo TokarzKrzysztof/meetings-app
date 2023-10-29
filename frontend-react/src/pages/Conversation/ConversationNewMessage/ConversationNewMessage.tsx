@@ -9,7 +9,7 @@ export const ConversationNewMessage = ({ onSend }: ConversationNewMessageProps) 
   const [message, setMessage] = useState<string | null>(null);
 
   return (
-    <Stack alignItems={'flex-start'} gap={1}>
+    <Stack alignItems={'flex-start'} gap={1} p={1}>
       <TextArea
         size='small'
         onChange={setMessage}

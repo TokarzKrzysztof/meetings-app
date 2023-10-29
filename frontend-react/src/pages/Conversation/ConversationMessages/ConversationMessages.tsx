@@ -10,7 +10,7 @@ export const ConversationMessages = ({ messages }: ConversationMessagesProps) =>
   const { currentUser } = useGetCurrentUser();
 
   return (
-    <Stack direction={'column'} py={1} mx={'auto'} gap={1} maxWidth={500}>
+    <Stack direction={'column'} py={1} gap={1}>
       {messages.map((x) => {
         const isAuthorCurrentUser = x.authorId === currentUser?.id;
         return (
