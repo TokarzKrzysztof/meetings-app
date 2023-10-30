@@ -3,9 +3,10 @@ import { Icon, IconButton, Stack, TextArea } from 'src/ui-components';
 
 export type ConversationNewMessageProps = {
   onSend: (message: string) => void;
+  onFocus: () => void;
 };
 
-export const ConversationNewMessage = ({ onSend }: ConversationNewMessageProps) => {
+export const ConversationNewMessage = ({ onSend, onFocus }: ConversationNewMessageProps) => {
   const [message, setMessage] = useState<string | null>(null);
 
   return (
@@ -13,6 +14,7 @@ export const ConversationNewMessage = ({ onSend }: ConversationNewMessageProps) 
       <TextArea
         size='small'
         onChange={setMessage}
+        onFocus={onFocus}
         value={message ?? ''}
         sx={{ flexGrow: 1 }}
         InputProps={{ sx: { borderRadius: 3 } }}

@@ -90,7 +90,7 @@ export const Conversation = () => {
         </Stack>
         <ConversationMessages messages={messages} />
       </Container>
-      <ConversationNewMessage onSend={handleSend} />
+      <ConversationNewMessage onSend={handleSend} onFocus={scrollToBottom} />
     </Stack>
   );
 };

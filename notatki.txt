@@ -52,3 +52,5 @@ Konta w aplikacji:
 test1@fake.com - 1-10
 12345
 
+https://bulldogjob.pl/readme/prosto-o-websocket
+https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
