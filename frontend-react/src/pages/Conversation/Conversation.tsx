@@ -1,17 +1,13 @@
-import _ from 'lodash';
 import { useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { Message } from 'src/models/conversation/message';
 import { ConversationHeader } from 'src/pages/Conversation/ConversationHeader/ConversationHeader';
 import { ConversationMessages } from 'src/pages/Conversation/ConversationMessages/ConversationMessages';
 import { ConversationNewMessage } from 'src/pages/Conversation/ConversationNewMessage/ConversationNewMessage';
-import {
-  useGetConversation,
-  useGetLatestConversationMessages,
-  useSendMessage,
-} from 'src/queries/conversation-queries';
-import { useGetUser } from 'src/queries/user-queries';
+import { useGetConversation } from 'src/queries/conversation-queries';
+import { useGetCurrentUser, useGetUser } from 'src/queries/user-queries';
 import { Avatar, Container, Stack, Typography } from 'src/ui-components';
 import { calculateAge } from 'src/utils/user-utils';
 
@@ -19,6 +15,7 @@ export const Conversation = () => {
   const scrollableRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [searchParams] = useSearchParams();
+  const { currentUser } = useGetCurrentUser();
   const { user, userFetching } = useGetUser(searchParams.get('userId')!);
   const { conversation, conversationFetching } = useGetConversation(user?.id as string, {
     enabled: !userFetching,
@@ -28,31 +25,15 @@ export const Conversation = () => {
     },
   });
 
-  const lastMessageDate = _.last(messages)?.createdAt ?? null;
-  const { latestConversationMessagesRefetch } = useGetLatestConversationMessages(
-    { conversationId: conversation?.id as string, lastMessageDate },
-    {
-      enabled: !conversationFetching,
-      refetchInterval: 5000,
-      onSuccess: (messages) => {
-        if (messages.length) {
-          setMessages((prev) => prev.concat(messages));
-        }
-      },
-    }
-  );
-
-  const { sendMessage } = useSendMessage();
+  // const lastMessageDate = _.last(messages)?.createdAt ?? null;
   // getIsUserTyping
 
-  const handleSend = (message: string) => {
-    sendMessage(
-      { text: message, conversationId: conversation!.id },
-      {
-        onSuccess: () => latestConversationMessagesRefetch().then(scrollToBottom),
-      }
-    );
-  };
+  useSignalREffect('onGetPrivateMessage', (msg) => {
+    setMessages((prev) => [...prev, msg]);
+    if (msg.authorId === currentUser?.id) {
+      scrollToBottom();
+    }
+  });
 
   const scrollToBottom = () => {
     // wait for messages state to be updated
@@ -90,7 +71,7 @@ export const Conversation = () => {
         </Stack>
         <ConversationMessages messages={messages} />
       </Container>
-      <ConversationNewMessage onSend={handleSend} onFocus={scrollToBottom} />
+      <ConversationNewMessage onFocus={scrollToBottom} recipient={user} />
     </Stack>
   );
 };

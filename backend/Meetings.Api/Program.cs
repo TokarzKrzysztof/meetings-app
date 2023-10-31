@@ -1,3 +1,4 @@
+using Meetings.Api.Hubs;
 using Meetings.Authentication.StartupExtensions;
 using Meetings.Database.StartupExtensions;
 using Meetings.EmailSender;
@@ -9,6 +10,7 @@ using Meetings.Utils;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using RazorHtmlEmails.RazorClassLib.Services;
@@ -40,6 +42,8 @@ builder.Services.AddCors(policyBuilder =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
 // custom builder extensions
 builder.AddCustomAuthentication();
@@ -67,6 +71,7 @@ app.UseAuthorization();
 app.AddErrorHandlingMiddleware();
 
 app.MapControllers();
+app.MapHub<AppHub>("/api/hub");
 
 using (var scope = app.Services.CreateScope())
 {

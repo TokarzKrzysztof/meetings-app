@@ -22,21 +22,5 @@ namespace Meetings.Api.Controllers
             ConversationDTO conversation = await _conversationService.GetConversation(participantId, createIfNotExist);
             return Ok(conversation);
         } 
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetLatestConversationMessages([FromQuery] Guid conversationId, [FromQuery] DateTime? lastMessageDate)
-        {
-            List<MessageDTO> messages = await _conversationService.GetLatestConversationMessages(conversationId, lastMessageDate);
-            return Ok(messages);
-        } 
-        
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> SendMessage([FromBody] MessageDTO data)
-        {
-            await _conversationService.SendMessage(data);
-            return Ok();
-        }
     }
 }

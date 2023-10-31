@@ -4,6 +4,7 @@ using Meetings.Database.Repositories;
 using Meetings.EmailSender;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
+using Meetings.Utils.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -36,9 +37,7 @@ namespace Meetings.Infrastructure.Services
             Guid userId = _claimsReader.GetCurrentUserId();
             List<string> orderedIds = new[] { userId.ToString(), participantId.ToString() }.OrderBy(x => x).ToList();
 
-            Conversation? conversation = await _repository.Data
-                .Include(x => x.Messages.OrderBy(x => x.CreatedAt))
-                .FirstOrDefaultAsync(x => x.ParticipantIds == orderedIds);
+            Conversation? conversation = await TryGetConversationByParticipants(userId, participantId, true);
             if (createIfNotExist && conversation == null)
             {
                 conversation = await _repository.Create(new Conversation()
@@ -50,24 +49,27 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<ConversationDTO>(conversation);
         }
 
-        public async Task<List<MessageDTO>> GetLatestConversationMessages(Guid conversationId, DateTime? lastMessageDate)
+        public async Task<MessageDTO> SendMessage(Guid authorId, string message, Guid recipientId)
         {
-            //var messages = await _repositorawait _messageRepository.Data.Where(x => x.ConversationId == conversationIdy.Data.Where(x => x.Id == conversationId).Include(x => x.Messages.Where(x => x.CreatedAt > lastMessageDate)).SelectMany(x => x.Messages).ToListAsync();
-            var query = _messageRepository.Data.Where(x => x.ConversationId == conversationId);
-            if (lastMessageDate != null)
+            var conversation = await TryGetConversationByParticipants(authorId, recipientId, false);
+            var result = await _messageRepository.Create(new Message()
             {
-                query = query.Where(x => x.CreatedAt > lastMessageDate);
-            }
-            var messages = await query.OrderBy(x => x.CreatedAt).ToListAsync();
-            return _mapper.Map<List<MessageDTO>>(messages);
+                AuthorId = authorId,
+                ConversationId = conversation.Id,
+                Text = message
+            });
+
+            return _mapper.Map<MessageDTO>(result);
         }
 
-        public async Task SendMessage(MessageDTO data)
+        private async Task<Conversation> TryGetConversationByParticipants(Guid participant1Id, Guid participant2Id, bool includeMessages)
         {
-            Guid userId = _claimsReader.GetCurrentUserId();
-            data.AuthorId = userId;
+            List<string> orderedIds = new[] { participant1Id.ToString(), participant2Id.ToString() }.OrderBy(x => x).ToList();
+            Conversation? conversation = await _repository.Data
+                .If(includeMessages, q => q.Include(x => x.Messages.OrderBy(x => x.CreatedAt)))
+                .FirstOrDefaultAsync(x => x.ParticipantIds == orderedIds);
 
-            await _messageRepository.Create(_mapper.Map<Message>(data));
+            return conversation;
         }
     }
 }
