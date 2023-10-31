@@ -1,5 +1,6 @@
 import { useSetAtom } from 'jotai';
-import { useRef, useState } from 'react';
+import _ from 'lodash';
+import { useMemo, useRef, useState } from 'react';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { User } from 'src/models/user';
@@ -29,21 +30,21 @@ export const ConversationNewMessage = ({ onFocus, recipient }: ConversationNewMe
       setIsTyping(true);
       timerRef.current = setTimeout(() => {
         setIsTyping(false);
-      }, 2000);
+      }, 3000);
     }
   });
 
-  const onKeyUp = () => {
-    startTyping(recipient.id);
-  };
-
+  const onKeyUpThrottle = useMemo(() => {
+    return _.throttle(() => startTyping(recipient.id), 2000, { trailing: false });
+  }, []);
+  
   return (
     <Stack alignItems={'flex-start'} gap={1} p={1}>
       <TextArea
         size='small'
         onChange={setMessage}
         onFocus={onFocus}
-        onKeyUp={onKeyUp}
+        onKeyUp={onKeyUpThrottle}
         value={message ?? ''}
         sx={{ flexGrow: 1 }}
         InputProps={{ sx: { borderRadius: 3 } }}
