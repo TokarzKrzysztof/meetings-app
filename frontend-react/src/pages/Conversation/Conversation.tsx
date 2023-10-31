@@ -6,6 +6,7 @@ import { Message } from 'src/models/conversation/message';
 import { ConversationHeader } from 'src/pages/Conversation/ConversationHeader/ConversationHeader';
 import { ConversationMessages } from 'src/pages/Conversation/ConversationMessages/ConversationMessages';
 import { ConversationNewMessage } from 'src/pages/Conversation/ConversationNewMessage/ConversationNewMessage';
+import { ConversationTypingIndicator } from 'src/pages/Conversation/ConversationTypingIndicator/ConversationTypingIndicator';
 import { useGetConversation } from 'src/queries/conversation-queries';
 import { useGetCurrentUser, useGetUser } from 'src/queries/user-queries';
 import { Avatar, Container, Stack, Typography } from 'src/ui-components';
@@ -70,8 +71,9 @@ export const Conversation = () => {
           <Typography>Limanowa (30 km od Ciebie)</Typography>
         </Stack>
         <ConversationMessages messages={messages} />
+        <ConversationTypingIndicator />
       </Container>
-      <ConversationNewMessage onFocus={scrollToBottom} recipient={user} />
+      <ConversationNewMessage onFocus={scrollToBottom} recipient={user}/>
     </Stack>
   );
 };

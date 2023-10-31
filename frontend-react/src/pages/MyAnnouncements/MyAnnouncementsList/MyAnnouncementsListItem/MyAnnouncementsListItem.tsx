@@ -5,13 +5,13 @@ import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
+import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import {
   useGetCurrentUserAnnouncements,
   useRemoveAnnouncement,
   useSetAnnouncementStatus,
 } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
-import { confirmationDialogAtom } from 'src/store/atoms';
 import { Box, Button, Card, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 

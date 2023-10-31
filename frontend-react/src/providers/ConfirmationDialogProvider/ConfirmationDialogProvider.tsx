@@ -1,5 +1,4 @@
-import { useAtom } from 'jotai';
-import { confirmationDialogAtom } from 'src/store/atoms';
+import { atom, useAtom } from 'jotai';
 import {
   Button,
   Dialog,
@@ -9,6 +8,14 @@ import {
   DialogTitle,
 } from 'src/ui-components';
 import { PropsWithReactElement } from 'src/utils/types/props';
+
+export type ConfirmationDialogData = {
+  message: string;
+  onAccept: () => void;
+  onCancel?: () => void;
+  title?: string;
+};
+export const confirmationDialogAtom = atom<ConfirmationDialogData | null>(null);
 
 export type ConfirmationDialogProviderProps = PropsWithReactElement;
 

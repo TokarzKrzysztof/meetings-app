@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useSetAtom } from 'jotai';
+import { useRef, useState } from 'react';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
+import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { User } from 'src/models/user';
+import { isTypingAtom } from 'src/pages/Conversation/ConversationTypingIndicator/ConversationTypingIndicator';
 import { Icon, IconButton, Stack, TextArea } from 'src/ui-components';
 
 export type ConversationNewMessageProps = {
@@ -9,12 +12,29 @@ export type ConversationNewMessageProps = {
 };
 
 export const ConversationNewMessage = ({ onFocus, recipient }: ConversationNewMessageProps) => {
-  const { sendPrivateMessage } = useSignalRActions();
+  const { sendPrivateMessage, startTyping } = useSignalRActions();
+  const setIsTyping = useSetAtom(isTypingAtom);
   const [message, setMessage] = useState<string | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const handleSend = () => {
     sendPrivateMessage(message!, recipient.id);
     setMessage(null);
+  };
+
+  useSignalREffect('onOtherUserTyping', (userId) => {
+    if (userId === recipient.id) {
+      clearTimeout(timerRef.current);
+
+      setIsTyping(true);
+      timerRef.current = setTimeout(() => {
+        setIsTyping(false);
+      }, 2000);
+    }
+  });
+
+  const onKeyUp = () => {
+    startTyping(recipient.id);
   };
 
   return (
@@ -23,6 +43,7 @@ export const ConversationNewMessage = ({ onFocus, recipient }: ConversationNewMe
         size='small'
         onChange={setMessage}
         onFocus={onFocus}
+        onKeyUp={onKeyUp}
         value={message ?? ''}
         sx={{ flexGrow: 1 }}
         InputProps={{ sx: { borderRadius: 3 } }}

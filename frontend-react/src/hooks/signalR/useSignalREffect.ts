@@ -5,6 +5,7 @@ import { Message } from 'src/models/conversation/message';
 
 type SignalRListeners = {
   onGetPrivateMessage: (message: Message) => void;
+  onOtherUserTyping: (userId: string) => void;
 };
 export const useSignalREffect = <TName extends keyof SignalRListeners>(
   name: TName,
