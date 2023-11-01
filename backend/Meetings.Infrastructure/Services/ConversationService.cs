@@ -32,26 +32,26 @@ namespace Meetings.Infrastructure.Services
             _messageRepository = messageRepository;
         }
 
-        public async Task<ConversationDTO> GetConversation(Guid participantId, bool createIfNotExist)
+        public async Task<ConversationDTO?> GetConversation(Guid participantId)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            List<string> orderedIds = new[] { userId.ToString(), participantId.ToString() }.OrderBy(x => x).ToList();
-
             Conversation? conversation = await TryGetConversationByParticipants(userId, participantId, true);
-            if (createIfNotExist && conversation == null)
+
+            return conversation != null ? _mapper.Map<ConversationDTO>(conversation) : null;
+        }
+
+        public async Task<MessageDTO> SendMessage(Guid authorId, string message, Guid recipientId)
+        {
+            Conversation? conversation = await TryGetConversationByParticipants(authorId, recipientId, false);
+            if (conversation == null)
             {
+                List<Guid> orderedIds = new[] { authorId, recipientId }.OrderBy(x => x).ToList();
                 conversation = await _repository.Create(new Conversation()
                 {
                     ParticipantIds = orderedIds
                 });
             }
 
-            return _mapper.Map<ConversationDTO>(conversation);
-        }
-
-        public async Task<MessageDTO> SendMessage(Guid authorId, string message, Guid recipientId)
-        {
-            var conversation = await TryGetConversationByParticipants(authorId, recipientId, false);
             var result = await _messageRepository.Create(new Message()
             {
                 AuthorId = authorId,
@@ -64,7 +64,7 @@ namespace Meetings.Infrastructure.Services
 
         private async Task<Conversation> TryGetConversationByParticipants(Guid participant1Id, Guid participant2Id, bool includeMessages)
         {
-            List<string> orderedIds = new[] { participant1Id.ToString(), participant2Id.ToString() }.OrderBy(x => x).ToList();
+            List<Guid> orderedIds = new[] { participant1Id, participant2Id }.OrderBy(x => x).ToList();
             Conversation? conversation = await _repository.Data
                 .If(includeMessages, q => q.Include(x => x.Messages.OrderBy(x => x.CreatedAt)))
                 .FirstOrDefaultAsync(x => x.ParticipantIds == orderedIds);

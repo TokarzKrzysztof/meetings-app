@@ -21,13 +21,14 @@ export const Conversation = () => {
   const { conversation, conversationFetching } = useGetConversation(user?.id as string, {
     enabled: !userFetching,
     onSuccess: (conversation) => {
-      setMessages(conversation.messages);
-      scrollToBottom();
+      if (conversation !== null) {
+        setMessages(conversation.messages);
+        scrollToBottom();
+      }
     },
   });
 
   // const lastMessageDate = _.last(messages)?.createdAt ?? null;
-  // getIsUserTyping
 
   useSignalREffect('onGetPrivateMessage', (msg) => {
     setMessages((prev) => [...prev, msg]);
@@ -73,7 +74,7 @@ export const Conversation = () => {
         <ConversationMessages messages={messages} />
         <ConversationTypingIndicator />
       </Container>
-      <ConversationNewMessage onFocus={scrollToBottom} recipient={user}/>
+      <ConversationNewMessage onFocus={scrollToBottom} recipient={user} />
     </Stack>
   );
 };

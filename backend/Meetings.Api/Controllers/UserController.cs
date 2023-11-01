@@ -37,8 +37,8 @@ namespace Meetings.EmailTemplates.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUser([FromQuery] Guid id)
         {
-            UserDTO? currentUser = await _userService.GetUser(id);
-            return Ok(currentUser);
+            UserDTO user = await _userService.GetUser(id);
+            return Ok(user);
         }
 
         [HttpGet]

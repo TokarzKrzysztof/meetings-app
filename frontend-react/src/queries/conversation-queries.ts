@@ -12,12 +12,12 @@ const baseUrl = `${apiUrl}/Conversation`;
 
 export const useGetConversation = (
   participantId: string,
-  options?: UseQueryOptions<Conversation, AxiosError<HttpErrorData>>
+  options?: UseQueryOptions<Conversation | null, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
     queryKey: ['GetConversation', participantId],
     queryFn: () => {
-      const params = { participantId, createIfNotExist: true };
+      const params = { participantId };
       return axios.get(`${baseUrl}/GetConversation`, { params });
     },
     ...options,

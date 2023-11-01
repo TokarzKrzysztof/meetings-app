@@ -17,9 +17,9 @@ namespace Meetings.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetConversation([FromQuery] Guid participantId, [FromQuery] bool createIfNotExist)
+        public async Task<IActionResult> GetConversation([FromQuery] Guid participantId)
         {
-            ConversationDTO conversation = await _conversationService.GetConversation(participantId, createIfNotExist);
+            ConversationDTO? conversation = await _conversationService.GetConversation(participantId);
             return Ok(conversation);
         } 
     }

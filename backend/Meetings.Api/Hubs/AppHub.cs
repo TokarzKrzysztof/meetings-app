@@ -18,16 +18,16 @@ namespace Meetings.Api.Hubs
 
 
         [Authorize]
-        public async Task SendPrivateMessage(string message, string recipientId)
+        public async Task SendPrivateMessage(string message, Guid recipientId)
         {
-            var result = await _conversationService.SendMessage(new Guid(Context.UserIdentifier), message, new Guid(recipientId));
-            await Clients.Users(Context.UserIdentifier, recipientId).SendAsync("onGetPrivateMessage", result);
+            var result = await _conversationService.SendMessage(new Guid(Context.UserIdentifier), message, recipientId);
+            await Clients.Users(Context.UserIdentifier, recipientId.ToString()).SendAsync("onGetPrivateMessage", result);
         }
 
         [Authorize]
-        public async Task StartTyping(string recipientId)
+        public async Task StartTyping(Guid recipientId)
         {
-            await Clients.User(recipientId).SendAsync("onOtherUserTyping", Context.UserIdentifier);
+            await Clients.User(recipientId.ToString()).SendAsync("onOtherUserTyping", Context.UserIdentifier);
         }
     }
 }
