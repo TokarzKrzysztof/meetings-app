@@ -2,6 +2,8 @@
 using Meetings.Models;
 using Meetings.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
+using System.Reflection.Metadata;
 
 namespace Meetings.Database
 {
@@ -18,6 +20,7 @@ namespace Meetings.Database
         public DbSet<TempData> TempDatas { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<MessageReaction> MessageReactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -25,6 +28,7 @@ namespace Meetings.Database
             builder.Entity<Category>().HasData(CategoriesGenerator.AllCategories);
             builder.Entity<Conversation>().Property(x => x.ParticipantIds)
                 .HasConversion(value => string.Join(",", value), dbValue => dbValue.Split(",", StringSplitOptions.None).Select(x => new Guid(x)).ToList());
+            builder.Entity<MessageReaction>().HasOne(x => x.Author).WithMany().OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

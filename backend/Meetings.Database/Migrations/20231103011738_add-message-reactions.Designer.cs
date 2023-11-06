@@ -4,6 +4,7 @@ using Meetings.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meetings.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231103011738_add-message-reactions")]
+    partial class addmessagereactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,7 +268,8 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId")
+                        .IsUnique();
 
                     b.HasIndex("MessageId");
 
@@ -383,8 +386,8 @@ namespace Meetings.Database.Migrations
             modelBuilder.Entity("Meetings.Models.Entities.MessageReaction", b =>
                 {
                     b.HasOne("Meetings.Models.Entities.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
+                        .WithOne()
+                        .HasForeignKey("Meetings.Models.Entities.MessageReaction", "AuthorId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 

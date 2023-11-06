@@ -22,14 +22,16 @@ namespace Meetings.Infrastructure.Services
     {
         private readonly IRepository<Conversation> _repository;
         private readonly IRepository<Message> _messageRepository;
+        private readonly IRepository<MessageReaction> _messageReactionRepository;
         private readonly IMapper _mapper;
         private readonly IClaimsReader _claimsReader;
-        public ConversationService(IRepository<Conversation> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository)
+        public ConversationService(IRepository<Conversation> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IRepository<MessageReaction> messageReactionRepository)
         {
             _repository = repository;
             _mapper = mapper;
             _claimsReader = claimsReader;
             _messageRepository = messageRepository;
+            _messageReactionRepository = messageReactionRepository;
         }
 
         public async Task<ConversationDTO?> GetConversation(Guid participantId)
@@ -62,11 +64,28 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<MessageDTO>(result);
         }
 
+        public async Task<MessageDTO> AddMessageReaction(MessageReactionDTO data)
+        {
+            Message message = await _messageRepository.Data.Where(x => x.Id == data.MessageId).Include(x => x.Reactions).SingleAsync();
+            var authorReaction = message.Reactions.SingleOrDefault(x => x.AuthorId == data.AuthorId);
+            if (authorReaction != null)
+            {
+                authorReaction.Unified = data.Unified;
+            }
+            else
+            {
+                message.Reactions.Add(_mapper.Map<MessageReaction>(data));
+            }
+            await _messageRepository.Update(message);
+
+            return _mapper.Map<MessageDTO>(message);
+        }
+
         private async Task<Conversation> TryGetConversationByParticipants(Guid participant1Id, Guid participant2Id, bool includeMessages)
         {
             List<Guid> orderedIds = new[] { participant1Id, participant2Id }.OrderBy(x => x).ToList();
             Conversation? conversation = await _repository.Data
-                .If(includeMessages, q => q.Include(x => x.Messages.OrderBy(x => x.CreatedAt)))
+                .If(includeMessages, q => q.Include(x => x.Messages.OrderBy(x => x.CreatedAt)).ThenInclude(x => x.Reactions))
                 .FirstOrDefaultAsync(x => x.ParticipantIds == orderedIds);
 
             return conversation;

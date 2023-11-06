@@ -1,18 +1,28 @@
-import { ClickAwayListener, IconButton } from '@mui/material';
-import Picker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
+import { IconButton } from '@mui/material';
+import { EmojiClickData } from 'emoji-picker-react';
 import { useState } from 'react';
-import { Box, Icon, Popper } from 'src/ui-components';
+import { EmojiSelectorPopper } from 'src/components/EmojiSelectorPopper/EmojiSelectorPopper';
+import { Icon, IconButtonProps, IconProps } from 'src/ui-components';
 
 export type EmojiPickerProps = {
   onEmojiSelected: (emoji: EmojiClickData, event: MouseEvent) => void;
-  onOpen: () => void;
+  onOpen?: () => void;
+  icon?: IconProps['name'];
+  buttonSize?: IconButtonProps['size'];
+  closeOnSelect?: boolean;
 };
 
-export const EmojiPicker = ({ onEmojiSelected, onOpen }: EmojiPickerProps) => {
+export const EmojiPicker = ({
+  onEmojiSelected,
+  onOpen,
+  icon = 'tag_faces',
+  buttonSize = 'medium',
+  closeOnSelect = false
+}: EmojiPickerProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
-    onOpen();
+    onOpen && onOpen();
   };
 
   const handleClose = () => {
@@ -21,21 +31,17 @@ export const EmojiPicker = ({ onEmojiSelected, onOpen }: EmojiPickerProps) => {
 
   return (
     <>
-      <IconButton disableRipple onClick={handleClick}>
-        <Icon name='tag_faces' />
+      <IconButton size={buttonSize} onClick={handleClick}>
+        <Icon name={icon} />
       </IconButton>
-      <Popper open={!!anchorEl} anchorEl={anchorEl} placement='bottom-end'>
-        <ClickAwayListener onClickAway={handleClose}>
-          {/* Box to make click away work because of ref */}
-          <Box>
-            <Picker
-              searchPlaceholder='Wyszukaj'
-              emojiStyle={EmojiStyle.NATIVE}
-              onEmojiClick={onEmojiSelected}
-            />
-          </Box>
-        </ClickAwayListener>
-      </Popper>
+      <EmojiSelectorPopper
+        anchorEl={anchorEl}
+        onClickAway={handleClose}
+        onEmojiClick={(emoji, event) => {
+          onEmojiSelected(emoji, event);
+          closeOnSelect && handleClose();
+        }}
+      />
     </>
   );
 };

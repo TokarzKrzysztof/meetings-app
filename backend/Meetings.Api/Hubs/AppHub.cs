@@ -8,6 +8,10 @@ using System.Security.Claims;
 
 namespace Meetings.Api.Hubs
 {
+    public record SendPrivateMessageData(Guid RecipientId, string Message);
+    public record StartTypingData(Guid RecipientId);
+    public record AddMessageReactionData(Guid RecipientId, Guid MessageId, string ReactionUnified);
+
     public class AppHub : Hub
     {
         private ConversationService _conversationService;
@@ -16,18 +20,30 @@ namespace Meetings.Api.Hubs
             _conversationService = conversationService;
         }
 
-
         [Authorize]
-        public async Task SendPrivateMessage(string message, Guid recipientId)
+        public async Task SendPrivateMessage(SendPrivateMessageData data)
         {
-            var result = await _conversationService.SendMessage(new Guid(Context.UserIdentifier), message, recipientId);
-            await Clients.Users(Context.UserIdentifier, recipientId.ToString()).SendAsync("onGetPrivateMessage", result);
+            var result = await _conversationService.SendMessage(new Guid(Context.UserIdentifier), data.Message, data.RecipientId);
+            await Clients.Users(Context.UserIdentifier, data.RecipientId.ToString()).SendAsync("onGetNewMessage", result);
         }
 
         [Authorize]
-        public async Task StartTyping(Guid recipientId)
+        public async Task StartTyping(StartTypingData data)
         {
-            await Clients.User(recipientId.ToString()).SendAsync("onOtherUserTyping", Context.UserIdentifier);
+            await Clients.User(data.RecipientId.ToString()).SendAsync("onOtherUserTyping", Context.UserIdentifier);
+        }
+
+        [Authorize]
+        public async Task AddMessageReaction(AddMessageReactionData data)
+        {
+            MessageDTO result = await _conversationService.AddMessageReaction(new MessageReactionDTO()
+            {
+                AuthorId = new Guid(Context.UserIdentifier),
+                MessageId = data.MessageId,
+                Unified = data.ReactionUnified
+            });
+
+            await Clients.Users(Context.UserIdentifier, data.RecipientId.ToString()).SendAsync("onMessageUpdate", result);
         }
     }
 }

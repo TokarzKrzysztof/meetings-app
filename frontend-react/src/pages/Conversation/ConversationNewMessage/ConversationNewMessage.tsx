@@ -19,7 +19,7 @@ export const ConversationNewMessage = ({ onFocus, recipient }: ConversationNewMe
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const handleSend = () => {
-    sendPrivateMessage(message!, recipient.id);
+    sendPrivateMessage({ message: message!, recipientId: recipient.id });
     setMessage(null);
   };
 
@@ -35,9 +35,9 @@ export const ConversationNewMessage = ({ onFocus, recipient }: ConversationNewMe
   });
 
   const onKeyUpThrottle = useMemo(() => {
-    return _.throttle(() => startTyping(recipient.id), 2000, { trailing: false });
+    return _.throttle(() => startTyping({ recipientId: recipient.id }), 2000, { trailing: false });
   }, []);
-  
+
   return (
     <Stack alignItems={'flex-start'} gap={1} p={1}>
       <TextArea

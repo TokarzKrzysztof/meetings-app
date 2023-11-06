@@ -25,7 +25,10 @@ namespace Meetings.Infrastructure.Mappers
             CreateMap<ConversationDTO, Conversation>();
             
             CreateMap<Message, MessageDTO>();
-            CreateMap<MessageDTO, Message>();
+            CreateMap<MessageDTO, Message>();    
+            
+            CreateMap<MessageReaction, MessageReactionDTO>();
+            CreateMap<MessageReactionDTO, MessageReaction>();
         }
     }
 }

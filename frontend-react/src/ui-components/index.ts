@@ -31,6 +31,7 @@ export * from './ListItemIcon/ListItemIcon';
 export * from './ListItemText/ListItemText';
 export * from './Menu/Menu';
 export * from './MenuItem/MenuItem';
+export * from './Popover/Popover';
 export * from './Popper/Popper';
 export * from './Radio/Radio';
 export * from './RadioGroup/RadioGroup';

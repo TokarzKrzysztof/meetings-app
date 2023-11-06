@@ -31,7 +31,7 @@ const TextAreaInner = (
     } else {
       onChange(insertAtIndex(value, emoji.emoji, selectionStartRef.current));
     }
-    selectionStartRef.current = selectionStartRef.current + 2;
+    selectionStartRef.current = selectionStartRef.current + emoji.emoji.length;
   };
 
   const { sx: inputPropsSx, ...RestInputProps } = InputProps ?? {};
