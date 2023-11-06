@@ -9,15 +9,17 @@ import { AuthIcon } from 'src/components/auth/AuthIcon/AuthIcon';
 import { AuthRedirectInfo } from 'src/components/auth/AuthRedirectInfo/AuthRedirectInfo';
 import { FormField } from 'src/components/FormField/FormField';
 import { Header } from 'src/components/Header/Header';
+import { useRouteParams } from 'src/hooks/useRouteParams';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { LoginCredentials } from 'src/models/login-credentials';
 import { useLogin, useResendActivationLink } from 'src/queries/auth-queries';
 import { Button, Typography } from 'src/ui-components';
-import { AppRoutes } from 'src/utils/enums/app-routes';
+import { AppRoutes, LoginParams } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 
 export const Login = () => {
+  const [params] = useRouteParams<LoginParams>();
   const form = useForm<LoginCredentials>();
   const { register, handleSubmit, getValues } = form;
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ export const Login = () => {
     login(data, {
       onSuccess: (user) => {
         setCurrentUser(user);
-        navigate(AppRoutes.Home);
+        navigate(AppRoutes.Home());
       },
       onError: (err) => {
         if (err.response?.data.statusCode === 403) {
@@ -41,14 +43,13 @@ export const Login = () => {
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('isFromActivation')) {
+    if (params.isFromActivation) {
       enqueueSnackbar({
         variant: 'success',
         message: 'Twoje konto zostało pomyślnie aktywowane, możesz się teraz zalogować',
       });
     }
-    if (params.get('isFromResetPassword')) {
+    if (params.isFromResetPassword) {
       enqueueSnackbar({
         variant: 'success',
         message: 'Twoje hasło zostało zmienione',
@@ -83,7 +84,7 @@ export const Login = () => {
                 variant='text'
                 component={Link}
                 sx={{ whiteSpace: 'nowrap', minWidth: 'auto', fontSize: 11 }}
-                to={AppRoutes.ForgotPassword}
+                to={AppRoutes.ForgotPassword()}
               >
                 Zapomniałem hasła
               </Button>
@@ -102,7 +103,7 @@ export const Login = () => {
         <AuthButton disabled={loginInProgress}>Zaloguj</AuthButton>
         <AuthRedirectInfo>
           Nie masz jeszcze konta?{' '}
-          <Button variant='text' component={Link} to={AppRoutes.Register}>
+          <Button variant='text' component={Link} to={AppRoutes.Register()}>
             Zarejestruj się
           </Button>
         </AuthRedirectInfo>

@@ -39,7 +39,7 @@ export const MyAnnouncements = () => {
             color='primary'
             sx={{ position: 'absolute', right: 0, top: -1 }}
             component={Link}
-            to={AppRoutes.NewAnnouncement}
+            to={AppRoutes.NewAnnouncement()}
             size='small'
           >
             <Icon name='add' />

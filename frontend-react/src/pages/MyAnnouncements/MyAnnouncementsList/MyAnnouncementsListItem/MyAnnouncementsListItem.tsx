@@ -56,7 +56,7 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
           });
           currentUserAnnoucementsRefetch();
         },
-      },
+      }
     );
   };
 
@@ -77,7 +77,7 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
           });
           currentUserAnnoucementsRefetch();
         },
-      },
+      }
     );
   };
 
@@ -127,7 +127,7 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
                 size='small'
                 variant='text'
                 component={Link}
-                to={`${AppRoutes.EditAnnouncement}?id=${announcement.id}`}
+                to={AppRoutes.EditAnnouncement({ id: announcement.id })}
               >
                 Edytuj
               </Button>

@@ -18,7 +18,7 @@ export const NewAnnouncement = () => {
           variant: 'success',
           message: 'Ogłoszenie zostało dodane',
         });
-        navigate(AppRoutes.MyAnnouncements);
+        navigate(AppRoutes.MyAnnouncements());
       },
     });
   };

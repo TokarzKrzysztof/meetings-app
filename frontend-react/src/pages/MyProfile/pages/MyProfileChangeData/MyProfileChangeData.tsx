@@ -47,7 +47,7 @@ export const MyProfileChangeData = () => {
           variant: 'success',
           message: 'Dane zostały zaktualizowane',
         });
-        navigate(AppRoutes.MyProfile);
+        navigate(AppRoutes.MyProfile());
       },
     });
   };

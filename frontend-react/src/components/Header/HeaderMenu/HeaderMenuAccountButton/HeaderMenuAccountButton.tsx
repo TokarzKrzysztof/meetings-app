@@ -18,29 +18,29 @@ export const HeaderMenuAccountButton = ({
 
   const menuOptions = currentUser ? (
     <>
-      <MenuItem component={Link} to={AppRoutes.NewAnnouncement} sx={{ fontWeight: 'bold' }}>
+      <MenuItem component={Link} to={AppRoutes.NewAnnouncement()} sx={{ fontWeight: 'bold' }}>
         Dodaj ogłoszenie
       </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.Home}>
+      <MenuItem component={Link} to={AppRoutes.Home()}>
         Strona główna
       </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.MyProfile}>
+      <MenuItem component={Link} to={AppRoutes.MyProfile()}>
         Mój profil
       </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.MyAnnouncements}>
+      <MenuItem component={Link} to={AppRoutes.MyAnnouncements()}>
         Moje ogłoszenia
       </MenuItem>
       <MenuItem onClick={onLogout}>Wyloguj się</MenuItem>
     </>
   ) : (
     <>
-      <MenuItem component={Link} to={AppRoutes.Home}>
+      <MenuItem component={Link} to={AppRoutes.Home()}>
         Strona główna
       </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.Login}>
+      <MenuItem component={Link} to={AppRoutes.Login()}>
         Logowanie
       </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.Register}>
+      <MenuItem component={Link} to={AppRoutes.Register()}>
         Rejestracja
       </MenuItem>
     </>

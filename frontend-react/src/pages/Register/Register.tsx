@@ -99,7 +99,7 @@ export const Register = () => {
         <AuthButton disabled={registerUserInProgress}>Zarejestruj się</AuthButton>
         <AuthRedirectInfo>
           Masz już konto?{' '}
-          <Button variant='text' component={Link} to={AppRoutes.Login}>
+          <Button variant='text' component={Link} to={AppRoutes.Login()}>
             Zaloguj się
           </Button>
         </AuthRedirectInfo>

@@ -9,7 +9,7 @@ export type MyProfileActionButtonsProps = {
 export const MyProfileActionButtons = ({ isSaveDisabled }: MyProfileActionButtonsProps) => {
   return (
     <Stack mt={4} justifyContent='space-between'>
-      <Button type='button' variant='outlined' component={Link} to={AppRoutes.MyProfile}>
+      <Button type='button' variant='outlined' component={Link} to={AppRoutes.MyProfile()}>
         Anuluj
       </Button>
 

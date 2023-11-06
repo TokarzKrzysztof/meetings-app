@@ -39,9 +39,10 @@ export const AnnouncementResultListItem = ({ data, imgSrc }: AnnouncementResultL
           size='small'
           variant='text'
           component={Link}
-          to={`${AppRoutes.PrivateChat}?userId=${data.userId}&returnUrl=${
-            location.pathname + location.search
-          }`}
+          to={AppRoutes.PrivateChat({
+            userId: data.userId,
+            returnUrl: location.pathname + location.search,
+          })}
         >
           Wyślij wiadomość
         </Button>

@@ -1,24 +1,25 @@
 import { useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { ChatHeader } from 'src/components/chat/ChatHeader/ChatHeader';
 import { ChatMessage } from 'src/components/chat/ChatMessage/ChatMessage';
 import { ChatNewMessage } from 'src/components/chat/ChatNewMessage/ChatNewMessage';
 import { ChatTypingIndicator } from 'src/components/chat/ChatTypingIndicator/ChatTypingIndicator';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
+import { useRouteParams } from 'src/hooks/useRouteParams';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { Message } from 'src/models/chat/message';
 import { useGetChat } from 'src/queries/chat-queries';
 import { useGetCurrentUser, useGetUser } from 'src/queries/user-queries';
 import { Avatar, Container, Stack, Typography } from 'src/ui-components';
 import { replaceItem } from 'src/utils/array-utils';
+import { PrivateChatParams } from 'src/utils/enums/app-routes';
 import { calculateAge } from 'src/utils/user-utils';
 
 export const PrivateChat = () => {
+  const [params] = useRouteParams<PrivateChatParams>();
   const scrollableRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [searchParams] = useSearchParams();
   const { currentUser } = useGetCurrentUser();
-  const { user, userFetching } = useGetUser(searchParams.get('userId')!);
+  const { user, userFetching } = useGetUser(params.userId);
   const { chat, chatFetching } = useGetChat(user?.id as string, {
     enabled: !userFetching,
     onSuccess: (chat) => {
@@ -57,7 +58,7 @@ export const PrivateChat = () => {
   if (!user || !currentUser) return null;
   return (
     <Stack height={'100vh'} direction={'column'}>
-      <ChatHeader user={user} />
+      <ChatHeader user={user} returnUrl={params.returnUrl} />
       <Container
         ref={scrollableRef}
         sx={{
@@ -81,12 +82,7 @@ export const PrivateChat = () => {
         </Stack>
         <Stack direction={'column'} py={1} gap={1}>
           {messages.map((x) => (
-            <ChatMessage
-              key={x.id}
-              message={x}
-              recipient={user}
-              currentUser={currentUser}
-            />
+            <ChatMessage key={x.id} message={x} recipient={user} currentUser={currentUser} />
           ))}
         </Stack>
         <ChatTypingIndicator />

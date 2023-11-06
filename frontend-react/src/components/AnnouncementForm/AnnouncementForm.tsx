@@ -71,7 +71,7 @@ export const AnnouncementForm = ({
         }}
       />
       <Stack mt={4}>
-        <Button type='button' variant='outlined' component={Link} to={AppRoutes.MyAnnouncements}>
+        <Button type='button' variant='outlined' component={Link} to={AppRoutes.MyAnnouncements()}>
           Anuluj
         </Button>
         <Button

@@ -26,7 +26,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
         logout(undefined, {
           onSuccess: () => {
             setCurrentUser(null);
-            navigate(AppRoutes.Home);
+            navigate(AppRoutes.Home());
           },
         });
       },
@@ -41,7 +41,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
           color='inherit'
           variant='text'
           component={Link}
-          to={AppRoutes.Login}
+          to={AppRoutes.Login()}
         >
           Logowanie
         </Button>
@@ -50,7 +50,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
           color='inherit'
           variant='text'
           component={Link}
-          to={AppRoutes.Register}
+          to={AppRoutes.Register()}
         >
           Rejestracja
         </Button>
@@ -68,7 +68,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
               color='inherit'
               variant='outlined'
               component={Link}
-              to={AppRoutes.NewAnnouncement}
+              to={AppRoutes.NewAnnouncement()}
             >
               Dodaj ogłoszenie
             </Button>

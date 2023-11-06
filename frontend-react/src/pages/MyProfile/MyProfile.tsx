@@ -13,7 +13,7 @@ export const MyProfile = () => {
 
   if (!currentUser) return null;
 
-  if (location.pathname === AppRoutes.MyProfile) {
+  if (location.pathname === AppRoutes.MyProfile()) {
     return (
       <>
         <Header />

@@ -50,7 +50,7 @@ export const ForgotPassword = () => {
         ></FormField>
         <AuthButton disabled={sendForgotPasswordEmailInProgress}>Wyślij</AuthButton>
         <AuthRedirectInfo>
-          <Button variant='text' component={Link} to={AppRoutes.Login}>
+          <Button variant='text' component={Link} to={AppRoutes.Login()}>
             Wróć do logowania
           </Button>
         </AuthRedirectInfo>

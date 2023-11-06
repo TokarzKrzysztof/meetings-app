@@ -1,15 +1,14 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { User } from 'src/models/user';
 import { AppBar, Avatar, Button, Icon, Stack, Toolbar, Typography } from 'src/ui-components';
 
 export type ChatHeaderProps = {
   user: User;
+  returnUrl: string;
 };
 
-export const ChatHeader = ({ user }: ChatHeaderProps) => {
-  const [searchParams] = useSearchParams();
-
+export const ChatHeader = ({ user, returnUrl }: ChatHeaderProps) => {
   return (
     <AppBar position='static'>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -18,7 +17,7 @@ export const ChatHeader = ({ user }: ChatHeaderProps) => {
           startIcon={<Icon name='arrow_back' />}
           size='small'
           component={Link}
-          to={searchParams.get('returnUrl')!}
+          to={returnUrl}
           color='inherit'
         >
           Wróć

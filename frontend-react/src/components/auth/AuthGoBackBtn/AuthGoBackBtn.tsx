@@ -12,7 +12,7 @@ export const AuthGoBackBtn = ({ ...props }: AuthGoBackBtnProps) => {
       startIcon={<Icon name='arrow_back' />}
       size='small'
       component={Link}
-      to={AppRoutes.Home}
+      to={AppRoutes.Home()}
     >
       Strona główna
     </Button>

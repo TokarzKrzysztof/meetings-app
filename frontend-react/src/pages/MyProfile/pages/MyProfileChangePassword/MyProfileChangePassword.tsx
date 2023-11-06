@@ -46,7 +46,7 @@ export const MyProfileChangePassword = () => {
             variant: 'success',
             message: 'Hasło zostało zmienione',
           });
-          navigate(AppRoutes.MyProfile);
+          navigate(AppRoutes.MyProfile());
         },
       },
     );

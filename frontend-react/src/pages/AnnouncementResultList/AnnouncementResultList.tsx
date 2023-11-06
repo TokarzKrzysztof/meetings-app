@@ -53,7 +53,7 @@ export const AnnouncementResultList = () => {
     <>
       <Header />
       <Container>
-        <GoBackBtn to={AppRoutes.Home}>Wyszukaj ogłoszenia z innej kategorii</GoBackBtn>
+        <GoBackBtn to={AppRoutes.Home()}>Wyszukaj ogłoszenia z innej kategorii</GoBackBtn>
         <Stack justifyContent={'space-between'} alignItems={'center'}>
           <Typography my={2}>
             Ogłoszenia z kategorii:{' '}

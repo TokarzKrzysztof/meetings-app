@@ -67,7 +67,7 @@ export const HomeCategoriesSearch = ({ data }: HomeCategoriesSearchProps) => {
           size='large'
           endIcon={<Icon name='arrow_forward' />}
           component={Link}
-          to={`${AppRoutes.AnnouncementResultList}?categoryId=${selectedCategory?.id}`}
+          to={AppRoutes.AnnouncementResultList({ categoryId: selectedCategory?.id as string })}
         >
           Sprawdź
         </Button>
