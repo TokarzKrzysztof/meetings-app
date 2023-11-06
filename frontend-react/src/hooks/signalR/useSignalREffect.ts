@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { DependencyList, useEffect } from 'react';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
-import { Message } from 'src/models/conversation/message';
+import { Message } from 'src/models/chat/message';
 
 type SignalRListeners = {
   onGetNewMessage: (message: Message) => void;

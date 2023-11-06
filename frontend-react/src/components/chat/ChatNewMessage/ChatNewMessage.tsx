@@ -1,18 +1,18 @@
 import { useSetAtom } from 'jotai';
 import _ from 'lodash';
 import { useMemo, useRef, useState } from 'react';
+import { isTypingAtom } from 'src/components/chat/ChatTypingIndicator/ChatTypingIndicator';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { User } from 'src/models/user';
-import { isTypingAtom } from 'src/pages/Conversation/ConversationTypingIndicator/ConversationTypingIndicator';
 import { Icon, IconButton, Stack, TextArea } from 'src/ui-components';
 
-export type ConversationNewMessageProps = {
+export type ChatNewMessageProps = {
   onFocus: () => void;
   recipient: User;
 };
 
-export const ConversationNewMessage = ({ onFocus, recipient }: ConversationNewMessageProps) => {
+export const ChatNewMessage = ({ onFocus, recipient }: ChatNewMessageProps) => {
   const { sendPrivateMessage, startTyping } = useSignalRActions();
   const setIsTyping = useSetAtom(isTypingAtom);
   const [message, setMessage] = useState<string | null>(null);

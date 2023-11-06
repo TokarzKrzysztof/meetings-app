@@ -42,9 +42,9 @@ const StyledDot = styled('span')({
   },
 });
 
-export type ConversationTypingIndicatorProps = {};
+export type ChatTypingIndicatorProps = {};
 
-export const ConversationTypingIndicator = ({ ...props }: ConversationTypingIndicatorProps) => {
+export const ChatTypingIndicator = ({ ...props }: ChatTypingIndicatorProps) => {
   const isTyping = useAtomValue(isTypingAtom);
 
   if (!isTyping) return null;

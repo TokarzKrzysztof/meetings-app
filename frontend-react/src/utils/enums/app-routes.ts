@@ -12,6 +12,6 @@ export enum AppRoutes {
   MyProfileChangeData = '/my-profile/change-data',
   MyProfileChangePassword = '/my-profile/change-password',
   MyProfileChangeEmail = '/my-profile/change-email',
-  Conversation = '/conversation',
-  MyConversations = '/my-conversations',
+  Chat = '/chat',
+  MyChats = '/my-chats',
 }

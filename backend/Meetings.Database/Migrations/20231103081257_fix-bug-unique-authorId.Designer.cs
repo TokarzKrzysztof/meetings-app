@@ -183,7 +183,7 @@ namespace Meetings.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Meetings.Models.Entities.Conversation", b =>
+            modelBuilder.Entity("Meetings.Models.Entities.Chat", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,7 +204,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Conversations");
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.Message", b =>
@@ -216,7 +216,7 @@ namespace Meetings.Database.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ConversationId")
+                    b.Property<Guid>("ChatId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -236,7 +236,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("ConversationId");
+                    b.HasIndex("ChatId");
 
                     b.ToTable("Messages");
                 });
@@ -371,15 +371,15 @@ namespace Meetings.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Meetings.Models.Entities.Conversation", "Conversation")
+                    b.HasOne("Meetings.Models.Entities.Chat", "Chat")
                         .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
+                        .HasForeignKey("ChatId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Author");
 
-                    b.Navigation("Conversation");
+                    b.Navigation("Chat");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.MessageReaction", b =>
@@ -401,7 +401,7 @@ namespace Meetings.Database.Migrations
                     b.Navigation("Message");
                 });
 
-            modelBuilder.Entity("Meetings.Models.Entities.Conversation", b =>
+            modelBuilder.Entity("Meetings.Models.Entities.Chat", b =>
                 {
                     b.Navigation("Messages");
                 });

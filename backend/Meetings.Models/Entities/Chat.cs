@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Entities
 {
-    public class Conversation : IEntityBase
+    public class Chat : IEntityBase
     {
         public Guid Id { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -17,7 +17,7 @@ namespace Meetings.Models.Entities
         public List<Guid> ParticipantIds { get; set; }
     }
 
-    public class ConversationDTO
+    public class ChatDTO
     {
         public Guid Id { get; set; }
         public List<Guid> ParticipantIds { get; set; }

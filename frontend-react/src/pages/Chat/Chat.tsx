@@ -1,29 +1,29 @@
 import { useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { ChatHeader } from 'src/components/chat/ChatHeader/ChatHeader';
+import { ChatMessage } from 'src/components/chat/ChatMessage/ChatMessage';
+import { ChatNewMessage } from 'src/components/chat/ChatNewMessage/ChatNewMessage';
+import { ChatTypingIndicator } from 'src/components/chat/ChatTypingIndicator/ChatTypingIndicator';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
-import { Message } from 'src/models/conversation/message';
-import { ConversationHeader } from 'src/pages/Conversation/ConversationHeader/ConversationHeader';
-import { ConversationMessage } from 'src/pages/Conversation/ConversationMessage/ConversationMessage';
-import { ConversationNewMessage } from 'src/pages/Conversation/ConversationNewMessage/ConversationNewMessage';
-import { ConversationTypingIndicator } from 'src/pages/Conversation/ConversationTypingIndicator/ConversationTypingIndicator';
-import { useGetConversation } from 'src/queries/conversation-queries';
+import { Message } from 'src/models/chat/message';
+import { useGetChat } from 'src/queries/chat-queries';
 import { useGetCurrentUser, useGetUser } from 'src/queries/user-queries';
 import { Avatar, Container, Stack, Typography } from 'src/ui-components';
 import { replaceItem } from 'src/utils/array-utils';
 import { calculateAge } from 'src/utils/user-utils';
 
-export const Conversation = () => {
+export const Chat = () => {
   const scrollableRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [searchParams] = useSearchParams();
   const { currentUser } = useGetCurrentUser();
   const { user, userFetching } = useGetUser(searchParams.get('userId')!);
-  const { conversation, conversationFetching } = useGetConversation(user?.id as string, {
+  const { chat, chatFetching } = useGetChat(user?.id as string, {
     enabled: !userFetching,
-    onSuccess: (conversation) => {
-      if (conversation !== null) {
-        setMessages(conversation.messages);
+    onSuccess: (chat) => {
+      if (chat !== null) {
+        setMessages(chat.messages);
         scrollToBottom();
       }
     },
@@ -57,7 +57,7 @@ export const Conversation = () => {
   if (!user || !currentUser) return null;
   return (
     <Stack height={'100vh'} direction={'column'}>
-      <ConversationHeader user={user} />
+      <ChatHeader user={user} />
       <Container
         ref={scrollableRef}
         sx={{
@@ -81,7 +81,7 @@ export const Conversation = () => {
         </Stack>
         <Stack direction={'column'} py={1} gap={1}>
           {messages.map((x) => (
-            <ConversationMessage
+            <ChatMessage
               key={x.id}
               message={x}
               recipient={user}
@@ -89,11 +89,11 @@ export const Conversation = () => {
             />
           ))}
         </Stack>
-        <ConversationTypingIndicator />
+        <ChatTypingIndicator />
       </Container>
-      <ConversationNewMessage onFocus={scrollToBottom} recipient={user} />
+      <ChatNewMessage onFocus={scrollToBottom} recipient={user} />
     </Stack>
   );
 };
 
-Conversation.displayName = 'Conversation';
+Chat.displayName = 'Chat';

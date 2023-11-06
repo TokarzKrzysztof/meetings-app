@@ -14,16 +14,16 @@ namespace Meetings.Api.Hubs
 
     public class AppHub : Hub
     {
-        private ConversationService _conversationService;
-        public AppHub(ConversationService conversationService)
+        private ChatService _chatService;
+        public AppHub(ChatService chatService)
         {
-            _conversationService = conversationService;
+            _chatService = chatService;
         }
 
         [Authorize]
         public async Task SendPrivateMessage(SendPrivateMessageData data)
         {
-            var result = await _conversationService.SendMessage(new Guid(Context.UserIdentifier), data.Message, data.RecipientId);
+            var result = await _chatService.SendMessage(new Guid(Context.UserIdentifier), data.Message, data.RecipientId);
             await Clients.Users(Context.UserIdentifier, data.RecipientId.ToString()).SendAsync("onGetNewMessage", result);
         }
 
@@ -36,7 +36,7 @@ namespace Meetings.Api.Hubs
         [Authorize]
         public async Task AddMessageReaction(AddMessageReactionData data)
         {
-            MessageDTO result = await _conversationService.AddMessageReaction(new MessageReactionDTO()
+            MessageDTO result = await _chatService.AddMessageReaction(new MessageReactionDTO()
             {
                 AuthorId = new Guid(Context.UserIdentifier),
                 MessageId = data.MessageId,

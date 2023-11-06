@@ -12,8 +12,8 @@ namespace Meetings.Models.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDelete { get; set; }
-        public Guid ConversationId { get; set; }
-        public virtual Conversation Conversation { get; set; }
+        public Guid ChatId { get; set; }
+        public virtual Chat Chat { get; set; }
         public Guid AuthorId { get; set; }
         public virtual User Author { get; set; }
         public string Text { get; set; }
@@ -23,7 +23,7 @@ namespace Meetings.Models.Entities
     public class MessageDTO
     {
         public Guid Id { get; set; }
-        public Guid ConversationId { get; set; }
+        public Guid ChatId { get; set; }
         public Guid AuthorId { get; set; }
         public string Text { get; set; }
         public DateTime CreatedAt { get; set; }

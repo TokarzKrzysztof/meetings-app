@@ -18,14 +18,14 @@ using System.Threading.Tasks;
 
 namespace Meetings.Infrastructure.Services
 {
-    public class ConversationService
+    public class ChatService
     {
-        private readonly IRepository<Conversation> _repository;
+        private readonly IRepository<Chat> _repository;
         private readonly IRepository<Message> _messageRepository;
         private readonly IRepository<MessageReaction> _messageReactionRepository;
         private readonly IMapper _mapper;
         private readonly IClaimsReader _claimsReader;
-        public ConversationService(IRepository<Conversation> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IRepository<MessageReaction> messageReactionRepository)
+        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IRepository<MessageReaction> messageReactionRepository)
         {
             _repository = repository;
             _mapper = mapper;
@@ -34,21 +34,21 @@ namespace Meetings.Infrastructure.Services
             _messageReactionRepository = messageReactionRepository;
         }
 
-        public async Task<ConversationDTO?> GetConversation(Guid participantId)
+        public async Task<ChatDTO?> GetChat(Guid participantId)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            Conversation? conversation = await TryGetConversationByParticipants(userId, participantId, true);
+            Chat? chat = await TryGetChatByParticipants(userId, participantId, true);
 
-            return conversation != null ? _mapper.Map<ConversationDTO>(conversation) : null;
+            return chat != null ? _mapper.Map<ChatDTO>(chat) : null;
         }
 
         public async Task<MessageDTO> SendMessage(Guid authorId, string message, Guid recipientId)
         {
-            Conversation? conversation = await TryGetConversationByParticipants(authorId, recipientId, false);
-            if (conversation == null)
+            Chat? chat = await TryGetChatByParticipants(authorId, recipientId, false);
+            if (chat == null)
             {
                 List<Guid> orderedIds = new[] { authorId, recipientId }.OrderBy(x => x).ToList();
-                conversation = await _repository.Create(new Conversation()
+                chat = await _repository.Create(new Chat()
                 {
                     ParticipantIds = orderedIds
                 });
@@ -57,7 +57,7 @@ namespace Meetings.Infrastructure.Services
             var result = await _messageRepository.Create(new Message()
             {
                 AuthorId = authorId,
-                ConversationId = conversation.Id,
+                ChatId = chat.Id,
                 Text = message
             });
 
@@ -81,14 +81,14 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<MessageDTO>(message);
         }
 
-        private async Task<Conversation> TryGetConversationByParticipants(Guid participant1Id, Guid participant2Id, bool includeMessages)
+        private async Task<Chat> TryGetChatByParticipants(Guid participant1Id, Guid participant2Id, bool includeMessages)
         {
             List<Guid> orderedIds = new[] { participant1Id, participant2Id }.OrderBy(x => x).ToList();
-            Conversation? conversation = await _repository.Data
+            Chat? chat = await _repository.Data
                 .If(includeMessages, q => q.Include(x => x.Messages.OrderBy(x => x.CreatedAt)).ThenInclude(x => x.Reactions))
                 .FirstOrDefaultAsync(x => x.ParticipantIds == orderedIds);
 
-            return conversation;
+            return chat;
         }
     }
 }

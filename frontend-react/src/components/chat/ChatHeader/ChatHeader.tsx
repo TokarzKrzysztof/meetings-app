@@ -3,11 +3,11 @@ import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { User } from 'src/models/user';
 import { AppBar, Avatar, Button, Icon, Stack, Toolbar, Typography } from 'src/ui-components';
 
-export type ConversationHeaderProps = {
+export type ChatHeaderProps = {
   user: User;
 };
 
-export const ConversationHeader = ({ user }: ConversationHeaderProps) => {
+export const ChatHeader = ({ user }: ChatHeaderProps) => {
   const [searchParams] = useSearchParams();
 
   return (

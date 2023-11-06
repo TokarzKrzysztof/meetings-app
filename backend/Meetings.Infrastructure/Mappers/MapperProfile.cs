@@ -21,8 +21,8 @@ namespace Meetings.Infrastructure.Mappers
             CreateMap<Category, CategoryDTO>();
             CreateMap<CategoryDTO, Category>();
             
-            CreateMap<Conversation, ConversationDTO>();
-            CreateMap<ConversationDTO, Conversation>();
+            CreateMap<Chat, ChatDTO>();
+            CreateMap<ChatDTO, Chat>();
             
             CreateMap<Message, MessageDTO>();
             CreateMap<MessageDTO, Message>();    

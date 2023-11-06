@@ -61,18 +61,18 @@ export const router = createBrowserRouter([
         loader: () => null,
       },
       {
-        path: AppRoutes.Conversation,
+        path: AppRoutes.Chat,
         lazy: async () => {
-          const { Conversation } = await import('./pages/Conversation/Conversation');
-          return { Component: Conversation };
+          const { Chat } = await import('./pages/Chat/Chat');
+          return { Component: Chat };
         },
         loader: protectedLoader,
       },
       {
-        path: AppRoutes.MyConversations,
+        path: AppRoutes.MyChats,
         lazy: async () => {
-          const { MyConversations } = await import('./pages/MyConversations/MyConversations');
-          return { Component: MyConversations };
+          const { MyChats } = await import('./pages/MyChats/MyChats');
+          return { Component: MyChats };
         },
         loader: protectedLoader,
       },

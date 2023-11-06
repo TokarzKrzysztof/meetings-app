@@ -18,7 +18,7 @@ namespace Meetings.Database
         public DbSet<User> Users { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<TempData> TempDatas { get; set; }
-        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Chat> Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageReaction> MessageReactions { get; set; }
 
@@ -26,7 +26,7 @@ namespace Meetings.Database
         {
             base.OnModelCreating(builder);
             builder.Entity<Category>().HasData(CategoriesGenerator.AllCategories);
-            builder.Entity<Conversation>().Property(x => x.ParticipantIds)
+            builder.Entity<Chat>().Property(x => x.ParticipantIds)
                 .HasConversion(value => string.Join(",", value), dbValue => dbValue.Split(",", StringSplitOptions.None).Select(x => new Guid(x)).ToList());
             builder.Entity<MessageReaction>().HasOne(x => x.Author).WithMany().OnDelete(DeleteBehavior.ClientCascade);
         }

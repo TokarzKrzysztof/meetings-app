@@ -1,11 +1,11 @@
 import { styled } from '@mui/material';
 import { Emoji } from 'emoji-picker-react';
 import { useRef, useState } from 'react';
+import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useLongPress } from 'src/hooks/useLongPress';
-import { Message } from 'src/models/conversation/message';
+import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';
-import { ConversationMessageReactionPicker } from 'src/pages/Conversation/ConversationMessage/ConversationMessageReactionPicker/ConversationMessageReactionPicker';
 import { Box, Chip, Popover, Stack } from 'src/ui-components';
 
 const StyledReactionsWrapper = styled(Stack)(({ theme }) => ({
@@ -19,17 +19,17 @@ const StyledReactionsWrapper = styled(Stack)(({ theme }) => ({
   transform: 'translateY(50%)',
 }));
 
-export type ConversationMessageProps = {
+export type ChatMessageProps = {
   message: Message;
   recipient: User;
   currentUser: User;
 };
 
-export const ConversationMessage = ({
+export const ChatMessage = ({
   message,
   recipient,
   currentUser,
-}: ConversationMessageProps) => {
+}: ChatMessageProps) => {
   const { addMessageReaction } = useSignalRActions();
   const [openReactions, setOpenReactions] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -105,7 +105,7 @@ export const ConversationMessage = ({
           },
         }}
       >
-        <ConversationMessageReactionPicker
+        <ChatMessageReactionPicker
           message={message}
           currentUser={currentUser}
           onSelectReaction={handleSelectReaction}
