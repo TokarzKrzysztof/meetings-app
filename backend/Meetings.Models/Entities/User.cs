@@ -28,7 +28,7 @@ namespace Meetings.Models.Entities
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
         public bool IsActive { get; set; }
-        public ICollection<Announcement> Announcements { get; set; }
+        public virtual ICollection<Announcement> Announcements { get; set; }
 
         public User()
         {

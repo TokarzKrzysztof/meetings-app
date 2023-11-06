@@ -17,7 +17,7 @@ namespace Meetings.Models.Entities
         public Guid AuthorId { get; set; }
         public virtual User Author { get; set; }
         public string Text { get; set; }
-        public ICollection<MessageReaction> Reactions { get; set; }
+        public virtual ICollection<MessageReaction> Reactions { get; set; }
     }
 
     public class MessageDTO
