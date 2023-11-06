@@ -13,7 +13,7 @@ import { Avatar, Container, Stack, Typography } from 'src/ui-components';
 import { replaceItem } from 'src/utils/array-utils';
 import { calculateAge } from 'src/utils/user-utils';
 
-export const Chat = () => {
+export const PrivateChat = () => {
   const scrollableRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [searchParams] = useSearchParams();
@@ -96,4 +96,4 @@ export const Chat = () => {
   );
 };
 
-Chat.displayName = 'Chat';
+PrivateChat.displayName = 'PrivateChat';

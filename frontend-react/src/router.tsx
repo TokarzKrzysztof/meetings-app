@@ -61,10 +61,10 @@ export const router = createBrowserRouter([
         loader: () => null,
       },
       {
-        path: AppRoutes.Chat,
+        path: AppRoutes.PrivateChat,
         lazy: async () => {
-          const { Chat } = await import('./pages/Chat/Chat');
-          return { Component: Chat };
+          const { PrivateChat } = await import('./pages/PrivateChat/PrivateChat');
+          return { Component: PrivateChat };
         },
         loader: protectedLoader,
       },
