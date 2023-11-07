@@ -21,15 +21,10 @@ const StyledReactionsWrapper = styled(Stack)(({ theme }) => ({
 
 export type ChatMessageProps = {
   message: Message;
-  recipient: User;
   currentUser: User;
 };
 
-export const ChatMessage = ({
-  message,
-  recipient,
-  currentUser,
-}: ChatMessageProps) => {
+export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
   const { addMessageReaction } = useSignalRActions();
   const [openReactions, setOpenReactions] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -39,7 +34,6 @@ export const ChatMessage = ({
     addMessageReaction({
       messageId: message.id,
       reactionUnified: unified,
-      recipientId: recipient.id,
     });
     setOpenReactions(false);
   };

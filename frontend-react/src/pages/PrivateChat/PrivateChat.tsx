@@ -22,7 +22,7 @@ export const PrivateChat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const { user, userFetching } = useGetUser(params.userId);
 
-  useGetPrivateChat(params.userId, {
+  const { privateChat } = useGetPrivateChat(params.userId, {
     onSuccess: (chat) => {
       if (chat !== null) {
         setMessages(chat.messages);
@@ -83,12 +83,12 @@ export const PrivateChat = () => {
         </Stack>
         <Stack direction={'column'} py={1} gap={1}>
           {messages.map((x) => (
-            <ChatMessage key={x.id} message={x} recipient={user} currentUser={currentUser} />
+            <ChatMessage key={x.id} message={x} currentUser={currentUser} />
           ))}
         </Stack>
         <ChatTypingIndicator />
       </Container>
-      <ChatNewMessage onFocus={scrollToBottom} recipient={user} />
+      <ChatNewMessage onFocus={scrollToBottom} recipient={user} chat={privateChat} />
     </Stack>
   );
 };

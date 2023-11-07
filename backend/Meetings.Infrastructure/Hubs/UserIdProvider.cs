@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
-namespace Meetings.Api.Hubs
+namespace Meetings.Infrastructure.Hubs
 {
     public class UserIdProvider : IUserIdProvider
     {

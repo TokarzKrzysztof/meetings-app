@@ -10,6 +10,8 @@ using AutoMapper;
 using Meetings.Infrastructure.Mappers;
 using FluentValidation;
 using Meetings.Infrastructure.Validators;
+using Meetings.Infrastructure.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Meetings.Infrastructure.StartupExtensions
 {
@@ -25,6 +27,9 @@ namespace Meetings.Infrastructure.StartupExtensions
 
             builder.Services.AddScoped<UserValidator>();
             builder.Services.AddScoped<AnnouncementValidator>();
+
+            builder.Services.AddSignalR();
+            builder.Services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
             builder.Services.AddAutoMapper(typeof(MapperProfile));
         }

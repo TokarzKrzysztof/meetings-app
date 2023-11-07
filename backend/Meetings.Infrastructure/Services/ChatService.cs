@@ -2,11 +2,13 @@
 using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
 using Meetings.EmailSender;
+using Meetings.Infrastructure.Hubs;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Utils.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using System;
@@ -26,7 +28,8 @@ namespace Meetings.Infrastructure.Services
         private readonly IRepository<User> _userRepository;
         private readonly IMapper _mapper;
         private readonly IClaimsReader _claimsReader;
-        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IRepository<MessageReaction> messageReactionRepository, IRepository<User> userRepository)
+        private readonly IHubContext<ChatHub> _chatHubContext;
+        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IRepository<MessageReaction> messageReactionRepository, IRepository<User> userRepository, IHubContext<ChatHub> chatHubContext)
         {
             _repository = repository;
             _mapper = mapper;
@@ -34,6 +37,7 @@ namespace Meetings.Infrastructure.Services
             _messageRepository = messageRepository;
             _messageReactionRepository = messageReactionRepository;
             _userRepository = userRepository;
+            _chatHubContext = chatHubContext;
         }
 
         public async Task<ChatDTO?> GetPrivateChat(Guid participantId)
@@ -47,7 +51,7 @@ namespace Meetings.Infrastructure.Services
             return chat != null ? _mapper.Map<ChatDTO>(chat) : null;
         }
 
-        public async Task<MessageDTO> SendPrivateMessage(Guid authorId, string message, Guid recipientId)
+        public async Task<MessageDTO> SendPrivateMessage(Guid authorId, string message, Guid recipientId, string connectionId)
         {
             Guid chatId = await GetPrivateChatQuery(authorId, recipientId).Select(x => x.Id).SingleOrDefaultAsync();
             if (chatId == Guid.Empty)
@@ -63,6 +67,8 @@ namespace Meetings.Infrastructure.Services
                     Participants = users
                 });
                 chatId = createdChat.Id;
+
+                await _chatHubContext.Groups.AddToGroupAsync(connectionId, chatId.ToString());
             }
 
             var result = await _messageRepository.Create(new Message()

@@ -1,5 +1,4 @@
-﻿using Meetings.Models.Entities.ManyToMany;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;

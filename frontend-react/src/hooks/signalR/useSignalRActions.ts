@@ -7,10 +7,10 @@ export const useSignalRActions = () => {
   const sendPrivateMessage = (data: { recipientId: string; message: string }) => {
     return connection.invoke('sendPrivateMessage', data);
   };
-  const startTyping = (data: { recipientId: string }) => {
+  const startTyping = (data: { chatId: string | undefined }) => {
     return connection.invoke('startTyping', data);
   };
-  const addMessageReaction = (data: { recipientId: string; messageId: string; reactionUnified: string }) => {
+  const addMessageReaction = (data: { messageId: string; reactionUnified: string }) => {
     return connection.invoke('addMessageReaction', data);
   };
 

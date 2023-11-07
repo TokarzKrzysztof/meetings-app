@@ -1,23 +1,11 @@
-using Meetings.Api.Hubs;
 using Meetings.Authentication.StartupExtensions;
 using Meetings.Database.StartupExtensions;
-using Meetings.EmailSender;
 using Meetings.EmailTemplates.StartupExtensions;
-using Meetings.EmailTemplates.Views;
 using Meetings.ErrorHandlingMiddleware.StartupExtensions;
+using Meetings.Infrastructure.Hubs;
 using Meetings.Infrastructure.StartupExtensions;
-using Meetings.Utils;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.FileProviders;
-using RazorHtmlEmails.RazorClassLib.Services;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,8 +30,6 @@ builder.Services.AddCors(policyBuilder =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddSignalR();
-builder.Services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
 // custom builder extensions
 builder.AddCustomAuthentication();
@@ -71,7 +57,7 @@ app.UseAuthorization();
 app.AddErrorHandlingMiddleware();
 
 app.MapControllers();
-app.MapHub<AppHub>("/api/hub");
+app.MapHub<ChatHub>("/api/chat-hub");
 
 using (var scope = app.Services.CreateScope())
 {

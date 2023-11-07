@@ -4,15 +4,17 @@ import { useMemo, useRef, useState } from 'react';
 import { isTypingAtom } from 'src/components/chat/ChatTypingIndicator/ChatTypingIndicator';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
+import { Chat } from 'src/models/chat/chat';
 import { User } from 'src/models/user';
 import { Icon, IconButton, Stack, TextArea } from 'src/ui-components';
 
 export type ChatNewMessageProps = {
   onFocus: () => void;
   recipient: User;
+  chat: Chat | null | undefined;
 };
 
-export const ChatNewMessage = ({ onFocus, recipient }: ChatNewMessageProps) => {
+export const ChatNewMessage = ({ onFocus, recipient, chat }: ChatNewMessageProps) => {
   const { sendPrivateMessage, startTyping } = useSignalRActions();
   const setIsTyping = useSetAtom(isTypingAtom);
   const [message, setMessage] = useState<string | null>(null);
@@ -35,7 +37,15 @@ export const ChatNewMessage = ({ onFocus, recipient }: ChatNewMessageProps) => {
   });
 
   const onKeyUpThrottle = useMemo(() => {
-    return _.throttle(() => startTyping({ recipientId: recipient.id }), 2000, { trailing: false });
+    return _.throttle(
+      () => {
+        if (chat) {
+          startTyping({ chatId: chat.id });
+        }
+      },
+      2000,
+      { trailing: false }
+    );
   }, []);
 
   return (
