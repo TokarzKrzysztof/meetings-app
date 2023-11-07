@@ -2,10 +2,11 @@
 using Meetings.Models.Entities;
 using Meetings.Utils.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Meetings.Database.Repositories
 {
-    public interface IRepository<TEntity>
+    public interface IRepository<TEntity> where TEntity : class, IEntityBase
     {
         IQueryable<TEntity> Data { get; }
 
@@ -17,6 +18,7 @@ namespace Meetings.Database.Repositories
         Task RemovePermanently(Guid id);
         Task RemovePermanently(TEntity entity);
         Task Update(TEntity entity);
+        TEntity Attach(TEntity entityData);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntityBase
@@ -34,6 +36,11 @@ namespace Meetings.Database.Repositories
             {
                 return _db.Set<TEntity>().Where(x => !x.IsDelete);
             }
+        }
+
+        public TEntity Attach(TEntity entityData)
+        {
+           return _db.Attach(entityData).Entity;
         }
 
         public async Task<TEntity> GetById(Guid id, Func<IQueryable<TEntity>, IQueryable<TEntity>> transform = null)

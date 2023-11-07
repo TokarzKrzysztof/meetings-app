@@ -4,6 +4,7 @@ using Meetings.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meetings.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231107000059_chat-participant-many-to-many")]
+    partial class chatparticipantmanytomany
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,7 +36,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasIndex("ParticipantsId");
 
-                    b.ToTable("ChatUser", (string)null);
+                    b.ToTable("ChatUser");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.Announcement", b =>
@@ -71,7 +73,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Announcements", (string)null);
+                    b.ToTable("Announcements");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.Category", b =>
@@ -95,7 +97,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -213,7 +215,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Chats", (string)null);
+                    b.ToTable("Chats");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.Message", b =>
@@ -247,7 +249,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasIndex("ChatId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.MessageReaction", b =>
@@ -281,7 +283,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasIndex("MessageId");
 
-                    b.ToTable("MessageReactions", (string)null);
+                    b.ToTable("MessageReactions");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.TempData", b =>
@@ -305,7 +307,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TempDatas", (string)null);
+                    b.ToTable("TempDatas");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.User", b =>
@@ -350,7 +352,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ChatUser", b =>

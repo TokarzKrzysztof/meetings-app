@@ -17,9 +17,9 @@ namespace Meetings.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetChat([FromQuery] Guid participantId)
+        public async Task<IActionResult> GetPrivateChat([FromQuery] Guid participantId)
         {
-            ChatDTO? chat = await _chatService.GetChat(participantId);
+            ChatDTO? chat = await _chatService.GetPrivateChat(participantId);
             return Ok(chat);
         } 
     }

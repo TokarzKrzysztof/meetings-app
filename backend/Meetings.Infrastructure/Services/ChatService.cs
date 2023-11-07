@@ -23,41 +23,52 @@ namespace Meetings.Infrastructure.Services
         private readonly IRepository<Chat> _repository;
         private readonly IRepository<Message> _messageRepository;
         private readonly IRepository<MessageReaction> _messageReactionRepository;
+        private readonly IRepository<User> _userRepository;
         private readonly IMapper _mapper;
         private readonly IClaimsReader _claimsReader;
-        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IRepository<MessageReaction> messageReactionRepository)
+        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IRepository<MessageReaction> messageReactionRepository, IRepository<User> userRepository)
         {
             _repository = repository;
             _mapper = mapper;
             _claimsReader = claimsReader;
             _messageRepository = messageRepository;
             _messageReactionRepository = messageReactionRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<ChatDTO?> GetChat(Guid participantId)
+        public async Task<ChatDTO?> GetPrivateChat(Guid participantId)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            Chat? chat = await TryGetChatByParticipants(userId, participantId, true);
+
+            Chat? chat = await GetPrivateChatQuery(userId, participantId)
+                .Include(x => x.Messages.OrderBy(x => x.CreatedAt)).ThenInclude(x => x.Reactions)
+                .SingleOrDefaultAsync();
 
             return chat != null ? _mapper.Map<ChatDTO>(chat) : null;
         }
 
-        public async Task<MessageDTO> SendMessage(Guid authorId, string message, Guid recipientId)
+        public async Task<MessageDTO> SendPrivateMessage(Guid authorId, string message, Guid recipientId)
         {
-            Chat? chat = await TryGetChatByParticipants(authorId, recipientId, false);
-            if (chat == null)
+            Guid chatId = await GetPrivateChatQuery(authorId, recipientId).Select(x => x.Id).SingleOrDefaultAsync();
+            if (chatId == Guid.Empty)
             {
-                List<Guid> orderedIds = new[] { authorId, recipientId }.OrderBy(x => x).ToList();
-                chat = await _repository.Create(new Chat()
+                List<User> users = new List<User>()
                 {
-                    ParticipantIds = orderedIds
+                    _userRepository.Attach(new User() { Id = authorId }),
+                    _userRepository.Attach(new User() { Id = recipientId })
+                };
+
+                var createdChat = await _repository.Create(new Chat()
+                {
+                    Participants = users
                 });
+                chatId = createdChat.Id;
             }
 
             var result = await _messageRepository.Create(new Message()
             {
                 AuthorId = authorId,
-                ChatId = chat.Id,
+                ChatId = chatId,
                 Text = message
             });
 
@@ -81,14 +92,10 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<MessageDTO>(message);
         }
 
-        private async Task<Chat> TryGetChatByParticipants(Guid participant1Id, Guid participant2Id, bool includeMessages)
+        private IQueryable<Chat> GetPrivateChatQuery(Guid participant1Id, Guid participant2Id)
         {
-            List<Guid> orderedIds = new[] { participant1Id, participant2Id }.OrderBy(x => x).ToList();
-            Chat? chat = await _repository.Data
-                .If(includeMessages, q => q.Include(x => x.Messages.OrderBy(x => x.CreatedAt)).ThenInclude(x => x.Reactions))
-                .FirstOrDefaultAsync(x => x.ParticipantIds == orderedIds);
-
-            return chat;
+            return _repository.Data
+                .Where(x => x.Participants.Select(x => x.Id).Contains(participant1Id) && x.Participants.Select(x => x.Id).Contains(participant2Id));
         }
     }
 }

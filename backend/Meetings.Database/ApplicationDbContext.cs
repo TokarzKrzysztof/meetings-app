@@ -26,8 +26,6 @@ namespace Meetings.Database
         {
             base.OnModelCreating(builder);
             builder.Entity<Category>().HasData(CategoriesGenerator.AllCategories);
-            builder.Entity<Chat>().Property(x => x.ParticipantIds)
-                .HasConversion(value => string.Join(",", value), dbValue => dbValue.Split(",", StringSplitOptions.None).Select(x => new Guid(x)).ToList());
             builder.Entity<MessageReaction>().HasOne(x => x.Author).WithMany().OnDelete(DeleteBehavior.ClientCascade);
         }
     }

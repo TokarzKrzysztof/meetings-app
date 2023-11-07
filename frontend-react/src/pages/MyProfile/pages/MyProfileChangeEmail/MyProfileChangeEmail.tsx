@@ -5,8 +5,9 @@ import { Header } from 'src/components/Header/Header';
 import { MyProfileActionButtons } from 'src/components/my-profile/MyProfileActionButtons/MyProfileActionButtons';
 import { MyProfileForm } from 'src/components/my-profile/MyProfileForm/MyProfileForm';
 import { MyProfileTitle } from 'src/components/my-profile/MyProfileTitle/MyProfileTitle';
+import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { MyProfileChangeEmailConfirmationDialog } from 'src/pages/MyProfile/pages/MyProfileChangeEmail/MyProfileChangeEmailConfirmationDialog/MyProfileChangeEmailConfirmationDialog';
-import { useGetCurrentUser, useSendChangeEmailAddressEmail } from 'src/queries/user-queries';
+import { useSendChangeEmailAddressEmail } from 'src/queries/user-queries';
 import { Typography } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
@@ -17,9 +18,9 @@ type FormData = {
 };
 
 export const MyProfileChangeEmail = () => {
+  const currentUser = useLoggedInUser();
   const form = useForm<FormData>();
   const { register, handleSubmit, setError, getValues } = form;
-  const { currentUser } = useGetCurrentUser();
   const [showDialog, setShowDialog] = useState(false);
   const {
     sendChangeEmailAddressEmail,
@@ -49,7 +50,7 @@ export const MyProfileChangeEmail = () => {
       <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
         <MyProfileTitle title='Zmiana adresu email'></MyProfileTitle>
         <Typography mb={2}>
-          Twój obecny adres email: <b>{currentUser?.email}</b>
+          Twój obecny adres email: <b>{currentUser.email}</b>
         </Typography>
         <FormField
           form={form}

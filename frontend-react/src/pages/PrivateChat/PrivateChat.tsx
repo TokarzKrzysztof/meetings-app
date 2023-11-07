@@ -4,11 +4,12 @@ import { ChatMessage } from 'src/components/chat/ChatMessage/ChatMessage';
 import { ChatNewMessage } from 'src/components/chat/ChatNewMessage/ChatNewMessage';
 import { ChatTypingIndicator } from 'src/components/chat/ChatTypingIndicator/ChatTypingIndicator';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
+import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { Message } from 'src/models/chat/message';
-import { useGetChat } from 'src/queries/chat-queries';
-import { useGetCurrentUser, useGetUser } from 'src/queries/user-queries';
+import { useGetPrivateChat } from 'src/queries/chat-queries';
+import { useGetUser } from 'src/queries/user-queries';
 import { Avatar, Container, Stack, Typography } from 'src/ui-components';
 import { replaceItem } from 'src/utils/array-utils';
 import { PrivateChatParams } from 'src/utils/enums/app-routes';
@@ -17,11 +18,11 @@ import { calculateAge } from 'src/utils/user-utils';
 export const PrivateChat = () => {
   const [params] = useRouteParams<PrivateChatParams>();
   const scrollableRef = useRef<HTMLDivElement>(null);
+  const currentUser = useLoggedInUser();
   const [messages, setMessages] = useState<Message[]>([]);
-  const { currentUser } = useGetCurrentUser();
   const { user, userFetching } = useGetUser(params.userId);
-  const { chat, chatFetching } = useGetChat(user?.id as string, {
-    enabled: !userFetching,
+
+  useGetPrivateChat(params.userId, {
     onSuccess: (chat) => {
       if (chat !== null) {
         setMessages(chat.messages);
@@ -34,7 +35,7 @@ export const PrivateChat = () => {
 
   useSignalREffect('onGetNewMessage', (msg) => {
     setMessages((prev) => [...prev, msg]);
-    if (msg.authorId === currentUser?.id) {
+    if (msg.authorId === currentUser.id) {
       scrollToBottom();
     }
   });
@@ -55,7 +56,7 @@ export const PrivateChat = () => {
 
   const age = useMemo(() => (user ? calculateAge(user.birthDate) : null), [user]);
 
-  if (!user || !currentUser) return null;
+  if (!user) return null;
   return (
     <Stack height={'100vh'} direction={'column'}>
       <ChatHeader user={user} returnUrl={params.returnUrl} />

@@ -23,7 +23,7 @@ namespace Meetings.Api.Hubs
         [Authorize]
         public async Task SendPrivateMessage(SendPrivateMessageData data)
         {
-            var result = await _chatService.SendMessage(new Guid(Context.UserIdentifier), data.Message, data.RecipientId);
+            var result = await _chatService.SendPrivateMessage(new Guid(Context.UserIdentifier), data.Message, data.RecipientId);
             await Clients.Users(Context.UserIdentifier, data.RecipientId.ToString()).SendAsync("onGetNewMessage", result);
         }
 

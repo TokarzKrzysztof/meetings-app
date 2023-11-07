@@ -10,20 +10,20 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Chat`;
 
-export const useGetChat = (
+export const useGetPrivateChat = (
   participantId: string,
   options?: UseQueryOptions<Chat | null, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
-    queryKey: ['GetChat', participantId],
+    queryKey: ['GetPrivateChat', participantId],
     queryFn: () => {
       const params = { participantId };
-      return axios.get(`${baseUrl}/GetChat`, { params });
+      return axios.get(`${baseUrl}/GetPrivateChat`, { params });
     },
     ...options,
   });
 
-  return genericUseQueryMethods('chat', query);
+  return genericUseQueryMethods('privateChat', query);
 };
 
 export const useGetCurrentUserChats = (
