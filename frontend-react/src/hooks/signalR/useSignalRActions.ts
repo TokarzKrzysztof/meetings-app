@@ -7,7 +7,7 @@ export const useSignalRActions = () => {
   const sendPrivateMessage = (data: { recipientId: string; message: string }) => {
     return connection.invoke('sendPrivateMessage', data);
   };
-  const startTyping = (data: { chatId: string | undefined }) => {
+  const startTyping = (data: { chatId: string }) => {
     return connection.invoke('startTyping', data);
   };
   const setMessageReaction = (data: { messageId: string; reactionUnified: string }) => {
