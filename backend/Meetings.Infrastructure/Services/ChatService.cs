@@ -81,13 +81,20 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<MessageDTO>(result);
         }
 
-        public async Task<MessageDTO> AddMessageReaction(MessageReactionDTO data)
+        public async Task<MessageDTO> SetMessageReaction(MessageReactionDTO data)
         {
             Message message = await _messageRepository.Data.Where(x => x.Id == data.MessageId).Include(x => x.Reactions).SingleAsync();
             var authorReaction = message.Reactions.SingleOrDefault(x => x.AuthorId == data.AuthorId);
             if (authorReaction != null)
             {
-                authorReaction.Unified = data.Unified;
+                if (authorReaction.Unified == data.Unified)
+                {
+                    message.Reactions.Remove(authorReaction);
+                }
+                else
+                {
+                    authorReaction.Unified = data.Unified;
+                }
             }
             else
             {

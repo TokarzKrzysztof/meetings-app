@@ -12,7 +12,7 @@ namespace Meetings.Infrastructure.Hubs
 {
     public record SendPrivateMessageData(Guid RecipientId, string Message);
     public record StartTypingData(Guid ChatId);
-    public record AddMessageReactionData(Guid MessageId, string ReactionUnified);
+    public record SetMessageReactionData(Guid MessageId, string ReactionUnified);
 
     public class ChatHub : Hub
     {
@@ -49,9 +49,9 @@ namespace Meetings.Infrastructure.Hubs
         }
 
         [Authorize]
-        public async Task AddMessageReaction(AddMessageReactionData data)
+        public async Task SetMessageReaction(SetMessageReactionData data)
         {
-            MessageDTO message = await _chatService.AddMessageReaction(new MessageReactionDTO()
+            MessageDTO message = await _chatService.SetMessageReaction(new MessageReactionDTO()
             {
                 AuthorId = new Guid(Context.UserIdentifier),
                 MessageId = data.MessageId,

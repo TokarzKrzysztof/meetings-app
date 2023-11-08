@@ -25,13 +25,13 @@ export type ChatMessageProps = {
 };
 
 export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
-  const { addMessageReaction } = useSignalRActions();
+  const { setMessageReaction } = useSignalRActions();
   const [openReactions, setOpenReactions] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
   const longPressEvent = useLongPress(() => setOpenReactions(true));
 
   const handleSelectReaction = (unified: string) => {
-    addMessageReaction({
+    setMessageReaction({
       messageId: message.id,
       reactionUnified: unified,
     });

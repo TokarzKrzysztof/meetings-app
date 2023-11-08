@@ -10,9 +10,9 @@ export const useSignalRActions = () => {
   const startTyping = (data: { chatId: string | undefined }) => {
     return connection.invoke('startTyping', data);
   };
-  const addMessageReaction = (data: { messageId: string; reactionUnified: string }) => {
-    return connection.invoke('addMessageReaction', data);
+  const setMessageReaction = (data: { messageId: string; reactionUnified: string }) => {
+    return connection.invoke('setMessageReaction', data);
   };
 
-  return { sendPrivateMessage, startTyping, addMessageReaction };
+  return { sendPrivateMessage, startTyping, setMessageReaction };
 };
