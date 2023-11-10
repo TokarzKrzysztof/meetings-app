@@ -2,12 +2,12 @@ import { styled } from '@mui/material';
 import { Chip, Icon } from 'src/ui-components';
 import { shouldNotForwardPropsWithKeys } from 'src/utils/types/should-not-forward-props';
 
-type ReplyIconProps = { maxMovement: number };
+type ReplyIconProps = { dystans: number };
 export const StyledReplyIcon = styled(Icon, {
-  shouldForwardProp: shouldNotForwardPropsWithKeys<ReplyIconProps>(['maxMovement']),
-})<ReplyIconProps>(({ maxMovement }) => ({
+  shouldForwardProp: shouldNotForwardPropsWithKeys<ReplyIconProps>(['dystans']),
+})<ReplyIconProps>(({ dystans }) => ({
   position: 'absolute',
-  right: -maxMovement,
+  right: -dystans,
   top: '50%',
   transform: 'translateY(-50%)',
 }));

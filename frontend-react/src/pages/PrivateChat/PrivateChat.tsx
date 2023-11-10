@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react';
 import { ChatHeader } from 'src/components/chat/ChatHeader/ChatHeader';
 import { ChatMessage } from 'src/components/chat/ChatMessage/ChatMessage';
 import { ChatNewMessage } from 'src/components/chat/ChatNewMessage/ChatNewMessage';
+import { ChatReplyPreview } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
 import { ChatTypingIndicator } from 'src/components/chat/ChatTypingIndicator/ChatTypingIndicator';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
@@ -90,7 +91,8 @@ export const PrivateChat = () => {
         </Stack>
         <ChatTypingIndicator />
       </Container>
-      <ChatNewMessage onFocus={scrollToBottom} recipient={user} chat={privateChat} />
+      <ChatReplyPreview />
+      <ChatNewMessage onScrollToBottom={scrollToBottom} recipient={user} chat={privateChat} />
     </Stack>
   );
 };

@@ -82,7 +82,7 @@ export const ChatMessageReply = ({
   return cloneElement(children, {
     // ref: mergeRefs([elementRef, (children as any).ref]),
     style: {
-      transform: `translateX(${moveX}px)`,
+      transform: moveX !== 0 ? `translateX(${moveX}px)` : undefined,
       transition: isTouchStarted ? 'none' : undefined,
     },
     onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => {

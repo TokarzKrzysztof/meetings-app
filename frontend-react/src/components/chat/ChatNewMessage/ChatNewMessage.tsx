@@ -1,6 +1,7 @@
-import { useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import _ from 'lodash';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { replyMessageAtom } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
 import { isTypingAtom } from 'src/components/chat/ChatTypingIndicator/ChatTypingIndicator';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
@@ -9,21 +10,24 @@ import { User } from 'src/models/user';
 import { Icon, IconButton, Stack, TextArea } from 'src/ui-components';
 
 export type ChatNewMessageProps = {
-  onFocus: () => void;
+  onScrollToBottom: () => void;
   recipient: User;
   chat: Chat | null | undefined;
 };
 
-export const ChatNewMessage = ({ onFocus, recipient, chat }: ChatNewMessageProps) => {
+export const ChatNewMessage = ({ onScrollToBottom, recipient, chat }: ChatNewMessageProps) => {
   const { sendPrivateMessage, startTyping } = useSignalRActions();
   const setIsTyping = useSetAtom(isTypingAtom);
+  const [replyMessage, setReplyMessage] = useAtom(replyMessageAtom);
   const [message, setMessage] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const fieldRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSend = () => {
-    sendPrivateMessage({ message: message!, recipientId: recipient.id });
-    setMessage(null);
-  };
+  useEffect(() => {
+    if (replyMessage && fieldRef.current) {
+      fieldRef.current.focus();
+    }
+  }, [replyMessage]);
 
   useSignalREffect('onOtherUserTyping', (userId) => {
     if (userId === recipient.id) {
@@ -35,6 +39,12 @@ export const ChatNewMessage = ({ onFocus, recipient, chat }: ChatNewMessageProps
       }, 3000);
     }
   });
+
+  const handleSend = () => {
+    sendPrivateMessage({ message: message!, recipientId: recipient.id });
+    setMessage(null);
+    setReplyMessage(null);
+  };
 
   const onKeyUpThrottle = useMemo(() => {
     return _.throttle(
@@ -51,9 +61,10 @@ export const ChatNewMessage = ({ onFocus, recipient, chat }: ChatNewMessageProps
   return (
     <Stack alignItems={'flex-start'} gap={1} p={1}>
       <TextArea
+        ref={fieldRef}
         size='small'
         onChange={setMessage}
-        onFocus={onFocus}
+        onFocus={() => !replyMessage && onScrollToBottom()}
         onKeyUp={onKeyUpThrottle}
         value={message ?? ''}
         sx={{ flexGrow: 1 }}

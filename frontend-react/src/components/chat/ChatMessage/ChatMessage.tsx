@@ -1,3 +1,4 @@
+import { useSetAtom } from 'jotai';
 import { useRef, useState } from 'react';
 import {
   StyledMessageChip,
@@ -6,6 +7,7 @@ import {
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/components/chat/ChatMessage/ChatMessageReactions/ChatMessageReactions';
 import { ChatMessageReply } from 'src/components/chat/ChatMessage/ChatMessageReply/ChatMessageReply';
+import { replyMessageAtom } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useLongPress } from 'src/hooks/useLongPress';
 import { Message } from 'src/models/chat/message';
@@ -19,6 +21,7 @@ export type ChatMessageProps = {
 
 export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
   const { setMessageReaction } = useSignalRActions();
+  const setReplyMessage = useSetAtom(replyMessageAtom);
   const [openReactions, setOpenReactions] = useState(false);
   const [moveX, setMoveX] = useState(0);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -40,7 +43,7 @@ export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
         maxMovement={maxMessageMovement}
         moveX={moveX}
         setMoveX={setMoveX}
-        onReply={() => console.log(message.id)}
+        onReply={() => setReplyMessage(message)}
       >
         <Box
           {...longPressEvent}
@@ -62,7 +65,7 @@ export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
           />
           <ChatMessageReactions reactions={message.reactions} />
           {moveX !== 0 && (
-            <StyledReplyIcon name='reply' color='primary' maxMovement={maxMessageMovement} />
+            <StyledReplyIcon name='reply' color='primary' dystans={maxMessageMovement} />
           )}
         </Box>
       </ChatMessageReply>
