@@ -69,6 +69,8 @@ export const PrivateChat = () => {
           display: 'flex',
           flexDirection: 'column',
           mx: 'auto',
+          // overflow hidden for message reply icon
+          overflowX: 'hidden',
         }}
       >
         <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
