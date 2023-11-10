@@ -1,5 +1,8 @@
-import { styled } from '@mui/material';
 import { useRef, useState } from 'react';
+import {
+  StyledMessageChip,
+  StyledReplyIcon,
+} from 'src/components/chat/ChatMessage/ChatMessage.styled';
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/components/chat/ChatMessage/ChatMessageReactions/ChatMessageReactions';
 import { ChatMessageReply } from 'src/components/chat/ChatMessage/ChatMessageReply/ChatMessageReply';
@@ -7,19 +10,7 @@ import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useLongPress } from 'src/hooks/useLongPress';
 import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';
-import { Box, Chip } from 'src/ui-components';
-
-const StyledMessageChip = styled(Chip)(({ theme }) => ({
-  height: 'auto',
-  display: 'block',
-  padding: theme.spacing(1),
-  '& .MuiChip-label': {
-    padding: 0,
-    display: 'block',
-    whiteSpace: 'pre-wrap',
-    wordBreak: 'break-word',
-  },
-}));
+import { Box } from 'src/ui-components';
 
 export type ChatMessageProps = {
   message: Message;
@@ -29,6 +20,7 @@ export type ChatMessageProps = {
 export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
   const { setMessageReaction } = useSignalRActions();
   const [openReactions, setOpenReactions] = useState(false);
+  const [moveX, setMoveX] = useState(0);
   const anchorRef = useRef<HTMLDivElement>(null);
   const longPressEvent = useLongPress(() => setOpenReactions(true));
 
@@ -41,9 +33,15 @@ export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
   };
 
   const isAuthorCurrentUser = message.authorId === currentUser.id;
+  const maxMessageMovement = 50;
   return (
     <>
-      <ChatMessageReply onReply={() => console.log(message.id)}>
+      <ChatMessageReply
+        maxMovement={maxMessageMovement}
+        moveX={moveX}
+        setMoveX={setMoveX}
+        onReply={() => console.log(message.id)}
+      >
         <Box
           {...longPressEvent}
           ref={anchorRef}
@@ -63,6 +61,9 @@ export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
             label={message.text}
           />
           <ChatMessageReactions reactions={message.reactions} />
+          {moveX !== 0 && (
+            <StyledReplyIcon name='reply' color='primary' maxMovement={maxMessageMovement} />
+          )}
         </Box>
       </ChatMessageReply>
 

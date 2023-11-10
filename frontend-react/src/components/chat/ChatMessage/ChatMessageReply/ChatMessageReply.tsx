@@ -1,21 +1,20 @@
-import { styled } from '@mui/material';
-import { HTMLAttributes, ReactElement, cloneElement, useEffect, useRef, useState } from 'react';
-import { Icon } from 'src/ui-components';
-import { shouldNotForwardPropsWithKeys } from 'src/utils/types/should-not-forward-props';
-
-type ReplyIconProps = { maxMovement: number };
-const StyledReplyIcon = styled(Icon, {
-  shouldForwardProp: shouldNotForwardPropsWithKeys<ReplyIconProps>(['maxMovement']),
-})<ReplyIconProps>(({ maxMovement }) => ({
-  position: 'absolute',
-  right: -maxMovement,
-  top: '50%',
-  transform: 'translateY(-50%)',
-}));
+import {
+  Dispatch,
+  HTMLAttributes,
+  ReactElement,
+  SetStateAction,
+  cloneElement,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 export type ChatMessageReplyProps = {
   children: ReactElement<React.DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>>;
   onReply: () => void;
+  maxMovement: number;
+  moveX: number;
+  setMoveX: Dispatch<SetStateAction<number>>;
   direction?: 'left' | 'right';
   returnOnDragEnd?: boolean;
 };
@@ -23,23 +22,25 @@ export type ChatMessageReplyProps = {
 export const ChatMessageReply = ({
   children,
   onReply,
+  maxMovement,
+  moveX,
+  setMoveX,
   direction = 'left',
   returnOnDragEnd = true,
 }: ChatMessageReplyProps) => {
-  const maxMovement = 50;
   const lastXRef = useRef<number | null>(null);
-  const [transformX, setTransformX] = useState(0);
+
   const [isTouchStarted, setIsTouchStarted] = useState(false);
 
   useEffect(() => {
     const handler = (e: TouchEvent) => {
       setIsTouchStarted(false);
-      if (Math.abs(transformX) === maxMovement) {
+      if (Math.abs(moveX) === maxMovement) {
         onReply();
       }
       if (returnOnDragEnd) {
         lastXRef.current = null;
-        setTransformX(0);
+        setMoveX(0);
       }
     };
 
@@ -47,7 +48,7 @@ export const ChatMessageReply = ({
     return () => {
       window.removeEventListener('touchend', handler);
     };
-  }, [transformX, onReply]);
+  }, [moveX, onReply]);
 
   useEffect(() => {
     const handler = (e: TouchEvent) => {
@@ -57,7 +58,7 @@ export const ChatMessageReply = ({
       const movementX = e.touches[0].clientX - lastXRef.current;
       lastXRef.current = e.touches[0].clientX;
 
-      setTransformX((prev) => {
+      setMoveX((prev) => {
         const newTransform = prev + movementX;
 
         if (direction === 'left') {
@@ -78,28 +79,15 @@ export const ChatMessageReply = ({
     };
   }, [isTouchStarted]);
 
-  return (
-    <>
-      {cloneElement(
-        children,
-        {
-          // ref: mergeRefs([elementRef, (children as any).ref]),
-          style: {
-            transform: `translateX(${transformX}px)`,
-            transition: isTouchStarted ? 'none' : undefined,
-          },
-          onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => {
-            setIsTouchStarted(true);
-            children.props.onTouchStart && children.props.onTouchStart(e);
-          },
-        },
-        <>
-          {children.props.children}
-          {transformX !== 0 && (
-            <StyledReplyIcon name='reply' color='primary' maxMovement={maxMovement} />
-          )}
-        </>
-      )}
-    </>
-  );
+  return cloneElement(children, {
+    // ref: mergeRefs([elementRef, (children as any).ref]),
+    style: {
+      transform: `translateX(${moveX}px)`,
+      transition: isTouchStarted ? 'none' : undefined,
+    },
+    onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => {
+      setIsTouchStarted(true);
+      children.props.onTouchStart && children.props.onTouchStart(e);
+    },
+  });
 };
