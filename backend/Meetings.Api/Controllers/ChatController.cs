@@ -17,10 +17,18 @@ namespace Meetings.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetPrivateChat([FromQuery] Guid participantId)
+        public async Task<IActionResult> GetPrivateChat([FromQuery] Guid participantId, [FromQuery] int messagesAmount)
         {
-            ChatDTO? chat = await _chatService.GetPrivateChat(participantId);
+            ChatDTO? chat = await _chatService.GetPrivateChat(participantId, messagesAmount);
             return Ok(chat);
-        } 
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> LoadMoreChatMessages([FromQuery] Guid chatId, [FromQuery] int skip, [FromQuery] int take)
+        {
+            List<MessageDTO> messages = await _chatService.LoadMoreChatMessages(chatId, skip, take);
+            return Ok(messages);
+        }
     }
 }

@@ -12,12 +12,13 @@ const baseUrl = `${apiUrl}/Chat`;
 
 export const useGetPrivateChat = (
   participantId: string,
+  messagesAmount: number,
   options?: UseQueryOptions<Chat | null, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
-    queryKey: ['GetPrivateChat', participantId],
+    queryKey: ['GetPrivateChat', participantId, messagesAmount],
     queryFn: () => {
-      const params = { participantId };
+      const params = { participantId, messagesAmount };
       return axios.get(`${baseUrl}/GetPrivateChat`, { params });
     },
     ...options,

@@ -28,7 +28,7 @@ export const PrivateChat = () => {
     scrollableRef.current!.scrollTo(0, scrollableRef.current!.scrollHeight);
   });
 
-  const { privateChat } = useGetPrivateChat(params.userId, {
+  const { privateChat } = useGetPrivateChat(params.userId, 20, {
     onSuccess: (chat) => {
       if (chat !== null) {
         setMessages(chat.messages);

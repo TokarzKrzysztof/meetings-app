@@ -29,6 +29,7 @@ namespace Meetings.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly IClaimsReader _claimsReader;
         private readonly IHubContext<ChatHub> _chatHubContext;
+
         public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IRepository<MessageReaction> messageReactionRepository, IRepository<User> userRepository, IHubContext<ChatHub> chatHubContext)
         {
             _repository = repository;
@@ -40,15 +41,21 @@ namespace Meetings.Infrastructure.Services
             _chatHubContext = chatHubContext;
         }
 
-        public async Task<ChatDTO?> GetPrivateChat(Guid participantId)
+        public async Task<ChatDTO?> GetPrivateChat(Guid participantId, int messagesAmount)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
 
             Chat? chat = await GetPrivateChatQuery(userId, participantId)
-                .Include(x => x.Messages.OrderBy(x => x.CreatedAt)).ThenInclude(x => x.Reactions)
+                .Include(x => x.Messages.OrderBy(x => x.CreatedAt).Take(messagesAmount)).ThenInclude(x => x.Reactions)
                 .SingleOrDefaultAsync();
 
             return chat != null ? _mapper.Map<ChatDTO>(chat) : null;
+        }
+
+        public async Task<List<MessageDTO>> LoadMoreChatMessages(Guid chatId, int skip, int take)
+        {
+            var messages = await _repository.Data.Where(x => x.Id == chatId).SelectMany(x => x.Messages.OrderBy(x => x.CreatedAt).Skip(skip).Take(take)).Include(x => x.Reactions).ToListAsync();
+            return _mapper.Map<List<MessageDTO>>(messages);
         }
 
         public async Task<MessageDTO> SendPrivateMessage(string connectionId, Guid recipientId, MessageDTO data)
