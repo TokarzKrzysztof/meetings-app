@@ -1,9 +1,6 @@
 import { useSetAtom } from 'jotai';
 import { useRef, useState } from 'react';
-import {
-  StyledMessageChip,
-  StyledReplyIcon,
-} from 'src/components/chat/ChatMessage/ChatMessage.styled';
+import { StyledMessage, StyledReplyIcon } from 'src/components/chat/ChatMessage/ChatMessage.styled';
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/components/chat/ChatMessage/ChatMessageReactions/ChatMessageReactions';
 import { ChatMessageReply } from 'src/components/chat/ChatMessage/ChatMessageReply/ChatMessageReply';
@@ -12,7 +9,7 @@ import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useLongPress } from 'src/hooks/useLongPress';
 import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';
-import { Box } from 'src/ui-components';
+import { Box, Typography } from 'src/ui-components';
 
 export type ChatMessageProps = {
   message: Message;
@@ -49,15 +46,11 @@ export const ChatMessage = ({ message, allMessages, currentUser }: ChatMessagePr
         onReply={() => setReplyMessage(message)}
         direction={isAuthorCurrentUser ? 'left' : 'right'}
       >
-        <Box
-          {...longPressEvent}
-          ref={anchorRef}
-          position={'relative'}
+        <Box  
           alignSelf={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           display={'flex'}
           flexDirection={'column'}
           alignItems={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
-          fontSize={14}
           maxWidth={400}
           sx={{
             ...(isAuthorCurrentUser ? { marginLeft: '20px' } : { marginRight: '20px' }),
@@ -68,25 +61,27 @@ export const ChatMessage = ({ message, allMessages, currentUser }: ChatMessagePr
           }}
         >
           {replyTo && (
-            <StyledMessageChip
-              variant={isAuthorCurrentUser ? 'filled' : 'outlined'}
-              label={replyTo.text}
+            <StyledMessage
+              variant={isAuthorCurrentUser ? 'filled' : 'outlined'}           
               sx={{
                 transform: `translateY(${repliedMessageWrap}px)`,
                 pb: `${repliedMessageWrap + 1}px`,
               }}
-            />
+            >
+              <Typography fontSize={12}>{replyTo.text}</Typography>
+            </StyledMessage>
           )}
-          <StyledMessageChip
+          <StyledMessage
+            {...longPressEvent}
+            ref={anchorRef}
             variant={isAuthorCurrentUser ? 'outlined' : 'filled'}
-            label={message.text}
             // transform to make message overlap
-            sx={{
-              transform: 'translateY(0px)',
-              background: isAuthorCurrentUser ? 'white' : '#eee',
-            }}
-          />
-          <ChatMessageReactions reactions={message.reactions} />
+            sx={{ transform: 'translateY(0px)' }}
+          >
+            <Typography fontSize={14}>{message.text}</Typography>
+            <ChatMessageReactions reactions={message.reactions} />
+          </StyledMessage>
+
           {moveX !== 0 && (
             <StyledReplyIcon
               name='reply'
