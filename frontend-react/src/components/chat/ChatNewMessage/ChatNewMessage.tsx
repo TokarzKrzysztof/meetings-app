@@ -41,7 +41,11 @@ export const ChatNewMessage = ({ onScrollToBottom, recipient, chat }: ChatNewMes
   });
 
   const handleSend = () => {
-    sendPrivateMessage({ message: message!, recipientId: recipient.id });
+    sendPrivateMessage({
+      text: message!,
+      recipientId: recipient.id,
+      replyToId: replyMessage?.id,
+    });
     setMessage(null);
     setReplyMessage(null);
   };

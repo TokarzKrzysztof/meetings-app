@@ -51,14 +51,14 @@ namespace Meetings.Infrastructure.Services
             return chat != null ? _mapper.Map<ChatDTO>(chat) : null;
         }
 
-        public async Task<MessageDTO> SendPrivateMessage(Guid authorId, string message, Guid recipientId, string connectionId)
+        public async Task<MessageDTO> SendPrivateMessage(string connectionId, Guid recipientId, MessageDTO data)
         {
-            Guid chatId = await GetPrivateChatQuery(authorId, recipientId).Select(x => x.Id).SingleOrDefaultAsync();
+            Guid chatId = await GetPrivateChatQuery(data.AuthorId, recipientId).Select(x => x.Id).SingleOrDefaultAsync();
             if (chatId == Guid.Empty)
             {
                 List<User> users = new List<User>()
                 {
-                    _userRepository.Attach(new User() { Id = authorId }),
+                    _userRepository.Attach(new User() { Id = data.AuthorId }),
                     _userRepository.Attach(new User() { Id = recipientId })
                 };
 
@@ -73,9 +73,10 @@ namespace Meetings.Infrastructure.Services
 
             var result = await _messageRepository.Create(new Message()
             {
-                AuthorId = authorId,
+                AuthorId = data.AuthorId,
                 ChatId = chatId,
-                Text = message
+                Text = data.Text,
+                ReplyToId = data.ReplyToId
             });
 
             return _mapper.Map<MessageDTO>(result);

@@ -86,7 +86,7 @@ export const PrivateChat = () => {
         </Stack>
         <Stack direction={'column'} py={1} gap={1}>
           {messages.map((x) => (
-            <ChatMessage key={x.id} message={x} currentUser={currentUser} />
+            <ChatMessage key={x.id} message={x} allMessages={messages} currentUser={currentUser} />
           ))}
         </Stack>
         <ChatTypingIndicator />

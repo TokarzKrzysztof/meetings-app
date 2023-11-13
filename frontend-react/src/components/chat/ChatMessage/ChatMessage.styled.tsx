@@ -2,12 +2,15 @@ import { styled } from '@mui/material';
 import { Chip, Icon } from 'src/ui-components';
 import { shouldNotForwardPropsWithKeys } from 'src/utils/types/should-not-forward-props';
 
-type ReplyIconProps = { dystans: number };
+type ReplyIconProps = { dystans: number; isAuthorCurrentUser: boolean };
 export const StyledReplyIcon = styled(Icon, {
-  shouldForwardProp: shouldNotForwardPropsWithKeys<ReplyIconProps>(['dystans']),
-})<ReplyIconProps>(({ dystans }) => ({
+  shouldForwardProp: shouldNotForwardPropsWithKeys<ReplyIconProps>([
+    'dystans',
+    'isAuthorCurrentUser',
+  ]),
+})<ReplyIconProps>(({ dystans, isAuthorCurrentUser }) => ({
   position: 'absolute',
-  right: -dystans,
+  ...(isAuthorCurrentUser ? { right: -dystans } : { left: -dystans }),
   top: '50%',
   transform: 'translateY(-50%)',
 }));

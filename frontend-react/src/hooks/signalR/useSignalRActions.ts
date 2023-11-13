@@ -4,7 +4,11 @@ import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 export const useSignalRActions = () => {
   const connection = useAtomValue(connectionAtom);
 
-  const sendPrivateMessage = (data: { recipientId: string; message: string }) => {
+  const sendPrivateMessage = (data: {
+    recipientId: string;
+    text: string;
+    replyToId: string | undefined;
+  }) => {
     return connection.invoke('sendPrivateMessage', data);
   };
   const startTyping = (data: { chatId: string }) => {

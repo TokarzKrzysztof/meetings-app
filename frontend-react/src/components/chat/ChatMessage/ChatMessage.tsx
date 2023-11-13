@@ -16,10 +16,11 @@ import { Box } from 'src/ui-components';
 
 export type ChatMessageProps = {
   message: Message;
+  allMessages: Message[];
   currentUser: User;
 };
 
-export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
+export const ChatMessage = ({ message, allMessages, currentUser }: ChatMessageProps) => {
   const { setMessageReaction } = useSignalRActions();
   const setReplyMessage = useSetAtom(replyMessageAtom);
   const [openReactions, setOpenReactions] = useState(false);
@@ -36,7 +37,9 @@ export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
   };
 
   const isAuthorCurrentUser = message.authorId === currentUser.id;
-  const maxMessageMovement = 50;
+  const maxMessageMovement = 80;
+  const replyTo = message.replyToId ? allMessages.find((x) => x.id === message.replyToId)! : null;
+  const repliedMessageWrap = 15;
   return (
     <>
       <ChatMessageReply
@@ -44,12 +47,16 @@ export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
         moveX={moveX}
         setMoveX={setMoveX}
         onReply={() => setReplyMessage(message)}
+        direction={isAuthorCurrentUser ? 'left' : 'right'}
       >
         <Box
           {...longPressEvent}
           ref={anchorRef}
           position={'relative'}
           alignSelf={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
+          display={'flex'}
+          flexDirection={'column'}
+          alignItems={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           fontSize={14}
           maxWidth={400}
           sx={{
@@ -57,15 +64,36 @@ export const ChatMessage = ({ message, currentUser }: ChatMessageProps) => {
             opacity: openReactions ? 0.4 : 1,
             marginBottom: message.reactions.length ? 1 : undefined,
             transition: '200ms',
+            marginTop: replyTo ? `-${repliedMessageWrap}px` : undefined,
           }}
         >
+          {replyTo && (
+            <StyledMessageChip
+              variant={isAuthorCurrentUser ? 'filled' : 'outlined'}
+              label={replyTo.text}
+              sx={{
+                transform: `translateY(${repliedMessageWrap}px)`,
+                pb: `${repliedMessageWrap + 1}px`,
+              }}
+            />
+          )}
           <StyledMessageChip
             variant={isAuthorCurrentUser ? 'outlined' : 'filled'}
             label={message.text}
+            // transform to make message overlap
+            sx={{
+              transform: 'translateY(0px)',
+              background: isAuthorCurrentUser ? 'white' : '#eee',
+            }}
           />
           <ChatMessageReactions reactions={message.reactions} />
           {moveX !== 0 && (
-            <StyledReplyIcon name='reply' color='primary' dystans={maxMessageMovement} />
+            <StyledReplyIcon
+              name='reply'
+              color='primary'
+              dystans={maxMessageMovement}
+              isAuthorCurrentUser={isAuthorCurrentUser}
+            />
           )}
         </Box>
       </ChatMessageReply>

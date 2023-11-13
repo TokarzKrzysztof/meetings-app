@@ -15,7 +15,7 @@ export type ChatMessageReplyProps = {
   maxMovement: number;
   moveX: number;
   setMoveX: Dispatch<SetStateAction<number>>;
-  direction?: 'left' | 'right';
+  direction: 'left' | 'right';
   returnOnDragEnd?: boolean;
 };
 
@@ -25,7 +25,7 @@ export const ChatMessageReply = ({
   maxMovement,
   moveX,
   setMoveX,
-  direction = 'left',
+  direction,
   returnOnDragEnd = true,
 }: ChatMessageReplyProps) => {
   const lastXRef = useRef<number | null>(null);

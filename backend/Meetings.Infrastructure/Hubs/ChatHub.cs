@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace Meetings.Infrastructure.Hubs
 {
-    public record SendPrivateMessageData(Guid RecipientId, string Message);
+    public record SendPrivateMessageData(Guid RecipientId, string Text, Guid? ReplyToId);
     public record StartTypingData(Guid ChatId);
     public record SetMessageReactionData(Guid MessageId, string ReactionUnified);
 
@@ -38,7 +38,12 @@ namespace Meetings.Infrastructure.Hubs
         [Authorize]
         public async Task SendPrivateMessage(SendPrivateMessageData data)
         {
-            var message = await _chatService.SendPrivateMessage(new Guid(Context.UserIdentifier), data.Message, data.RecipientId, Context.ConnectionId);
+            var message = await _chatService.SendPrivateMessage(Context.ConnectionId, data.RecipientId, new MessageDTO()
+            {
+                AuthorId = new Guid(Context.UserIdentifier),
+                Text = data.Text,
+                ReplyToId = data.ReplyToId,
+            });
             await Clients.Group(message.ChatId.ToString()).SendAsync("onGetNewMessage", message);
         }
 
