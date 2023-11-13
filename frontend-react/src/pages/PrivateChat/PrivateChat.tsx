@@ -5,6 +5,7 @@ import { ChatNewMessage } from 'src/components/chat/ChatNewMessage/ChatNewMessag
 import { ChatReplyPreview } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
 import { ChatTypingIndicator } from 'src/components/chat/ChatTypingIndicator/ChatTypingIndicator';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
+import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
@@ -21,7 +22,11 @@ export const PrivateChat = () => {
   const scrollableRef = useRef<HTMLDivElement>(null);
   const currentUser = useLoggedInUser();
   const [messages, setMessages] = useState<Message[]>([]);
-  const { user, userFetching } = useGetUser(params.userId);
+  const { user } = useGetUser(params.userId);
+
+  const scrollToBottom = useDeferredFunction(() => {
+    scrollableRef.current!.scrollTo(0, scrollableRef.current!.scrollHeight);
+  });
 
   const { privateChat } = useGetPrivateChat(params.userId, {
     onSuccess: (chat) => {
@@ -31,8 +36,6 @@ export const PrivateChat = () => {
       }
     },
   });
-
-  // const lastMessageDate = _.last(messages)?.createdAt ?? null;
 
   useSignalREffect('onGetNewMessage', (msg) => {
     setMessages((prev) => [...prev, msg]);
@@ -47,13 +50,6 @@ export const PrivateChat = () => {
       return [...prev];
     });
   });
-
-  const scrollToBottom = () => {
-    // wait for messages state to be updated
-    setTimeout(() => {
-      scrollableRef.current!.scrollTo(0, scrollableRef.current!.scrollHeight);
-    });
-  };
 
   const age = useMemo(() => (user ? calculateAge(user.birthDate) : null), [user]);
 
@@ -86,7 +82,13 @@ export const PrivateChat = () => {
         </Stack>
         <Stack direction={'column'} py={1} gap={1}>
           {messages.map((x) => (
-            <ChatMessage key={x.id} message={x} allMessages={messages} currentUser={currentUser} />
+            <ChatMessage
+              key={x.id}
+              message={x}
+              allMessages={messages}
+              currentUser={currentUser}
+              onScrollToBottom={scrollToBottom}
+            />
           ))}
         </Stack>
         <ChatTypingIndicator />

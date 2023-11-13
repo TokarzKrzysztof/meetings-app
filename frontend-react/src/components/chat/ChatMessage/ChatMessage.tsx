@@ -1,4 +1,5 @@
 import { useSetAtom } from 'jotai';
+import _ from 'lodash';
 import { useRef, useState } from 'react';
 import { StyledMessage, StyledReplyIcon } from 'src/components/chat/ChatMessage/ChatMessage.styled';
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
@@ -15,9 +16,15 @@ export type ChatMessageProps = {
   message: Message;
   allMessages: Message[];
   currentUser: User;
+  onScrollToBottom: () => void;
 };
 
-export const ChatMessage = ({ message, allMessages, currentUser }: ChatMessageProps) => {
+export const ChatMessage = ({
+  message,
+  allMessages,
+  currentUser,
+  onScrollToBottom,
+}: ChatMessageProps) => {
   const { setMessageReaction } = useSignalRActions();
   const setReplyMessage = useSetAtom(replyMessageAtom);
   const [openReactions, setOpenReactions] = useState(false);
@@ -33,6 +40,13 @@ export const ChatMessage = ({ message, allMessages, currentUser }: ChatMessagePr
     setOpenReactions(false);
   };
 
+  const handleStartReply = () => {
+    setReplyMessage(message);
+    if (_.last(allMessages)?.id === message.id) {
+      onScrollToBottom();
+    }
+  };
+
   const isAuthorCurrentUser = message.authorId === currentUser.id;
   const maxMessageMovement = 80;
   const replyTo = message.replyToId ? allMessages.find((x) => x.id === message.replyToId)! : null;
@@ -43,10 +57,10 @@ export const ChatMessage = ({ message, allMessages, currentUser }: ChatMessagePr
         maxMovement={maxMessageMovement}
         moveX={moveX}
         setMoveX={setMoveX}
-        onReply={() => setReplyMessage(message)}
+        onReply={handleStartReply}
         direction={isAuthorCurrentUser ? 'left' : 'right'}
       >
-        <Box  
+        <Box
           alignSelf={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           display={'flex'}
           flexDirection={'column'}
@@ -62,7 +76,7 @@ export const ChatMessage = ({ message, allMessages, currentUser }: ChatMessagePr
         >
           {replyTo && (
             <StyledMessage
-              variant={isAuthorCurrentUser ? 'filled' : 'outlined'}           
+              variant={isAuthorCurrentUser ? 'filled' : 'outlined'}
               sx={{
                 transform: `translateY(${repliedMessageWrap}px)`,
                 pb: `${repliedMessageWrap + 1}px`,
