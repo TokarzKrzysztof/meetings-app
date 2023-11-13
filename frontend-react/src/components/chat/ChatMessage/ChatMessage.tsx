@@ -1,6 +1,6 @@
-import { useSetAtom } from 'jotai';
+import { atom, useAtom, useSetAtom } from 'jotai';
 import _ from 'lodash';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyledMessage, StyledReplyIcon } from 'src/components/chat/ChatMessage/ChatMessage.styled';
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/components/chat/ChatMessage/ChatMessageReactions/ChatMessageReactions';
@@ -11,6 +11,8 @@ import { useLongPress } from 'src/hooks/useLongPress';
 import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';
 import { Box, Typography } from 'src/ui-components';
+
+export const messageToFocusAtom = atom<Message | null>(null);
 
 export type ChatMessageProps = {
   message: Message;
@@ -27,10 +29,23 @@ export const ChatMessage = ({
 }: ChatMessageProps) => {
   const { setMessageReaction } = useSignalRActions();
   const setReplyMessage = useSetAtom(replyMessageAtom);
+  const [messageToFocus, setMessageToFocus] = useAtom(messageToFocusAtom);
   const [openReactions, setOpenReactions] = useState(false);
   const [moveX, setMoveX] = useState(0);
   const anchorRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const longPressEvent = useLongPress(() => setOpenReactions(true));
+
+  const shouldFocus = messageToFocus === message;
+  useEffect(() => {
+    if (shouldFocus) {
+      containerRef.current!.scrollIntoView({ block: 'center' });
+      setTimeout(() => {
+        setMessageToFocus(null);
+        // time of animation
+      }, 1000);
+    }
+  }, [shouldFocus]);
 
   const handleSelectReaction = (unified: string) => {
     setMessageReaction({
@@ -61,6 +76,7 @@ export const ChatMessage = ({
         direction={isAuthorCurrentUser ? 'left' : 'right'}
       >
         <Box
+          ref={containerRef}
           alignSelf={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           display={'flex'}
           flexDirection={'column'}
@@ -70,7 +86,7 @@ export const ChatMessage = ({
             ...(isAuthorCurrentUser ? { marginLeft: '20px' } : { marginRight: '20px' }),
             opacity: openReactions ? 0.4 : 1,
             marginBottom: message.reactions.length ? 1 : undefined,
-            transition: '200ms',
+            transition: 'margin 200ms',
             marginTop: replyTo ? `-${repliedMessageWrap}px` : undefined,
           }}
         >
@@ -81,6 +97,7 @@ export const ChatMessage = ({
                 transform: `translateY(${repliedMessageWrap}px)`,
                 pb: `${repliedMessageWrap + 1}px`,
               }}
+              onClick={() => setMessageToFocus(replyTo)}
             >
               <Typography fontSize={12}>{replyTo.text}</Typography>
             </StyledMessage>
@@ -90,7 +107,11 @@ export const ChatMessage = ({
             ref={anchorRef}
             variant={isAuthorCurrentUser ? 'outlined' : 'filled'}
             // transform to make message overlap
-            sx={{ transform: 'translateY(0px)' }}
+            sx={(theme) => ({
+              transform: 'translateY(0px)',
+              transition: 'box-shadow 400ms',
+              boxShadow: shouldFocus ? `0px 0px 0px 1px ${theme.palette.primary.main}` : undefined,
+            })}
           >
             <Typography fontSize={14}>{message.text}</Typography>
             <ChatMessageReactions reactions={message.reactions} />
