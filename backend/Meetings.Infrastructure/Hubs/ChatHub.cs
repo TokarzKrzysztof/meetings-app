@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace Meetings.Infrastructure.Hubs
 {
-    public record SendPrivateMessageData(Guid RecipientId, string Text, Guid? ReplyToId);
+    public record SendPrivateMessageData(Guid RecipientId, string Text, MessageDTO? ReplyTo);
     public record StartTypingData(Guid ChatId);
     public record SetMessageReactionData(Guid MessageId, string ReactionUnified);
 
@@ -42,7 +42,7 @@ namespace Meetings.Infrastructure.Hubs
             {
                 AuthorId = new Guid(Context.UserIdentifier),
                 Text = data.Text,
-                ReplyToId = data.ReplyToId,
+                ReplyTo = data.ReplyTo,
             });
             await Clients.Group(message.ChatId.ToString()).SendAsync("onGetNewMessage", message);
         }

@@ -44,7 +44,7 @@ export const ChatNewMessage = ({ onScrollToBottom, recipient, chat }: ChatNewMes
     sendPrivateMessage({
       text: message!,
       recipientId: recipient.id,
-      replyToId: replyMessage?.id,
+      replyTo: replyMessage,
     });
     setMessage(null);
     setReplyMessage(null);

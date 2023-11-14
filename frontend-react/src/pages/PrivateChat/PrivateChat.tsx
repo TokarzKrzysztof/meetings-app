@@ -1,3 +1,4 @@
+import { useTheme } from '@mui/material';
 import { useMemo, useRef, useState } from 'react';
 import { InfiniteScroll } from 'src/components/InfiniteScroll/InfiniteScroll';
 import { ChatHeader } from 'src/components/chat/ChatHeader/ChatHeader';
@@ -24,9 +25,14 @@ export const PrivateChat = () => {
   const currentUser = useLoggedInUser();
   const [messages, setMessages] = useState<Message[]>([]);
   const { user } = useGetUser(params.userId);
+  const theme = useTheme();
 
   const scrollToBottom = useDeferredFunction(() => {
     scrollableRef.current!.scrollTo(0, scrollableRef.current!.scrollHeight);
+  });
+  const scrollToPreviousScrollState = useDeferredFunction((prevScrollHeight: number) => {
+    const currentScrollHeight = scrollableRef.current!.scrollHeight;
+    scrollableRef.current!.scrollBy({ top: currentScrollHeight - prevScrollHeight });
   });
 
   const pageSize = 20;
@@ -46,6 +52,7 @@ export const PrivateChat = () => {
       enabled: false,
       onSuccess: (data) => {
         setMessages((prev) => [...data, ...prev]);
+        scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
       },
     }
   );
@@ -63,6 +70,18 @@ export const PrivateChat = () => {
       return [...prev];
     });
   });
+
+  const handleFocusRepliedMessage = (toFocus: Message) => {
+    const element = document.getElementById(toFocus.id)!;
+    element.scrollIntoView({ block: 'center' });
+    element.style.boxShadow = `0px 0px 0px 1px ${theme.palette.primary.main}`;
+    element.style.transition = 'box-shadow 400ms';
+
+    setTimeout(() => {
+      element.style.boxShadow = '';
+      element.style.transition = '';
+    }, 1000);
+  };
 
   const age = useMemo(() => (user ? calculateAge(user.birthDate) : null), [user]);
 
@@ -106,6 +125,7 @@ export const PrivateChat = () => {
                 allMessages={messages}
                 currentUser={currentUser}
                 onScrollToBottom={scrollToBottom}
+                onFocusRepliedMessage={handleFocusRepliedMessage}
               />
             ))}
           </InfiniteScroll>

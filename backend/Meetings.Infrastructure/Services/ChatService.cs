@@ -47,6 +47,7 @@ namespace Meetings.Infrastructure.Services
 
             var queryResult = await GetPrivateChatQuery(userId, participantId)
                 .Include(x => x.Messages).ThenInclude(x => x.Reactions)
+                .Include(x => x.Messages).ThenInclude(x => x.ReplyTo)
                 .Select(x => new
                 {
                     x.Id,
@@ -96,15 +97,17 @@ namespace Meetings.Infrastructure.Services
                 await _chatHubContext.Groups.AddToGroupAsync(connectionId, chatId.ToString());
             }
 
-            var result = await _messageRepository.Create(new Message()
+            var entity = await _messageRepository.Create(new Message()
             {
                 AuthorId = data.AuthorId,
                 ChatId = chatId,
                 Text = data.Text,
-                ReplyToId = data.ReplyToId
+                ReplyToId = data.ReplyTo?.Id
             });
 
-            return _mapper.Map<MessageDTO>(result);
+            var result = _mapper.Map<MessageDTO>(entity);
+            result.ReplyTo = data.ReplyTo;
+            return result;
         }
 
         public async Task<MessageDTO> SetMessageReaction(MessageReactionDTO data)

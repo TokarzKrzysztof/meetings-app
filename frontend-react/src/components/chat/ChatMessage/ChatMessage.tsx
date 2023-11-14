@@ -1,6 +1,6 @@
-import { atom, useAtom, useSetAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import _ from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { StyledMessage, StyledReplyIcon } from 'src/components/chat/ChatMessage/ChatMessage.styled';
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/components/chat/ChatMessage/ChatMessageReactions/ChatMessageReactions';
@@ -12,13 +12,12 @@ import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';
 import { Box, Typography } from 'src/ui-components';
 
-export const messageToFocusAtom = atom<Message | null>(null);
-
 export type ChatMessageProps = {
   message: Message;
   allMessages: Message[];
   currentUser: User;
   onScrollToBottom: () => void;
+  onFocusRepliedMessage: (toFocus: Message) => void;
 };
 
 export const ChatMessage = ({
@@ -26,26 +25,14 @@ export const ChatMessage = ({
   allMessages,
   currentUser,
   onScrollToBottom,
+  onFocusRepliedMessage,
 }: ChatMessageProps) => {
   const { setMessageReaction } = useSignalRActions();
   const setReplyMessage = useSetAtom(replyMessageAtom);
-  const [messageToFocus, setMessageToFocus] = useAtom(messageToFocusAtom);
   const [openReactions, setOpenReactions] = useState(false);
   const [moveX, setMoveX] = useState(0);
   const anchorRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const longPressEvent = useLongPress(() => setOpenReactions(true));
-
-  const shouldFocus = messageToFocus === message;
-  useEffect(() => {
-    if (shouldFocus) {
-      containerRef.current!.scrollIntoView({ block: 'center' });
-      setTimeout(() => {
-        setMessageToFocus(null);
-        // time of animation
-      }, 1000);
-    }
-  }, [shouldFocus]);
 
   const handleSelectReaction = (unified: string) => {
     setMessageReaction({
@@ -64,7 +51,6 @@ export const ChatMessage = ({
 
   const isAuthorCurrentUser = message.authorId === currentUser.id;
   const maxMessageMovement = 80;
-  const replyTo = message.replyToId ? allMessages.find((x) => x.id === message.replyToId)! : null;
   const repliedMessageWrap = 15;
   return (
     <>
@@ -76,7 +62,6 @@ export const ChatMessage = ({
         direction={isAuthorCurrentUser ? 'left' : 'right'}
       >
         <Box
-          ref={containerRef}
           alignSelf={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           display={'flex'}
           flexDirection={'column'}
@@ -87,31 +72,29 @@ export const ChatMessage = ({
             opacity: openReactions ? 0.4 : 1,
             marginBottom: message.reactions.length ? 1 : undefined,
             transition: 'margin 200ms',
-            marginTop: replyTo ? `-${repliedMessageWrap}px` : undefined,
+            marginTop: message.replyTo ? `-${repliedMessageWrap}px` : undefined,
           }}
         >
-          {replyTo && (
+          {message.replyTo && (
             <StyledMessage
               variant={isAuthorCurrentUser ? 'filled' : 'outlined'}
               sx={{
                 transform: `translateY(${repliedMessageWrap}px)`,
                 pb: `${repliedMessageWrap + 1}px`,
               }}
-              onClick={() => setMessageToFocus(replyTo)}
+              onClick={() => onFocusRepliedMessage(message.replyTo!)}
+              shrinkMessage
             >
-              <Typography fontSize={12}>{replyTo.text}</Typography>
+              <Typography fontSize={12}>{message.replyTo.text}</Typography>
             </StyledMessage>
           )}
           <StyledMessage
             {...longPressEvent}
+            id={message.id}
             ref={anchorRef}
             variant={isAuthorCurrentUser ? 'outlined' : 'filled'}
             // transform to make message overlap
-            sx={(theme) => ({
-              transform: 'translateY(0px)',
-              transition: 'box-shadow 400ms',
-              boxShadow: shouldFocus ? `0px 0px 0px 1px ${theme.palette.primary.main}` : undefined,
-            })}
+            sx={{ transform: 'translateY(0px)' }}
           >
             <Typography fontSize={14}>{message.text}</Typography>
             <ChatMessageReactions reactions={message.reactions} />

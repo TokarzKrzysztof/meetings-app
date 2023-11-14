@@ -39,7 +39,6 @@ export const InfiniteScroll = ({
 
   useEffect(() => {
     setIsLoadingMore(false);
-    scrollableRef.current!.scrollBy({ top: 10 });
   }, [children.length]);
 
   return (
