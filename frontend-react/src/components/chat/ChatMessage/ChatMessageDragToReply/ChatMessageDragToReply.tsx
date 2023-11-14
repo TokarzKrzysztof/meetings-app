@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 
-export type ChatMessageReplyProps = {
+export type ChatMessageDragToReplyProps = {
   children: ReactElement<React.DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>>;
   onReply: () => void;
   maxMovement: number;
@@ -19,7 +19,7 @@ export type ChatMessageReplyProps = {
   returnOnDragEnd?: boolean;
 };
 
-export const ChatMessageReply = ({
+export const ChatMessageDragToReply = ({
   children,
   onReply,
   maxMovement,
@@ -27,7 +27,7 @@ export const ChatMessageReply = ({
   setMoveX,
   direction,
   returnOnDragEnd = true,
-}: ChatMessageReplyProps) => {
+}: ChatMessageDragToReplyProps) => {
   const lastXRef = useRef<number | null>(null);
 
   const [isTouchStarted, setIsTouchStarted] = useState(false);

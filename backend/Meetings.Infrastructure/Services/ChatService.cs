@@ -112,7 +112,7 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<MessageDTO> SetMessageReaction(MessageReactionDTO data)
         {
-            Message message = await _messageRepository.Data.Where(x => x.Id == data.MessageId).Include(x => x.Reactions).SingleAsync();
+            Message message = await _messageRepository.Data.Where(x => x.Id == data.MessageId).Include(x => x.Reactions).Include(x => x.ReplyTo).SingleAsync();
             var authorReaction = message.Reactions.SingleOrDefault(x => x.AuthorId == data.AuthorId);
             if (authorReaction != null)
             {

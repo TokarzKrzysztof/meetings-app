@@ -2,9 +2,9 @@ import { useSetAtom } from 'jotai';
 import _ from 'lodash';
 import { useRef, useState } from 'react';
 import { StyledMessage, StyledReplyIcon } from 'src/components/chat/ChatMessage/ChatMessage.styled';
+import { ChatMessageDragToReply } from 'src/components/chat/ChatMessage/ChatMessageDragToReply/ChatMessageDragToReply';
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/components/chat/ChatMessage/ChatMessageReactions/ChatMessageReactions';
-import { ChatMessageReply } from 'src/components/chat/ChatMessage/ChatMessageReply/ChatMessageReply';
 import { replyMessageAtom } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useLongPress } from 'src/hooks/useLongPress';
@@ -54,7 +54,7 @@ export const ChatMessage = ({
   const repliedMessageWrap = 15;
   return (
     <>
-      <ChatMessageReply
+      <ChatMessageDragToReply
         maxMovement={maxMessageMovement}
         moveX={moveX}
         setMoveX={setMoveX}
@@ -109,7 +109,7 @@ export const ChatMessage = ({
             />
           )}
         </Box>
-      </ChatMessageReply>
+      </ChatMessageDragToReply>
 
       <ChatMessageReactionPicker
         open={openReactions}

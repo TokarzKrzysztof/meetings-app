@@ -38,7 +38,7 @@ namespace Meetings.Infrastructure.Hubs
         [Authorize]
         public async Task SendPrivateMessage(SendPrivateMessageData data)
         {
-            var message = await _chatService.SendPrivateMessage(Context.ConnectionId, data.RecipientId, new MessageDTO()
+            MessageDTO message = await _chatService.SendPrivateMessage(Context.ConnectionId, data.RecipientId, new MessageDTO()
             {
                 AuthorId = new Guid(Context.UserIdentifier),
                 Text = data.Text,
