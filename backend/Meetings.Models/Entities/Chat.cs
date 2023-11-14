@@ -20,6 +20,7 @@ namespace Meetings.Models.Entities
     public class ChatDTO
     {
         public Guid Id { get; set; }
+        public int TotalMessagesAmount { get; set; }
         public List<MessageDTO> Messages { get; set; }
         public List<UserDTO> Participants { get; set; }
     }

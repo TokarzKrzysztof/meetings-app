@@ -45,16 +45,34 @@ namespace Meetings.Infrastructure.Services
         {
             Guid userId = _claimsReader.GetCurrentUserId();
 
-            Chat? chat = await GetPrivateChatQuery(userId, participantId)
-                .Include(x => x.Messages.OrderBy(x => x.CreatedAt).Take(messagesAmount)).ThenInclude(x => x.Reactions)
+            var queryResult = await GetPrivateChatQuery(userId, participantId)
+                .Include(x => x.Messages).ThenInclude(x => x.Reactions)
+                .Select(x => new
+                {
+                    x.Id,
+                    TotalMessagesAmount = x.Messages.Count(),
+                    Messages = x.Messages.OrderByDescending(x => x.CreatedAt).Take(messagesAmount).Reverse()
+                })
                 .SingleOrDefaultAsync();
 
-            return chat != null ? _mapper.Map<ChatDTO>(chat) : null;
+            if (queryResult == null) return null;
+
+            return new ChatDTO()
+            {
+                Id = queryResult.Id,
+                Messages = _mapper.Map<List<MessageDTO>>(queryResult.Messages),
+                TotalMessagesAmount = queryResult.TotalMessagesAmount
+            };
         }
 
-        public async Task<List<MessageDTO>> LoadMoreChatMessages(Guid chatId, int skip, int take)
+        public async Task<List<MessageDTO>> GetMoreChatMessages(Guid chatId, int skip, int take)
         {
-            var messages = await _repository.Data.Where(x => x.Id == chatId).SelectMany(x => x.Messages.OrderBy(x => x.CreatedAt).Skip(skip).Take(take)).Include(x => x.Reactions).ToListAsync();
+            var messages = await _repository.Data.Where(x => x.Id == chatId)
+                .Include(x => x.Messages).ThenInclude(x => x.Reactions)
+                .Select(x => x.Messages.OrderByDescending(x => x.CreatedAt).Skip(skip).Take(take).Reverse())
+                .SingleOrDefaultAsync();
+
+            await Task.Delay(1000);
             return _mapper.Map<List<MessageDTO>>(messages);
         }
 

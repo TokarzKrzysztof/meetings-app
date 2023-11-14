@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
+import { InfiniteScroll } from 'src/components/InfiniteScroll/InfiniteScroll';
 import { ChatHeader } from 'src/components/chat/ChatHeader/ChatHeader';
 import { ChatMessage } from 'src/components/chat/ChatMessage/ChatMessage';
 import { ChatNewMessage } from 'src/components/chat/ChatNewMessage/ChatNewMessage';
@@ -10,7 +11,7 @@ import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { Message } from 'src/models/chat/message';
-import { useGetPrivateChat } from 'src/queries/chat-queries';
+import { useGetMoreChatMessages, useGetPrivateChat } from 'src/queries/chat-queries';
 import { useGetUser } from 'src/queries/user-queries';
 import { Avatar, Container, Stack, Typography } from 'src/ui-components';
 import { replaceItem } from 'src/utils/array-utils';
@@ -28,7 +29,8 @@ export const PrivateChat = () => {
     scrollableRef.current!.scrollTo(0, scrollableRef.current!.scrollHeight);
   });
 
-  const { privateChat } = useGetPrivateChat(params.userId, 20, {
+  const pageSize = 20;
+  const { privateChat } = useGetPrivateChat(params.userId, pageSize, {
     onSuccess: (chat) => {
       if (chat !== null) {
         setMessages(chat.messages);
@@ -36,6 +38,17 @@ export const PrivateChat = () => {
       }
     },
   });
+  const { moreChatMessagesRefetch } = useGetMoreChatMessages(
+    privateChat?.id as string,
+    messages.length,
+    pageSize,
+    {
+      enabled: false,
+      onSuccess: (data) => {
+        setMessages((prev) => [...data, ...prev]);
+      },
+    }
+  );
 
   useSignalREffect('onGetNewMessage', (msg) => {
     setMessages((prev) => [...prev, msg]);
@@ -81,15 +94,21 @@ export const PrivateChat = () => {
           <Typography>Limanowa (30 km od Ciebie)</Typography>
         </Stack>
         <Stack direction={'column'} py={1} gap={1}>
-          {messages.map((x) => (
-            <ChatMessage
-              key={x.id}
-              message={x}
-              allMessages={messages}
-              currentUser={currentUser}
-              onScrollToBottom={scrollToBottom}
-            />
-          ))}
+          <InfiniteScroll
+            scrollableRef={scrollableRef}
+            totalAmount={privateChat?.totalMessagesAmount as number}
+            next={moreChatMessagesRefetch}
+          >
+            {messages.map((x) => (
+              <ChatMessage
+                key={x.id}
+                message={x}
+                allMessages={messages}
+                currentUser={currentUser}
+                onScrollToBottom={scrollToBottom}
+              />
+            ))}
+          </InfiniteScroll>
         </Stack>
         <ChatTypingIndicator />
       </Container>

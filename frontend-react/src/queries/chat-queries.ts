@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import { UseQueryOptions, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
 import { Chat } from 'src/models/chat/chat';
+import { Message } from 'src/models/chat/message';
 import { apiUrl } from 'src/utils/api-url';
 import {
   genericUseQueryMethods
@@ -25,6 +26,24 @@ export const useGetPrivateChat = (
   });
 
   return genericUseQueryMethods('privateChat', query);
+};
+
+export const useGetMoreChatMessages = (
+  chatId: string,
+  skip: number,
+  take: number,
+  options?: UseQueryOptions<Message[], AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: ['GetMoreChatMessages', chatId, skip, take],
+    queryFn: () => {
+      const params = { chatId, skip, take };
+      return axios.get(`${baseUrl}/GetMoreChatMessages`, { params });
+    },
+    ...options,
+  });
+
+  return genericUseQueryMethods('moreChatMessages', query);
 };
 
 export const useGetCurrentUserChats = (
