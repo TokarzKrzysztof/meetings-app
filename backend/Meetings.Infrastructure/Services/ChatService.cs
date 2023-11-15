@@ -1,22 +1,11 @@
 ﻿using AutoMapper;
 using Meetings.Authentication.Services;
+using Meetings.Database.QueryExtensions;
 using Meetings.Database.Repositories;
-using Meetings.EmailSender;
 using Meetings.Infrastructure.Hubs;
-using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
-using Meetings.Utils.Extensions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -45,9 +34,9 @@ namespace Meetings.Infrastructure.Services
         {
             Guid userId = _claimsReader.GetCurrentUserId();
 
-            var queryResult = await GetPrivateChatQuery(userId, participantId)
-                .Include(x => x.Messages).ThenInclude(x => x.Reactions)
-                .Include(x => x.Messages).ThenInclude(x => x.ReplyTo)
+            var queryResult = await _repository.Data
+                .ByParticipants(userId, participantId)
+                .IncludeAllMessagesData()
                 .Select(x => new
                 {
                     x.Id,
@@ -66,20 +55,29 @@ namespace Meetings.Infrastructure.Services
             };
         }
 
-        public async Task<List<MessageDTO>> GetMoreChatMessages(Guid chatId, int skip, int take)
+        public async Task<List<MessageDTO>> LoadMoreChatMessages(Guid chatId, int skip, int take)
         {
             var messages = await _repository.Data.Where(x => x.Id == chatId)
-                .Include(x => x.Messages).ThenInclude(x => x.Reactions)
+                .IncludeAllMessagesData()
                 .Select(x => x.Messages.OrderByDescending(x => x.CreatedAt).Skip(skip).Take(take).Reverse())
                 .SingleOrDefaultAsync();
 
-            await Task.Delay(1000);
+            return _mapper.Map<List<MessageDTO>>(messages);
+        }
+
+        public async Task<List<MessageDTO>> LoadAllMessagesAfterDate(Guid chatId, DateTime afterDate)
+        {
+            var messages = await _repository.Data.Where(x => x.Id == chatId)
+                 .IncludeAllMessagesData()
+                 .Select(x => x.Messages.OrderByDescending(x => x.CreatedAt).Where(x => x.CreatedAt >= afterDate).Reverse())
+                 .SingleOrDefaultAsync();
+
             return _mapper.Map<List<MessageDTO>>(messages);
         }
 
         public async Task<MessageDTO> SendPrivateMessage(string connectionId, Guid recipientId, MessageDTO data)
         {
-            Guid chatId = await GetPrivateChatQuery(data.AuthorId, recipientId).Select(x => x.Id).SingleOrDefaultAsync();
+            Guid chatId = await _repository.Data.ByParticipants(data.AuthorId, recipientId).Select(x => x.Id).SingleOrDefaultAsync();
             if (chatId == Guid.Empty)
             {
                 List<User> users = new List<User>()
@@ -132,12 +130,6 @@ namespace Meetings.Infrastructure.Services
             await _messageRepository.Update(message);
 
             return _mapper.Map<MessageDTO>(message);
-        }
-
-        private IQueryable<Chat> GetPrivateChatQuery(Guid participant1Id, Guid participant2Id)
-        {
-            return _repository.Data
-                .Where(x => x.Participants.Select(x => x.Id).Contains(participant1Id) && x.Participants.Select(x => x.Id).Contains(participant2Id));
         }
     }
 }

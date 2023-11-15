@@ -41,56 +41,54 @@ export const ImageCropDialog = ({ image, onAccept, onClose }: ImageCropDialogPro
   };
 
   return (
-    <>
-      <Dialog
-        open
-        PaperProps={{
-          sx: { m: 1, maxWidth: 'initial', maxHeight: 'calc(100% - 10px)' },
-        }}
-      >
-        <Box textAlign='right'>
-          <IconButton onClick={onClose}>
-            <Icon name='close'></Icon>
-          </IconButton>
-        </Box>
-        {!croppedImage ? (
-          <>
-            <DialogContent sx={{ p: 1 }}>
-              <ImageCropDialogCropper
-                imageSrc={sourceImageSrc}
-                onCrop={(areaPixels) => (croppedAreaPixelsRef.current = areaPixels)}
-                crop={crop}
-                setCrop={setCrop}
-                zoom={zoom}
-                setZoom={setZoom}
-              />
-            </DialogContent>
-            <DialogActions sx={{ justifyContent: 'space-between' }}>
-              <Button variant='outlined' onClick={onClose}>
-                Anuluj
-              </Button>
-              <Button onClick={generateCroppedImage}>Dalej</Button>
-            </DialogActions>
-          </>
-        ) : (
-          <>
-            <DialogContent>
-              <Box maxWidth={300} margin='0 auto'>
-                <img style={{ borderRadius: '50%', maxWidth: '100%' }} src={croppedImage.src} />
-              </Box>
-              <Typography textAlign='center' my={2}>
-                Czy chcesz ustawić to zdjęcie jako swoje nowe zdjęcie profilowe?
-              </Typography>
-            </DialogContent>
-            <DialogActions sx={{ justifyContent: 'space-between' }}>
-              <Button variant='outlined' onClick={() => setCroppedImage(null)}>
-                Edytuj
-              </Button>
-              <Button onClick={() => onAccept(croppedImage.file)}>Zapisz</Button>
-            </DialogActions>
-          </>
-        )}
-      </Dialog>
-    </>
+    <Dialog
+      open
+      PaperProps={{
+        sx: { m: 1, maxWidth: 'initial', maxHeight: 'calc(100% - 10px)' },
+      }}
+    >
+      <Box textAlign='right'>
+        <IconButton onClick={onClose}>
+          <Icon name='close'></Icon>
+        </IconButton>
+      </Box>
+      {!croppedImage ? (
+        <>
+          <DialogContent sx={{ p: 1 }}>
+            <ImageCropDialogCropper
+              imageSrc={sourceImageSrc}
+              onCrop={(areaPixels) => (croppedAreaPixelsRef.current = areaPixels)}
+              crop={crop}
+              setCrop={setCrop}
+              zoom={zoom}
+              setZoom={setZoom}
+            />
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: 'space-between' }}>
+            <Button variant='outlined' onClick={onClose}>
+              Anuluj
+            </Button>
+            <Button onClick={generateCroppedImage}>Dalej</Button>
+          </DialogActions>
+        </>
+      ) : (
+        <>
+          <DialogContent>
+            <Box maxWidth={300} margin='0 auto'>
+              <img style={{ borderRadius: '50%', maxWidth: '100%' }} src={croppedImage.src} />
+            </Box>
+            <Typography textAlign='center' my={2}>
+              Czy chcesz ustawić to zdjęcie jako swoje nowe zdjęcie profilowe?
+            </Typography>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: 'space-between' }}>
+            <Button variant='outlined' onClick={() => setCroppedImage(null)}>
+              Edytuj
+            </Button>
+            <Button onClick={() => onAccept(croppedImage.file)}>Zapisz</Button>
+          </DialogActions>
+        </>
+      )}
+    </Dialog>
   );
 };

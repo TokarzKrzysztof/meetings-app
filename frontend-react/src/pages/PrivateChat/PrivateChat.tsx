@@ -2,6 +2,7 @@ import { useTheme } from '@mui/material';
 import { useMemo, useRef, useState } from 'react';
 import { InfiniteScroll } from 'src/components/InfiniteScroll/InfiniteScroll';
 import { ChatHeader } from 'src/components/chat/ChatHeader/ChatHeader';
+import { ChatLoadingOldMessagesDialog } from 'src/components/chat/ChatLoadingOldMessagesDialog/ChatLoadingOldMessagesDialog';
 import { ChatMessage } from 'src/components/chat/ChatMessage/ChatMessage';
 import { ChatNewMessage } from 'src/components/chat/ChatNewMessage/ChatNewMessage';
 import { ChatReplyPreview } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
@@ -12,7 +13,11 @@ import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { Message } from 'src/models/chat/message';
-import { useGetMoreChatMessages, useGetPrivateChat } from 'src/queries/chat-queries';
+import {
+  useGetPrivateChat,
+  useLoadAllMessagesAfterDate,
+  useLoadMoreChatMessages,
+} from 'src/queries/chat-queries';
 import { useGetUser } from 'src/queries/user-queries';
 import { Avatar, Container, Stack, Typography } from 'src/ui-components';
 import { replaceItem } from 'src/utils/array-utils';
@@ -24,6 +29,7 @@ export const PrivateChat = () => {
   const scrollableRef = useRef<HTMLDivElement>(null);
   const currentUser = useLoggedInUser();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [showLoadingOldMessagesDialog, setShowLoadingOldMessagesDialog] = useState(false);
   const { user } = useGetUser(params.userId);
   const theme = useTheme();
 
@@ -33,6 +39,9 @@ export const PrivateChat = () => {
   const scrollToPreviousScrollState = useDeferredFunction((prevScrollHeight: number) => {
     const currentScrollHeight = scrollableRef.current!.scrollHeight;
     scrollableRef.current!.scrollBy({ top: currentScrollHeight - prevScrollHeight });
+  });
+  const handleFocusRepliedMessageDeferred = useDeferredFunction((repliedMessage: Message) => {
+    handleFocusRepliedMessage(repliedMessage);
   });
 
   const pageSize = 20;
@@ -44,18 +53,8 @@ export const PrivateChat = () => {
       }
     },
   });
-  const { moreChatMessagesRefetch } = useGetMoreChatMessages(
-    privateChat?.id as string,
-    messages.length,
-    pageSize,
-    {
-      enabled: false,
-      onSuccess: (data) => {
-        setMessages((prev) => [...data, ...prev]);
-        scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
-      },
-    }
-  );
+  const { loadMoreChatMessages } = useLoadMoreChatMessages();
+  const { loadAllMessagesAfterDate } = useLoadAllMessagesAfterDate();
 
   useSignalREffect('onGetNewMessage', (msg) => {
     setMessages((prev) => [...prev, msg]);
@@ -71,12 +70,48 @@ export const PrivateChat = () => {
     });
   });
 
-  const handleFocusRepliedMessage = (toFocus: Message) => {
-    const element = document.getElementById(toFocus.id)!;
-    element.scrollIntoView({ block: 'center' });
+  const handleLoadMoreMessages = () => {
+    loadMoreChatMessages(
+      {
+        chatId: privateChat!.id,
+        skip: messages.length,
+        take: pageSize,
+      },
+      {
+        onSuccess: (data) => {
+          setMessages((prev) => [...data, ...prev]);
+          scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
+        },
+      }
+    );
+  };
+
+  const handleFocusRepliedMessage = (repliedMessage: Message) => {
+    const element = document.getElementById(repliedMessage.id)!;
+    if (element) {
+      element.scrollIntoView({ block: 'center' });
+      animateMessage(element);
+    } else {
+      setShowLoadingOldMessagesDialog(true);
+      loadAllMessagesAfterDate(
+        {
+          chatId: privateChat!.id,
+          afterDate: repliedMessage.createdAt,
+        },
+        {
+          onSuccess: (data) => {
+            setMessages(data);
+            handleFocusRepliedMessageDeferred(repliedMessage);
+            setShowLoadingOldMessagesDialog(false);
+          },
+        }
+      );
+    }
+  };
+
+  const animateMessage = (element: HTMLElement) => {
     element.style.boxShadow = `0px 0px 0px 1px ${theme.palette.primary.main}`;
     element.style.transition = 'box-shadow 400ms';
-
     setTimeout(() => {
       element.style.boxShadow = '';
       element.style.transition = '';
@@ -87,54 +122,59 @@ export const PrivateChat = () => {
 
   if (!user) return null;
   return (
-    <Stack height={'100vh'} direction={'column'}>
-      <ChatHeader user={user} returnUrl={params.returnUrl} />
-      <Container
-        ref={scrollableRef}
-        sx={{
-          pt: 3,
-          overflow: 'auto',
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          mx: 'auto',
-          // overflow hidden for message reply icon
-          overflowX: 'hidden',
-        }}
-      >
-        <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
-          <Avatar
-            src={user.profileImage ?? avatarPlaceholder}
-            sx={{ width: 100, height: 100, mb: 2 }}
-          />
-          <Typography>
-            {user.firstName} {user.lastName}, {age}
-          </Typography>
-          <Typography>Limanowa (30 km od Ciebie)</Typography>
-        </Stack>
-        <Stack direction={'column'} py={1} gap={1}>
-          <InfiniteScroll
-            scrollableRef={scrollableRef}
-            totalAmount={privateChat?.totalMessagesAmount as number}
-            next={moreChatMessagesRefetch}
-          >
-            {messages.map((x) => (
-              <ChatMessage
-                key={x.id}
-                message={x}
-                allMessages={messages}
-                currentUser={currentUser}
-                onScrollToBottom={scrollToBottom}
-                onFocusRepliedMessage={handleFocusRepliedMessage}
-              />
-            ))}
-          </InfiniteScroll>
-        </Stack>
-        <ChatTypingIndicator />
-      </Container>
-      <ChatReplyPreview />
-      <ChatNewMessage onScrollToBottom={scrollToBottom} recipient={user} chat={privateChat} />
-    </Stack>
+    <>
+      <Stack height={'100vh'} direction={'column'}>
+        <ChatHeader user={user} returnUrl={params.returnUrl} />
+        <Container
+          ref={scrollableRef}
+          sx={{
+            pt: 3,
+            overflow: 'auto',
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            mx: 'auto',
+            // overflow hidden for message reply icon
+            overflowX: 'hidden',
+          }}
+        >
+          <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
+            <Avatar
+              src={user.profileImage ?? avatarPlaceholder}
+              sx={{ width: 100, height: 100, mb: 2 }}
+            />
+            <Typography>
+              {user.firstName} {user.lastName}, {age}
+            </Typography>
+            <Typography>Limanowa (30 km od Ciebie)</Typography>
+          </Stack>
+          <Stack direction={'column'} py={1} gap={1}>
+            <InfiniteScroll
+              scrollableRef={scrollableRef}
+              totalAmount={privateChat?.totalMessagesAmount as number}
+              next={handleLoadMoreMessages}
+            >
+              {messages.map((x) => (
+                <ChatMessage
+                  key={x.id}
+                  message={x}
+                  allMessages={messages}
+                  currentUser={currentUser}
+                  onScrollToBottom={scrollToBottom}
+                  onFocusRepliedMessage={handleFocusRepliedMessage}
+                />
+              ))}
+            </InfiniteScroll>
+          </Stack>
+          <ChatTypingIndicator />
+        </Container>
+        <ChatReplyPreview />
+        <ChatNewMessage onScrollToBottom={scrollToBottom} recipient={user} chat={privateChat} />
+      </Stack>
+      {showLoadingOldMessagesDialog && (
+        <ChatLoadingOldMessagesDialog onClose={() => setShowLoadingOldMessagesDialog(false)} />
+      )}
+    </>
   );
 };
 

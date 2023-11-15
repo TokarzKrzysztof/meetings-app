@@ -1,11 +1,12 @@
 import { AxiosError } from 'axios';
-import { UseQueryOptions, useQuery } from 'react-query';
+import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
 import { Chat } from 'src/models/chat/chat';
 import { Message } from 'src/models/chat/message';
 import { apiUrl } from 'src/utils/api-url';
 import {
-  genericUseQueryMethods
+  genericUseMutationMethods,
+  genericUseQueryMethods,
 } from 'src/utils/types/generic-query-methods';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
@@ -28,22 +29,34 @@ export const useGetPrivateChat = (
   return genericUseQueryMethods('privateChat', query);
 };
 
-export const useGetMoreChatMessages = (
-  chatId: string,
-  skip: number,
-  take: number,
-  options?: UseQueryOptions<Message[], AxiosError<HttpErrorData>>
+export const useLoadMoreChatMessages = (
+  options?: UseMutationOptions<
+    Message[],
+    AxiosError<HttpErrorData>,
+    { chatId: Chat['id']; skip: number; take: number }
+  >
 ) => {
-  const query = useQuery({
-    queryKey: ['GetMoreChatMessages', chatId, skip, take],
-    queryFn: () => {
-      const params = { chatId, skip, take };
-      return axios.get(`${baseUrl}/GetMoreChatMessages`, { params });
-    },
+  const mutation = useMutation({
+    mutationFn: (data) => axios.get(`${baseUrl}/LoadMoreChatMessages`, { params: data }),
     ...options,
   });
 
-  return genericUseQueryMethods('moreChatMessages', query);
+  return genericUseMutationMethods('loadMoreChatMessages', mutation);
+};
+
+export const useLoadAllMessagesAfterDate = (
+  options?: UseMutationOptions<
+    Message[],
+    AxiosError<HttpErrorData>,
+    { chatId: Chat['id']; afterDate: Message['createdAt'] }
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => axios.get(`${baseUrl}/LoadAllMessagesAfterDate`, { params: data }),
+    ...options,
+  });
+
+  return genericUseMutationMethods('loadAllMessagesAfterDate', mutation);
 };
 
 export const useGetCurrentUserChats = (

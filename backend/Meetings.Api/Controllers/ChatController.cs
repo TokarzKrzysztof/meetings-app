@@ -25,9 +25,17 @@ namespace Meetings.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetMoreChatMessages([FromQuery] Guid chatId, [FromQuery] int skip, [FromQuery] int take)
+        public async Task<IActionResult> LoadMoreChatMessages([FromQuery] Guid chatId, [FromQuery] int skip, [FromQuery] int take)
         {
-            List<MessageDTO> messages = await _chatService.GetMoreChatMessages(chatId, skip, take);
+            List<MessageDTO> messages = await _chatService.LoadMoreChatMessages(chatId, skip, take);
+            return Ok(messages);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> LoadAllMessagesAfterDate([FromQuery] Guid chatId, [FromQuery] DateTime afterDate)
+        {
+            List<MessageDTO> messages = await _chatService.LoadAllMessagesAfterDate(chatId, afterDate);
             return Ok(messages);
         }
     }
