@@ -1,5 +1,6 @@
 ﻿using Meetings.Infrastructure.Services;
 using Meetings.Models.Entities;
+using Meetings.Models.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,6 +38,14 @@ namespace Meetings.Api.Controllers
         {
             List<MessageDTO> messages = await _chatService.LoadAllMessagesAfterDate(chatId, afterDate);
             return Ok(messages);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUserChats()
+        {
+            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserChats();
+            return Ok(chats);
         }
     }
 }

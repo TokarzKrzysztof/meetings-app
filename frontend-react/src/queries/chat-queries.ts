@@ -2,6 +2,7 @@ import { AxiosError } from 'axios';
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
 import { Chat } from 'src/models/chat/chat';
+import { ChatPreview } from 'src/models/chat/chat-preview';
 import { Message } from 'src/models/chat/message';
 import { apiUrl } from 'src/utils/api-url';
 import {
@@ -60,7 +61,7 @@ export const useLoadAllMessagesAfterDate = (
 };
 
 export const useGetCurrentUserChats = (
-  options?: UseQueryOptions<Chat[], AxiosError<HttpErrorData>>
+  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
     queryKey: 'GetCurrentUserChats',

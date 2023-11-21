@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { InfiniteScroll } from 'src/components/InfiniteScroll/InfiniteScroll';
 import { ChatHeader } from 'src/components/chat/ChatHeader/ChatHeader';
 import { ChatLoadingOldMessagesDialog } from 'src/components/chat/ChatLoadingOldMessagesDialog/ChatLoadingOldMessagesDialog';
@@ -11,7 +11,6 @@ import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
-import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { Message } from 'src/models/chat/message';
 import {
   useGetPrivateChat,
@@ -30,7 +29,7 @@ export const PrivateChat = () => {
   const currentUser = useLoggedInUser();
   const [messages, setMessages] = useState<Message[]>([]);
   const [showLoadingOldMessagesDialog, setShowLoadingOldMessagesDialog] = useState(false);
-  const { user } = useGetUser(params.userId);
+  const { user, userFetching } = useGetUser(params.userId);
   const theme = useTheme();
 
   const scrollToBottom = useDeferredFunction(() => {
@@ -45,16 +44,19 @@ export const PrivateChat = () => {
   });
 
   const pageSize = 20;
-  const { privateChat } = useGetPrivateChat(params.userId, pageSize, {
+  const { privateChat, privateChatFetching } = useGetPrivateChat(params.userId, pageSize, {
     onSuccess: (chat) => {
-      if (chat !== null) {
-        setMessages(chat.messages);
-        scrollToBottom();
-      }
+      if (chat !== null) setMessages(chat.messages);
     },
   });
   const { loadMoreChatMessages } = useLoadMoreChatMessages();
   const { loadAllMessagesAfterDate } = useLoadAllMessagesAfterDate();
+
+  useEffect(() => {
+    if (!userFetching && !privateChatFetching) {
+      scrollToBottom();
+    }
+  }, [userFetching, privateChatFetching]);
 
   useSignalREffect('onGetNewMessage', (msg) => {
     setMessages((prev) => [...prev, msg]);
@@ -139,10 +141,7 @@ export const PrivateChat = () => {
           }}
         >
           <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
-            <Avatar
-              src={user.profileImage ?? avatarPlaceholder}
-              sx={{ width: 100, height: 100, mb: 2 }}
-            />
+            <Avatar src={user.profileImage} size={100} sx={{ mb: 2 }} />
             <Typography>
               {user.firstName} {user.lastName}, {age}
             </Typography>

@@ -40,7 +40,8 @@ const useAnnouncementResultListSearchParams = () => {
 export const AnnouncementResultList = () => {
   const [params, setParams] = useAnnouncementResultListSearchParams();
   const { allCategories } = useGetAllCategories();
-  const { announcementResultList, announcementResultListFetching } = useGetAnnouncementResultList(params);
+  const { announcementResultList, announcementResultListFetching } =
+    useGetAnnouncementResultList(params);
   const { profileImages } = useGetProfileImages(
     _.uniq(announcementResultList?.map((x) => x.userId)),
     {

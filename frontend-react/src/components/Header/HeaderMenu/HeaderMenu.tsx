@@ -25,8 +25,9 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
       onAccept: () => {
         logout(undefined, {
           onSuccess: () => {
-            setCurrentUser(null);
+            // the order is important here, first navigate to home, then clear current user to avoid error
             navigate(AppRoutes.Home());
+            setCurrentUser(null);
           },
         });
       },
@@ -73,7 +74,13 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
               Dodaj ogłoszenie
             </Button>
           )}
-          <IconButton size='large' slot='end' color='inherit'>
+          <IconButton
+            size='large'
+            slot='end'
+            color='inherit'
+            component={Link}
+            to={AppRoutes.MyChats()}
+          >
             <Icon name='question_answer' />
           </IconButton>
         </>

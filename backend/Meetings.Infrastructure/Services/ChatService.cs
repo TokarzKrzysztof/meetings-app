@@ -4,8 +4,10 @@ using Meetings.Database.QueryExtensions;
 using Meetings.Database.Repositories;
 using Meetings.Infrastructure.Hubs;
 using Meetings.Models.Entities;
+using Meetings.Models.Resources;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -130,6 +132,43 @@ namespace Meetings.Infrastructure.Services
             await _messageRepository.Update(message);
 
             return _mapper.Map<MessageDTO>(message);
+        }
+
+        public async Task<IEnumerable<ChatPreview>> GetCurrentUserChats()
+        {
+            //Guid userId = _claimsReader.GetCurrentUserId();
+
+            //var chats = await _repository.Data
+            //    .Include(x => x.Participants)
+            //    .Include(x => x.Messages.OrderByDescending(msg => msg.CreatedAt).Take(1))
+            //    .Where(x => x.Participants.Select(x => x.Id).Contains(userId))
+            //    .ToListAsync();
+
+            //return chats.Select(x => new ChatPreview()
+            //{
+            //    Id = x.Id,
+            //    ParticipantId = x.Participants.Single(x => x.Id != userId).Id,
+            //    ParticipantName = x.Participants.Single(x => x.Id != userId).GetFullName(),
+            //    LastMessageAuthorId = x.GetLastMessageAuthorId(),
+            //    LastMessageText = x.GetLastMessageText()
+            //});
+
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            var result = await _userRepository.Data
+                .Where(x => x.Id == userId)
+                .Select(user => user.Chats.Select(chat => new ChatPreview
+                {
+                    Id = chat.Id,
+                    ParticipantId = chat.Participants.Single(x => x.Id != userId).Id,
+                    ParticipantName = $"{chat.Participants.Single(x => x.Id != userId).FirstName} {chat.Participants.Single(x => x.Id != userId).LastName}",
+                    LastMessageAuthorId = chat.Messages.Any() ? chat.Messages.OrderByDescending(msg => msg.CreatedAt).First().AuthorId : null,
+                    LastMessageText = chat.Messages.Any() ? chat.Messages.OrderByDescending(msg => msg.CreatedAt).First().Text : null,
+                    LastMessageDate = chat.Messages.Any() ? chat.Messages.OrderByDescending(msg => msg.CreatedAt).First().CreatedAt : null,
+                }).OrderByDescending(x => x.LastMessageDate).ToList())
+                .SingleAsync();
+
+            return result;
         }
     }
 }

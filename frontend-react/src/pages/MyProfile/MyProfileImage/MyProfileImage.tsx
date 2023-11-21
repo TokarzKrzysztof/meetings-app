@@ -2,20 +2,9 @@ import { styled } from '@mui/material';
 import { useRef } from 'react';
 import { ImageCropDialog } from 'src/components/ImageCropDialog/ImageCropDialog';
 import { useFilePicker } from 'src/hooks/useFilePicker';
-import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { User } from 'src/models/user';
 import { useGetCurrentUser, useUploadProfileImage } from 'src/queries/user-queries';
-import { Box, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
-
-const StyledImageWrapper = styled(Box)({
-  display: 'flex',
-  height: 150,
-  position: 'relative',
-  img: {
-    height: '100%',
-    borderRadius: '50%',
-  },
-});
+import { Avatar, Box, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 
 const StyledEditButton = styled(IconButton)({
   position: 'absolute',
@@ -44,12 +33,12 @@ export const MyProfileImage = ({ currentUser }: MyProfileImageProps) => {
 
   return (
     <>
-      <StyledImageWrapper>
-        <img src={currentUser.profileImage ?? avatarPlaceholder} />
+      <Box position={'relative'}>
+        <Avatar src={currentUser.profileImage} size={150} />
         <StyledEditButton color='primary' filled ref={menuAnchorRef}>
           <Icon name='edit' />
         </StyledEditButton>
-      </StyledImageWrapper>
+      </Box>
       <Menu
         anchorRef={menuAnchorRef}
         transformOrigin={{

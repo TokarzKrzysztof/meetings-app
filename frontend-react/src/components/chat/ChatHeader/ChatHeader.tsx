@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { User } from 'src/models/user';
 import { AppBar, Avatar, Button, Icon, Stack, Toolbar, Typography } from 'src/ui-components';
 
@@ -23,7 +22,7 @@ export const ChatHeader = ({ user, returnUrl }: ChatHeaderProps) => {
           Wróć
         </Button>
         <Stack alignItems={'center'} gap={1}>
-          <Avatar src={user.profileImage ?? avatarPlaceholder} sx={{ width: 30, height: 30 }} />
+          <Avatar src={user.profileImage} size={30} />
           <Typography>
             {user.firstName} {user.lastName}
           </Typography>

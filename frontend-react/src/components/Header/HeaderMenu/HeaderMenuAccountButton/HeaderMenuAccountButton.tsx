@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { User } from 'src/models/user';
 import { Avatar, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -50,10 +49,7 @@ export const HeaderMenuAccountButton = ({
     <>
       <IconButton color='inherit' ref={menuAnchorRef}>
         {currentUser ? (
-          <Avatar
-            src={currentUser.profileImage ?? avatarPlaceholder}
-            sx={{ width: 35, height: 35 }}
-          />
+          <Avatar src={currentUser.profileImage} size={35} />
         ) : (
           <Icon name='person_outline' />
         )}

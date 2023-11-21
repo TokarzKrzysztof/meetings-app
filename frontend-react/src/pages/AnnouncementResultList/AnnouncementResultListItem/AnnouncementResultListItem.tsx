@@ -1,7 +1,6 @@
 import { Divider } from '@mui/material';
 import { useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 import { UserAnnouncement } from 'src/models/annoucement/user-announcement';
 import { Avatar, Box, Button, Card, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -19,7 +18,7 @@ export const AnnouncementResultListItem = ({ data, imgSrc }: AnnouncementResultL
   return (
     <Card>
       <Stack p={1} alignItems={'center'}>
-        <Avatar src={imgSrc ?? avatarPlaceholder} sx={{ width: 50, height: 50 }} />
+        <Avatar src={imgSrc} size={50} />
         <Box ml={2}>
           <Typography fontSize={14}>
             {data.userFirstName}, {age}
