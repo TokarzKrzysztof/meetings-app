@@ -3,6 +3,7 @@ using Meetings.Authentication.Services;
 using Meetings.Database.QueryExtensions;
 using Meetings.Database.Repositories;
 using Meetings.Infrastructure.Hubs;
+using Meetings.Infrastructure.Utils;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Microsoft.AspNetCore.SignalR;
@@ -162,10 +163,11 @@ namespace Meetings.Infrastructure.Services
                     Id = x.Id,
                     ParticipantId = participant.UserId,
                     ParticipantName = $"{participant.User.FirstName} {participant.User.LastName}",
+                    ParticipantActiveStatus = UserUtils.DetermineUserActiveStatus(participant.User.LastActiveDate),
                     HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
                     LastMessageAuthorId = lastMessage?.AuthorId,
                     LastMessageText = lastMessage?.Text,
-                    LastMessageDate = lastMessage?.CreatedAt
+                    LastMessageDate = lastMessage?.CreatedAt,
                 };
             }).OrderByDescending(x => x.LastMessageDate);
         }

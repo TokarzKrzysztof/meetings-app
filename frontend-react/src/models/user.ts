@@ -2,6 +2,11 @@ export enum UserGender {
   Male,
   Female,
 }
+export enum UserActiveStatus {
+  Online,
+  RecentlyOnline,
+  Offline,
+}
 
 export type User = {
   id: string;
@@ -13,4 +18,5 @@ export type User = {
   passwordRepeat: string | null;
   gender: UserGender;
   profileImage: string | null;
+  activeStatus: UserActiveStatus;
 };

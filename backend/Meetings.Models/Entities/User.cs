@@ -14,6 +14,12 @@ namespace Meetings.Models.Entities
         Male,
         Female
     }
+    public enum UserActiveStatus
+    {
+        Online,
+        RecentlyOnline,
+        Offline
+    }
 
     public class User : IEntityBase
     {
@@ -52,5 +58,6 @@ namespace Meetings.Models.Entities
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
         public string? ProfileImage { get; set; }
+        public UserActiveStatus ActiveStatus { get; set; }
     }
 }

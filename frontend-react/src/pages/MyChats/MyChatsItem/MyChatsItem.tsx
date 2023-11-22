@@ -1,8 +1,15 @@
 import { styled } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
+import { UserActiveStatusBadge } from 'src/components/UserActiveStatusBadge/UserActiveStatusBadge';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { ChatPreview } from 'src/models/chat/chat-preview';
-import { Avatar, Box, ListItemAvatar, ListItemButton, ListItemText } from 'src/ui-components';
+import {
+  Avatar,
+  Box,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText
+} from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 const StyledDot = styled(Box)(({ theme }) => ({
@@ -32,7 +39,9 @@ export const MyChatsItem = ({ chat, imageSrc }: MyChatsItemProps) => {
       })}
     >
       <ListItemAvatar sx={{ minWidth: 'auto', mr: 2 }}>
-        <Avatar size={50} src={imageSrc} />
+        <UserActiveStatusBadge status={chat.participantActiveStatus}>
+          <Avatar size={50} src={imageSrc} />
+        </UserActiveStatusBadge>
       </ListItemAvatar>
       <ListItemText
         primary={chat.participantName}

@@ -1,26 +1,18 @@
 ﻿using Meetings.Database.Repositories;
 using Meetings.Models.Entities;
 using Meetings.Utils;
-using Meetings.Utils.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using FluentValidation.Results;
 using FluentValidation;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
-using Meetings.Authentication;
 using Meetings.Authentication.Services;
-using Microsoft.AspNetCore.Mvc;
 using Meetings.Models.Resources;
 using Meetings.Infrastructure.Validators;
 using Meetings.EmailSender;
 using Meetings.EmailTemplates.Views;
 using System.Text.Json;
 using Meetings.Models.TempDataModels;
-using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Meetings.Infrastructure.Utils;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -132,6 +124,7 @@ namespace Meetings.Infrastructure.Services
 
             var result = _mapper.Map<UserDTO>(user);
             result.ProfileImage = await GetConnectedProfileImage(id);
+            result.ActiveStatus = UserUtils.DetermineUserActiveStatus(user.LastActiveDate);
             return result;
         }
 
@@ -149,20 +142,6 @@ namespace Meetings.Infrastructure.Services
             {
                 await image.CopyToAsync(stream);
             }
-        }
-
-        private async Task<string> GetConnectedProfileImage(Guid userId)
-        {
-            var filePath = GetProfileImageFilePath(userId);
-
-            if (!File.Exists(filePath)) return null;
-
-            byte[] bytes = await File.ReadAllBytesAsync(filePath);
-            return $"data:image/jpeg;base64, {Convert.ToBase64String(bytes)}";
-        }
-        private string GetProfileImageFilePath(Guid userId)
-        {
-            return Path.Combine(Directory.GetCurrentDirectory(), "Files", $"profile image - {userId}.jpg");
         }
 
         public async Task<List<UserDTO>> GetProfileImages(Guid[] userIds)
@@ -188,6 +167,20 @@ namespace Meetings.Infrastructure.Services
                .ExecuteUpdateAsync(s =>
                     s.SetProperty(x => x.LastActiveDate, DateTime.UtcNow)
                 );
+        }
+
+        private async Task<string> GetConnectedProfileImage(Guid userId)
+        {
+            var filePath = GetProfileImageFilePath(userId);
+
+            if (!File.Exists(filePath)) return null;
+
+            byte[] bytes = await File.ReadAllBytesAsync(filePath);
+            return $"data:image/jpeg;base64, {Convert.ToBase64String(bytes)}";
+        }
+        private string GetProfileImageFilePath(Guid userId)
+        {
+            return Path.Combine(Directory.GetCurrentDirectory(), "Files", $"profile image - {userId}.jpg");
         }
     }
 }

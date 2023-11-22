@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { UserActiveStatusBadge } from 'src/components/UserActiveStatusBadge/UserActiveStatusBadge';
 import { User } from 'src/models/user';
 import { AppBar, Avatar, Button, Icon, Stack, Toolbar, Typography } from 'src/ui-components';
 
@@ -22,7 +23,9 @@ export const ChatHeader = ({ user, returnUrl }: ChatHeaderProps) => {
           Wróć
         </Button>
         <Stack alignItems={'center'} gap={1}>
-          <Avatar src={user.profileImage} size={30} />
+          <UserActiveStatusBadge status={user.activeStatus}>
+            <Avatar src={user.profileImage} size={30} />
+          </UserActiveStatusBadge>
           <Typography>
             {user.firstName} {user.lastName}
           </Typography>
