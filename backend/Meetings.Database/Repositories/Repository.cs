@@ -19,6 +19,7 @@ namespace Meetings.Database.Repositories
         Task RemovePermanently(TEntity entity);
         Task Update(TEntity entity);
         TEntity Attach(TEntity entityData);
+        Task UpdateRange(IEnumerable<TEntity> entities);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntityBase
@@ -84,6 +85,16 @@ namespace Meetings.Database.Repositories
         {
             entity.UpdatedAt = DateTime.UtcNow;
             _db.Update(entity);
+            await _db.SaveChangesAsync();
+        } 
+        
+        public async Task UpdateRange(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.UpdatedAt = DateTime.UtcNow;
+            }
+            _db.UpdateRange(entities);
             await _db.SaveChangesAsync();
         }
 

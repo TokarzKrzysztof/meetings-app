@@ -47,5 +47,21 @@ namespace Meetings.Api.Controllers
             IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserChats();
             return Ok(chats);
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUnreadChatsCount()
+        {
+            int count = await _chatService.GetUnreadChatsCount();
+            return Ok(count);
+        }
+
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> MarkChatAsRead([FromQuery] Guid chatId)
+        {
+            await _chatService.MarkChatAsRead(chatId);
+            return Ok();
+        }
     }
 }

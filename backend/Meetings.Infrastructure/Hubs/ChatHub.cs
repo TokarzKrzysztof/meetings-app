@@ -7,26 +7,44 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Meetings.Infrastructure.Hubs
 {
     public record SendPrivateMessageData(Guid RecipientId, string Text, MessageDTO? ReplyTo);
     public record StartTypingData(Guid ChatId);
     public record SetMessageReactionData(Guid MessageId, string ReactionUnified);
+    public record StartListenNewChatData(Guid ChatId);
 
-    public class ChatHub : Hub
+    public interface IChatHub
+    {
+        Task OnGetNewMessage(MessageDTO message);
+        Task OnOtherUserTyping(Guid userId);
+        Task OnMessageReactionChange(MessageDTO message);
+        Task OnNewChatCreated(Guid chatId);
+    }
+
+    public class ChatHub : Hub<IChatHub>
     {
         private readonly ChatService _chatService;
-        private readonly IRepository<User> _userRepository;
-        public ChatHub(ChatService chatService, IRepository<User> userRepository)
+        private readonly IRepository<ChatParticipant> _chatParticipantRepository;
+        public ChatHub(ChatService chatService, IRepository<ChatParticipant> chatParticipantRepository)
         {
             _chatService = chatService;
-            _userRepository = userRepository;
+            _chatParticipantRepository = chatParticipantRepository;
+        }
+
+        private Guid CurrentUserId
+        {
+            get
+            {
+                return new Guid(Context.UserIdentifier);
+            }
         }
 
         public override async Task OnConnectedAsync()
         {
-            var userChatIds = await _userRepository.Data.Where(x => x.Id == new Guid(Context.UserIdentifier)).SelectMany(x => x.Chats.Select(x => x.Id)).ToListAsync();
+            var userChatIds = await _chatParticipantRepository.Data.Where(x => x.UserId == CurrentUserId).Select(x => x.ChatId).ToListAsync();
             foreach (Guid id in userChatIds)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, id.ToString());
@@ -40,17 +58,18 @@ namespace Meetings.Infrastructure.Hubs
         {
             MessageDTO message = await _chatService.SendPrivateMessage(Context.ConnectionId, data.RecipientId, new MessageDTO()
             {
-                AuthorId = new Guid(Context.UserIdentifier),
+                AuthorId = CurrentUserId,
                 Text = data.Text,
                 ReplyTo = data.ReplyTo,
             });
-            await Clients.Group(message.ChatId.ToString()).SendAsync("onGetNewMessage", message);
+
+            await Clients.Group(message.ChatId.ToString()).OnGetNewMessage(message);
         }
 
         [Authorize]
         public async Task StartTyping(StartTypingData data)
         {
-            await Clients.OthersInGroup(data.ChatId.ToString()).SendAsync("onOtherUserTyping", Context.UserIdentifier);
+            await Clients.OthersInGroup(data.ChatId.ToString()).OnOtherUserTyping(CurrentUserId);
         }
 
         [Authorize]
@@ -58,12 +77,18 @@ namespace Meetings.Infrastructure.Hubs
         {
             MessageDTO message = await _chatService.SetMessageReaction(new MessageReactionDTO()
             {
-                AuthorId = new Guid(Context.UserIdentifier),
+                AuthorId = CurrentUserId,
                 MessageId = data.MessageId,
                 Unified = data.ReactionUnified
             });
 
-            await Clients.Group(message.ChatId.ToString()).SendAsync("onMessageUpdate", message);
+            await Clients.Group(message.ChatId.ToString()).OnMessageReactionChange(message);
+        }
+
+        [Authorize]
+        public async Task StartListenNewChat(StartListenNewChatData data)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, data.ChatId.ToString());
         }
     }
 }

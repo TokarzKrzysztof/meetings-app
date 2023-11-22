@@ -12,6 +12,7 @@ namespace Meetings.Models.Resources
         public Guid Id { get; set; }
         public Guid ParticipantId { get; set; }
         public string ParticipantName { get; set; }
+        public bool HasUnreadMessages { get; set; }
         public Guid? LastMessageAuthorId { get; set; }
         public string? LastMessageText { get; set; }
         public DateTime? LastMessageDate { get; set; }

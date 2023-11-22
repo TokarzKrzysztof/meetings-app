@@ -12,7 +12,7 @@ namespace Meetings.Database.QueryExtensions
     {
         public static IQueryable<Chat> ByParticipants(this IQueryable<Chat> query, Guid participant1Id, Guid participant2Id)
         {
-            return query.Where(x => x.Participants.Select(x => x.Id).Contains(participant1Id) && x.Participants.Select(x => x.Id).Contains(participant2Id));
+            return query.Where(x => x.Participants.Select(x => x.UserId).Contains(participant1Id) && x.Participants.Select(x => x.UserId).Contains(participant2Id));
         }
         public static IQueryable<Chat> IncludeAllMessagesData(this IQueryable<Chat> query)
         {

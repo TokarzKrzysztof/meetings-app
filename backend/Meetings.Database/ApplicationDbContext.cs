@@ -21,6 +21,7 @@ namespace Meetings.Database
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageReaction> MessageReactions { get; set; }
+        public DbSet<ChatParticipant> ChatParticipants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

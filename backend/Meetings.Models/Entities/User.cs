@@ -29,7 +29,7 @@ namespace Meetings.Models.Entities
         public Gender Gender { get; set; }
         public bool IsActive { get; set; }
         public virtual ICollection<Announcement> Announcements { get; set; }
-        public virtual ICollection<Chat> Chats { get; set; }
+        public virtual ICollection<ChatParticipant> Chats { get; set; }
 
         public User()
         {
