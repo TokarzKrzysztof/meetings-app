@@ -67,10 +67,11 @@ namespace Meetings.Infrastructure.Services
 
         public async Task SetAnnouncementStatus(Guid id, AnnoucementStatus newStatus)
         {
-            var item = await _repository.GetById(id);
-            item.Status = newStatus;
-
-            await _repository.Update(item);
+            await _repository.Data
+               .Where(x => x.Id == id)
+               .ExecuteUpdateAsync(s =>
+                    s.SetProperty(x => x.Status, newStatus)
+                );
         }
 
         public async Task RemoveAnnouncement(Guid id)

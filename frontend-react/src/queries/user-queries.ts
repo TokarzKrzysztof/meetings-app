@@ -130,7 +130,7 @@ export const useSendChangeEmailAddressEmail = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, { password: string; email: string }>
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => axios.patch(`${baseUrl}/SendChangeEmailAddressEmail`, data),
+    mutationFn: (data) => axios.post(`${baseUrl}/SendChangeEmailAddressEmail`, data),
     ...options,
   });
 

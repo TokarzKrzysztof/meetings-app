@@ -19,6 +19,8 @@ using Meetings.EmailTemplates.Views;
 using System.Text.Json;
 using Meetings.Models.TempDataModels;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -175,6 +177,17 @@ namespace Meetings.Infrastructure.Services
                 });
             }
             return result;
+        }
+
+        public async Task SendUserActivityTick()
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            await _repository.Data
+               .Where(x => x.Id == userId)
+               .ExecuteUpdateAsync(s =>
+                    s.SetProperty(x => x.LastActiveDate, DateTime.UtcNow)
+                );
         }
     }
 }

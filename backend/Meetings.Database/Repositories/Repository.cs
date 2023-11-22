@@ -3,6 +3,7 @@ using Meetings.Models.Entities;
 using Meetings.Utils.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 
 namespace Meetings.Database.Repositories
 {
@@ -41,7 +42,7 @@ namespace Meetings.Database.Repositories
 
         public TEntity Attach(TEntity entityData)
         {
-           return _db.Attach(entityData).Entity;
+            return _db.Attach(entityData).Entity;
         }
 
         public async Task<TEntity> GetById(Guid id, Func<IQueryable<TEntity>, IQueryable<TEntity>> transform = null)
@@ -86,8 +87,8 @@ namespace Meetings.Database.Repositories
             entity.UpdatedAt = DateTime.UtcNow;
             _db.Update(entity);
             await _db.SaveChangesAsync();
-        } 
-        
+        }
+
         public async Task UpdateRange(IEnumerable<TEntity> entities)
         {
             foreach (var entity in entities)

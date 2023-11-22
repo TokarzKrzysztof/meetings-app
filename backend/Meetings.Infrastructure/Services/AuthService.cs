@@ -90,10 +90,12 @@ namespace Meetings.Infrastructure.Services
             await _userValidator.WhenResetPassword(data);
 
             var tempData = await _tempDataRepository.GetById(data.TempId);
-            var user = await _repository.Data.SingleAsync(x => x.Email == tempData.Data);
 
-            user.Password = Hasher.Hash(data.NewPassword);
-            await _repository.Update(user);
+            await _repository.Data
+                .Where(x => x.Email == tempData.Data)
+                .ExecuteUpdateAsync(s =>
+                     s.SetProperty(x => x.Password, Hasher.Hash(data.NewPassword))
+                 );
         }
 
         public async Task SendForgotPasswordEmail(string email, string appUrl)

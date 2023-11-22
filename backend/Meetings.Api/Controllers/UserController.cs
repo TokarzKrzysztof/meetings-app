@@ -72,7 +72,7 @@ namespace Meetings.EmailTemplates.Controllers
             return Ok(user);
         }
 
-        [HttpPatch]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> SendChangeEmailAddressEmail([FromBody] ChangeEmailAddressData data)
         {

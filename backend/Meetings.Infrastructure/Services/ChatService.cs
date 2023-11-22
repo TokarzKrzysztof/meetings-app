@@ -179,13 +179,12 @@ namespace Meetings.Infrastructure.Services
         public async Task MarkChatAsRead(Guid chatId)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            ChatParticipant chatParticipant = await _chatParticipantRepository.Data.SingleAsync(x => x.UserId == userId && x.ChatId == chatId);
 
-            if (chatParticipant.HasUnreadMessages)
-            {
-                chatParticipant.HasUnreadMessages = false;
-                await _chatParticipantRepository.Update(chatParticipant);
-            }
+            await _chatParticipantRepository.Data
+                .Where(x => x.UserId == userId && x.ChatId == chatId)
+                .ExecuteUpdateAsync(s =>
+                    s.SetProperty(x => x.HasUnreadMessages, false)
+                 );
         }
 
         private async Task SetUnreadMessages(Guid chatId, Guid authorId)
