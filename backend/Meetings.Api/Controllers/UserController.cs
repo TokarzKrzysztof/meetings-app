@@ -32,8 +32,8 @@ namespace Meetings.EmailTemplates.Controllers
         {
             UserDTO? currentUser = await _userService.GetCurrentUser();
             return Ok(currentUser);
-        } 
-        
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetUser([FromQuery] Guid id)
         {
@@ -77,6 +77,14 @@ namespace Meetings.EmailTemplates.Controllers
         public async Task<IActionResult> SendChangeEmailAddressEmail([FromBody] ChangeEmailAddressData data)
         {
             await _userService.SendChangeEmailAddressEmail(data, GetAppUrl());
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> SendUserActivityTick()
+        {
+            await _userService.SendUserActivityTick();
             return Ok();
         }
     }

@@ -27,7 +27,8 @@ namespace Meetings.Models.Entities
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
         public Gender Gender { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsConfirmed { get; set; }
+        public DateTime LastActiveDate { get; set; }
         public virtual ICollection<Announcement> Announcements { get; set; }
         public virtual ICollection<ChatParticipant> Chats { get; set; }
 
@@ -35,7 +36,7 @@ namespace Meetings.Models.Entities
         {
             if (Utilities.IsDebug())
             {
-                IsActive = true;
+                IsConfirmed = true;
             }
         }
     }

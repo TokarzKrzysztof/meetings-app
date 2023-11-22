@@ -48,7 +48,7 @@ namespace Meetings.Infrastructure.Services
             {
                 throw new UnauthorizedAccessException();
             }
-            if (!user.IsActive)
+            if (!user.IsConfirmed)
             {
                 ResendActivationLink(user.Email, appUrl);
                 throw new UnauthorizedAccessException("UserNotActive");

@@ -107,7 +107,7 @@ namespace Meetings.Infrastructure.Services
             var tempData = await _tempDataRepository.GetById(tempId);
             var user = await _repository.GetById(new Guid(tempData.Data));
 
-            user.IsActive = true;
+            user.IsConfirmed = true;
 
             await _repository.Update(user);
             await _tempDataRepository.RemovePermanently(tempData);
