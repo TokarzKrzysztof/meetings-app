@@ -18,13 +18,13 @@ export const InfiniteScroll = ({
   ...props
 }: InfiniteScrollProps) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const isSomethingToLoad = children.length < totalAmount;
 
   useEffect(() => {
     if (!scrollableRef.current) return;
 
     const handler = () => {
       const isScrolled = scrollableRef.current!.scrollTop - scrollThreshold <= 0;
-      const isSomethingToLoad = children.length < totalAmount;
       if (!isLoadingMore && isScrolled && isSomethingToLoad) {
         next();
         setIsLoadingMore(true);
@@ -35,7 +35,7 @@ export const InfiniteScroll = ({
     return () => {
       scrollableRef.current?.removeEventListener('scroll', handler);
     };
-  }, [scrollableRef.current, children.length, totalAmount, scrollThreshold, isLoadingMore]);
+  }, [scrollableRef.current, isSomethingToLoad, scrollThreshold, isLoadingMore]);
 
   useEffect(() => {
     setIsLoadingMore(false);
@@ -43,8 +43,14 @@ export const InfiniteScroll = ({
 
   return (
     <>
-      {isLoadingMore && (
-        <Box display='flex' justifyContent='center' p={2}>
+      {isSomethingToLoad && (
+        // change only visibility to avoid scroll jumping
+        <Box
+          display='flex'
+          justifyContent='center'
+          p={2}
+          visibility={isLoadingMore ? 'visible' : 'hidden'}
+        >
           <CircularProgress size={25} />
         </Box>
       )}
