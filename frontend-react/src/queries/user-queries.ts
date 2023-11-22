@@ -136,3 +136,14 @@ export const useSendChangeEmailAddressEmail = (
 
   return genericUseMutationMethods('sendChangeEmailAddressEmail', mutation);
 };
+
+export const useSendUserActivityTick = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, void>
+) => {
+  const mutation = useMutation({
+    mutationFn: () => axios.patch(`${baseUrl}/SendUserActivityTick`),
+    ...options,
+  });
+
+  return genericUseMutationMethods('sendUserActivityTick', mutation);
+};
