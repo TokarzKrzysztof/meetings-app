@@ -1,7 +1,9 @@
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { HeaderMenu } from 'src/components/Header/HeaderMenu/HeaderMenu';
 import { AppBar, Box, Slide, Toolbar } from 'src/ui-components';
+import { AppRoutes } from 'src/utils/enums/app-routes';
 import { PropsWithReactElement } from 'src/utils/types/props';
 
 const HideOnScroll = ({ children }: PropsWithReactElement) => {
@@ -24,7 +26,7 @@ export const Header = ({ leftSlot }: HeaderProps) => {
       <HideOnScroll>
         <AppBar>
           <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Box>{leftSlot}</Box>
+            <Box>{leftSlot ?? <Box component={Link} to={AppRoutes.Home()} color={'white'}>Logo</Box>}</Box>
             <Box>
               <HeaderMenu />
             </Box>
