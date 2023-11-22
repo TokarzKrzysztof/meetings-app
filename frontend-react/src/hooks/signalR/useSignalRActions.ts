@@ -18,6 +18,9 @@ export const useSignalRActions = () => {
   const setMessageReaction = (data: { messageId: string; reactionUnified: string }) => {
     return connection.invoke('setMessageReaction', data);
   };
+  const startListenNewChat = (data: { chatId: string }) => {
+    return connection.invoke('startListenNewChat', data);
+  };
 
-  return { sendPrivateMessage, startTyping, setMessageReaction };
+  return { sendPrivateMessage, startTyping, setMessageReaction, startListenNewChat };
 };

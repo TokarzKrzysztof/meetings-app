@@ -25,7 +25,11 @@ TODO
 - dodac menu po kliknieciu na przycisk edycji i usunąć step 1
 - zrobic file service
 - zrobic claimsReader
-
+- zrobic usuwanie wszystkich entity bez flagi tylko za pomocą delete
+- rozbić IEntityBase na mniejsze części, bo czasami te daty nie są potrzebne 
+- naprawic blad z wchodzeniem w chat kiedy nie ma scrolla z odczytywaniem wiadomosci
+- naprawic blad z wchodzeniem w chat ze leci error na debounce
+- naprawic blad z wylogowywaniem kiedy currentUser jest resetowany
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)

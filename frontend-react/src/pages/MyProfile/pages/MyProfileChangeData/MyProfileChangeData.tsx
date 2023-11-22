@@ -1,5 +1,4 @@
 import { useSnackbar } from 'notistack';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { ControlledFormField } from 'src/components/ControlledFormField/ControlledFormField';
@@ -8,9 +7,10 @@ import { Header } from 'src/components/Header/Header';
 import { MyProfileActionButtons } from 'src/components/my-profile/MyProfileActionButtons/MyProfileActionButtons';
 import { MyProfileForm } from 'src/components/my-profile/MyProfileForm/MyProfileForm';
 import { MyProfileTitle } from 'src/components/my-profile/MyProfileTitle/MyProfileTitle';
+import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { User } from 'src/models/user';
-import { useChangePersonalData, useGetCurrentUser } from 'src/queries/user-queries';
+import { useChangePersonalData } from 'src/queries/user-queries';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
@@ -19,25 +19,20 @@ import { genderOptions } from 'src/utils/user-utils';
 type FormData = Pick<User, 'firstName' | 'lastName' | 'birthDate' | 'gender'>;
 
 export const MyProfileChangeData = () => {
-  const form = useForm<FormData>();
+  const currentUser = useLoggedInUser();
+  const form = useForm<FormData>({
+    defaultValues: currentUser,
+  });
   const {
     register,
     handleSubmit,
     control,
-    reset,
     formState: { isDirty },
   } = form;
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { currentUser } = useGetCurrentUser();
   const { setCurrentUser } = useSetQueryData();
   const { changePersonalData, changePersonalDataInProgress } = useChangePersonalData();
-
-  useEffect(() => {
-    if (currentUser) {
-      reset(currentUser);
-    }
-  }, [currentUser]);
 
   const onSubmit = (data: FormData) => {
     changePersonalData(data, {

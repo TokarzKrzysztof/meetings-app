@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
-import { atom, useAtomValue } from 'jotai';
+import { atom, useAtom } from 'jotai';
+import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { Box } from 'src/ui-components';
 
 export const isTypingAtom = atom(false);
@@ -45,7 +46,11 @@ const StyledDot = styled('span')({
 export type ChatTypingIndicatorProps = {};
 
 export const ChatTypingIndicator = ({ ...props }: ChatTypingIndicatorProps) => {
-  const isTyping = useAtomValue(isTypingAtom);
+  const [isTyping, setIsTyping] = useAtom(isTypingAtom);
+
+  useSignalREffect('onGetNewMessage', () => {
+    setIsTyping(false);
+  });
 
   if (!isTyping) return null;
   return (

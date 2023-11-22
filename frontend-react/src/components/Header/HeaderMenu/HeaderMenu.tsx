@@ -1,23 +1,21 @@
 import { useSetAtom } from 'jotai';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { HeaderMenuAccountButton } from 'src/components/Header/HeaderMenu/HeaderMenuAccountButton/HeaderMenuAccountButton';
+import { HeaderMenuMessages } from 'src/components/Header/HeaderMenu/HeaderMenuMessages/HeaderMenuMessages';
 import { useDeviceMediaQuery } from 'src/hooks/useDeviceMediaQuery';
-import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import { useLogout } from 'src/queries/auth-queries';
 import { useGetCurrentUser } from 'src/queries/user-queries';
-import { Button, Icon, IconButton } from 'src/ui-components';
+import { Button } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type HeaderMenuProps = {};
 
 export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
-  const { setCurrentUser } = useSetQueryData();
   const { currentUser } = useGetCurrentUser();
   const confirm = useSetAtom(confirmationDialogAtom);
   const { isDesktop } = useDeviceMediaQuery();
   const { logout } = useLogout();
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     confirm({
@@ -25,9 +23,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
       onAccept: () => {
         logout(undefined, {
           onSuccess: () => {
-            // the order is important here, first navigate to home, then clear current user to avoid error
-            navigate(AppRoutes.Home());
-            setCurrentUser(null);
+            window.location.reload();
           },
         });
       },
@@ -74,15 +70,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
               Dodaj ogłoszenie
             </Button>
           )}
-          <IconButton
-            size='large'
-            slot='end'
-            color='inherit'
-            component={Link}
-            to={AppRoutes.MyChats()}
-          >
-            <Icon name='question_answer' />
-          </IconButton>
+          <HeaderMenuMessages />
         </>
       )}
       <HeaderMenuAccountButton currentUser={currentUser} onLogout={handleLogout} />

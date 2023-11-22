@@ -71,3 +71,29 @@ export const useGetCurrentUserChats = (
 
   return genericUseQueryMethods('currentUserChats', query);
 };
+
+export const useGetUnreadChatsCount = (
+  options?: UseQueryOptions<number, AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: 'GetUnreadChatsCount',
+    queryFn: () => axios.get(`${baseUrl}/GetUnreadChatsCount`),
+    ...options,
+  });
+
+  return genericUseQueryMethods('unreadChatsCount', query);
+};
+
+export const useMarkChatAsRead = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Chat['id']>
+) => {
+  const mutation = useMutation({
+    mutationFn: (chatId) => {
+      const params = { chatId };
+      return axios.patch(`${baseUrl}/MarkChatAsRead`, null, { params });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('markChatAsRead', mutation);
+};

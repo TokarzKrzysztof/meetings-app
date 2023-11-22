@@ -6,7 +6,8 @@ import { Message } from 'src/models/chat/message';
 type SignalRListeners = {
   onGetNewMessage: (message: Message) => void;
   onOtherUserTyping: (userId: string) => void;
-  onMessageUpdate: (message: Message) => void;
+  onMessageReactionChange: (message: Message) => void;
+  onNewChatCreated: (chatId: string) => void;
 };
 export const useSignalREffect = <TName extends keyof SignalRListeners>(
   name: TName,

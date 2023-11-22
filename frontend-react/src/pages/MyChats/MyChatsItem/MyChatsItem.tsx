@@ -1,8 +1,16 @@
+import { styled } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { ChatPreview } from 'src/models/chat/chat-preview';
-import { Avatar, ListItemAvatar, ListItemButton, ListItemText } from 'src/ui-components';
+import { Avatar, Box, ListItemAvatar, ListItemButton, ListItemText } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
+
+const StyledDot = styled(Box)(({ theme }) => ({
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.primary.main,
+}));
 
 export type MyChatsItemProps = {
   chat: ChatPreview;
@@ -14,6 +22,7 @@ export const MyChatsItem = ({ chat, imageSrc }: MyChatsItemProps) => {
   const location = useLocation();
 
   const prefix = currentUser.id === chat.lastMessageAuthorId ? 'Ty:' : '';
+  const fontWeight = chat.hasUnreadMessages ? 'bold' : undefined;
   return (
     <ListItemButton
       component={Link}
@@ -28,7 +37,11 @@ export const MyChatsItem = ({ chat, imageSrc }: MyChatsItemProps) => {
       <ListItemText
         primary={chat.participantName}
         secondary={`${prefix} ${chat.lastMessageText}`}
+        primaryTypographyProps={{
+          fontWeight: fontWeight,
+        }}
         secondaryTypographyProps={{
+          fontWeight: fontWeight,
           sx: {
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
@@ -36,6 +49,7 @@ export const MyChatsItem = ({ chat, imageSrc }: MyChatsItemProps) => {
           },
         }}
       />
+      {chat.hasUnreadMessages && <StyledDot />}
     </ListItemButton>
   );
 };

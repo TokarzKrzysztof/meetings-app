@@ -13,9 +13,15 @@ export type ChatNewMessageProps = {
   onScrollToBottom: () => void;
   recipient: User;
   chat: Chat | null | undefined;
+  privateChatRefetch: () => void;
 };
 
-export const ChatNewMessage = ({ onScrollToBottom, recipient, chat }: ChatNewMessageProps) => {
+export const ChatNewMessage = ({
+  onScrollToBottom,
+  recipient,
+  chat,
+  privateChatRefetch,
+}: ChatNewMessageProps) => {
   const { sendPrivateMessage, startTyping } = useSignalRActions();
   const setIsTyping = useSetAtom(isTypingAtom);
   const [replyMessage, setReplyMessage] = useAtom(replyMessageAtom);
@@ -45,7 +51,10 @@ export const ChatNewMessage = ({ onScrollToBottom, recipient, chat }: ChatNewMes
       text: message!,
       recipientId: recipient.id,
       replyTo: replyMessage,
+    }).then(() => {
+      if (!chat) privateChatRefetch();
     });
+
     setMessage(null);
     setReplyMessage(null);
   };
@@ -53,14 +62,12 @@ export const ChatNewMessage = ({ onScrollToBottom, recipient, chat }: ChatNewMes
   const onKeyUpThrottle = useMemo(() => {
     return _.throttle(
       () => {
-        if (chat) {
-          startTyping({ chatId: chat.id });
-        }
+        if (chat) startTyping({ chatId: chat.id });
       },
       2000,
       { trailing: false }
     );
-  }, []);
+  }, [chat]);
 
   return (
     <Stack alignItems={'flex-start'} gap={1} p={1}>

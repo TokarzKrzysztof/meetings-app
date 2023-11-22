@@ -27,7 +27,7 @@ export const Menu = ({ children, anchorRef, ...props }: MenuProps) => {
         setOpen(true);
       });
     }
-  }, [anchorRef]);
+  }, [anchorRef.current]);
 
   if (!anchorRef.current) return null;
   return (
