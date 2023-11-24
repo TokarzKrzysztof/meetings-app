@@ -2,7 +2,9 @@
 using Meetings.Authentication.Services;
 using Meetings.Database.QueryExtensions;
 using Meetings.Database.Repositories;
+using Meetings.FileManager;
 using Meetings.Infrastructure.Hubs;
+using Meetings.Infrastructure.Mappers;
 using Meetings.Infrastructure.Utils;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
@@ -10,6 +12,8 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -21,8 +25,9 @@ namespace Meetings.Infrastructure.Services
         private readonly IMapper _mapper;
         private readonly IClaimsReader _claimsReader;
         private readonly IHubContext<ChatHub, IChatHub> _chatHubContext;
+        private readonly ExtendedMapper _extendedMapper;
 
-        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IHubContext<ChatHub, IChatHub> chatHubContext, IRepository<ChatParticipant> chatParticipantRepository)
+        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IHubContext<ChatHub, IChatHub> chatHubContext, IRepository<ChatParticipant> chatParticipantRepository, ExtendedMapper extendedMapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -30,6 +35,7 @@ namespace Meetings.Infrastructure.Services
             _messageRepository = messageRepository;
             _chatHubContext = chatHubContext;
             _chatParticipantRepository = chatParticipantRepository;
+            _extendedMapper = extendedMapper;
         }
 
         public async Task<ChatDTO?> GetPrivateChat(Guid participantId, int messagesAmount)
@@ -54,7 +60,7 @@ namespace Meetings.Infrastructure.Services
             return new ChatDTO()
             {
                 Id = queryResult.Id,
-                Messages = _mapper.Map<List<MessageDTO>>(queryResult.Messages),
+                Messages = await _extendedMapper.ToMessageDTOList(queryResult.Messages),
                 TotalMessagesAmount = queryResult.TotalMessagesAmount
             };
         }
@@ -66,7 +72,7 @@ namespace Meetings.Infrastructure.Services
                 .Select(x => x.Messages.OrderByDescending(x => x.CreatedAt).Skip(skip).Take(take).Reverse())
                 .SingleOrDefaultAsync();
 
-            return _mapper.Map<List<MessageDTO>>(messages);
+            return await _extendedMapper.ToMessageDTOList(messages);
         }
 
         public async Task<List<MessageDTO>> LoadAllMessagesAfterDate(Guid chatId, DateTime afterDate)
@@ -76,47 +82,50 @@ namespace Meetings.Infrastructure.Services
                  .Select(x => x.Messages.OrderByDescending(x => x.CreatedAt).Where(x => x.CreatedAt >= afterDate).Reverse())
                  .SingleOrDefaultAsync();
 
-            return _mapper.Map<List<MessageDTO>>(messages);
+            return await _extendedMapper.ToMessageDTOList(messages);
         }
 
-        public async Task<MessageDTO> SendPrivateMessage(string connectionId, Guid recipientId, MessageDTO data)
+        private async Task<Message> CreateMessage(Guid authorId, Guid chatId, SendPrivateMessageData data)
         {
-            Guid chatId = await _repository.Data.ByParticipants(data.AuthorId, recipientId).Select(x => x.Id).SingleOrDefaultAsync();
-
-            if (chatId == Guid.Empty)
+            if (data.Type == MessageType.Image)
             {
-                List<ChatParticipant> participants = new List<ChatParticipant>()
-                {
-                    new ChatParticipant(data.AuthorId),
-                    new ChatParticipant(recipientId)
-                    {
-                        HasUnreadMessages = true
-                    }
-                };
+                var filePath = Path.Combine(FileUtils.Root, "Chats", chatId.ToString(), $"{Guid.NewGuid()}.jpg");
+                await FileUtils.Save(filePath, data.File!);
 
-                var createdChat = await _repository.Create(new Chat()
+                return await _messageRepository.Create(new Message()
                 {
-                    Participants = participants
-                });
-                chatId = createdChat.Id;
-
-                await _chatHubContext.Groups.AddToGroupAsync(connectionId, chatId.ToString());
-                await _chatHubContext.Clients.Users(participants.Select(x => x.UserId.ToString())).OnNewChatCreated(chatId);
+                    AuthorId = authorId,
+                    ChatId = chatId,
+                    ReplyToId = data.ReplyToId,
+                    Value = filePath,
+                    Type = MessageType.Image,
+                }, (x) => x.ReplyTo);
             }
 
-            var entity = await _messageRepository.Create(new Message()
+            return await _messageRepository.Create(new Message()
             {
-                AuthorId = data.AuthorId,
+                AuthorId = authorId,
                 ChatId = chatId,
-                Text = data.Text,
-                ReplyToId = data.ReplyTo?.Id
-            });
+                ReplyToId = data.ReplyToId,
+                Value = data.Value!,
+                Type = MessageType.Text,
+            }, (x) => x.ReplyTo);
+        }
 
-            await SetUnreadMessages(chatId, data.AuthorId);
+        public async Task<MessageDTO> SendPrivateMessage(SendPrivateMessageData data)
+        {
+            Guid authorId = _claimsReader.GetCurrentUserId();
 
-            var result = _mapper.Map<MessageDTO>(entity);
-            result.ReplyTo = data.ReplyTo;
-            return result;
+            Guid chatId = await _repository.Data.ByParticipants(authorId, data.RecipientId).Select(x => x.Id).SingleOrDefaultAsync();
+            if (chatId == Guid.Empty)
+            {
+                chatId = await CreateNewChat(authorId, data);
+            }
+            Message entity = await CreateMessage(authorId, chatId, data);
+
+            await SetUnreadMessages(chatId, authorId);
+
+            return await _extendedMapper.ToMessageDTO(entity);
         }
 
         public async Task<MessageDTO> SetMessageReaction(MessageReactionDTO data)
@@ -140,7 +149,7 @@ namespace Meetings.Infrastructure.Services
             }
             await _messageRepository.Update(message);
 
-            return _mapper.Map<MessageDTO>(message);
+            return await _extendedMapper.ToMessageDTO(message);
         }
 
         public async Task<IEnumerable<ChatPreview>> GetCurrentUserChats()
@@ -166,7 +175,7 @@ namespace Meetings.Infrastructure.Services
                     ParticipantActiveStatus = UserUtils.DetermineUserActiveStatus(participant.User.LastActiveDate),
                     HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
                     LastMessageAuthorId = lastMessage?.AuthorId,
-                    LastMessageText = lastMessage?.Text,
+                    LastMessageText = lastMessage?.Value,
                     LastMessageDate = lastMessage?.CreatedAt,
                 };
             }).OrderByDescending(x => x.LastMessageDate);
@@ -187,6 +196,28 @@ namespace Meetings.Infrastructure.Services
                 .ExecuteUpdateAsync(s =>
                     s.SetProperty(x => x.HasUnreadMessages, false)
                  );
+        }
+
+        private async Task<Guid> CreateNewChat(Guid authorId, SendPrivateMessageData data)
+        {
+            List<ChatParticipant> participants = new List<ChatParticipant>()
+            {
+                    new ChatParticipant(authorId),
+                    new ChatParticipant(data.RecipientId)
+                    {
+                        HasUnreadMessages = true
+                    }
+                };
+
+            var createdChat = await _repository.Create(new Chat()
+            {
+                Participants = participants
+            });
+
+            await _chatHubContext.Groups.AddToGroupAsync(data.ConnectionId, createdChat.Id.ToString());
+            await _chatHubContext.Clients.Users(participants.Select(x => x.UserId.ToString())).OnNewChatCreated(createdChat.Id);
+
+            return createdChat.Id;
         }
 
         private async Task SetUnreadMessages(Guid chatId, Guid authorId)

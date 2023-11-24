@@ -4,6 +4,7 @@ using Meetings.Utils.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
+using System.Reflection.Metadata;
 
 namespace Meetings.Database.Repositories
 {
@@ -11,7 +12,6 @@ namespace Meetings.Database.Repositories
     {
         IQueryable<TEntity> Data { get; }
 
-        Task<TEntity> Create(TEntity entity);
         Task<TEntity> GetById(Guid id, Func<IQueryable<TEntity>, IQueryable<TEntity>> transform = null);
         Task<TEntity> TryGetById(Guid id);
         Task Remove(Guid id);
@@ -21,6 +21,7 @@ namespace Meetings.Database.Repositories
         Task Update(TEntity entity);
         TEntity Attach(TEntity entityData);
         Task UpdateRange(IEnumerable<TEntity> entities);
+        Task<TEntity> Create(TEntity entity, Expression<Func<TEntity, object>>? includeReference = null);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntityBase
@@ -99,13 +100,19 @@ namespace Meetings.Database.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task<TEntity> Create(TEntity entity)
+        public async Task<TEntity> Create(TEntity entity, Expression<Func<TEntity, object>>? includeReference = null)
         {
             entity.Id = Guid.NewGuid();
             entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedAt = DateTime.UtcNow;
+
             _db.Add(entity);
             await _db.SaveChangesAsync();
+
+            if (includeReference != null)
+            {
+               await _db.Entry(entity).Reference(includeReference).LoadAsync();
+            }
 
             return entity;
         }

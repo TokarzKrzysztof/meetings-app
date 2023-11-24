@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Entities
 {
+    public enum MessageType
+    {
+        Text,
+        Image
+    }
+
     public class Message : IEntityBase
     {
         public Guid Id { get; set; }
@@ -18,7 +24,8 @@ namespace Meetings.Models.Entities
         public virtual User Author { get; set; }
         public Guid? ReplyToId { get; set; }
         public virtual Message? ReplyTo { get; set; }
-        public string Text { get; set; }
+        public string Value { get; set; }
+        public MessageType Type { get; set; }
         public virtual ICollection<MessageReaction> Reactions { get; set; }
     }
 
@@ -28,7 +35,8 @@ namespace Meetings.Models.Entities
         public Guid ChatId { get; set; }
         public Guid AuthorId { get; set; }
         public MessageDTO? ReplyTo { get; set; }
-        public string Text { get; set; }
+        public string Value { get; set; }
+        public MessageType Type { get; set; }
         public DateTime CreatedAt { get; set; }
         public ICollection<MessageReactionDTO> Reactions { get; set; }
     }

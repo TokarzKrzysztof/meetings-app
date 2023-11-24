@@ -4,7 +4,9 @@ import axios from 'src/config/axios-config';
 import { Chat } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { Message } from 'src/models/chat/message';
+import { SendPrivateMessageData } from 'src/models/chat/send-private-message-data';
 import { apiUrl } from 'src/utils/api-url';
+import { getFormData } from 'src/utils/http-utils';
 import {
   genericUseMutationMethods,
   genericUseQueryMethods,
@@ -96,4 +98,22 @@ export const useMarkChatAsRead = (
   });
 
   return genericUseMutationMethods('markChatAsRead', mutation);
+};
+
+export const useSendPrivateMessage = (
+  options?: UseMutationOptions<Message, AxiosError<HttpErrorData>, SendPrivateMessageData>
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => {
+      const formData = getFormData(data);
+      return axios.post(`${baseUrl}/SendPrivateMessage`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('sendPrivateMessage', mutation);
 };

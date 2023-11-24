@@ -1,8 +1,10 @@
-﻿using Meetings.Infrastructure.Services;
+﻿using Meetings.Infrastructure.Hubs;
+using Meetings.Infrastructure.Services;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Meetings.Api.Controllers
 {
@@ -11,9 +13,11 @@ namespace Meetings.Api.Controllers
     public class ChatController : AppControllerBase
     {
         private readonly ChatService _chatService;
-        public ChatController(ChatService chatService)
+        private readonly IHubContext<ChatHub, IChatHub> _chatHubContext;
+        public ChatController(ChatService chatService, IHubContext<ChatHub, IChatHub> chatHubContext)
         {
             _chatService = chatService;
+            _chatHubContext = chatHubContext;
         }
 
         [HttpGet]
@@ -62,6 +66,16 @@ namespace Meetings.Api.Controllers
         {
             await _chatService.MarkChatAsRead(chatId);
             return Ok();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> SendPrivateMessage([FromForm] SendPrivateMessageData data)
+        {
+            MessageDTO message = await _chatService.SendPrivateMessage(data);
+            await _chatHubContext.Clients.Group(message.ChatId.ToString()).OnGetNewMessage(message);
+
+            return Ok(message);
         }
     }
 }

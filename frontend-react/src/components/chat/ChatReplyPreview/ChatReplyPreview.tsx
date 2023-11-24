@@ -1,5 +1,5 @@
 import { atom, useAtom } from 'jotai';
-import { Message } from 'src/models/chat/message';
+import { Message, MessageType } from 'src/models/chat/message';
 import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
 
 export const replyMessageAtom = atom<Message | null>(null);
@@ -14,14 +14,18 @@ export const ChatReplyPreview = ({ ...props }: ChatReplyPreviewProps) => {
     <Stack p={1} pb={0} alignItems={'center'} justifyContent={'space-between'}>
       <Box overflow={'hidden'}>
         <Typography>Odpowiadanie</Typography>
-        <Typography
-          color={'grey'}
-          whiteSpace={'nowrap'}
-          textOverflow={'ellipsis'}
-          overflow={'hidden'}
-        >
-          {replyMessage.text}
-        </Typography>
+        {replyMessage.type === MessageType.Image ? (
+          <img style={{ maxHeight: 50 }} src={replyMessage.value} />
+        ) : (
+          <Typography
+            color={'grey'}
+            whiteSpace={'nowrap'}
+            textOverflow={'ellipsis'}
+            overflow={'hidden'}
+          >
+            {replyMessage.value}
+          </Typography>
+        )}
       </Box>
       <IconButton onClick={() => setReplyMessage(null)}>
         <Icon name='close' />

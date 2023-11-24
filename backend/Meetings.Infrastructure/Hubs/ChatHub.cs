@@ -11,7 +11,6 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Meetings.Infrastructure.Hubs
 {
-    public record SendPrivateMessageData(Guid RecipientId, string Text, MessageDTO? ReplyTo);
     public record StartTypingData(Guid ChatId);
     public record SetMessageReactionData(Guid MessageId, string ReactionUnified);
     public record StartListenNewChatData(Guid ChatId);
@@ -51,19 +50,6 @@ namespace Meetings.Infrastructure.Hubs
             }
 
             await base.OnConnectedAsync();
-        }
-
-        [Authorize]
-        public async Task SendPrivateMessage(SendPrivateMessageData data)
-        {
-            MessageDTO message = await _chatService.SendPrivateMessage(Context.ConnectionId, data.RecipientId, new MessageDTO()
-            {
-                AuthorId = CurrentUserId,
-                Text = data.Text,
-                ReplyTo = data.ReplyTo,
-            });
-
-            await Clients.Group(message.ChatId.ToString()).OnGetNewMessage(message);
         }
 
         [Authorize]

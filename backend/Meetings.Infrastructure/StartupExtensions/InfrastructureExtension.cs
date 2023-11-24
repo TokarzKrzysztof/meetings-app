@@ -31,6 +31,7 @@ namespace Meetings.Infrastructure.StartupExtensions
             builder.Services.AddSignalR();
             builder.Services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
+            builder.Services.AddScoped<ExtendedMapper>();
             builder.Services.AddAutoMapper(typeof(MapperProfile));
         }
     }

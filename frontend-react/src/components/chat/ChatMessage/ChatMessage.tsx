@@ -1,16 +1,16 @@
 import { useSetAtom } from 'jotai';
 import _ from 'lodash';
 import { useRef, useState } from 'react';
-import { StyledMessage, StyledReplyIcon } from 'src/components/chat/ChatMessage/ChatMessage.styled';
+import { StyledReplyIcon } from 'src/components/chat/ChatMessage/ChatMessage.styled';
 import { ChatMessageDragToReply } from 'src/components/chat/ChatMessage/ChatMessageDragToReply/ChatMessageDragToReply';
+import { ChatMessageMessage } from 'src/components/chat/ChatMessage/ChatMessageMessage/ChatMessageMessage';
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/components/chat/ChatMessage/ChatMessageReactions/ChatMessageReactions';
 import { replyMessageAtom } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
-import { useLongPress } from 'src/hooks/useLongPress';
 import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';
-import { Box, Typography } from 'src/ui-components';
+import { Box } from 'src/ui-components';
 
 export type ChatMessageProps = {
   message: Message;
@@ -32,7 +32,6 @@ export const ChatMessage = ({
   const [openReactions, setOpenReactions] = useState(false);
   const [moveX, setMoveX] = useState(0);
   const anchorRef = useRef<HTMLDivElement>(null);
-  const longPressEvent = useLongPress(() => setOpenReactions(true));
 
   const handleSelectReaction = (unified: string) => {
     setMessageReaction({
@@ -64,6 +63,7 @@ export const ChatMessage = ({
         <Box
           alignSelf={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           display={'flex'}
+          position={'relative'}
           flexDirection={'column'}
           alignItems={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           maxWidth={400}
@@ -75,31 +75,14 @@ export const ChatMessage = ({
             marginTop: message.replyTo ? `-${repliedMessageWrap}px` : undefined,
           }}
         >
-          {message.replyTo && (
-            <StyledMessage
-              variant={isAuthorCurrentUser ? 'filled' : 'outlined'}
-              sx={{
-                transform: `translateY(${repliedMessageWrap}px)`,
-                pb: `${repliedMessageWrap + 1}px`,
-              }}
-              onClick={() => onFocusRepliedMessage(message.replyTo!)}
-              shrinkMessage
-            >
-              <Typography fontSize={12}>{message.replyTo.text}</Typography>
-            </StyledMessage>
-          )}
-          <StyledMessage
-            {...longPressEvent}
-            id={message.id}
-            ref={anchorRef}
-            variant={isAuthorCurrentUser ? 'outlined' : 'filled'}
-            // transform to make message overlap
-            sx={{ transform: 'translateY(0px)' }}
-          >
-            <Typography fontSize={14}>{message.text}</Typography>
-            <ChatMessageReactions reactions={message.reactions} />
-          </StyledMessage>
-
+          <ChatMessageMessage
+            message={message}
+            isAuthorCurrentUser={isAuthorCurrentUser}
+            repliedMessageWrap={repliedMessageWrap}
+            anchorRef={anchorRef}
+            onFocusRepliedMessage={onFocusRepliedMessage}
+            onLongPress={() => setOpenReactions(true)}
+          />
           {moveX !== 0 && (
             <StyledReplyIcon
               name='reply'
@@ -108,6 +91,7 @@ export const ChatMessage = ({
               isAuthorCurrentUser={isAuthorCurrentUser}
             />
           )}
+          <ChatMessageReactions reactions={message.reactions} />
         </Box>
       </ChatMessageDragToReply>
 

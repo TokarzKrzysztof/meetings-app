@@ -61,11 +61,6 @@ app.MapHub<ChatHub>("/api/chat-hub");
 
 using (var scope = app.Services.CreateScope())
 {
-    var filesDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Files");
-    if (!Directory.Exists(filesDirectory))
-    {
-        Directory.CreateDirectory(filesDirectory);
-    }
     //IEmailSender emailS = scope.ServiceProvider.GetRequiredService<IEmailSender>();
 
     //var receivers = new List<EmailReceiver>()

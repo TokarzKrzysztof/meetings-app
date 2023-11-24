@@ -13,6 +13,8 @@ using Meetings.EmailTemplates.Views;
 using System.Text.Json;
 using Meetings.Models.TempDataModels;
 using Meetings.Infrastructure.Utils;
+using Meetings.Infrastructure.Mappers;
+using Meetings.FileManager;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -25,7 +27,8 @@ namespace Meetings.Infrastructure.Services
         private readonly IClaimsReader _claimsReader;
         private readonly UserValidator _userValidator;
         private readonly IEmailSender _emailSender;
-        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, IClaimsReader claimsReader, UserValidator userValidator, IEmailSender emailSender)
+        private readonly ExtendedMapper _extendedMapper;
+        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, IClaimsReader claimsReader, UserValidator userValidator, IEmailSender emailSender, ExtendedMapper extendedMapper)
         {
             _repository = repository;
             _mapper = mapper;
@@ -34,6 +37,7 @@ namespace Meetings.Infrastructure.Services
             _claimsReader = claimsReader;
             _userValidator = userValidator;
             _emailSender = emailSender;
+            _extendedMapper = extendedMapper;
         }
 
         public async Task SendChangeEmailAddressEmail(ChangeEmailAddressData data, string appUrl)
@@ -121,11 +125,7 @@ namespace Meetings.Infrastructure.Services
         public async Task<UserDTO> GetUser(Guid id)
         {
             var user = await _repository.GetById(id);
-
-            var result = _mapper.Map<UserDTO>(user);
-            result.ProfileImage = await GetConnectedProfileImage(id);
-            result.ActiveStatus = UserUtils.DetermineUserActiveStatus(user.LastActiveDate);
-            return result;
+            return _extendedMapper.ToUserDTO(user, await GetConnectedProfileImage(id));     
         }
 
         public Task<bool> IsEmailTaken(string email)
@@ -136,12 +136,7 @@ namespace Meetings.Infrastructure.Services
         public async Task UploadProfileImage(IFormFile image)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-
-            var filePath = GetProfileImageFilePath(userId);
-            using (FileStream stream = File.Create(filePath))
-            {
-                await image.CopyToAsync(stream);
-            }
+            await FileUtils.Save(GetProfileImageFilePath(userId), image);
         }
 
         public async Task<List<UserDTO>> GetProfileImages(Guid[] userIds)
@@ -169,18 +164,14 @@ namespace Meetings.Infrastructure.Services
                 );
         }
 
-        private async Task<string> GetConnectedProfileImage(Guid userId)
+        private async Task<string?> GetConnectedProfileImage(Guid userId)
         {
             var filePath = GetProfileImageFilePath(userId);
-
-            if (!File.Exists(filePath)) return null;
-
-            byte[] bytes = await File.ReadAllBytesAsync(filePath);
-            return $"data:image/jpeg;base64, {Convert.ToBase64String(bytes)}";
+            return await FileUtils.GetImageBase64(filePath);
         }
         private string GetProfileImageFilePath(Guid userId)
         {
-            return Path.Combine(Directory.GetCurrentDirectory(), "Files", $"profile image - {userId}.jpg");
+            return Path.Combine(FileUtils.Root, $"profile image - {userId}.jpg");
         }
     }
 }

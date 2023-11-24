@@ -1,17 +1,9 @@
 import { useAtomValue } from 'jotai';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
-import { Message } from 'src/models/chat/message';
 
 export const useSignalRActions = () => {
   const connection = useAtomValue(connectionAtom);
 
-  const sendPrivateMessage = (data: {
-    recipientId: string;
-    text: string;
-    replyTo: Message | null;
-  }) => {
-    return connection.invoke('sendPrivateMessage', data);
-  };
   const startTyping = (data: { chatId: string }) => {
     return connection.invoke('startTyping', data);
   };
@@ -22,5 +14,5 @@ export const useSignalRActions = () => {
     return connection.invoke('startListenNewChat', data);
   };
 
-  return { sendPrivateMessage, startTyping, setMessageReaction, startListenNewChat };
+  return { startTyping, setMessageReaction, startListenNewChat };
 };

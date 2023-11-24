@@ -1,4 +1,5 @@
-import { styled } from '@mui/material';
+import { CSSObject, styled } from '@mui/material';
+import { MessageType } from 'src/models/chat/message';
 import { Box, Icon } from 'src/ui-components';
 import { shouldNotForwardPropsWithKeys } from 'src/utils/types/should-not-forward-props';
 
@@ -15,24 +16,38 @@ export const StyledReplyIcon = styled(Icon, {
   transform: 'translateY(-50%)',
 }));
 
-type MessageProps = { variant: 'outlined' | 'filled'; shrinkMessage?: boolean };
+type MessageProps = { variant: 'outlined' | 'filled'; type: MessageType; shrinkMessage?: boolean };
 export const StyledMessage = styled(Box, {
-  shouldForwardProp: shouldNotForwardPropsWithKeys<MessageProps>(['variant', 'shrinkMessage']),
-})<MessageProps>(({ theme, variant, shrinkMessage }) => ({
-  position: 'relative',
-  padding: theme.spacing(1),
-  borderRadius: theme.shape.borderRadius * 4,
-  ...(variant === 'filled'
-    ? { background: theme.palette.grey[200] }
-    : { background: 'white', border: `1px solid ${theme.palette.grey[400]}` }),
-  '.MuiTypography-root': {
-    ...(shrinkMessage && {
+  shouldForwardProp: shouldNotForwardPropsWithKeys<MessageProps>([
+    'variant',
+    'type',
+    'shrinkMessage',
+  ]),
+})<MessageProps>(({ theme, variant, type, shrinkMessage }) => {
+  const result: CSSObject = {
+    padding: theme.spacing(1),
+    borderRadius: theme.shape.borderRadius * 4,
+    ...(variant === 'filled'
+      ? { background: theme.palette.grey[200] }
+      : { background: 'white', border: `1px solid ${theme.palette.grey[400]}` }),
+    '.MuiTypography-root': {
+      ...(shrinkMessage && {
+        display: '-webkit-box',
+        WebkitLineClamp: 4,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+      }),
+      whiteSpace: 'pre-wrap',
       wordBreak: 'break-word',
-      display: '-webkit-box',
-      WebkitLineClamp: 4,
-      WebkitBoxOrient: 'vertical',
-      overflow: 'hidden',
-    }),
-    whiteSpace: 'pre-wrap',
-  },
-}));
+    },
+  };
+
+  if (type === MessageType.Image) {
+    result.padding = undefined;
+    result.background = undefined;
+    result.border = undefined;
+    result.lineHeight = 0;
+  }
+
+  return result;
+});
