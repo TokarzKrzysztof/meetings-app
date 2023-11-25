@@ -25,6 +25,7 @@ export * from './Icon/Icon';
 export * from './IconButton/IconButton';
 export * from './InputAdornment/InputAdornment';
 export * from './InputLabel/InputLabel';
+export * from './LinearProgress/LinearProgress';
 export * from './List/List';
 export * from './ListItemAvatar/ListItemAvatar';
 export * from './ListItemButton/ListItemButton';

@@ -19,14 +19,12 @@ export const StyledReplyIcon = styled(Icon, {
 type MessageProps = {
   variant: 'outlined' | 'filled';
   type: MessageType;
-  isPending?: boolean;
   shrinkMessage?: boolean;
 };
 export const StyledMessage = styled(Box, {
   shouldForwardProp: shouldNotForwardPropsWithKeys<MessageProps>([
     'variant',
     'type',
-    'isPending',
     'shrinkMessage',
   ]),
 })<MessageProps>(({ theme, variant, type, isPending, shrinkMessage }) => {
@@ -53,11 +51,6 @@ export const StyledMessage = styled(Box, {
     result.background = undefined;
     result.border = undefined;
     result.lineHeight = 0;
-  }
-
-  if (isPending) {
-    result.opacity = 0.5;
-    result.pointerEvents = 'none';
   }
 
   return result;

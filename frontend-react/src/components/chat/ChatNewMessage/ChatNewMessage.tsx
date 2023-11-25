@@ -20,6 +20,7 @@ export type ChatNewMessageProps = {
   chat: Chat | null | undefined;
   privateChatRefetch: () => void;
   onAddPendingMessage: (message: Message) => void;
+  onPendingMessageProgressChange: (id: Message['id'], progressPercentage: number) => void;
 };
 
 export const ChatNewMessage = ({
@@ -29,13 +30,16 @@ export const ChatNewMessage = ({
   chat,
   privateChatRefetch,
   onAddPendingMessage,
+  onPendingMessageProgressChange,
 }: ChatNewMessageProps) => {
   const { startTyping } = useSignalRActions();
   const [replyMessage, setReplyMessage] = useAtom(replyMessageAtom);
   const connection = useAtomValue(connectionAtom);
   const [text, setText] = useState<string | null>(null);
   const fieldRef = useRef<HTMLTextAreaElement>(null);
-  const { sendPrivateMessage } = useSendPrivateMessage((percentage) => {});
+  const { sendPrivateMessage } = useSendPrivateMessage((data, percentage) =>
+    onPendingMessageProgressChange(data.id, percentage)
+  );
   const { addToQueue } = useQueue(sendPrivateMessage, {
     onSuccess: () => {
       if (!chat) privateChatRefetch();
@@ -74,6 +78,7 @@ export const ChatNewMessage = ({
       createdAt: new Date().toISOString(),
       reactions: [],
       isPending: true,
+      progressPercentage: 0,
       ...(isFileType
         ? {
             type: MessageType.Image,
@@ -112,7 +117,12 @@ export const ChatNewMessage = ({
         sx={{ flexGrow: 1 }}
         InputProps={{ sx: { borderRadius: 3 } }}
       ></TextArea>
-      <IconButton color='primary' disabled={!text} onClick={() => sendMessage(text!)} sx={{ ml: 1 }}>
+      <IconButton
+        color='primary'
+        disabled={!text}
+        onClick={() => sendMessage(text!)}
+        sx={{ ml: 1 }}
+      >
         <Icon name='send' />
       </IconButton>
     </Stack>

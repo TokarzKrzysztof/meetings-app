@@ -2,7 +2,7 @@ import { RefObject } from 'react';
 import { StyledMessage } from 'src/components/chat/ChatMessage/ChatMessage.styled';
 import { useLongPress } from 'src/hooks/useLongPress';
 import { Message, MessageType } from 'src/models/chat/message';
-import { Typography } from 'src/ui-components';
+import { Box, CircularProgress, Typography } from 'src/ui-components';
 
 export type ChatMessageMessageProps = {
   message: Message;
@@ -57,17 +57,49 @@ export const ChatMessageMessage = ({
         ref={anchorRef}
         variant={isAuthorCurrentUser ? 'outlined' : 'filled'}
         // transform to make message overlap
-        sx={{ transform: 'translateY(0px)' }}
+        sx={{
+          transform: 'translateY(0px)',
+        }}
         type={message.type}
-        isPending={message.isPending}
       >
         {message.type === MessageType.Image ? (
-          <img style={{ maxWidth: '100%', borderRadius: 10 }} src={message.value} />
+          <Box position={'relative'}>
+            <img
+              style={{
+                opacity: message.isPending ? 0.5 : undefined,
+                maxWidth: '100%',
+                borderRadius: 10,
+              }}
+              src={message.value}
+            />
+            {message.isPending && <ProgressSpinner progress={message.progressPercentage} />}
+          </Box>
         ) : (
-          <Typography fontSize={14}>{message.value} </Typography>
+          <Typography fontSize={14} sx={{ opacity: message.isPending ? 0.5 : undefined }}>
+            {message.value}
+          </Typography>
         )}
       </StyledMessage>
-      {message.isPending && <Typography fontSize={11} color={'grey'}>Trwa wysyłanie...</Typography>}
+      {message.isPending && (
+        <Typography fontSize={11} color={'grey'}>
+          Trwa wysyłanie...
+        </Typography>
+      )}
     </>
+  );
+};
+
+const ProgressSpinner = ({ progress }: { progress: number }) => {
+  return (
+    <Box
+      sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+      }}
+    >
+      <CircularProgress variant='determinate' value={progress} />
+    </Box>
   );
 };

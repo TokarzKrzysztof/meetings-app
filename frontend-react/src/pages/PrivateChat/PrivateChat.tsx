@@ -96,7 +96,7 @@ export const PrivateChat = () => {
           return [...prev];
         });
       } else {
-        setMessages((prev) => [...prev, msg])
+        setMessages((prev) => [...prev, msg]);
         markChatAsRead(privateChat!.id);
       }
     },
@@ -124,6 +124,15 @@ export const PrivateChat = () => {
         },
       }
     );
+  };
+
+  const handlePendingMessageProgressChange = (id: Message['id'], progressPercentage: number) => {
+    setMessages((prev) => {
+      const item = prev.find((x) => x.id === id)!;
+      item.progressPercentage = progressPercentage;
+      replaceItem(prev, item);
+      return [...prev];
+    });
   };
 
   const handleFocusRepliedMessage = (repliedMessage: Message) => {
@@ -202,6 +211,7 @@ export const PrivateChat = () => {
           chat={privateChat}
           privateChatRefetch={privateChatRefetch}
           onAddPendingMessage={(msg) => setMessages((prev) => [...prev, msg])}
+          onPendingMessageProgressChange={handlePendingMessageProgressChange}
         />
       </Stack>
       {showLoadingOldMessagesDialog && (

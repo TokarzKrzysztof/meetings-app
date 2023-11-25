@@ -73,6 +73,8 @@ export const ChatMessage = ({
             marginBottom: message.reactions.length ? 1 : undefined,
             transition: 'margin 200ms',
             marginTop: message.replyTo ? `-${repliedMessageWrap}px` : undefined,
+            pointerEvents: message.isPending ? 'none' : undefined,
+            touchAction: message.isPending ? 'none' : undefined,
           }}
         >
           <ChatMessageMessage

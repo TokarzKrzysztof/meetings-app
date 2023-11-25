@@ -17,4 +17,5 @@ export type Message = {
 
   // UI
   isPending: boolean;
+  progressPercentage: number;
 };

@@ -101,7 +101,7 @@ export const useMarkChatAsRead = (
 };
 
 export const useSendPrivateMessage = (
-  onUploadProgress: (percentage: number) => void, 
+  onUploadProgress: (data: SendPrivateMessageData, percentage: number) => void, 
   options?: UseMutationOptions<Message, AxiosError<HttpErrorData>, SendPrivateMessageData>
 ) => {
   const mutation = useMutation({
@@ -113,7 +113,7 @@ export const useSendPrivateMessage = (
         },
         onUploadProgress: (event) => {
          const percentage = +(event.loaded / event.total! * 100).toFixed(0);
-         onUploadProgress(percentage);
+         onUploadProgress(data, percentage);
         }
       });
     },
