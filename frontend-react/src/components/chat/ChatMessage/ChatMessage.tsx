@@ -2,8 +2,8 @@ import { useSetAtom } from 'jotai';
 import _ from 'lodash';
 import { useRef, useState } from 'react';
 import { StyledReplyIcon } from 'src/components/chat/ChatMessage/ChatMessage.styled';
+import { ChatMessageContent } from 'src/components/chat/ChatMessage/ChatMessageContent/ChatMessageContent';
 import { ChatMessageDragToReply } from 'src/components/chat/ChatMessage/ChatMessageDragToReply/ChatMessageDragToReply';
-import { ChatMessageMessage } from 'src/components/chat/ChatMessage/ChatMessageMessage/ChatMessageMessage';
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/components/chat/ChatMessage/ChatMessageReactions/ChatMessageReactions';
 import { replyMessageAtom } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
@@ -77,7 +77,7 @@ export const ChatMessage = ({
             touchAction: message.isPending ? 'none' : undefined,
           }}
         >
-          <ChatMessageMessage
+          <ChatMessageContent
             message={message}
             isAuthorCurrentUser={isAuthorCurrentUser}
             repliedMessageWrap={repliedMessageWrap}

@@ -4,7 +4,7 @@ import { useLongPress } from 'src/hooks/useLongPress';
 import { Message, MessageType } from 'src/models/chat/message';
 import { Box, CircularProgress, Typography } from 'src/ui-components';
 
-export type ChatMessageMessageProps = {
+export type ChatMessageContentProps = {
   message: Message;
   isAuthorCurrentUser: boolean;
   repliedMessageWrap: number;
@@ -13,14 +13,14 @@ export type ChatMessageMessageProps = {
   onLongPress: () => void;
 };
 
-export const ChatMessageMessage = ({
+export const ChatMessageContent = ({
   message,
   isAuthorCurrentUser,
   repliedMessageWrap,
   anchorRef,
   onFocusRepliedMessage,
   onLongPress,
-}: ChatMessageMessageProps) => {
+}: ChatMessageContentProps) => {
   const longPressEvent = useLongPress(() => onLongPress());
 
   return (

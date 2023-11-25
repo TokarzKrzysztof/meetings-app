@@ -6,7 +6,7 @@ import {
   cloneElement,
   useEffect,
   useRef,
-  useState,
+  useState
 } from 'react';
 
 export type ChatMessageDragToReplyProps = {
