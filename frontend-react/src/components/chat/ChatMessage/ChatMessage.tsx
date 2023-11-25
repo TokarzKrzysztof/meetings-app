@@ -6,7 +6,7 @@ import { ChatMessageContent } from 'src/components/chat/ChatMessage/ChatMessageC
 import { ChatMessageDragToReply } from 'src/components/chat/ChatMessage/ChatMessageDragToReply/ChatMessageDragToReply';
 import { ChatMessageReactionPicker } from 'src/components/chat/ChatMessage/ChatMessageReactionPicker/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/components/chat/ChatMessage/ChatMessageReactions/ChatMessageReactions';
-import { replyMessageAtom } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
+import { replyMessageAtom } from 'src/components/chat/ChatNewMessage/ChatNewMessageReplyPreview/ChatNewMessageReplyPreview';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';

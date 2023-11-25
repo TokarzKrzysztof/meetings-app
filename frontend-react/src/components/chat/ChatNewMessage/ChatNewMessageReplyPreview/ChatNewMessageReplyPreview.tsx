@@ -4,9 +4,9 @@ import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
 
 export const replyMessageAtom = atom<Message | null>(null);
 
-export type ChatReplyPreviewProps = {};
+export type ChatNewMessageReplyPreviewProps = {};
 
-export const ChatReplyPreview = ({ ...props }: ChatReplyPreviewProps) => {
+export const ChatNewMessageReplyPreview = ({ ...props }: ChatNewMessageReplyPreviewProps) => {
   const [replyMessage, setReplyMessage] = useAtom(replyMessageAtom);
 
   if (!replyMessage) return null;

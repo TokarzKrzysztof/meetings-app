@@ -1,11 +1,11 @@
 import { styled, useTheme } from '@mui/material';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { InfiniteScroll } from 'src/components/InfiniteScroll/InfiniteScroll';
+import { ChatGoDownBtn } from 'src/components/chat/ChatGoDownBtn/ChatGoDownBtn';
 import { ChatHeader } from 'src/components/chat/ChatHeader/ChatHeader';
 import { ChatLoadingOldMessagesDialog } from 'src/components/chat/ChatLoadingOldMessagesDialog/ChatLoadingOldMessagesDialog';
 import { ChatMessage } from 'src/components/chat/ChatMessage/ChatMessage';
 import { ChatNewMessage } from 'src/components/chat/ChatNewMessage/ChatNewMessage';
-import { ChatReplyPreview } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
 import { ChatTypingIndicator } from 'src/components/chat/ChatTypingIndicator/ChatTypingIndicator';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
@@ -26,6 +26,7 @@ import { calculateAge } from 'src/utils/user-utils';
 
 const StyledScrollableContainer = styled(Container)(({ theme }) => ({
   paddingTop: theme.spacing(3),
+  position: 'relative',
   overflow: 'auto',
   flexGrow: 1,
   display: 'flex',
@@ -55,8 +56,12 @@ export const PrivateChat = () => {
   const { user, userFetching } = useGetUser(params.userId);
   const theme = useTheme();
 
-  const scrollToBottom = useDeferredFunction(() => {
-    scrollableRef.current!.scrollTo(0, scrollableRef.current!.scrollHeight);
+  const scrollToBottom = useDeferredFunction((behavior: ScrollBehavior = 'auto') => {
+    scrollableRef.current!.scrollTo({
+      left: 0,
+      top: scrollableRef.current!.scrollHeight,
+      behavior,
+    });
   });
   const scrollToPreviousScrollState = useDeferredFunction((prevScrollHeight: number) => {
     const currentScrollHeight = scrollableRef.current!.scrollHeight;
@@ -216,8 +221,8 @@ export const PrivateChat = () => {
           </Stack>
           <ChatTypingIndicator />
           <StyledScrollingAnchor />
+          <ChatGoDownBtn scrollableRef={scrollableRef} onGoDown={() => scrollToBottom('smooth')} />
         </StyledScrollableContainer>
-        <ChatReplyPreview />
         <ChatNewMessage
           onScrollToBottom={scrollToBottom}
           recipient={user}

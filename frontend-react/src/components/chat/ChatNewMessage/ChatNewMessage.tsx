@@ -2,7 +2,10 @@ import { useAtom, useAtomValue } from 'jotai';
 import _ from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ChatNewMessageImage } from 'src/components/chat/ChatNewMessage/ChatNewMessageImage/ChatNewMessageImage';
-import { replyMessageAtom } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
+import {
+  ChatNewMessageReplyPreview,
+  replyMessageAtom,
+} from 'src/components/chat/ChatNewMessage/ChatNewMessageReplyPreview/ChatNewMessageReplyPreview';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useQueue } from 'src/hooks/useQueue';
@@ -105,26 +108,29 @@ export const ChatNewMessage = ({
   }, [chat]);
 
   return (
-    <Stack alignItems={'flex-start'} p={1} pl={0}>
-      <ChatNewMessageImage onSend={(image) => sendMessage(image!)} />
-      <TextArea
-        ref={fieldRef}
-        size='small'
-        onChange={setText}
-        onFocus={() => !replyMessage && onScrollToBottom()}
-        onKeyUp={onKeyUpThrottle}
-        value={text ?? ''}
-        sx={{ flexGrow: 1 }}
-        InputProps={{ sx: { borderRadius: 3 } }}
-      ></TextArea>
-      <IconButton
-        color='primary'
-        disabled={!text}
-        onClick={() => sendMessage(text!)}
-        sx={{ ml: 1 }}
-      >
-        <Icon name='send' />
-      </IconButton>
-    </Stack>
+    <>
+      <ChatNewMessageReplyPreview />
+      <Stack alignItems={'flex-start'} p={1} pl={0}>
+        <ChatNewMessageImage onSend={(image) => sendMessage(image!)} />
+        <TextArea
+          ref={fieldRef}
+          size='small'
+          onChange={setText}
+          onFocus={() => !replyMessage && onScrollToBottom()}
+          onKeyUp={onKeyUpThrottle}
+          value={text ?? ''}
+          sx={{ flexGrow: 1 }}
+          InputProps={{ sx: { borderRadius: 3 } }}
+        ></TextArea>
+        <IconButton
+          color='primary'
+          disabled={!text}
+          onClick={() => sendMessage(text!)}
+          sx={{ ml: 1 }}
+        >
+          <Icon name='send' />
+        </IconButton>
+      </Stack>
+    </>
   );
 };

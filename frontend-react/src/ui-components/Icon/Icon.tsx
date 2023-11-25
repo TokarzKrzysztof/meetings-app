@@ -27,7 +27,9 @@ export type IconProps<D extends React.ElementType = IconTypeMap['defaultComponen
     | 'add'
     | 'send'
     | 'reply'
-    | 'photo';
+    | 'keyboard_double_arrow_down'
+    | 'photo'
+    | 'south';
 };
 
 export const Icon = <D extends React.ElementType = IconTypeMap['defaultComponent']>({
