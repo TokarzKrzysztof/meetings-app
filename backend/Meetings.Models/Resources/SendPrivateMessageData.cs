@@ -10,6 +10,7 @@ namespace Meetings.Models.Resources
 {
     public class SendPrivateMessageData
     {
+        public Guid Id { get; set; }
         public IFormFile? File { get; set; }
         public string ConnectionId { get; set; }
         public Guid RecipientId { get; set; }

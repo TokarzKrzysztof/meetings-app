@@ -1,20 +1,11 @@
 import { MessageType } from 'src/models/chat/message';
 
-type BasePrivateMessageData = {
+export type SendPrivateMessageData = {
+  id: string;
+  file?: File;
   connectionId: string;
   recipientId: string;
+  value?: string;
   replyToId?: string;
+  type: MessageType;
 };
-
-export type TextPrivateMessageData = {
-  value: string;
-  type: MessageType.Text;
-};
-
-export type ImagePrivateMessageData = {
-  file: File;
-  type: MessageType.Image;
-};
-
-export type SendPrivateMessageData = BasePrivateMessageData &
-  (TextPrivateMessageData | ImagePrivateMessageData);

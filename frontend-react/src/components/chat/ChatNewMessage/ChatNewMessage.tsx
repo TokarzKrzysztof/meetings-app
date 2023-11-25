@@ -5,35 +5,42 @@ import { ChatNewMessageImage } from 'src/components/chat/ChatNewMessage/ChatNewM
 import { replyMessageAtom } from 'src/components/chat/ChatReplyPreview/ChatReplyPreview';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
+import { useQueue } from 'src/hooks/useQueue';
 import { Chat } from 'src/models/chat/chat';
-import { MessageType } from 'src/models/chat/message';
-import {
-  ImagePrivateMessageData,
-  TextPrivateMessageData,
-} from 'src/models/chat/send-private-message-data';
+import { Message, MessageType } from 'src/models/chat/message';
 import { User } from 'src/models/user';
 import { useSendPrivateMessage } from 'src/queries/chat-queries';
 import { Icon, IconButton, Stack, TextArea } from 'src/ui-components';
+import { fileToBase64, isFile } from 'src/utils/file-utils';
 
 export type ChatNewMessageProps = {
   onScrollToBottom: () => void;
+  currentUser: User;
   recipient: User;
   chat: Chat | null | undefined;
   privateChatRefetch: () => void;
+  onAddPendingMessage: (message: Message) => void;
 };
 
 export const ChatNewMessage = ({
   onScrollToBottom,
+  currentUser,
   recipient,
   chat,
   privateChatRefetch,
+  onAddPendingMessage,
 }: ChatNewMessageProps) => {
   const { startTyping } = useSignalRActions();
-  const { sendPrivateMessage } = useSendPrivateMessage();
   const [replyMessage, setReplyMessage] = useAtom(replyMessageAtom);
   const connection = useAtomValue(connectionAtom);
-  const [message, setMessage] = useState<string | null>(null);
+  const [text, setText] = useState<string | null>(null);
   const fieldRef = useRef<HTMLTextAreaElement>(null);
+  const { sendPrivateMessage } = useSendPrivateMessage((percentage) => {});
+  const { addToQueue } = useQueue(sendPrivateMessage, {
+    onSuccess: () => {
+      if (!chat) privateChatRefetch();
+    },
+  });
 
   useEffect(() => {
     if (replyMessage && fieldRef.current) {
@@ -41,37 +48,45 @@ export const ChatNewMessage = ({
     }
   }, [replyMessage]);
 
-  const sendMessage = (data: TextPrivateMessageData | ImagePrivateMessageData) => {
-    sendPrivateMessage(
-      {
-        connectionId: connection.connectionId!,
-        recipientId: recipient.id,
-        replyToId: replyMessage?.id,
-        ...data,
-      },
-      {
-        onSuccess: () => {
-          if (!chat) privateChatRefetch();
-        },
-      }
-    );
+  const sendMessage = async (value: string | File) => {
+    const id = window.self.crypto.randomUUID();
+    const isFileType = isFile(value);
+    addToQueue({
+      id,
+      connectionId: connection.connectionId!,
+      recipientId: recipient.id,
+      replyToId: replyMessage?.id,
+      ...(isFileType
+        ? {
+            type: MessageType.Image,
+            file: value,
+          }
+        : {
+            type: MessageType.Text,
+            value: value,
+          }),
+    });
+    onAddPendingMessage({
+      id,
+      chatId: chat?.id as string,
+      authorId: currentUser.id,
+      replyTo: replyMessage,
+      createdAt: new Date().toISOString(),
+      reactions: [],
+      isPending: true,
+      ...(isFileType
+        ? {
+            type: MessageType.Image,
+            value: await fileToBase64(value),
+          }
+        : {
+            type: MessageType.Text,
+            value: value,
+          }),
+    });
 
-    setMessage(null);
+    setText(null);
     setReplyMessage(null);
-  };
-
-  const handleSendTextMessage = () => {
-    sendMessage({
-      value: message!,
-      type: MessageType.Text,
-    });
-  };
-
-  const handleSendImageMessage = (image: File) => {
-    sendMessage({
-      file: image,
-      type: MessageType.Image,
-    });
   };
 
   const onKeyUpThrottle = useMemo(() => {
@@ -86,23 +101,18 @@ export const ChatNewMessage = ({
 
   return (
     <Stack alignItems={'flex-start'} p={1} pl={0}>
-      <ChatNewMessageImage onSend={handleSendImageMessage}/>
+      <ChatNewMessageImage onSend={(image) => sendMessage(image!)} />
       <TextArea
         ref={fieldRef}
         size='small'
-        onChange={setMessage}
+        onChange={setText}
         onFocus={() => !replyMessage && onScrollToBottom()}
         onKeyUp={onKeyUpThrottle}
-        value={message ?? ''}
+        value={text ?? ''}
         sx={{ flexGrow: 1 }}
         InputProps={{ sx: { borderRadius: 3 } }}
       ></TextArea>
-      <IconButton
-        color='primary'
-        disabled={!message}
-        onClick={handleSendTextMessage}
-        sx={{ ml: 1 }}
-      >
+      <IconButton color='primary' disabled={!text} onClick={() => sendMessage(text!)} sx={{ ml: 1 }}>
         <Icon name='send' />
       </IconButton>
     </Stack>

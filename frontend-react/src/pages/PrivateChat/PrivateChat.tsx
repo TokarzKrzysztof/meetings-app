@@ -89,8 +89,14 @@ export const PrivateChat = () => {
   useSignalREffect(
     'onGetNewMessage',
     (msg) => {
-      setMessages((prev) => [...prev, msg]);
-      if (msg.authorId !== currentUser.id) {
+      if (msg.authorId === currentUser.id) {
+        setMessages((prev) => {
+          // replace pending message
+          replaceItem(prev, msg);
+          return [...prev];
+        });
+      } else {
+        setMessages((prev) => [...prev, msg])
         markChatAsRead(privateChat!.id);
       }
     },
@@ -192,8 +198,10 @@ export const PrivateChat = () => {
         <ChatNewMessage
           onScrollToBottom={scrollToBottom}
           recipient={user}
+          currentUser={currentUser}
           chat={privateChat}
           privateChatRefetch={privateChatRefetch}
+          onAddPendingMessage={(msg) => setMessages((prev) => [...prev, msg])}
         />
       </Stack>
       {showLoadingOldMessagesDialog && (

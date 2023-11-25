@@ -59,6 +59,7 @@ export const ChatMessageMessage = ({
         // transform to make message overlap
         sx={{ transform: 'translateY(0px)' }}
         type={message.type}
+        isPending={message.isPending}
       >
         {message.type === MessageType.Image ? (
           <img style={{ maxWidth: '100%', borderRadius: 10 }} src={message.value} />
@@ -66,6 +67,7 @@ export const ChatMessageMessage = ({
           <Typography fontSize={14}>{message.value} </Typography>
         )}
       </StyledMessage>
+      {message.isPending && <Typography fontSize={11} color={'grey'}>Trwa wysyłanie...</Typography>}
     </>
   );
 };

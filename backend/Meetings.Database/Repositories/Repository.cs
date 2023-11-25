@@ -102,11 +102,11 @@ namespace Meetings.Database.Repositories
 
         public async Task<TEntity> Create(TEntity entity, Expression<Func<TEntity, object>>? includeReference = null)
         {
-            entity.Id = Guid.NewGuid();
+            entity.Id = entity.Id == Guid.Empty ? Guid.NewGuid() : entity.Id;
             entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedAt = DateTime.UtcNow;
 
-            _db.Add(entity);
+            _db.Add(entity); 
             await _db.SaveChangesAsync();
 
             if (includeReference != null)

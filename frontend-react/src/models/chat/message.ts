@@ -7,11 +7,14 @@ export enum MessageType {
 
 export type Message = {
   id: string;
-  chatId: string;
+  chatId?: string;
   authorId: string;
   replyTo: Message | null;
   value: string;
   type: MessageType;
   createdAt: string;
-  reactions: MessageReaction[]
+  reactions: MessageReaction[];
+
+  // UI
+  isPending: boolean;
 };

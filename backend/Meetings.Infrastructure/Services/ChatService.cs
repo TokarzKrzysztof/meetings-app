@@ -94,6 +94,7 @@ namespace Meetings.Infrastructure.Services
 
                 return await _messageRepository.Create(new Message()
                 {
+                    Id = data.Id,
                     AuthorId = authorId,
                     ChatId = chatId,
                     ReplyToId = data.ReplyToId,
@@ -104,6 +105,7 @@ namespace Meetings.Infrastructure.Services
 
             return await _messageRepository.Create(new Message()
             {
+                Id = data.Id,
                 AuthorId = authorId,
                 ChatId = chatId,
                 ReplyToId = data.ReplyToId,
