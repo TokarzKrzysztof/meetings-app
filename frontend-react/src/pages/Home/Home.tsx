@@ -1,8 +1,8 @@
 import { useSnackbar } from 'notistack';
 import { useEffect } from 'react';
-import { Header } from 'src/components/Header/Header';
+import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
-import { HomeCategoriesSearch } from 'src/pages/Home/HomeCategoriesSearch/HomeCategoriesSearch';
+import { HomeCategoriesSearch } from 'src/pages/Home/HomeCategoriesSearch';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Container, Typography } from 'src/ui-components';
 import { HomeParams } from 'src/utils/enums/app-routes';

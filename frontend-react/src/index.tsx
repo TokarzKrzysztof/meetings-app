@@ -9,7 +9,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClientProvider } from 'react-query';
 import { RouterProvider } from 'react-router-dom';
-import { SnackbarCloseButton } from 'src/components/SnackbarCloseButton/SnackbarCloseButton';
+import { SnackbarCloseButton } from 'src/components/SnackbarCloseButton';
 import { queryClient } from 'src/config/query-config';
 import './config/axios-config';
 import './index.css';

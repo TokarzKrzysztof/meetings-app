@@ -31,7 +31,7 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.Login(),
         lazy: async () => {
-          const { Login } = await import('./pages/Login/Login');
+          const { Login } = await import('./pages/account/Login/Login');
           return { Component: Login };
         },
         loader: () => null,
@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.Register(),
         lazy: async () => {
-          const { Register } = await import('./pages/Register/Register');
+          const { Register } = await import('./pages/account/Register/Register');
           return { Component: Register };
         },
         loader: () => null,
@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.ForgotPassword(),
         lazy: async () => {
-          const { ForgotPassword } = await import('./pages/ForgotPassword/ForgotPassword');
+          const { ForgotPassword } = await import('./pages/account/ForgotPassword/ForgotPassword');
           return { Component: ForgotPassword };
         },
         loader: () => null,
@@ -55,7 +55,7 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.ResetPassword(),
         lazy: async () => {
-          const { ResetPassword } = await import('./pages/ResetPassword/ResetPassword');
+          const { ResetPassword } = await import('./pages/account/ResetPassword/ResetPassword');
           return { Component: ResetPassword };
         },
         loader: () => null,
@@ -63,7 +63,7 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.PrivateChat(),
         lazy: async () => {
-          const { PrivateChat } = await import('./pages/PrivateChat/PrivateChat');
+          const { PrivateChat } = await import('./pages/chat/PrivateChat/PrivateChat');
           return { Component: PrivateChat };
         },
         loader: protectedLoader,
@@ -71,7 +71,7 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.MyChats(),
         lazy: async () => {
-          const { MyChats } = await import('./pages/MyChats/MyChats');
+          const { MyChats } = await import('./pages/chat/MyChats/MyChats');
           return { Component: MyChats };
         },
         loader: protectedLoader,
@@ -79,7 +79,9 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.AnnouncementResultList(),
         lazy: async () => {
-          const { AnnouncementResultList } = await import('./pages/AnnouncementResultList/AnnouncementResultList');
+          const { AnnouncementResultList } = await import(
+            './pages/announcement/AnnouncementResultList/AnnouncementResultList'
+          );
           return { Component: AnnouncementResultList };
         },
         loader: protectedLoader,
@@ -87,7 +89,9 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.NewAnnouncement(),
         lazy: async () => {
-          const { NewAnnouncement } = await import('./pages/NewAnnouncement/NewAnnouncement');
+          const { NewAnnouncement } = await import(
+            './pages/announcement/NewAnnouncement/NewAnnouncement'
+          );
           return { Component: NewAnnouncement };
         },
         loader: protectedLoader,
@@ -95,7 +99,9 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.EditAnnouncement(),
         lazy: async () => {
-          const { EditAnnouncement } = await import('./pages/EditAnnouncement/EditAnnouncement');
+          const { EditAnnouncement } = await import(
+            './pages/announcement/EditAnnouncement/EditAnnouncement'
+          );
           return { Component: EditAnnouncement };
         },
         loader: protectedLoader,
@@ -103,7 +109,9 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.MyAnnouncements(),
         lazy: async () => {
-          const { MyAnnouncements } = await import('./pages/MyAnnouncements/MyAnnouncements');
+          const { MyAnnouncements } = await import(
+            './pages/announcement/MyAnnouncements/MyAnnouncements'
+          );
           return { Component: MyAnnouncements };
         },
         loader: protectedLoader,
@@ -111,7 +119,7 @@ export const router = createBrowserRouter([
       {
         path: AppRoutes.MyProfile(),
         lazy: async () => {
-          const { MyProfile } = await import('./pages/MyProfile/MyProfile');
+          const { MyProfile } = await import('./pages/account/MyProfile/MyProfile');
           return { Component: MyProfile };
         },
         loader: protectedLoader,
@@ -120,7 +128,7 @@ export const router = createBrowserRouter([
             path: AppRoutes.MyProfileChangeData(),
             lazy: async () => {
               const { MyProfileChangeData } = await import(
-                './pages/MyProfile/pages/MyProfileChangeData/MyProfileChangeData'
+                './pages/account/MyProfile/sub-pages/MyProfileChangeData'
               );
               return { Component: MyProfileChangeData };
             },
@@ -130,7 +138,7 @@ export const router = createBrowserRouter([
             path: AppRoutes.MyProfileChangeEmail(),
             lazy: async () => {
               const { MyProfileChangeEmail } = await import(
-                './pages/MyProfile/pages/MyProfileChangeEmail/MyProfileChangeEmail'
+                './pages/account/MyProfile/sub-pages/MyProfileChangeEmail'
               );
               return { Component: MyProfileChangeEmail };
             },
@@ -140,7 +148,7 @@ export const router = createBrowserRouter([
             path: AppRoutes.MyProfileChangePassword(),
             lazy: async () => {
               const { MyProfileChangePassword } = await import(
-                './pages/MyProfile/pages/MyProfileChangePassword/MyProfileChangePassword'
+                './pages/account/MyProfile/sub-pages/MyProfileChangePassword'
               );
               return { Component: MyProfileChangePassword };
             },

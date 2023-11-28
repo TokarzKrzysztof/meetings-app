@@ -1,7 +1,7 @@
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { HeaderMenu } from 'src/components/Header/HeaderMenu/HeaderMenu';
+import { HeaderMenu } from 'src/components/header/HeaderMenu';
 import { AppBar, Box, Slide, Toolbar } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { PropsWithReactElement } from 'src/utils/types/props';
