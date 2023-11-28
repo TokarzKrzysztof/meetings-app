@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SendBtn } from 'src/components/chat/ChatNewMessage/ChatNewMessage.shared';
+import { ChatSendBtn } from 'src/components/chat/ChatSendBtn/ChatSendBtn';
 import { useVoiceRecording } from 'src/hooks/useVoiceRecording';
 import { Icon, IconButton, TextField } from 'src/ui-components';
 
@@ -48,7 +48,7 @@ export const ChatNewMessageRecording = ({ onCancel, onSend }: ChatNewMessageReco
         sx={{ flexGrow: 1 }}
         InputProps={{ sx: { p: 0 } }}
       />
-      <SendBtn
+      <ChatSendBtn
         onClick={() => {
           stop().then((blob) => onSend(blob));
         }}

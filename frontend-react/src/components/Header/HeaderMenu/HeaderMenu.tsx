@@ -1,7 +1,7 @@
 import { useSetAtom } from 'jotai';
 import { Link } from 'react-router-dom';
-import { HeaderMenuAccountButton } from 'src/components/Header/HeaderMenu/HeaderMenuAccountButton/HeaderMenuAccountButton';
-import { HeaderMenuMessages } from 'src/components/Header/HeaderMenu/HeaderMenuMessages/HeaderMenuMessages';
+import { HeaderMenuAccountButton } from 'src/components/Header/HeaderMenuAccountButton/HeaderMenuAccountButton';
+import { HeaderMenuMessages } from 'src/components/Header/HeaderMenuMessages/HeaderMenuMessages';
 import { useDeviceMediaQuery } from 'src/hooks/useDeviceMediaQuery';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import { useLogout } from 'src/queries/auth-queries';

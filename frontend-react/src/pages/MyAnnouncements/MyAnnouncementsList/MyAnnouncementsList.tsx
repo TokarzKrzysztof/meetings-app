@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
-import { MyAnnouncementsListItem } from 'src/pages/MyAnnouncements/MyAnnouncementsList/MyAnnouncementsListItem/MyAnnouncementsListItem';
+import { MyAnnouncementsListItem } from 'src/pages/MyAnnouncements/MyAnnouncementsListItem/MyAnnouncementsListItem';
 import { Box, Stack, Typography } from 'src/ui-components';
 
 export type MyAnnouncementsListProps = {

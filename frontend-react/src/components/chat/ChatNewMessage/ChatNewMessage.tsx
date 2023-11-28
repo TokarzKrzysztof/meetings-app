@@ -1,13 +1,13 @@
 import { useAtom, useAtomValue } from 'jotai';
 import _ from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { SendBtn } from 'src/components/chat/ChatNewMessage/ChatNewMessage.shared';
-import { ChatNewMessageImage } from 'src/components/chat/ChatNewMessage/ChatNewMessageImage/ChatNewMessageImage';
-import { ChatNewMessageRecording } from 'src/components/chat/ChatNewMessage/ChatNewMessageRecording/ChatNewMessageRecording';
+import { ChatNewMessageImage } from 'src/components/chat/ChatNewMessageImage/ChatNewMessageImage';
+import { ChatNewMessageRecording } from 'src/components/chat/ChatNewMessageRecording/ChatNewMessageRecording';
 import {
   ChatNewMessageReplyPreview,
   replyMessageAtom,
-} from 'src/components/chat/ChatNewMessage/ChatNewMessageReplyPreview/ChatNewMessageReplyPreview';
+} from 'src/components/chat/ChatNewMessageReplyPreview/ChatNewMessageReplyPreview';
+import { ChatSendBtn } from 'src/components/chat/ChatSendBtn/ChatSendBtn';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useQueue } from 'src/hooks/useQueue';
@@ -142,7 +142,7 @@ export const ChatNewMessage = ({
               sx={{ flexGrow: 1, marginLeft: text ? 0 : `${margin}px`, transition }}
               InputProps={{ sx: { borderRadius: 3 } }}
             ></TextArea>
-            <SendBtn onClick={() => sendMessage(text!, MessageType.Text)} disabled={!text} />
+            <ChatSendBtn onClick={() => sendMessage(text!, MessageType.Text)} disabled={!text} />
           </>
         )}
       </Stack>
