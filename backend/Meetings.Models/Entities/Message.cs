@@ -9,7 +9,8 @@ namespace Meetings.Models.Entities
     public enum MessageType
     {
         Text,
-        Image
+        Image,
+        Audio
     }
 
     public class Message : IEntityBase

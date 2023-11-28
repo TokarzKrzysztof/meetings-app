@@ -3,7 +3,6 @@ import {
   default as MuiAvatar,
   AvatarProps as MuiAvatarProps,
 } from '@mui/material/Avatar';
-import avatarPlaceholder from 'src/images/avatar-placeholder.png';
 
 export type AvatarProps<D extends React.ElementType = AvatarTypeMap['defaultComponent']> = Omit<
   MuiAvatarProps<D, { component?: D }>,
@@ -21,7 +20,7 @@ export const Avatar = <D extends React.ElementType = AvatarTypeMap['defaultCompo
 }: AvatarProps<D>) => (
   <MuiAvatar
     sx={{ width: size, height: size, ...sx }}
-    src={src ?? avatarPlaceholder}
+    src={src ?? undefined}
     {...props}
   ></MuiAvatar>
 );

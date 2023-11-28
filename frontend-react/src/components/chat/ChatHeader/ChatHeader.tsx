@@ -24,7 +24,7 @@ export const ChatHeader = ({ user, returnUrl }: ChatHeaderProps) => {
         </Button>
         <Stack alignItems={'center'} gap={1}>
           <UserActiveStatusBadge status={user.activeStatus}>
-            <Avatar src={user.profileImage} size={30} />
+            <Avatar src={user.profileImageSrc} size={30} />
           </UserActiveStatusBadge>
           <Typography>
             {user.firstName} {user.lastName}

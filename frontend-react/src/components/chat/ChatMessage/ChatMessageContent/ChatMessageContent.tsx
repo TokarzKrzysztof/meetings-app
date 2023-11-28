@@ -62,7 +62,12 @@ export const ChatMessageContent = ({
         }}
         type={message.type}
       >
-        {message.type === MessageType.Image ? (
+        {message.type === MessageType.Text && (
+          <Typography fontSize={14} sx={{ opacity: message.isPending ? 0.5 : undefined }}>
+            {message.value}
+          </Typography>
+        )}
+        {message.type === MessageType.Image && (
           <Box position={'relative'}>
             <img
               style={{
@@ -74,10 +79,9 @@ export const ChatMessageContent = ({
             />
             {message.isPending && <ProgressSpinner progress={message.progressPercentage} />}
           </Box>
-        ) : (
-          <Typography fontSize={14} sx={{ opacity: message.isPending ? 0.5 : undefined }}>
-            {message.value}
-          </Typography>
+        )}
+        {message.type === MessageType.Audio && (
+          <audio src={message.value} controls/>
         )}
       </StyledMessage>
       {message.isPending && (

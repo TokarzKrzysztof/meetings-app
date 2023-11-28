@@ -27,4 +27,7 @@
     <ProjectReference Include="..\Meetings.Infrastructure\Meetings.Infrastructure.csproj" />
     <ProjectReference Include="..\Meetings.Models\Meetings.Models.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
 </Project>

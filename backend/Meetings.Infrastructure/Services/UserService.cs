@@ -15,6 +15,8 @@ using Meetings.Models.TempDataModels;
 using Meetings.Infrastructure.Utils;
 using Meetings.Infrastructure.Mappers;
 using Meetings.FileManager;
+using Meetings.Infrastructure.Helpers;
+using Meetings.Utils.Extensions;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -23,24 +25,26 @@ namespace Meetings.Infrastructure.Services
         private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
         private readonly IRepository<TempData> _tempDataRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IClaimsReader _claimsReader;
         private readonly UserValidator _userValidator;
         private readonly IEmailSender _emailSender;
         private readonly ExtendedMapper _extendedMapper;
-        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, IClaimsReader claimsReader, UserValidator userValidator, IEmailSender emailSender, ExtendedMapper extendedMapper)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IFileManager _fileManager;
+        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository, IClaimsReader claimsReader, UserValidator userValidator, IEmailSender emailSender, ExtendedMapper extendedMapper, IHttpContextAccessor httpContextAccessor, IFileManager fileManager)
         {
             _repository = repository;
             _mapper = mapper;
             _tempDataRepository = tempDataRepository;
-            _httpContextAccessor = httpContextAccessor;
             _claimsReader = claimsReader;
             _userValidator = userValidator;
             _emailSender = emailSender;
             _extendedMapper = extendedMapper;
+            _httpContextAccessor = httpContextAccessor;
+            _fileManager = fileManager;
         }
 
-        public async Task SendChangeEmailAddressEmail(ChangeEmailAddressData data, string appUrl)
+        public async Task SendChangeEmailAddressEmail(ChangeEmailAddressData data)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
             var user = await _repository.GetById(userId);
@@ -53,7 +57,7 @@ namespace Meetings.Infrastructure.Services
                new EmailReceiver(data.Email, data.Email),
                "Zmiana adresu email",
                "ChangeEmailAddress",
-               new ChangeEmailAddressModel($"{appUrl}/api/Email/ChangeEmailAddress?tempId={tempData.Id}")
+               new ChangeEmailAddressModel($"{_httpContextAccessor.GetAppUrl()}/api/Email/ChangeEmailAddress?tempId={tempData.Id}")
            );
 
             // non blocking action
@@ -65,10 +69,11 @@ namespace Meetings.Infrastructure.Services
             var tempData = await _tempDataRepository.GetById(tempId);
             var data = JsonSerializer.Deserialize<ChangeEmailAddressTempData>(tempData.Data);
 
-            var user = await _repository.GetById(data.UserId);
-            user.Email = data.Email;
-
-            await _repository.Update(user);
+            await _repository.Data
+                .Where(x => x.Id == data.UserId)
+                .ExecuteUpdateAsync(s =>
+                    s.SetProperty(x => x.Email, data.Email)
+                 );
             await _tempDataRepository.RemovePermanently(tempData);
         }
 
@@ -88,14 +93,15 @@ namespace Meetings.Infrastructure.Services
             await _userValidator.WhenChangePersonalData(data);
 
             Guid userId = _claimsReader.GetCurrentUserId();
-            var user = await _repository.GetById(userId);
 
-            user.FirstName = data.FirstName;
-            user.LastName = data.LastName;
-            user.Gender = data.Gender;
-            user.BirthDate = data.BirthDate;
-
-            await _repository.Update(user);
+            await _repository.Data
+                .Where(x => x.Id == userId)
+                .ExecuteUpdateAsync(s =>
+                    s.SetProperty(x => x.FirstName, data.FirstName)
+                     .SetProperty(x => x.LastName, data.LastName)
+                     .SetProperty(x => x.Gender, data.Gender)
+                     .SetProperty(x => x.BirthDate, data.BirthDate)
+                 );
 
             return await GetUser(userId);
         }
@@ -125,7 +131,7 @@ namespace Meetings.Infrastructure.Services
         public async Task<UserDTO> GetUser(Guid id)
         {
             var user = await _repository.GetById(id);
-            return _extendedMapper.ToUserDTO(user, await GetConnectedProfileImage(id));     
+            return _extendedMapper.ToUserDTO(user);
         }
 
         public Task<bool> IsEmailTaken(string email)
@@ -136,21 +142,18 @@ namespace Meetings.Infrastructure.Services
         public async Task UploadProfileImage(IFormFile image)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            await FileUtils.Save(GetProfileImageFilePath(userId), image);
-        }
 
-        public async Task<List<UserDTO>> GetProfileImages(Guid[] userIds)
-        {
-            List<UserDTO> result = new List<UserDTO>();
-            foreach (var id in userIds)
+            var filePath = Path.Combine(_fileManager.Root, "ProfileImages", $"{Guid.NewGuid()}.jpg");
+            await _fileManager.Save(filePath, image);
+
+            var user = await _repository.GetById(userId);
+            if (user.ProfileImagePath != null)
             {
-                result.Add(new UserDTO()
-                {
-                    Id = id,
-                    ProfileImage = await GetConnectedProfileImage(id)
-                });
+                _fileManager.Delete(user.ProfileImagePath);
             }
-            return result;
+            user.ProfileImagePath = filePath;
+
+            await _repository.Update(user);
         }
 
         public async Task SendUserActivityTick()
@@ -162,16 +165,6 @@ namespace Meetings.Infrastructure.Services
                .ExecuteUpdateAsync(s =>
                     s.SetProperty(x => x.LastActiveDate, DateTime.UtcNow)
                 );
-        }
-
-        private async Task<string?> GetConnectedProfileImage(Guid userId)
-        {
-            var filePath = GetProfileImageFilePath(userId);
-            return await FileUtils.GetImageBase64(filePath);
-        }
-        private string GetProfileImageFilePath(Guid userId)
-        {
-            return Path.Combine(FileUtils.Root, $"profile image - {userId}.jpg");
         }
     }
 }

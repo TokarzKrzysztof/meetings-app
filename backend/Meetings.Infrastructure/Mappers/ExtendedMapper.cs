@@ -3,27 +3,41 @@ using Humanizer;
 using Meetings.FileManager;
 using Meetings.Infrastructure.Utils;
 using Meetings.Models.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Meetings.Utils.Extensions;
 
 namespace Meetings.Infrastructure.Mappers
 {
     public class ExtendedMapper
     {
         private readonly IMapper _mapper;
-        public ExtendedMapper(IMapper mapper)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IFileManager _fileManager;
+        public ExtendedMapper(IMapper mapper, IHttpContextAccessor httpContextAccessor, IFileManager fileManager)
         {
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
+            _fileManager = fileManager;
         }
 
-        public UserDTO ToUserDTO(User entity, string? profileImage = null)
+        private string FilePathToSrc(string filePath)
+        {
+            return filePath.Replace(_fileManager.Root, _httpContextAccessor.GetAppUrl());
+        }
+
+        public UserDTO ToUserDTO(User entity)
         {
             var result = _mapper.Map<UserDTO>(entity);
-            result.ProfileImage = profileImage;
             result.ActiveStatus = UserUtils.DetermineUserActiveStatus(entity.LastActiveDate);
+            if (entity.ProfileImagePath != null)
+            {
+                result.ProfileImageSrc = FilePathToSrc(entity.ProfileImagePath);
+            }
 
             return result;
         }
@@ -31,9 +45,9 @@ namespace Meetings.Infrastructure.Mappers
         public async Task<MessageDTO> ToMessageDTO(Message entity)
         {
             var result = _mapper.Map<MessageDTO>(entity);
-            if (result.Type == MessageType.Image)
+            if (result.Type == MessageType.Image || result.Type == MessageType.Audio)
             {
-                result.Value = await FileUtils.GetImageBase64(result.Value);
+                result.Value = FilePathToSrc(entity.Value);
             }
             if (entity.ReplyTo != null)
             {

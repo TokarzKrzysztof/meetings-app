@@ -1,11 +1,9 @@
-import _ from 'lodash';
 import { useSearchParams } from 'react-router-dom';
 import { GoBackBtn } from 'src/components/GoBackBtn/GoBackBtn';
 import { Header } from 'src/components/Header/Header';
 import { AnnouncementResultListItem } from 'src/pages/AnnouncementResultList/AnnouncementResultListItem/AnnouncementResultListItem';
 import { useGetAnnouncementResultList } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
-import { useGetProfileImages } from 'src/queries/user-queries';
 import { Box, Button, Container, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
@@ -42,12 +40,6 @@ export const AnnouncementResultList = () => {
   const { allCategories } = useGetAllCategories();
   const { announcementResultList, announcementResultListFetching } =
     useGetAnnouncementResultList(params);
-  const { profileImages } = useGetProfileImages(
-    _.uniq(announcementResultList?.map((x) => x.userId)),
-    {
-      enabled: !announcementResultListFetching,
-    }
-  );
 
   const categoryName = allCategories?.find((x) => x.id === params.categoryId)?.name;
   return (
@@ -67,13 +59,7 @@ export const AnnouncementResultList = () => {
         <Stack direction='column' gap={2}>
           {announcementResultList?.length ? (
             announcementResultList.map((announcement) => (
-              <AnnouncementResultListItem
-                key={announcement.announcementId}
-                data={announcement}
-                imgSrc={
-                  profileImages?.find((x) => x.id === announcement.userId)?.profileImage ?? null
-                }
-              />
+              <AnnouncementResultListItem key={announcement.announcementId} data={announcement} />
             ))
           ) : (
             <Box mt={6} textAlign={'center'} color={'grey'}>

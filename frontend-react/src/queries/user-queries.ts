@@ -57,26 +57,6 @@ export const useGetUser = (
   return genericUseQueryMethods('user', query);
 };
 
-export const useGetProfileImages = (
-  userIds: string[],
-  options?: UseQueryOptions<Pick<User, 'id' | 'profileImage'>[], AxiosError<HttpErrorData>>
-) => {
-  const query = useQuery({
-    queryKey: ['GetProfileImages', userIds],
-    queryFn: () => {
-      const params = { userIds };
-      return axios.get(`${baseUrl}/GetProfileImages`, {
-        params,
-        paramsSerializer: { indexes: true },
-      });
-    },
-    staleTime: Infinity,
-    ...options,
-  });
-
-  return genericUseQueryMethods('profileImages', query);
-};
-
 export const useUploadProfileImage = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Blob>
 ) => {

@@ -4,6 +4,7 @@ using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
 using Meetings.EmailSender;
 using Meetings.EmailTemplates.Views;
+using Meetings.Infrastructure.Helpers;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
@@ -16,6 +17,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Meetings.Utils.Extensions;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -41,7 +43,7 @@ namespace Meetings.Infrastructure.Services
             _userValidator = userValidator;
         }
 
-        public async Task<UserDTO> Login(LoginCredentials data, string appUrl)
+        public async Task<UserDTO> Login(LoginCredentials data)
         {
             var user = await TryGetUserByEmail(data.Email);
             if (user == null || !UserRuleBuilderExtensions.BeCorrect(data.Password, user))
@@ -50,7 +52,7 @@ namespace Meetings.Infrastructure.Services
             }
             if (!user.IsConfirmed)
             {
-                ResendActivationLink(user.Email, appUrl);
+                ResendActivationLink(user.Email);
                 throw new UnauthorizedAccessException("UserNotActive");
             }
 
@@ -65,7 +67,7 @@ namespace Meetings.Infrastructure.Services
             UpdateAuthCookie("", DateTime.UtcNow.AddDays(-1));
         }
 
-        public async Task Register(UserDTO data, string appUrl)
+        public async Task Register(UserDTO data)
         {
             await _userValidator.WhenRegister(data);
 
@@ -74,15 +76,15 @@ namespace Meetings.Infrastructure.Services
             var user = await _repository.Create(_mapper.Map(data, new User()));
             var tempData = await _tempDataRepository.Create(new TempData(user.Id.ToString()));
 
-            SendUserActivationLink(user, appUrl, tempData);
+            SendUserActivationLink(user, tempData);
         }
 
-        public async Task ResendActivationLink(string email, string appUrl)
+        public async Task ResendActivationLink(string email)
         {
             var user = await _repository.Data.SingleAsync(x => x.Email == email);
             var tempData = await _tempDataRepository.Data.SingleAsync(x => x.Data == user.Id.ToString());
 
-            SendUserActivationLink(user, appUrl, tempData);
+            SendUserActivationLink(user, tempData);
         }
 
         public async Task ResetPassword(ResetPasswordData data)
@@ -98,14 +100,14 @@ namespace Meetings.Infrastructure.Services
                  );
         }
 
-        public async Task SendForgotPasswordEmail(string email, string appUrl)
+        public async Task SendForgotPasswordEmail(string email)
         {
             var tempData = await _tempDataRepository.Create(new TempData(email));
             EmailData emailData = new EmailData(
                new EmailReceiver(email, email),
                "Reset hasła",
                "ResetPassword",
-               new ResetPasswordModel($"{appUrl}/api/Email/ResetPassword?tempId={tempData.Id}")
+               new ResetPasswordModel($"{_httpContextAccessor.GetAppUrl()}/api/Email/ResetPassword?tempId={tempData.Id}")
            );
 
             // non blocking action
@@ -117,13 +119,13 @@ namespace Meetings.Infrastructure.Services
             return await _repository.Data.SingleOrDefaultAsync(x => x.Email == email);
         }
 
-        private void SendUserActivationLink(User user, string appUrl, TempData tempData)
+        private void SendUserActivationLink(User user, TempData tempData)
         {
             EmailData emailData = new EmailData(
                 new EmailReceiver(user.Email, $"{user.FirstName} {user.LastName}"),
                 "Aktywacja konta",
                 "ConfirmAccount",
-                new ConfirmAccountModel(user.FirstName, $"{appUrl}/api/Email/ConfirmAccount?tempId={tempData.Id}")
+                new ConfirmAccountModel(user.FirstName, $"{_httpContextAccessor.GetAppUrl()}/api/Email/ConfirmAccount?tempId={tempData.Id}")
             );
 
             // non blocking action

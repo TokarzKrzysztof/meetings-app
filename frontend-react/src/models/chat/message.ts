@@ -2,7 +2,8 @@ import { MessageReaction } from "src/models/chat/message-reaction";
 
 export enum MessageType {
   Text,
-  Image
+  Image,
+  Audio,
 }
 
 export type Message = {

@@ -2,7 +2,7 @@ import { MessageType } from 'src/models/chat/message';
 
 export type SendPrivateMessageData = {
   id: string;
-  file?: File;
+  file?: Blob;
   connectionId: string;
   recipientId: string;
   value?: string;

@@ -2,6 +2,7 @@ using Meetings.Authentication.StartupExtensions;
 using Meetings.Database.StartupExtensions;
 using Meetings.EmailTemplates.StartupExtensions;
 using Meetings.ErrorHandlingMiddleware.StartupExtensions;
+using Meetings.FileManager.StartupExtensions;
 using Meetings.Infrastructure.Hubs;
 using Meetings.Infrastructure.StartupExtensions;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -37,6 +38,7 @@ builder.AddDatabase();
 builder.AddInfrastructure();
 builder.AddEmailSender();
 builder.AddEmailTemplates();
+builder.AddFileManager();
 
 var app = builder.Build();
 
@@ -50,6 +52,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -7,4 +7,5 @@ export type UserAnnouncement = {
     description: Announcement['description'];
     userBirthDate: string;
     userFirstName: string;
+    userProfileImageSrc: string | null;
 };

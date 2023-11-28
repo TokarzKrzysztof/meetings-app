@@ -5,6 +5,7 @@
 
 # Custom
 Files/
+wwwroot/
 
 # User-specific files
 *.rsuser

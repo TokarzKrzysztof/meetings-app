@@ -8,17 +8,16 @@ import { calculateAge } from 'src/utils/user-utils';
 
 export type AnnouncementResultListItemProps = {
   data: UserAnnouncement;
-  imgSrc: string | null;
 };
 
-export const AnnouncementResultListItem = ({ data, imgSrc }: AnnouncementResultListItemProps) => {
+export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemProps) => {
   const location = useLocation();
   const age = useMemo(() => calculateAge(data.userBirthDate), [data]);
 
   return (
     <Card>
       <Stack p={1} alignItems={'center'}>
-        <Avatar src={imgSrc} size={50} />
+        <Avatar src={data.userProfileImageSrc} size={50} />
         <Box ml={2}>
           <Typography fontSize={14}>
             {data.userFirstName}, {age}

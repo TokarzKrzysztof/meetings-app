@@ -26,8 +26,9 @@ namespace Meetings.Infrastructure.Services
         private readonly IClaimsReader _claimsReader;
         private readonly IHubContext<ChatHub, IChatHub> _chatHubContext;
         private readonly ExtendedMapper _extendedMapper;
+        private readonly IFileManager _fileManager;
 
-        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IHubContext<ChatHub, IChatHub> chatHubContext, IRepository<ChatParticipant> chatParticipantRepository, ExtendedMapper extendedMapper)
+        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IHubContext<ChatHub, IChatHub> chatHubContext, IRepository<ChatParticipant> chatParticipantRepository, ExtendedMapper extendedMapper, IFileManager fileManager)
         {
             _repository = repository;
             _mapper = mapper;
@@ -36,6 +37,7 @@ namespace Meetings.Infrastructure.Services
             _chatHubContext = chatHubContext;
             _chatParticipantRepository = chatParticipantRepository;
             _extendedMapper = extendedMapper;
+            _fileManager = fileManager;
         }
 
         public async Task<ChatDTO?> GetPrivateChat(Guid participantId, int messagesAmount)
@@ -87,21 +89,22 @@ namespace Meetings.Infrastructure.Services
 
         private async Task<Message> CreateMessage(Guid authorId, Guid chatId, SendPrivateMessageData data)
         {
-            if (data.Type == MessageType.Image)
+            if (data.Type == MessageType.Text)
             {
-                var filePath = Path.Combine(FileUtils.Root, "Chats", chatId.ToString(), $"{Guid.NewGuid()}.jpg");
-                await FileUtils.Save(filePath, data.File!);
-
                 return await _messageRepository.Create(new Message()
                 {
                     Id = data.Id,
                     AuthorId = authorId,
                     ChatId = chatId,
                     ReplyToId = data.ReplyToId,
-                    Value = filePath,
-                    Type = MessageType.Image,
+                    Value = data.Value!,
+                    Type = MessageType.Text,
                 }, (x) => x.ReplyTo);
             }
+
+            string extension = data.Type == MessageType.Image ? "jpg" : "mp3";
+            var filePath = Path.Combine(_fileManager.Root, "Chats", chatId.ToString(), $"{Guid.NewGuid()}.{extension}");
+            await _fileManager.Save(filePath, data.File!);
 
             return await _messageRepository.Create(new Message()
             {
@@ -109,8 +112,8 @@ namespace Meetings.Infrastructure.Services
                 AuthorId = authorId,
                 ChatId = chatId,
                 ReplyToId = data.ReplyToId,
-                Value = data.Value!,
-                Type = MessageType.Text,
+                Value = filePath,
+                Type = data.Type,
             }, (x) => x.ReplyTo);
         }
 
@@ -173,12 +176,17 @@ namespace Meetings.Infrastructure.Services
                 {
                     Id = x.Id,
                     ParticipantId = participant.UserId,
-                    ParticipantName = $"{participant.User.FirstName} {participant.User.LastName}",
+                    ParticipantFirstName = participant.User.FirstName,
+                    ParticipantLastName = participant.User.LastName,
+                    ParticipantGender = participant.User.Gender,
+                    ParticipantProfileImageSrc = participant.User.ProfileImagePath,
                     ParticipantActiveStatus = UserUtils.DetermineUserActiveStatus(participant.User.LastActiveDate),
                     HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
+                    HasLastMessage = lastMessage != null,
                     LastMessageAuthorId = lastMessage?.AuthorId,
-                    LastMessageText = lastMessage?.Value,
+                    LastMessageValue = lastMessage?.Type == MessageType.Text ? lastMessage?.Value : null,
                     LastMessageDate = lastMessage?.CreatedAt,
+                    LastMessageType = lastMessage?.Type,
                 };
             }).OrderByDescending(x => x.LastMessageDate);
         }

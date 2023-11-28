@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Entities
 {
-    public enum Gender
+    public enum UserGender
     {
         Male,
         Female
@@ -32,8 +32,9 @@ namespace Meetings.Models.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public Gender Gender { get; set; }
+        public UserGender Gender { get; set; }
         public bool IsConfirmed { get; set; }
+        public string? ProfileImagePath { get; set; }
         public DateTime LastActiveDate { get; set; }
         public virtual ICollection<Announcement> Announcements { get; set; }
         public virtual ICollection<ChatParticipant> Chats { get; set; }
@@ -56,8 +57,8 @@ namespace Meetings.Models.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BirthDate { get; set; }
-        public Gender Gender { get; set; }
-        public string? ProfileImage { get; set; }
+        public UserGender Gender { get; set; }
+        public string? ProfileImageSrc { get; set; }
         public UserActiveStatus ActiveStatus { get; set; }
     }
 }

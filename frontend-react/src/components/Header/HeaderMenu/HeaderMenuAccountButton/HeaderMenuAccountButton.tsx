@@ -43,7 +43,7 @@ export const HeaderMenuAccountButton = ({
     <>
       <IconButton color='inherit' ref={menuAnchorRef}>
         {currentUser ? (
-          <Avatar src={currentUser.profileImage} size={35} />
+          <Avatar src={currentUser.profileImageSrc} size={35} />
         ) : (
           <Icon name='person_outline' />
         )}

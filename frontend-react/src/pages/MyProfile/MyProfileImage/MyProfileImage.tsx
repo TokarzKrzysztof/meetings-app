@@ -34,7 +34,7 @@ export const MyProfileImage = ({ currentUser }: MyProfileImageProps) => {
   return (
     <>
       <Box position={'relative'}>
-        <Avatar src={currentUser.profileImage} size={150} />
+        <Avatar src={currentUser.profileImageSrc} size={150} />
         <StyledEditButton color='primary' filled ref={menuAnchorRef}>
           <Icon name='edit' />
         </StyledEditButton>
@@ -47,7 +47,7 @@ export const MyProfileImage = ({ currentUser }: MyProfileImageProps) => {
         }}
       >
         <MenuItem onClick={() => showPicker('image/*')}>
-          {currentUser.profileImage ? 'Zmień' : 'Dodaj'} zdjęcie profilowe
+          {currentUser.profileImageSrc ? 'Zmień' : 'Dodaj'} zdjęcie profilowe
         </MenuItem>
         <MenuItem>Wyświetl zdjęcie profilowe</MenuItem>
       </Menu>

@@ -25,7 +25,7 @@ namespace Meetings.EmailTemplates.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginCredentials data)
         {
-            UserDTO user = await _authService.Login(data, GetAppUrl());
+            UserDTO user = await _authService.Login(data);
             return Ok(user);
         } 
         
@@ -40,21 +40,21 @@ namespace Meetings.EmailTemplates.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] UserDTO data)
         {
-            await _authService.Register(data, GetAppUrl());
+            await _authService.Register(data);
             return Ok(data.Email);
         }
 
         [HttpPost]
         public async Task<IActionResult> ResendActivationLink([FromQuery] string email)
         {
-            await _authService.ResendActivationLink(email, GetAppUrl());
+            await _authService.ResendActivationLink(email);
             return Ok();
         }
 
         [HttpPost]
         public async Task<IActionResult> SendForgotPasswordEmail([FromQuery] string email)
         {
-            await _authService.SendForgotPasswordEmail(email, GetAppUrl());
+            await _authService.SendForgotPasswordEmail(email);
             return Ok();
         }  
 

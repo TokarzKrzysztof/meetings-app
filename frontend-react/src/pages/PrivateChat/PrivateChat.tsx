@@ -195,7 +195,7 @@ export const PrivateChat = () => {
         <ChatHeader user={user} returnUrl={params.returnUrl} />
         <StyledScrollableContainer ref={scrollableRef}>
           <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
-            <Avatar src={user.profileImage} size={100} sx={{ mb: 2 }} />
+            <Avatar src={user.profileImageSrc} size={100} sx={{ mb: 2 }} />
             <Typography>
               {user.firstName} {user.lastName}, {age}
             </Typography>

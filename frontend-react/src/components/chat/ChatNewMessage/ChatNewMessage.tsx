@@ -1,7 +1,9 @@
 import { useAtom, useAtomValue } from 'jotai';
 import _ from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { SendBtn } from 'src/components/chat/ChatNewMessage/ChatNewMessage.shared';
 import { ChatNewMessageImage } from 'src/components/chat/ChatNewMessage/ChatNewMessageImage/ChatNewMessageImage';
+import { ChatNewMessageRecording } from 'src/components/chat/ChatNewMessage/ChatNewMessageRecording/ChatNewMessageRecording';
 import {
   ChatNewMessageReplyPreview,
   replyMessageAtom,
@@ -13,8 +15,8 @@ import { Chat } from 'src/models/chat/chat';
 import { Message, MessageType } from 'src/models/chat/message';
 import { User } from 'src/models/user';
 import { useSendPrivateMessage } from 'src/queries/chat-queries';
-import { Icon, IconButton, Stack, TextArea } from 'src/ui-components';
-import { fileToBase64, isFile } from 'src/utils/file-utils';
+import { Box, Icon, IconButton, Stack, TextArea } from 'src/ui-components';
+import { isBlob } from 'src/utils/file-utils';
 
 export type ChatNewMessageProps = {
   onScrollToBottom: () => void;
@@ -39,6 +41,7 @@ export const ChatNewMessage = ({
   const [replyMessage, setReplyMessage] = useAtom(replyMessageAtom);
   const connection = useAtomValue(connectionAtom);
   const [text, setText] = useState<string | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
   const fieldRef = useRef<HTMLTextAreaElement>(null);
   const { sendPrivateMessage } = useSendPrivateMessage((data, percentage) =>
     onPendingMessageProgressChange(data.id, percentage)
@@ -55,21 +58,21 @@ export const ChatNewMessage = ({
     }
   }, [replyMessage]);
 
-  const sendMessage = async (value: string | File) => {
+  const sendMessage = async (value: string | Blob, type: MessageType) => {
     const id = window.self.crypto.randomUUID();
-    const isFileType = isFile(value);
+    const isBlobType = isBlob(value);
+
     addToQueue({
       id,
       connectionId: connection.connectionId!,
       recipientId: recipient.id,
       replyToId: replyMessage?.id,
-      ...(isFileType
+      type,
+      ...(isBlobType
         ? {
-            type: MessageType.Image,
             file: value,
           }
         : {
-            type: MessageType.Text,
             value: value,
           }),
     });
@@ -82,15 +85,8 @@ export const ChatNewMessage = ({
       reactions: [],
       isPending: true,
       progressPercentage: 0,
-      ...(isFileType
-        ? {
-            type: MessageType.Image,
-            value: await fileToBase64(value),
-          }
-        : {
-            type: MessageType.Text,
-            value: value,
-          }),
+      type,
+      value: isBlobType ? URL.createObjectURL(value) : value,
     });
 
     setText(null);
@@ -107,29 +103,48 @@ export const ChatNewMessage = ({
     );
   }, [chat]);
 
+  const transition = '300ms';
+  const margin = 80;
   return (
     <>
       <ChatNewMessageReplyPreview />
-      <Stack alignItems={'flex-start'} p={1} pl={0}>
-        <ChatNewMessageImage onSend={(image) => sendMessage(image!)} />
-        <TextArea
-          ref={fieldRef}
-          size='small'
-          onChange={setText}
-          onFocus={() => !replyMessage && onScrollToBottom()}
-          onKeyUp={onKeyUpThrottle}
-          value={text ?? ''}
-          sx={{ flexGrow: 1 }}
-          InputProps={{ sx: { borderRadius: 3 } }}
-        ></TextArea>
-        <IconButton
-          color='primary'
-          disabled={!text}
-          onClick={() => sendMessage(text!)}
-          sx={{ ml: 1 }}
-        >
-          <Icon name='send' />
-        </IconButton>
+      <Stack position={'relative'} alignItems={'flex-start'} p={1}>
+        {isRecording ? (
+          <ChatNewMessageRecording
+            onCancel={() => setIsRecording(false)}
+            onSend={(blob) => {
+              sendMessage(blob, MessageType.Audio);
+              setIsRecording(false);
+            }}
+          />
+        ) : (
+          <>
+            <Box
+              sx={{
+                display: 'flex',
+                position: 'absolute',
+                left: text ? -margin : 0,
+                transition,
+              }}
+            >
+              <ChatNewMessageImage onSend={(image) => sendMessage(image!, MessageType.Image)} />
+              <IconButton onClick={() => setIsRecording(true)}>
+                <Icon name='mic' />
+              </IconButton>
+            </Box>
+            <TextArea
+              ref={fieldRef}
+              size='small'
+              onChange={setText}
+              onFocus={() => !replyMessage && onScrollToBottom()}
+              onKeyUp={onKeyUpThrottle}
+              value={text ?? ''}
+              sx={{ flexGrow: 1, marginLeft: text ? 0 : `${margin}px`, transition }}
+              InputProps={{ sx: { borderRadius: 3 } }}
+            ></TextArea>
+            <SendBtn onClick={() => sendMessage(text!, MessageType.Text)} disabled={!text} />
+          </>
+        )}
       </Stack>
     </>
   );

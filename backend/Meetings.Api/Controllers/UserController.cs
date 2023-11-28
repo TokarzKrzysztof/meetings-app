@@ -41,13 +41,6 @@ namespace Meetings.EmailTemplates.Controllers
             return Ok(user);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetProfileImages([FromQuery] Guid[] userIds)
-        {
-            List<UserDTO> profileImages = await _userService.GetProfileImages(userIds);
-            return Ok(profileImages.Select(x => new { x.Id, x.ProfileImage }));
-        }
-
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile image)
@@ -76,7 +69,7 @@ namespace Meetings.EmailTemplates.Controllers
         [Authorize]
         public async Task<IActionResult> SendChangeEmailAddressEmail([FromBody] ChangeEmailAddressData data)
         {
-            await _userService.SendChangeEmailAddressEmail(data, GetAppUrl());
+            await _userService.SendChangeEmailAddressEmail(data);
             return Ok();
         }
 

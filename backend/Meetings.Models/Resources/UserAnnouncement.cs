@@ -13,5 +13,6 @@ namespace Meetings.Models.Resources
         public string Description { get; set; }
         public DateTime UserBirthDate { get; set; }
         public string UserFirstName { get; set; }
+        public string? UserProfileImageSrc { get; set; }
     }
 }

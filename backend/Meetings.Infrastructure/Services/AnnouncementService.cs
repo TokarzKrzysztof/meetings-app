@@ -102,7 +102,8 @@ namespace Meetings.Infrastructure.Services
                 UserId = x.UserId,
                 Description = x.Description,
                 UserBirthDate = x.User.BirthDate,
-                UserFirstName = x.User.FirstName
+                UserFirstName = x.User.FirstName,
+                UserProfileImageSrc = x.User.ProfileImagePath
             }).ToListAsync();
 
             return result;
