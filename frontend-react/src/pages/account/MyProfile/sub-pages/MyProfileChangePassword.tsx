@@ -4,9 +4,9 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FormField } from 'src/components/FormField';
 import { Header } from 'src/components/header/Header';
-import { MyProfileActionButtons } from 'src/pages/account/MyProfile/shared/MyProfileActionButtons';
-import { MyProfileForm } from 'src/pages/account/MyProfile/shared/MyProfileForm';
-import { MyProfileTitle } from 'src/pages/account/MyProfile/shared/MyProfileTitle';
+import { MyProfileActionButtons } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileActionButtons';
+import { MyProfileForm } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileForm';
+import { MyProfileTitle } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileTitle';
 import {
   PasswordFields,
   PasswordFieldsFormData,
