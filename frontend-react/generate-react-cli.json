@@ -5,7 +5,8 @@
       "customTemplates": {
         "component": "templates/component/TemplateName.tsx"
       },
-      "path": "src/components"
+      "path": "src/components",
+      "flat": true
     },
     "page": {
       "customTemplates": {
@@ -17,7 +18,8 @@
       "customTemplates": {
         "component": "templates/ui/TemplateName.tsx"
       },
-      "path": "src/ui-components"
+      "path": "src/ui-components",
+      "flat": true
     },
     "default": {
       "path": "n",
