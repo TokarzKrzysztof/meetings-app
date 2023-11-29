@@ -1,4 +1,5 @@
 import { CSSObject, styled } from '@mui/material';
+import { theme } from 'src/config/theme-config';
 import { MessageType } from 'src/models/chat/message';
 import { Box, Icon } from 'src/ui-components';
 import { shouldNotForwardPropsWithKeys } from 'src/utils/types/should-not-forward-props';
@@ -16,6 +17,12 @@ export const StyledReplyIcon = styled(Icon, {
   transform: 'translateY(-50%)',
 }));
 
+export const messageStyles = {
+  border: `1px solid ${theme.palette.grey[400]}`,
+  padding: theme.spacing(1),
+  borderRadius: theme.shape.borderRadius * 4,
+} as const;
+
 type MessageProps = {
   variant: 'outlined' | 'filled';
   type: MessageType;
@@ -27,13 +34,13 @@ export const StyledMessage = styled(Box, {
     'type',
     'shrinkMessage',
   ]),
-})<MessageProps>(({ theme, variant, type, isPending, shrinkMessage }) => {
+})<MessageProps>(({ theme, variant, type, shrinkMessage }) => {
   const result: CSSObject = {
-    padding: theme.spacing(1),
-    borderRadius: theme.shape.borderRadius * 4,
+    padding: messageStyles.padding,
+    borderRadius: messageStyles.borderRadius,
     ...(variant === 'filled'
       ? { background: theme.palette.grey[200] }
-      : { background: 'white', border: `1px solid ${theme.palette.grey[400]}` }),
+      : { background: 'white', border: messageStyles.border }),
     '.MuiTypography-root': {
       ...(shrinkMessage && {
         display: '-webkit-box',
@@ -46,7 +53,7 @@ export const StyledMessage = styled(Box, {
     },
   };
 
-  if (type === MessageType.Image) {
+  if (type !== MessageType.Text) {
     result.padding = undefined;
     result.background = undefined;
     result.border = undefined;

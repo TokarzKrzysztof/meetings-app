@@ -23,7 +23,7 @@ export const ChatGoDownBtn = ({ scrollableRef, onGoDown }: ChatGoDownBtnProps) =
     return () => {
       scrollableRef.current?.removeEventListener('scroll', handler);
     };
-  }, [scrollableRef.current]);
+  }, []);
 
   return (
     <IconButton
@@ -35,6 +35,7 @@ export const ChatGoDownBtn = ({ scrollableRef, onGoDown }: ChatGoDownBtnProps) =
         // negative margin equal to button height to take no space
         marginTop: '-40px',
         opacity: show ? 1 : 0,
+        pointerEvents: !show ? 'none' : undefined,
         transition: '400ms',
       }}
     >

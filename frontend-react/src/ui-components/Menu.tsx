@@ -22,14 +22,11 @@ export const Menu = ({ children, anchorRef, ...props }: MenuProps) => {
   };
 
   useEffect(() => {
-    if (anchorRef.current) {
-      anchorRef.current.addEventListener('click', () => {
-        setOpen(true);
-      });
-    }
-  }, [anchorRef.current]);
+    anchorRef.current!.addEventListener('click', () => {
+      setOpen(true);
+    });
+  }, []);
 
-  if (!anchorRef.current) return null;
   return (
     <StyledMenu anchorEl={anchorRef.current} open={open} onClose={handleClose} {...props}>
       <div onClick={handleClose}>{children}</div>

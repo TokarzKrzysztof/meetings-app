@@ -2,6 +2,7 @@ import { RefObject } from 'react';
 import { useLongPress } from 'src/hooks/useLongPress';
 import { Message, MessageType } from 'src/models/chat/message';
 import { StyledMessage } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
+import { ChatMessageContentVoiceMessage } from 'src/pages/chat/shared/ChatMessageContentVoiceMessage';
 import { Box, CircularProgress, Typography } from 'src/ui-components';
 
 export type ChatMessageContentProps = {
@@ -39,9 +40,10 @@ export const ChatMessageContent = ({
           {message.replyTo.type === MessageType.Image ? (
             <img
               style={{
+                width: '100%',
                 maxWidth: 200,
                 opacity: 0.5,
-                borderRadius: 10,
+                borderRadius: 16,
                 transform: `translateY(${repliedMessageWrap}px)`,
               }}
               src={message.replyTo.value}
@@ -73,7 +75,7 @@ export const ChatMessageContent = ({
               style={{
                 opacity: message.isPending ? 0.5 : undefined,
                 maxWidth: '100%',
-                borderRadius: 10,
+                borderRadius: 16,
               }}
               src={message.value}
             />
@@ -81,7 +83,7 @@ export const ChatMessageContent = ({
           </Box>
         )}
         {message.type === MessageType.Audio && (
-          <audio src={message.value} controls/>
+          <ChatMessageContentVoiceMessage src={message.value} />
         )}
       </StyledMessage>
       {message.isPending && (

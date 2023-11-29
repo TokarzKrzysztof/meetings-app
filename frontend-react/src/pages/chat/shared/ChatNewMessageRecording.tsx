@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useVoiceRecording } from 'src/hooks/useVoiceRecording';
 import { ChatSendBtn } from 'src/pages/chat/shared/ChatSendBtn';
 import { Icon, IconButton, TextField } from 'src/ui-components';
+import { toDuration } from 'src/utils/audio-utils';
 
 export type ChatNewMessageRecordingProps = {
   onCancel: () => void;
@@ -20,16 +21,6 @@ export const ChatNewMessageRecording = ({ onCancel, onSend }: ChatNewMessageReco
 
     return () => clearInterval(intervalId);
   }, []);
-
-  const toDuration = (seconds: number) => {
-    if (seconds < 60) {
-      return seconds < 10 ? `0:0${seconds}` : `0:${seconds}`;
-    }
-
-    const minutes = Math.floor(seconds / 60);
-    const rest = seconds % 60;
-    return `${minutes}:${rest < 10 ? `0${rest}` : rest}`;
-  };
 
   return (
     <>

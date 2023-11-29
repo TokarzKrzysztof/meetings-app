@@ -8,9 +8,9 @@ export type BoxProps<D extends React.ElementType = BoxTypeMap['defaultComponent'
   { component?: D }
 > & {};
 
-export const BoxInner = <D extends React.ElementType = BoxTypeMap['defaultComponent']>(
+const BoxInner = <D extends React.ElementType = BoxTypeMap['defaultComponent']>(
   { ...props }: BoxProps<D>,
-  ref: ForwardedRef<HTMLElement>,
+  ref: ForwardedRef<HTMLElement>
 ) => <MuiBox {...props} ref={ref}></MuiBox>;
 
 export const Box = typedForwardRef(BoxInner);

@@ -21,8 +21,6 @@ export const InfiniteScroll = ({
   const isSomethingToLoad = children.length < totalAmount;
 
   useEffect(() => {
-    if (!scrollableRef.current) return;
-
     const handler = () => {
       const isScrolled = scrollableRef.current!.scrollTop - scrollThreshold <= 0;
       if (!isLoadingMore && isScrolled && isSomethingToLoad) {
@@ -31,11 +29,11 @@ export const InfiniteScroll = ({
       }
     };
 
-    scrollableRef.current.addEventListener('scroll', handler);
+    scrollableRef.current!.addEventListener('scroll', handler);
     return () => {
       scrollableRef.current?.removeEventListener('scroll', handler);
     };
-  }, [scrollableRef.current, isSomethingToLoad, scrollThreshold, isLoadingMore]);
+  }, [next, isSomethingToLoad, scrollThreshold, isLoadingMore]);
 
   useEffect(() => {
     setIsLoadingMore(false);

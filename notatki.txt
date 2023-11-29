@@ -14,24 +14,18 @@ https://alimozdemir.medium.com/asp-net-core-jwt-and-refresh-token-with-httponly-
 
 TODO
 - sprawdzić czy trzeba pokazywać prompt użytkownikom o używaniu cookie
-- usunąć zapamiętaj mnie checkbox
 - przy zmienianiu statusu ogłoszenia na aktywne sprawdzić czy użytkownik może to wykonać
 - obsłużyć ładowanie danych
 - ogarnąć responsywność
 - przy edycji danych sprawdzać czy ten konkretny użytkownik edytuje 
 - dodać captcha przy rejestracji
-- sprawdzić forgot password dialog otwieranie
-- poprawki do dialogu dodawania zdjec
-- dodac menu po kliknieciu na przycisk edycji i usunąć step 1
-- zrobic file service
-- zrobic claimsReader
 - zrobic usuwanie wszystkich entity bez flagi tylko za pomocą delete
 - rozbić IEntityBase na mniejsze części, bo czasami te daty nie są potrzebne 
-- naprawic blad z wchodzeniem w chat kiedy nie ma scrolla z odczytywaniem wiadomosci
-- naprawic blad z wchodzeniem w chat ze leci error na debounce
-- naprawic blad z wylogowywaniem kiedy currentUser jest resetowany
 - dodac walidacje do wiadomosci (pusta, whitespace itp)
 - nie zwracać message do klienta ze względów bezpieczeństwa
+- dodac notyfication w aplikacji o nowej wiadomosci
+- pamietac o preventDefault w chatmessage na telefonie w useLongPress
+- pokazywać odpowiednio odpowiedź na wiadomość głosową
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)
