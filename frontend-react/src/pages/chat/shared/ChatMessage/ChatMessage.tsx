@@ -16,7 +16,7 @@ export type ChatMessageProps = {
   message: Message;
   allMessages: Message[];
   currentUser: User;
-  onScrollToBottom: () => void;
+  onStartReplyLastMessage: () => void;
   onFocusRepliedMessage: (toFocus: Message) => void;
 };
 
@@ -24,7 +24,7 @@ export const ChatMessage = ({
   message,
   allMessages,
   currentUser,
-  onScrollToBottom,
+  onStartReplyLastMessage,
   onFocusRepliedMessage,
 }: ChatMessageProps) => {
   const { setMessageReaction } = useSignalRActions();
@@ -44,7 +44,7 @@ export const ChatMessage = ({
   const handleStartReply = () => {
     setReplyMessage(message);
     if (_.last(allMessages)?.id === message.id) {
-      onScrollToBottom();
+      onStartReplyLastMessage();
     }
   };
 

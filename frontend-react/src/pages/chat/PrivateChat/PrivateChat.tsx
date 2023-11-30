@@ -34,7 +34,6 @@ const StyledScrollableContainer = styled(Container)(({ theme }) => ({
   margin: '0 auto',
   // overflow hidden for message reply icon
   overflowX: 'hidden',
-  overflowAnchor: 'auto',
   '& *': {
     overflowAnchor: 'none',
   },
@@ -194,13 +193,15 @@ export const PrivateChat = () => {
       <Stack height={'100vh'} direction={'column'}>
         <ChatHeader user={user} returnUrl={params.returnUrl} />
         <StyledScrollableContainer ref={scrollableRef}>
-          <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
-            <Avatar src={user.profileImageSrc} size={100} sx={{ mb: 2 }} />
-            <Typography>
-              {user.firstName} {user.lastName}, {age}
-            </Typography>
-            <Typography>Limanowa (30 km od Ciebie)</Typography>
-          </Stack>
+          {messages.length === privateChat?.totalMessagesAmount && (
+            <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
+              <Avatar src={user.profileImageSrc} size={100} sx={{ mb: 2 }} />
+              <Typography>
+                {user.firstName} {user.lastName}, {age}
+              </Typography>
+              <Typography>Limanowa (30 km od Ciebie)</Typography>
+            </Stack>
+          )}
           <Stack direction={'column'} py={1} gap={1}>
             <InfiniteScroll
               scrollableRef={scrollableRef}
@@ -213,7 +214,7 @@ export const PrivateChat = () => {
                   message={x}
                   allMessages={messages}
                   currentUser={currentUser}
-                  onScrollToBottom={scrollToBottom}
+                  onStartReplyLastMessage={scrollToBottom}
                   onFocusRepliedMessage={handleFocusRepliedMessage}
                 />
               ))}
