@@ -64,7 +64,7 @@ export const PrivateChat = () => {
   });
   const scrollToPreviousScrollState = useDeferredFunction((prevScrollHeight: number) => {
     const currentScrollHeight = scrollableRef.current!.scrollHeight;
-    scrollableRef.current!.scrollBy({ top: currentScrollHeight - prevScrollHeight });
+    scrollableRef.current!.scrollTo({ top: currentScrollHeight - prevScrollHeight });
   });
   const handleFocusRepliedMessageDeferred = useDeferredFunction((repliedMessage: Message) => {
     handleFocusRepliedMessage(repliedMessage);
