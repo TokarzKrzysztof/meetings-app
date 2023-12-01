@@ -18,7 +18,8 @@ const StyledDurationBar = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: 0,
   bottom: 0,
-  left: 0,
+  width: '100%',
+  left: '-100%',
   backgroundColor: theme.palette.grey[200],
   zIndex: -1,
 })) as typeof Box;
@@ -30,7 +31,10 @@ export type ChatMessageContentVoiceMessageProps = {
   id: string;
 };
 
-export const ChatMessageContentVoiceMessage = ({ src, id }: ChatMessageContentVoiceMessageProps) => {
+export const ChatMessageContentVoiceMessage = ({
+  src,
+  id,
+}: ChatMessageContentVoiceMessageProps) => {
   const [audio, setAudio] = useState<HTMLAudioElement>();
   const [playingAudio, setPlayingAudio] = useAtom(playingAudioAtom);
   const [duration, setDuration] = useState(0);
@@ -46,25 +50,28 @@ export const ChatMessageContentVoiceMessage = ({ src, id }: ChatMessageContentVo
   }, [src]);
 
   useEffect(() => {
-    if (audio) {
-      audio.addEventListener('ended', () => {
-        setPlayingAudio(null);
-        setCurrentTime(0);
-        audio.currentTime = 0;
-      });
-      audio.addEventListener('timeupdate', () => {
-        setCurrentTime(audio.currentTime);
-      });
-    }
-  }, [audio]);
-
-  useEffect(() => {
+    let intervalId: ReturnType<typeof setInterval>;
     if (playingAudio === audio) {
       audio.play();
+      intervalId = setInterval(() => {
+        setCurrentTime(audio.currentTime);
+      }, 30);
     } else {
       audio?.pause();
     }
+
+    return () => {
+      clearInterval(intervalId);
+    };
   }, [playingAudio]);
+
+  useEffect(() => {
+    if (audio && currentTime === duration) {
+      setPlayingAudio(null);
+      setCurrentTime(0);
+      audio.currentTime = 0;
+    }
+  }, [audio, currentTime, duration]);
 
   const handleVoiceMessageClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const target = e.currentTarget as HTMLDivElement;
@@ -73,6 +80,7 @@ export const ChatMessageContentVoiceMessage = ({ src, id }: ChatMessageContentVo
     const clickedPlace = e.clientX - left;
     const newTime = (clickedPlace / width) * duration;
 
+    setCurrentTime(newTime);
     audio!.currentTime = newTime;
   };
 
@@ -80,14 +88,15 @@ export const ChatMessageContentVoiceMessage = ({ src, id }: ChatMessageContentVo
     return `${toDuration(currentTime)} / ${toDuration(duration)}`;
   }, [currentTime, duration]);
 
-  const durationBarWidth = `${(currentTime / duration) * 100}%`;
   return (
     <Stack alignItems={'center'}>
       <IconButton onClick={() => (isPlaying ? setPlayingAudio(null) : setPlayingAudio(audio!))}>
         <Icon name={isPlaying ? 'pause' : 'play_arrow'} />
       </IconButton>
       <StyledVoiceMessage onClick={handleVoiceMessageClick} id={id}>
-        <StyledDurationBar style={{ width: durationBarWidth }}></StyledDurationBar>
+        <StyledDurationBar
+          style={{ transform: `translateX(${(currentTime / duration) * 100}%)` }}
+        ></StyledDurationBar>
         <Typography>{time}</Typography>
       </StyledVoiceMessage>
     </Stack>
