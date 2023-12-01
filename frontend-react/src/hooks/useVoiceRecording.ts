@@ -1,6 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 export const useVoiceRecording = () => {
+  const [hasPermission, setHasPermission] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
@@ -15,15 +16,22 @@ export const useVoiceRecording = () => {
   };
 
   const start = () => {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      mediaRecorderRef.current = new MediaRecorder(stream);
-      mediaRecorderRef.current.start();
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        setHasPermission(true);
 
-      mediaRecorderRef.current.addEventListener('dataavailable', (event) => {
-        chunksRef.current.push(event.data);
+        mediaRecorderRef.current = new MediaRecorder(stream);
+        mediaRecorderRef.current.start();
+
+        mediaRecorderRef.current.addEventListener('dataavailable', (event) => {
+          chunksRef.current.push(event.data);
+        });
+      })
+      .catch(() => {
+        console.warn('permission denied');
       });
-    });
   };
 
-  return { start, stop };
+  return { hasPermission, start, stop };
 };

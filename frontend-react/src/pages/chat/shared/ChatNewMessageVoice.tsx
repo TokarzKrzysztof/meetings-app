@@ -10,17 +10,20 @@ export type ChatNewMessageVoiceProps = {
 };
 
 export const ChatNewMessageVoice = ({ onCancel, onSend }: ChatNewMessageVoiceProps) => {
-  const { start, stop } = useVoiceRecording();
+  const { hasPermission, start, stop } = useVoiceRecording();
   const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     start();
+  }, []);
+
+  useEffect(() => {
     const intervalId = setInterval(() => {
-      setDuration((prev) => prev + 1);
+      hasPermission && setDuration((prev) => prev + 1);
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [hasPermission]);
 
   return (
     <>

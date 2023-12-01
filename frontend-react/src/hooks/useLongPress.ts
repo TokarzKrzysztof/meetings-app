@@ -43,7 +43,7 @@ export const useLongPress = (
     onMouseUp: (e: React.MouseEvent) => clear(e),
     onMouseLeave: (e: React.MouseEvent) => clear(e, false),
     onTouchEnd: (e: React.TouchEvent) => clear(e),
-    onTouchMove: (e: React.TouchEvent) => clear(e),
+    onTouchMove: (e: React.TouchEvent) => clear(e, false),
   } as React.HTMLAttributes<HTMLElement>;
 };
 
