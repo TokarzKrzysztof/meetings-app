@@ -2,8 +2,9 @@ import { RefObject } from 'react';
 import { useLongPress } from 'src/hooks/useLongPress';
 import { Message, MessageType } from 'src/models/chat/message';
 import { StyledMessage } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
+import { ChatMessageContentImage } from 'src/pages/chat/shared/ChatMessageContentImage';
 import { ChatMessageContentVoiceMessage } from 'src/pages/chat/shared/ChatMessageContentVoiceMessage';
-import { Box, CircularProgress, Typography } from 'src/ui-components';
+import { Typography } from 'src/ui-components';
 
 export type ChatMessageContentProps = {
   message: Message;
@@ -38,15 +39,10 @@ export const ChatMessageContent = ({
           type={message.replyTo.type}
         >
           {message.replyTo.type === MessageType.Image ? (
-            <img
-              style={{
-                width: '100%',
-                maxWidth: 200,
-                opacity: 0.5,
-                borderRadius: 16,
-                transform: `translateY(${repliedMessageWrap}px)`,
-              }}
-              src={message.replyTo.value}
+            <ChatMessageContentImage
+              message={message.replyTo}
+              maxHeight={200}
+              style={{ opacity: 0.5, transform: `translateY(${repliedMessageWrap}px)` }}
             />
           ) : (
             <Typography fontSize={12}>{message.replyTo.value} </Typography>
@@ -70,17 +66,7 @@ export const ChatMessageContent = ({
           </Typography>
         )}
         {message.type === MessageType.Image && (
-          <Box position={'relative'}>
-            <img
-              style={{
-                opacity: message.isPending ? 0.5 : undefined,
-                maxWidth: '100%',
-                borderRadius: 16,
-              }}
-              src={message.value}
-            />
-            {message.isPending && <ProgressSpinner progress={message.progressPercentage} />}
-          </Box>
+          <ChatMessageContentImage message={message} maxHeight={300} />
         )}
         {message.type === MessageType.Audio && (
           <ChatMessageContentVoiceMessage src={message.value} />
@@ -92,20 +78,5 @@ export const ChatMessageContent = ({
         </Typography>
       )}
     </>
-  );
-};
-
-const ProgressSpinner = ({ progress }: { progress: number }) => {
-  return (
-    <Box
-      sx={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-      }}
-    >
-      <CircularProgress variant='determinate' value={progress} />
-    </Box>
   );
 };
