@@ -1,8 +1,10 @@
-export const toDuration = (seconds: number) => {
+export const toDuration = (seconds?: number) => {
+  if (seconds === undefined) return '0:00';
+  seconds = Math.ceil(seconds);
+
   if (seconds < 60) {
     return seconds < 10 ? `0:0${seconds}` : `0:${seconds}`;
   }
-
   const minutes = Math.floor(seconds / 60);
   const rest = seconds % 60;
   return `${minutes}:${rest < 10 ? `0${rest}` : rest}`;

@@ -30,7 +30,7 @@ export type ChatMessageContentVoiceMessageProps = {
 };
 
 export const ChatMessageContentVoiceMessage = ({ src }: ChatMessageContentVoiceMessageProps) => {
-  const audio = useMemo(() => new Audio(src), [src]);
+  const [audio, setAudio] = useState<HTMLAudioElement>();
   const [playingAudio, setPlayingAudio] = useAtom(playingAudioAtom);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -38,28 +38,30 @@ export const ChatMessageContentVoiceMessage = ({ src }: ChatMessageContentVoiceM
   const isPlaying = playingAudio === audio;
 
   useEffect(() => {
-    let _duration = 0;
-
+    setAudio(new Audio(src));
     getDuration(src).then((result) => {
-      _duration = result;
-      setDuration(_duration);
+      setDuration(result);
     });
+  }, [src]);
 
-    audio.addEventListener('ended', () => {
-      setPlayingAudio(null);
-      setCurrentTime(0);
-      audio.currentTime = 0;
-    });
-    audio.addEventListener('timeupdate', () => {
-      setCurrentTime(audio.currentTime);
-    });
-  }, []);
+  useEffect(() => {
+    if (audio) {
+      audio.addEventListener('ended', () => {
+        setPlayingAudio(null);
+        setCurrentTime(0);
+        audio.currentTime = 0;
+      });
+      audio.addEventListener('timeupdate', () => {
+        setCurrentTime(audio.currentTime);
+      });
+    }
+  }, [audio]);
 
   useEffect(() => {
     if (playingAudio === audio) {
       audio.play();
     } else {
-      audio.pause();
+      audio?.pause();
     }
   }, [playingAudio]);
 
@@ -70,19 +72,17 @@ export const ChatMessageContentVoiceMessage = ({ src }: ChatMessageContentVoiceM
     const clickedPlace = e.clientX - left;
     const newTime = (clickedPlace / width) * duration;
 
-    audio.currentTime = newTime;
+    audio!.currentTime = newTime;
   };
 
   const time = useMemo(() => {
-    const currentTimeInt = Math.ceil(currentTime);
-    const durationInt = Math.ceil(duration);
-    return `${toDuration(currentTimeInt)} / ${toDuration(durationInt)}`;
+    return `${toDuration(currentTime)} / ${toDuration(duration)}`;
   }, [currentTime, duration]);
 
   const durationBarWidth = `${(currentTime / duration) * 100}%`;
   return (
     <Stack alignItems={'center'}>
-      <IconButton onClick={() => (isPlaying ? setPlayingAudio(null) : setPlayingAudio(audio))}>
+      <IconButton onClick={() => (isPlaying ? setPlayingAudio(null) : setPlayingAudio(audio!))}>
         <Icon name={isPlaying ? 'pause' : 'play_arrow'} />
       </IconButton>
       <StyledVoiceMessage onClick={handleVoiceMessageClick}>

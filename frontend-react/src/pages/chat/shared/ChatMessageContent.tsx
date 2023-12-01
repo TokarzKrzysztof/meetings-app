@@ -4,6 +4,7 @@ import { Message, MessageType } from 'src/models/chat/message';
 import { StyledMessage } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
 import { ChatMessageContentImage } from 'src/pages/chat/shared/ChatMessageContentImage';
 import { ChatMessageContentVoiceMessage } from 'src/pages/chat/shared/ChatMessageContentVoiceMessage';
+import { ChatVoiceMessageDescription } from 'src/pages/chat/shared/ChatVoiceMessageDescription';
 import { Typography } from 'src/ui-components';
 
 export type ChatMessageContentProps = {
@@ -35,7 +36,7 @@ export const ChatMessageContent = ({
             pb: `${repliedMessageWrap + 1}px`,
           }}
           onClick={() => onFocusRepliedMessage(message.replyTo!)}
-          shrinkMessage
+          isRepliedMessage
           type={message.replyTo.type}
         >
           {message.replyTo.type === MessageType.Image ? (
@@ -45,7 +46,13 @@ export const ChatMessageContent = ({
               style={{ opacity: 0.5, transform: `translateY(${repliedMessageWrap}px)` }}
             />
           ) : (
-            <Typography fontSize={12}>{message.replyTo.value} </Typography>
+            <Typography fontSize={12}>
+              {message.replyTo.type === MessageType.Audio ? (
+                <ChatVoiceMessageDescription src={message.replyTo.value} />
+              ) : (
+                message.replyTo.value
+              )}
+            </Typography>
           )}
         </StyledMessage>
       )}

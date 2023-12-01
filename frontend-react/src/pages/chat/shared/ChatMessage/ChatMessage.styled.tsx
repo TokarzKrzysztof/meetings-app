@@ -26,15 +26,15 @@ export const messageStyles = {
 type MessageProps = {
   variant: 'outlined' | 'filled';
   type: MessageType;
-  shrinkMessage?: boolean;
+  isRepliedMessage?: boolean;
 };
 export const StyledMessage = styled(Box, {
   shouldForwardProp: shouldNotForwardPropsWithKeys<MessageProps>([
     'variant',
     'type',
-    'shrinkMessage',
+    'isRepliedMessage',
   ]),
-})<MessageProps>(({ theme, variant, type, shrinkMessage }) => {
+})<MessageProps>(({ theme, variant, type, isRepliedMessage }) => {
   const result: CSSObject = {
     padding: messageStyles.padding,
     borderRadius: messageStyles.borderRadius,
@@ -42,7 +42,7 @@ export const StyledMessage = styled(Box, {
       ? { background: theme.palette.grey[200] }
       : { background: 'white', border: messageStyles.border }),
     '.MuiTypography-root': {
-      ...(shrinkMessage && {
+      ...(isRepliedMessage && {
         display: '-webkit-box',
         WebkitLineClamp: 4,
         WebkitBoxOrient: 'vertical',
@@ -53,7 +53,8 @@ export const StyledMessage = styled(Box, {
     },
   };
 
-  if (type !== MessageType.Text) {
+  const condition = isRepliedMessage ? type === MessageType.Image : type !== MessageType.Text;
+  if (condition) {
     result.padding = undefined;
     result.background = undefined;
     result.border = undefined;

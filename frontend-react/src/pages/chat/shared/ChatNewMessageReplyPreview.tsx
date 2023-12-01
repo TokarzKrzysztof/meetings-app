@@ -1,5 +1,6 @@
 import { atom, useAtom } from 'jotai';
 import { Message, MessageType } from 'src/models/chat/message';
+import { ChatVoiceMessageDescription } from 'src/pages/chat/shared/ChatVoiceMessageDescription';
 import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
 
 export const replyMessageAtom = atom<Message | null>(null);
@@ -23,7 +24,11 @@ export const ChatNewMessageReplyPreview = ({ ...props }: ChatNewMessageReplyPrev
             textOverflow={'ellipsis'}
             overflow={'hidden'}
           >
-            {replyMessage.value}
+            {replyMessage.type === MessageType.Audio ? (
+              <ChatVoiceMessageDescription src={replyMessage.value} />
+            ) : (
+              replyMessage.value
+            )}
           </Typography>
         )}
       </Box>

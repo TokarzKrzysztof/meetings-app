@@ -26,8 +26,9 @@ TODO
 - dodac notyfication w aplikacji o nowej wiadomosci
 - pamietac o preventDefault w chatmessage na telefonie w useLongPress
 - pokazywać odpowiednio odpowiedź na wiadomość głosową
-- naprawic bug ze skakaniem przy ładowaniu wiadomości kiedy są zdjęcia
 - naprawic bug ze skakaniem przy odtwarzaniu wiadomosci glosowych na niektorych rozdzielczosciach
+- naprawic bug z odtwarzaniem zaraz po wyslaniu wiadomosci
+- naprawic bug z microfone permissions
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)
