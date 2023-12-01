@@ -21,6 +21,7 @@ import {
 import { useGetUser } from 'src/queries/user-queries';
 import { Avatar, Box, Container, Stack, Typography } from 'src/ui-components';
 import { replaceItem } from 'src/utils/array-utils';
+import { getFocusableId } from 'src/utils/chat-utils';
 import { PrivateChatParams } from 'src/utils/enums/app-routes';
 import { calculateAge } from 'src/utils/user-utils';
 
@@ -154,7 +155,7 @@ export const PrivateChat = () => {
   };
 
   const handleFocusRepliedMessage = (repliedMessage: Message) => {
-    const element = document.getElementById(repliedMessage.id)!;
+    const element = document.getElementById(getFocusableId(repliedMessage.id))!;
     if (element) {
       element.scrollIntoView({ block: 'center' });
       animateMessage(element);

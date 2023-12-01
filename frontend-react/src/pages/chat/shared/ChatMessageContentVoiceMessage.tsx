@@ -27,9 +27,10 @@ const playingAudioAtom = atom<HTMLAudioElement | null>(null);
 
 export type ChatMessageContentVoiceMessageProps = {
   src: string;
+  id: string;
 };
 
-export const ChatMessageContentVoiceMessage = ({ src }: ChatMessageContentVoiceMessageProps) => {
+export const ChatMessageContentVoiceMessage = ({ src, id }: ChatMessageContentVoiceMessageProps) => {
   const [audio, setAudio] = useState<HTMLAudioElement>();
   const [playingAudio, setPlayingAudio] = useAtom(playingAudioAtom);
   const [duration, setDuration] = useState(0);
@@ -85,7 +86,7 @@ export const ChatMessageContentVoiceMessage = ({ src }: ChatMessageContentVoiceM
       <IconButton onClick={() => (isPlaying ? setPlayingAudio(null) : setPlayingAudio(audio!))}>
         <Icon name={isPlaying ? 'pause' : 'play_arrow'} />
       </IconButton>
-      <StyledVoiceMessage onClick={handleVoiceMessageClick}>
+      <StyledVoiceMessage onClick={handleVoiceMessageClick} id={id}>
         <StyledDurationBar style={{ width: durationBarWidth }}></StyledDurationBar>
         <Typography>{time}</Typography>
       </StyledVoiceMessage>

@@ -6,6 +6,7 @@ import { ChatMessageContentImage } from 'src/pages/chat/shared/ChatMessageConten
 import { ChatMessageContentVoiceMessage } from 'src/pages/chat/shared/ChatMessageContentVoiceMessage';
 import { ChatVoiceMessageDescription } from 'src/pages/chat/shared/ChatVoiceMessageDescription';
 import { Typography } from 'src/ui-components';
+import { getFocusableId } from 'src/utils/chat-utils';
 
 export type ChatMessageContentProps = {
   message: Message;
@@ -58,7 +59,7 @@ export const ChatMessageContent = ({
       )}
       <StyledMessage
         {...longPressEvent}
-        id={message.id}
+        id={message.type !== MessageType.Audio ? getFocusableId(message.id) : undefined}
         ref={anchorRef}
         variant={isAuthorCurrentUser ? 'outlined' : 'filled'}
         // transform to make message overlap
@@ -76,7 +77,7 @@ export const ChatMessageContent = ({
           <ChatMessageContentImage message={message} maxHeight={300} />
         )}
         {message.type === MessageType.Audio && (
-          <ChatMessageContentVoiceMessage src={message.value} />
+          <ChatMessageContentVoiceMessage id={getFocusableId(message.id)} src={message.value} />
         )}
       </StyledMessage>
       {message.isPending && (

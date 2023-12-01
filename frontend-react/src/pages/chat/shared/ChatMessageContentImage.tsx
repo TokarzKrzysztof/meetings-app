@@ -19,7 +19,12 @@ export const ChatMessageContentImage = ({
   return (
     <>
       {!show && (
-        <Skeleton variant='rectangular' sx={{ borderRadius, ...style }} width={200} height={maxHeight} />
+        <Skeleton
+          variant='rectangular'
+          sx={{ borderRadius, ...style }}
+          width={200}
+          height={maxHeight}
+        />
       )}
       <Box position={'relative'} display={show ? 'block' : 'none'}>
         <img
