@@ -9,6 +9,7 @@ export type IconProps<D extends React.ElementType = IconTypeMap['defaultComponen
     | 'star'
     | 'mic'
     | 'pause'
+    | 'replay'
     | 'play_arrow'
     | 'search'
     | 'arrow_forward'

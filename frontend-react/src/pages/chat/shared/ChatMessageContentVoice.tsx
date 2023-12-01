@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import { atom, useAtom } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLongPress } from 'src/hooks/useLongPress';
 import { messageStyles } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
 import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
 import { getDuration, toDuration } from 'src/utils/audio-utils';
@@ -29,16 +30,27 @@ const playingAudioAtom = atom<HTMLAudioElement | null>(null);
 export type ChatMessageContentVoiceProps = {
   src: string;
   id: string;
+  onLongPress: () => void;
 };
 
-export const ChatMessageContentVoice = ({
-  src,
-  id,
-}: ChatMessageContentVoiceProps) => {
+export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageContentVoiceProps) => {
   const [audio, setAudio] = useState<HTMLAudioElement>();
   const [playingAudio, setPlayingAudio] = useAtom(playingAudioAtom);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+
+  const handleVoiceMessageClick = (e: React.TouchEvent | React.MouseEvent) => {
+    const target = e.currentTarget as HTMLDivElement;
+    const { left, width } = target.getBoundingClientRect();
+
+    const clientX = 'touches' in e ? e.changedTouches[0].clientX : e.clientX;
+    const clickedPlace = clientX - left;
+    const newTime = (clickedPlace / width) * duration;
+
+    setCurrentTime(newTime);
+    audio!.currentTime = newTime;
+  };
+  const longPressEvent = useLongPress(() => onLongPress(), handleVoiceMessageClick);
 
   const isPlaying = playingAudio === audio;
 
@@ -73,31 +85,28 @@ export const ChatMessageContentVoice = ({
     }
   }, [audio, currentTime, duration]);
 
-  const handleVoiceMessageClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.currentTarget as HTMLDivElement;
-    const { left, width } = target.getBoundingClientRect();
-
-    const clickedPlace = e.clientX - left;
-    const newTime = (clickedPlace / width) * duration;
-
-    setCurrentTime(newTime);
-    audio!.currentTime = newTime;
+  const handleReplayClick = () => {
+    setCurrentTime(0);
+    audio!.currentTime = 0;
   };
-
-  const time = useMemo(() => {
-    return `${toDuration(currentTime)} / ${toDuration(duration)}`;
-  }, [currentTime, duration]);
 
   return (
     <Stack alignItems={'center'}>
-      <IconButton onClick={() => (isPlaying ? setPlayingAudio(null) : setPlayingAudio(audio!))}>
+      {isPlaying && (
+        <IconButton onClick={handleReplayClick}>
+          <Icon name={'replay'} />
+        </IconButton>
+      )}
+      <IconButton onClick={(e) => (isPlaying ? setPlayingAudio(null) : setPlayingAudio(audio!))}>
         <Icon name={isPlaying ? 'pause' : 'play_arrow'} />
       </IconButton>
-      <StyledVoiceMessage onClick={handleVoiceMessageClick} id={id}>
+      <StyledVoiceMessage {...longPressEvent} id={id}>
         <StyledDurationBar
           style={{ transform: `translateX(${(currentTime / duration) * 100}%)` }}
         ></StyledDurationBar>
-        <Typography>{time}</Typography>
+        <Typography>
+          {toDuration(currentTime)} / {toDuration(duration)}
+        </Typography>
       </StyledVoiceMessage>
     </Stack>
   );

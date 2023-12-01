@@ -58,7 +58,7 @@ export const ChatMessageContent = ({
         </StyledMessage>
       )}
       <StyledMessage
-        {...longPressEvent}
+        {...(message.type !== MessageType.Audio ? longPressEvent : undefined)}
         id={message.type !== MessageType.Audio ? getFocusableId(message.id) : undefined}
         ref={anchorRef}
         variant={isAuthorCurrentUser ? 'outlined' : 'filled'}
@@ -77,7 +77,11 @@ export const ChatMessageContent = ({
           <ChatMessageContentImage message={message} maxHeight={300} />
         )}
         {message.type === MessageType.Audio && (
-          <ChatMessageContentVoice id={getFocusableId(message.id)} src={message.value} />
+          <ChatMessageContentVoice
+            id={getFocusableId(message.id)}
+            src={message.value}
+            onLongPress={onLongPress}
+          />
         )}
       </StyledMessage>
       {message.isPending && (
