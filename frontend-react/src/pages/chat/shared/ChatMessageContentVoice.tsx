@@ -26,15 +26,15 @@ const StyledDurationBar = styled(Box)(({ theme }) => ({
 
 const playingAudioAtom = atom<HTMLAudioElement | null>(null);
 
-export type ChatMessageContentVoiceMessageProps = {
+export type ChatMessageContentVoiceProps = {
   src: string;
   id: string;
 };
 
-export const ChatMessageContentVoiceMessage = ({
+export const ChatMessageContentVoice = ({
   src,
   id,
-}: ChatMessageContentVoiceMessageProps) => {
+}: ChatMessageContentVoiceProps) => {
   const [audio, setAudio] = useState<HTMLAudioElement>();
   const [playingAudio, setPlayingAudio] = useAtom(playingAudioAtom);
   const [duration, setDuration] = useState(0);

@@ -4,12 +4,12 @@ import { ChatSendBtn } from 'src/pages/chat/shared/ChatSendBtn';
 import { Icon, IconButton, TextField } from 'src/ui-components';
 import { toDuration } from 'src/utils/audio-utils';
 
-export type ChatNewMessageRecordingProps = {
+export type ChatNewMessageVoiceProps = {
   onCancel: () => void;
   onSend: (blob: Blob) => void;
 };
 
-export const ChatNewMessageRecording = ({ onCancel, onSend }: ChatNewMessageRecordingProps) => {
+export const ChatNewMessageVoice = ({ onCancel, onSend }: ChatNewMessageVoiceProps) => {
   const { start, stop } = useVoiceRecording();
   const [duration, setDuration] = useState(0);
 

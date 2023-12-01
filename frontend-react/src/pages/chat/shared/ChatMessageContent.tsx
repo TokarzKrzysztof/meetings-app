@@ -3,7 +3,7 @@ import { useLongPress } from 'src/hooks/useLongPress';
 import { Message, MessageType } from 'src/models/chat/message';
 import { StyledMessage } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
 import { ChatMessageContentImage } from 'src/pages/chat/shared/ChatMessageContentImage';
-import { ChatMessageContentVoiceMessage } from 'src/pages/chat/shared/ChatMessageContentVoiceMessage';
+import { ChatMessageContentVoice } from 'src/pages/chat/shared/ChatMessageContentVoice';
 import { ChatVoiceMessageDescription } from 'src/pages/chat/shared/ChatVoiceMessageDescription';
 import { Typography } from 'src/ui-components';
 import { getFocusableId } from 'src/utils/chat-utils';
@@ -77,7 +77,7 @@ export const ChatMessageContent = ({
           <ChatMessageContentImage message={message} maxHeight={300} />
         )}
         {message.type === MessageType.Audio && (
-          <ChatMessageContentVoiceMessage id={getFocusableId(message.id)} src={message.value} />
+          <ChatMessageContentVoice id={getFocusableId(message.id)} src={message.value} />
         )}
       </StyledMessage>
       {message.isPending && (

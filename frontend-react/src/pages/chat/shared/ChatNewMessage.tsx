@@ -8,11 +8,11 @@ import { Chat } from 'src/models/chat/chat';
 import { Message, MessageType } from 'src/models/chat/message';
 import { User } from 'src/models/user';
 import { ChatNewMessageImage } from 'src/pages/chat/shared/ChatNewMessageImage';
-import { ChatNewMessageRecording } from 'src/pages/chat/shared/ChatNewMessageRecording';
 import {
   ChatNewMessageReplyPreview,
   replyMessageAtom,
 } from 'src/pages/chat/shared/ChatNewMessageReplyPreview';
+import { ChatNewMessageVoice } from 'src/pages/chat/shared/ChatNewMessageVoice';
 import { ChatSendBtn } from 'src/pages/chat/shared/ChatSendBtn';
 import { useSendPrivateMessage } from 'src/queries/chat-queries';
 import { Box, Icon, IconButton, Stack, TextArea } from 'src/ui-components';
@@ -110,7 +110,7 @@ export const ChatNewMessage = ({
       <ChatNewMessageReplyPreview />
       <Stack position={'relative'} alignItems={'flex-start'} p={1}>
         {isRecording ? (
-          <ChatNewMessageRecording
+          <ChatNewMessageVoice
             onCancel={() => setIsRecording(false)}
             onSend={(blob) => {
               sendMessage(blob, MessageType.Audio);
