@@ -34,7 +34,7 @@ namespace Meetings.ErrorHandlingMiddleware
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
                     validationErrors = ((ValidationException)ex).Errors.Select(x => x.ErrorCode).ToList();
-                }       
+                }
                 else if (ex.GetType() == typeof(UnauthorizedAccessException))
                 {
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -48,7 +48,7 @@ namespace Meetings.ErrorHandlingMiddleware
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 }
 
-                var result = JsonSerializer.Serialize(new { statusCode = response.StatusCode, validationErrors, message = ex.Message });
+                var result = JsonSerializer.Serialize(new { statusCode = response.StatusCode, validationErrors, message = Utilities.IsDebug() ? ex.Message : null });
                 await response.WriteAsync(result);
             }
         }

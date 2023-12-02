@@ -22,13 +22,7 @@ TODO
 - zrobic usuwanie wszystkich entity bez flagi tylko za pomocą delete
 - rozbić IEntityBase na mniejsze części, bo czasami te daty nie są potrzebne 
 - dodac walidacje do wiadomosci (pusta, whitespace itp)
-- nie zwracać message do klienta ze względów bezpieczeństwa
 - dodac notyfication w aplikacji o nowej wiadomosci
-- pamietac o preventDefault w chatmessage na telefonie w useLongPress
-- pokazywać odpowiednio odpowiedź na wiadomość głosową
-- naprawic bug ze skakaniem przy odtwarzaniu wiadomosci glosowych na niektorych rozdzielczosciach
-- naprawic bug z odtwarzaniem zaraz po wyslaniu wiadomosci
-- naprawic bug z microfone permissions
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)
