@@ -55,13 +55,6 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
   const isPlaying = playingAudio === audio;
 
   useEffect(() => {
-    return () => {
-      // pause audio on destroy
-      audio?.pause();
-    };
-  }, [audio]);
-
-  useEffect(() => {
     setAudio(new Audio(src));
     getDuration(src).then((result) => {
       setDuration(result);
@@ -75,12 +68,11 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
       intervalId = setInterval(() => {
         setCurrentTime(audio.currentTime);
       }, 30);
-    } else {
-      audio?.pause();
     }
 
     return () => {
       clearInterval(intervalId);
+      audio?.pause();
     };
   }, [playingAudio, audio]);
 
