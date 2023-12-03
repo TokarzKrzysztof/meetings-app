@@ -16,11 +16,11 @@ const StyledDot = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }));
 
-export type MyChatsItemProps = {
+export type MyChatsTabsListItemProps = {
   chat: ChatPreview;
 };
 
-export const MyChatsItem = ({ chat }: MyChatsItemProps) => {
+export const MyChatsTabsListItem = ({ chat }: MyChatsTabsListItemProps) => {
   const currentUser = useLoggedInUser();
   const location = useLocation();
 

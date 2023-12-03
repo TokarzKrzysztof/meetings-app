@@ -194,15 +194,14 @@ export const PrivateChat = () => {
       <Stack height={'100vh'} direction={'column'}>
         <ChatHeader user={user} returnUrl={params.returnUrl} />
         <StyledScrollableContainer ref={scrollableRef}>
-          {messages.length === privateChat?.totalMessagesAmount && (
-            <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
-              <Avatar src={user.profileImageSrc} size={100} sx={{ mb: 2 }} />
-              <Typography>
-                {user.firstName} {user.lastName}, {age}
-              </Typography>
-              <Typography>Limanowa (30 km od Ciebie)</Typography>
-            </Stack>
-          )}
+          <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
+            <Avatar src={user.profileImageSrc} size={100} sx={{ mb: 2 }} />
+            <Typography>
+              {user.firstName} {user.lastName}, {age}
+            </Typography>
+            <Typography>Limanowa (30 km od Ciebie)</Typography>
+          </Stack>
+
           <Stack direction={'column'} py={1} gap={1}>
             <InfiniteScroll
               scrollableRef={scrollableRef}

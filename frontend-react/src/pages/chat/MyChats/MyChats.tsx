@@ -1,8 +1,9 @@
 import { Header } from 'src/components/header/Header';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
-import { MyChatsItem } from 'src/pages/chat/MyChats/MyChatsItem';
+import { MyChatsNewPrivateMessage } from 'src/pages/chat/MyChats/MyChatsNewPrivateMessage';
+import { MyChatsTabs } from 'src/pages/chat/MyChats/MyChatsTabs';
 import { useGetCurrentUserChats } from 'src/queries/chat-queries';
-import { List, Typography } from 'src/ui-components';
+import { Box } from 'src/ui-components';
 
 export const MyChats = () => {
   const { currentUserChats, currentUserChatsRefetch } = useGetCurrentUserChats();
@@ -15,17 +16,10 @@ export const MyChats = () => {
   return (
     <>
       <Header />
-      {currentUserChats.length ? (
-        <List>
-          {currentUserChats.map((chat) => (
-            <MyChatsItem key={chat.id} chat={chat} />
-          ))}
-        </List>
-      ) : (
-        <Typography mt={6} textAlign={'center'} color={'grey'}>
-          Nie masz jeszcze żadnych rozmów
-        </Typography>
-      )}
+      <Box position={'relative'}>
+        {currentUserChats.length && <MyChatsTabs currentUserChats={currentUserChats} />}
+        <MyChatsNewPrivateMessage />
+      </Box>
     </>
   );
 };

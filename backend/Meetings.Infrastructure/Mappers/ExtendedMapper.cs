@@ -42,6 +42,16 @@ namespace Meetings.Infrastructure.Mappers
             return result;
         }
 
+        public List<UserDTO> ToUserDTOList(IEnumerable<User> entities)
+        {
+            var result = new List<UserDTO>();
+            foreach (var entity in entities)
+            {
+                result.Add(ToUserDTO(entity));
+            }
+            return result;
+        }
+
         public async Task<MessageDTO> ToMessageDTO(Message entity)
         {
             var result = _mapper.Map<MessageDTO>(entity);

@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Entities
 {
+    public enum ChatType
+    {
+        Private,
+        Group
+    }
     public class Chat : IEntityBase
     {
         public Guid Id { get; set; }

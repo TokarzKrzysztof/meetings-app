@@ -23,5 +23,6 @@ namespace Meetings.Models.Resources
         public string? LastMessageValue { get; set; }
         public DateTime? LastMessageDate { get; set; }
         public MessageType? LastMessageType { get; set; }
+        public ChatType ChatType { get; set; }
     }
 }

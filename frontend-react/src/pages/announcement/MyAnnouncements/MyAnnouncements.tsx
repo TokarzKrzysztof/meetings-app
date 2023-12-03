@@ -46,9 +46,24 @@ export const MyAnnouncements = () => {
           </IconButton>
         </Typography>
         <Divider></Divider>
-        <MyAnnouncementsList data={data.activeAnnouncements} status={AnnouncementStatus.Active} />
-        <MyAnnouncementsList data={data.pendingAnnouncements} status={AnnouncementStatus.Pending} />
-        <MyAnnouncementsList data={data.closedAnnouncements} status={AnnouncementStatus.Closed} />
+        <MyAnnouncementsList
+          data={data.activeAnnouncements}
+          status={AnnouncementStatus.Active}
+          title='Aktywne'
+          noAnnoucementsText='Brak aktywnych ogłoszeń'
+        />
+        <MyAnnouncementsList
+          data={data.pendingAnnouncements}
+          status={AnnouncementStatus.Pending}
+          title='Oczekujące'
+          noAnnoucementsText='Brak oczekujących ogłoszeń'
+        />
+        <MyAnnouncementsList
+          data={data.closedAnnouncements}
+          status={AnnouncementStatus.Closed}
+          title='Zakończone'
+          noAnnoucementsText='Brak zakończonych ogłoszeń'
+        />
       </Container>
     </>
   );

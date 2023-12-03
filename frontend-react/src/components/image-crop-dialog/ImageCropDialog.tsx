@@ -10,6 +10,8 @@ import {
   DialogContent,
   Icon,
   IconButton,
+  Slider,
+  Stack,
   Typography,
 } from 'src/ui-components';
 
@@ -64,20 +66,29 @@ export const ImageCropDialog = ({ image, onAccept, onClose }: ImageCropDialogPro
               setZoom={setZoom}
             />
           </DialogContent>
-          <DialogActions sx={{ justifyContent: 'space-between' }}>
-            <Button variant='outlined' onClick={onClose}>
-              Anuluj
-            </Button>
-            <Button onClick={generateCroppedImage}>Dalej</Button>
+          <DialogActions sx={{ display: 'block' }}>
+            <Slider
+              sx={{ width: '80%', margin: '0 auto', display: 'block' }}
+              value={zoom}
+              valueLabelDisplay='auto'
+              onChange={(event, value) => setZoom(value as number)}
+              step={0.01}
+              min={1}
+              max={3}
+            />
+            <Stack justifyContent={'space-between'}>
+              <Button variant='outlined' onClick={onClose}>
+                Anuluj
+              </Button>
+              <Button onClick={generateCroppedImage}>Dalej</Button>
+            </Stack>
           </DialogActions>
         </>
       ) : (
         <>
-          <DialogContent>
-            <Box maxWidth={300} margin='0 auto'>
-              <img style={{ borderRadius: '50%', maxWidth: '100%' }} src={croppedImage.src} />
-            </Box>
-            <Typography textAlign='center' my={2}>
+          <DialogContent sx={{ textAlign: 'center' }}>
+            <img style={{ borderRadius: '50%', maxWidth: 300 }} src={croppedImage.src} />
+            <Typography my={2}>
               Czy chcesz ustawić to zdjęcie jako swoje nowe zdjęcie profilowe?
             </Typography>
           </DialogContent>

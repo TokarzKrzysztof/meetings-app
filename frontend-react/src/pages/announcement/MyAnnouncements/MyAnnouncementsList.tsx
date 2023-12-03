@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { MyAnnouncementsListItem } from 'src/pages/announcement/MyAnnouncements/MyAnnouncementsListItem';
 import { Box, Stack, Typography } from 'src/ui-components';
@@ -6,21 +5,16 @@ import { Box, Stack, Typography } from 'src/ui-components';
 export type MyAnnouncementsListProps = {
   data: Announcement[];
   status: AnnouncementStatus;
+  title: string;
+  noAnnoucementsText: string;
 };
 
-export const MyAnnouncementsList = ({ data, status }: MyAnnouncementsListProps) => {
-  const title = useMemo(() => {
-    if (status === AnnouncementStatus.Active) return 'Aktywne';
-    if (status === AnnouncementStatus.Pending) return 'Oczekujące';
-    return 'Zakończone';
-  }, [status]);
-
-  const noAnnoucementsText = useMemo(() => {
-    if (status === AnnouncementStatus.Active) return 'Brak aktywnych ogłoszeń';
-    if (status === AnnouncementStatus.Pending) return 'Brak oczekujących ogłoszeń';
-    return 'Brak zakończonych ogłoszeń';
-  }, [status]);
-
+export const MyAnnouncementsList = ({
+  data,
+  status,
+  title,
+  noAnnoucementsText,
+}: MyAnnouncementsListProps) => {
   return (
     <Box my={3}>
       <Typography variant='h6' textAlign='center' mb={1}>

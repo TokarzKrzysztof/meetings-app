@@ -57,6 +57,20 @@ export const useGetUser = (
   return genericUseQueryMethods('user', query);
 };
 
+export const useGetUsersByFilter = (
+  options?: UseMutationOptions<User[], AxiosError<HttpErrorData>, string>
+) => {
+  const mutation = useMutation({
+    mutationFn: (filter) => {
+      const params = { filter };
+      return axios.get(`${baseUrl}/GetUsersByFilter`, { params });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('getUsersByFilter', mutation);
+};
+
 export const useUploadProfileImage = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Blob>
 ) => {

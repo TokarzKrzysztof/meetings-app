@@ -187,6 +187,7 @@ namespace Meetings.Infrastructure.Services
                     LastMessageValue = lastMessage?.Type == MessageType.Text ? lastMessage?.Value : null,
                     LastMessageDate = lastMessage?.CreatedAt,
                     LastMessageType = lastMessage?.Type,
+                    ChatType = x.Participants.Count == 2 ? ChatType.Private : ChatType.Group
                 };
             }).OrderByDescending(x => x.LastMessageDate);
         }

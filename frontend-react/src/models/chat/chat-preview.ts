@@ -1,3 +1,4 @@
+import { ChatType } from "src/models/chat/chat";
 import { MessageType } from "src/models/chat/message";
 import { UserActiveStatus, UserGender } from "src/models/user";
 
@@ -15,4 +16,5 @@ export type ChatPreview = {
   lastMessageValue: string | null;
   lastMessageDate: string | null;
   lastMessageType: MessageType | null;
+  chatType: ChatType
 };

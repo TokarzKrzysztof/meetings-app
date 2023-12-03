@@ -134,6 +134,20 @@ namespace Meetings.Infrastructure.Services
             return _extendedMapper.ToUserDTO(user);
         }
 
+        public async Task<List<UserDTO>> GetUsersByFilter(string filter, int take, bool excludeCurrentUser)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            string filterLower = filter.ToLower();
+            List<User> users = await _repository.Data
+                .Where(x => x.FirstName.ToLower().Contains(filterLower) || x.LastName.ToLower().Contains(filterLower))
+                .If(excludeCurrentUser, q => q.Where(x => x.Id != userId))
+                .Take(take)
+                .ToListAsync();
+
+            return _extendedMapper.ToUserDTOList(users);
+        }
+
         public Task<bool> IsEmailTaken(string email)
         {
             return _repository.Data.AnyAsync(x => x.Email == email);

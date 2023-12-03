@@ -41,6 +41,14 @@ namespace Meetings.EmailTemplates.Controllers
             return Ok(user);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUsersByFilter([FromQuery] string filter, [FromQuery] int take = 20, [FromQuery] bool excludeCurrentUser = true)
+        {
+            List<UserDTO> users = await _userService.GetUsersByFilter(filter, take, excludeCurrentUser);
+            return Ok(users);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile image)

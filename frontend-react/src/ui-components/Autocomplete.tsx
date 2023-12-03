@@ -4,9 +4,11 @@ import {
   AutocompleteProps as MuiAutocompleteProps,
   autocompleteClasses,
 } from '@mui/material/Autocomplete';
+import { ForwardedRef } from 'react';
 import { Box } from 'src/ui-components/Box';
 import { CircularProgress } from 'src/ui-components/CircularProgress';
 import { Popper } from 'src/ui-components/Popper';
+import { typedForwardRef } from 'src/utils/types/forward-ref';
 
 const StyledPopper = styled(Popper)({
   '& .MuiPaper-root': {
@@ -21,26 +23,35 @@ const StyledPopper = styled(Popper)({
   },
 });
 
-export type AutocompleteProps<T> = {
-  optionsAsync: T[] | undefined;
-  getOptionLabel: (option: T) => string;
-};
-
-export const Autocomplete = <
+export type AutocompleteProps<
   T,
   Multiple extends boolean | undefined,
   DisableClearable extends boolean | undefined,
   FreeSolo extends boolean | undefined,
-  ChipComponent extends React.ElementType = ChipTypeMap['defaultComponent'],
->({
-  optionsAsync,
-  getOptionLabel,
-  ...props
-}: Omit<
+  ChipComponent extends React.ElementType = ChipTypeMap['defaultComponent']
+> = Omit<
   MuiAutocompleteProps<T, Multiple, DisableClearable, FreeSolo, ChipComponent>,
-  'options' | 'getOptionLabel'
-> &
-  AutocompleteProps<T>) => {
+  'options' | 'getOptionLabel' | 'ref'
+> & {
+  optionsAsync: T[] | undefined;
+  getOptionLabel?: (option: T) => string;
+};
+
+const AutocompleteInner = <
+  T,
+  Multiple extends boolean | undefined,
+  DisableClearable extends boolean | undefined,
+  FreeSolo extends boolean | undefined,
+  ChipComponent extends React.ElementType = ChipTypeMap['defaultComponent']
+>(
+  {
+    optionsAsync,
+    renderOption,
+    getOptionLabel,
+    ...props
+  }: AutocompleteProps<T, Multiple, DisableClearable, FreeSolo, ChipComponent>,
+  ref: ForwardedRef<HTMLInputElement>
+) => {
   const loadingOption = (
     <Box
       component='li'
@@ -63,12 +74,14 @@ export const Autocomplete = <
   return (
     <MuiAutocomplete
       options={optionsAsync ?? ['loadingDummyOption' as T]}
-      renderOption={optionsAsync ? undefined : () => loadingOption}
+      renderOption={optionsAsync ? renderOption : () => loadingOption}
       // fix error with option label as undefined instead of null
-      getOptionLabel={(opt) => getOptionLabel(opt as T) ?? ''}
+      getOptionLabel={(opt) => (getOptionLabel && getOptionLabel(opt as T)) ?? ''}
       PopperComponent={StyledPopper}
       noOptionsText='Brak opcji'
       {...props}
     ></MuiAutocomplete>
   );
 };
+
+export const Autocomplete = typedForwardRef(AutocompleteInner);
