@@ -6,6 +6,7 @@ import { useLongPress } from 'src/hooks/useLongPress';
 import { messageStyles } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
 import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
 import { getDuration, toDuration } from 'src/utils/audio-utils';
+import { inRange } from 'src/utils/number-utils';
 
 const StyledVoiceMessage = styled(Box)({
   ...messageStyles,
@@ -46,7 +47,7 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
 
     const clientX = 'touches' in e ? e.changedTouches[0].clientX : e.clientX;
     const clickedPlace = clientX - left;
-    const newTime = (clickedPlace / width) * duration;
+    const newTime = inRange((clickedPlace / width) * duration, 0, duration);
 
     setCurrentTime(newTime);
     audio!.currentTime = newTime;
@@ -90,6 +91,7 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
     audio!.currentTime = 0;
   };
 
+  const currentTimePercentage = (currentTime / duration) * 100;
   return (
     <Stack alignItems={'center'}>
       {isPlaying && (
@@ -102,7 +104,9 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
       </IconButton>
       <StyledVoiceMessage {...longPressEvent} id={id}>
         <StyledDurationBar
-          style={{ transform: `translateX(${(currentTime / duration) * 100}%)` }}
+          style={{
+            transform: `translateX(${inRange(currentTimePercentage, 0, 100)}%)`,
+          }}
         ></StyledDurationBar>
         <Typography>
           {toDuration(currentTime)} / {toDuration(duration)}

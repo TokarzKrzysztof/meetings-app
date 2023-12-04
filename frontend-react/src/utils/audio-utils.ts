@@ -1,5 +1,5 @@
 export const toDuration = (seconds?: number) => {
-  if (seconds === undefined || seconds < 0) return '0:00';
+  if (seconds === undefined) return '0:00';
   seconds = Math.ceil(seconds);
 
   if (seconds < 60) {
