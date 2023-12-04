@@ -23,6 +23,7 @@ TODO
 - rozbić IEntityBase na mniejsze części, bo czasami te daty nie są potrzebne 
 - dodac walidacje do wiadomosci (pusta, whitespace itp)
 - dodac notyfication w aplikacji o nowej wiadomosci
+- włączyć react rule do useEffecta i innych hooks
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)

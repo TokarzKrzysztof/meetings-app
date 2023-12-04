@@ -8,6 +8,7 @@ using Meetings.Infrastructure.Mappers;
 using Meetings.Infrastructure.Utils;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
+using Meetings.Utils.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -42,14 +43,27 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<ChatDTO?> GetPrivateChat(Guid participantId, int messagesAmount)
         {
+            return await GetChat(ChatType.Private, messagesAmount, participantId: participantId);
+        }
+
+        public async Task<ChatDTO> GetGroupChat(Guid chatId, int messagesAmount)
+        {
+            var result = await GetChat(ChatType.Group, messagesAmount, chatId: chatId);
+            return result!;
+        }
+
+        private async Task<ChatDTO?> GetChat(ChatType type, int messagesAmount, Guid chatId = default, Guid participantId = default)
+        {
             Guid userId = _claimsReader.GetCurrentUserId();
 
             var queryResult = await _repository.Data
-                .ByParticipants(userId, participantId)
+                .If(type == ChatType.Private, q => q.ByParticipants(userId, participantId))
+                .If(type == ChatType.Group, q => q.Where(x => x.Id == chatId))
                 .IncludeAllMessagesData()
                 .Select(x => new
                 {
                     x.Id,
+                    x.Name,
                     TotalMessagesAmount = x.Messages.Count(),
                     Messages = x.Messages.OrderByDescending(x => x.CreatedAt).Take(messagesAmount).Reverse(),
                 })
@@ -62,6 +76,7 @@ namespace Meetings.Infrastructure.Services
             return new ChatDTO()
             {
                 Id = queryResult.Id,
+                Name = queryResult.Name,
                 Messages = await _extendedMapper.ToMessageDTOList(queryResult.Messages),
                 TotalMessagesAmount = queryResult.TotalMessagesAmount
             };
@@ -124,7 +139,15 @@ namespace Meetings.Infrastructure.Services
             Guid chatId = await _repository.Data.ByParticipants(authorId, data.RecipientId).Select(x => x.Id).SingleOrDefaultAsync();
             if (chatId == Guid.Empty)
             {
-                chatId = await CreateNewChat(authorId, data);
+                List<ChatParticipant> participants = new List<ChatParticipant>()
+                {
+                    new ChatParticipant(authorId),
+                    new ChatParticipant(data.RecipientId)
+                    {
+                        HasUnreadMessages = true
+                    }
+                };
+                chatId = await CreateNewChat(data.ConnectionId, participants);
             }
             Message entity = await CreateMessage(authorId, chatId, data);
 
@@ -169,7 +192,8 @@ namespace Meetings.Infrastructure.Services
 
             return chats.Select(x =>
             {
-                ChatParticipant participant = x.Participants.Single(x => x.UserId != userId);
+                // TODO participant check for group chat
+                ChatParticipant participant = x.Participants.First(x => x.UserId != userId);
                 ChatParticipant currentUserParticipant = x.Participants.Single(x => x.UserId == userId);
                 Message? lastMessage = x.Messages.OrderByDescending(msg => msg.CreatedAt).FirstOrDefault();
                 return new ChatPreview()
@@ -209,23 +233,30 @@ namespace Meetings.Infrastructure.Services
                  );
         }
 
-        private async Task<Guid> CreateNewChat(Guid authorId, SendPrivateMessageData data)
+        public async Task<Guid> CreateGroupChat(CreateGroupChatData data)
         {
-            List<ChatParticipant> participants = new List<ChatParticipant>()
+            if (data.UserIds.Count < 2)
             {
-                    new ChatParticipant(authorId),
-                    new ChatParticipant(data.RecipientId)
-                    {
-                        HasUnreadMessages = true
-                    }
-                };
+                throw new Exception();
+            }
 
+            Guid userId = _claimsReader.GetCurrentUserId();
+            List<ChatParticipant> participants = data.UserIds.Select(x => new ChatParticipant(x)).ToList();
+            participants.Add(new ChatParticipant(userId));
+            Guid chatId = await CreateNewChat(data.ConnectionId, participants, data.Name);
+
+            return chatId;
+        }
+
+        private async Task<Guid> CreateNewChat(string connectionId, List<ChatParticipant> participants, string name = null)
+        {
             var createdChat = await _repository.Create(new Chat()
             {
-                Participants = participants
+                Participants = participants,
+                Name = name
             });
 
-            await _chatHubContext.Groups.AddToGroupAsync(data.ConnectionId, createdChat.Id.ToString());
+            await _chatHubContext.Groups.AddToGroupAsync(connectionId, createdChat.Id.ToString());
             await _chatHubContext.Clients.Users(participants.Select(x => x.UserId.ToString())).OnNewChatCreated(createdChat.Id);
 
             return createdChat.Id;

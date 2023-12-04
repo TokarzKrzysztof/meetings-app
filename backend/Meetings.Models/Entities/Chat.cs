@@ -15,6 +15,7 @@ namespace Meetings.Models.Entities
     public class Chat : IEntityBase
     {
         public Guid Id { get; set; }
+        public string? Name { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDelete { get; set; }
@@ -25,6 +26,7 @@ namespace Meetings.Models.Entities
     public class ChatDTO
     {
         public Guid Id { get; set; }
+        public string? Name { get; set; }
         public int TotalMessagesAmount { get; set; }
         public List<MessageDTO> Messages { get; set; }
         public List<UserDTO> Participants { get; set; }

@@ -27,6 +27,7 @@ export * from './InputAdornment';
 export * from './InputLabel';
 export * from './LinearProgress';
 export * from './List';
+export * from './ListItem';
 export * from './ListItemAvatar';
 export * from './ListItemButton';
 export * from './ListItemIcon';

@@ -15,6 +15,38 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Chat`;
 
+export const useCreateGroupChat = (
+  options?: UseMutationOptions<
+    Chat['id'],
+    AxiosError<HttpErrorData>,
+    { name: string; userIds: string[]; connectionId: string }
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => axios.post(`${baseUrl}/CreateGroupChat`, data),
+    ...options,
+  });
+
+  return genericUseMutationMethods('createGroupChat', mutation);
+};
+
+export const useGetGroupChat = (
+  chatId: string,
+  messagesAmount: number,
+  options?: UseQueryOptions<Chat, AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: ['GetGroupChat', chatId, messagesAmount],
+    queryFn: () => {
+      const params = { chatId, messagesAmount };
+      return axios.get(`${baseUrl}/GetGroupChat`, { params });
+    },
+    ...options,
+  });
+
+  return genericUseQueryMethods('groupChat', query);
+};
+
 export const useGetPrivateChat = (
   participantId: string,
   messagesAmount: number,
@@ -101,7 +133,7 @@ export const useMarkChatAsRead = (
 };
 
 export const useSendPrivateMessage = (
-  onUploadProgress: (data: SendPrivateMessageData, percentage: number) => void, 
+  onUploadProgress: (data: SendPrivateMessageData, percentage: number) => void,
   options?: UseMutationOptions<Message, AxiosError<HttpErrorData>, SendPrivateMessageData>
 ) => {
   const mutation = useMutation({
@@ -112,9 +144,9 @@ export const useSendPrivateMessage = (
           'Content-Type': 'multipart/form-data',
         },
         onUploadProgress: (event) => {
-         const percentage = +(event.loaded / event.total! * 100).toFixed(0);
-         onUploadProgress(data, percentage);
-        }
+          const percentage = +((event.loaded / event.total!) * 100).toFixed(0);
+          onUploadProgress(data, percentage);
+        },
       });
     },
     ...options,

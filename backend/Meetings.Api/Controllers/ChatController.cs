@@ -30,6 +30,14 @@ namespace Meetings.Api.Controllers
 
         [HttpGet]
         [Authorize]
+        public async Task<IActionResult> GetGroupChat([FromQuery] Guid chatId, [FromQuery] int messagesAmount)
+        {
+            ChatDTO chat = await _chatService.GetGroupChat(chatId, messagesAmount);
+            return Ok(chat);
+        }
+
+        [HttpGet]
+        [Authorize]
         public async Task<IActionResult> LoadMoreChatMessages([FromQuery] Guid chatId, [FromQuery] int skip, [FromQuery] int take)
         {
             List<MessageDTO> messages = await _chatService.LoadMoreChatMessages(chatId, skip, take);
@@ -76,6 +84,14 @@ namespace Meetings.Api.Controllers
             await _chatHubContext.Clients.Group(message.ChatId.ToString()).OnGetNewMessage(message);
 
             return Ok(message);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CreateGroupChat([FromBody] CreateGroupChatData data)
+        {
+            Guid chatId = await _chatService.CreateGroupChat(data);
+            return Ok(chatId);
         }
     }
 }

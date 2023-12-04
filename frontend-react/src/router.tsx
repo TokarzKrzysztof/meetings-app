@@ -69,10 +69,26 @@ export const router = createBrowserRouter([
         loader: protectedLoader,
       },
       {
+        path: AppRoutes.GroupChat(),
+        lazy: async () => {
+          const { GroupChat } = await import('./pages/chat/GroupChat/GroupChat');
+          return { Component: GroupChat };
+        },
+        loader: protectedLoader,
+      },
+      {
         path: AppRoutes.MyChats(),
         lazy: async () => {
           const { MyChats } = await import('./pages/chat/MyChats/MyChats');
           return { Component: MyChats };
+        },
+        loader: protectedLoader,
+      },
+      {
+        path: AppRoutes.NewGroupChat(),
+        lazy: async () => {
+          const { NewGroupChat } = await import('./pages/chat/NewGroupChat/NewGroupChat');
+          return { Component: NewGroupChat };
         },
         loader: protectedLoader,
       },

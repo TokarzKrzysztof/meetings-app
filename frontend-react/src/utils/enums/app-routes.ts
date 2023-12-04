@@ -14,7 +14,9 @@ export const AppRoutes = {
   MyProfileChangePassword: () => '/my-profile/change-password',
   MyProfileChangeEmail: () => '/my-profile/change-email',
   PrivateChat: (params?: PrivateChatParams) => makeUrl('/private-chat', params),
+  GroupChat: (params?: GroupChatParams) => makeUrl('/group-chat', params),
   MyChats: () => '/my-chats',
+  NewGroupChat: () => '/new-group-chat',
 } as const;
 
 export type HomeParams = {
@@ -36,6 +38,10 @@ export type AnnouncementResultListParams = {
 export type PrivateChatParams = {
   userId: string;
   returnUrl: string;
+};
+
+export type GroupChatParams = {
+  chatId: string;
 };
 
 export type LoginParams = {
