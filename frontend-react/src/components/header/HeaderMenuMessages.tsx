@@ -21,7 +21,7 @@ export const HeaderMenuMessages = ({ ...props }: HeaderMenuMessagesProps) => {
   });
 
   return (
-    <IconButton size='large' slot='end' color='inherit' component={Link} to={AppRoutes.MyChats()}>
+    <IconButton size='large' slot='end' color='inherit' component={Link} to={AppRoutes.MyChatsPrivate()}>
       <Badge badgeContent={unreadChatsCount} color='error'>
         <Icon name='question_answer' />
       </Badge>

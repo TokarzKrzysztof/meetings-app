@@ -39,7 +39,7 @@ export const PrivateChat = () => {
   return (
     <ChatMessageFocusProvider chat={privateChat} setMessages={setMessages}>
       <Stack height={'100vh'} direction={'column'}>
-        <ChatHeader user={user} returnUrl={params.returnUrl} />
+        <ChatHeader user={user} />
         <ChatScrollable
           ref={scrollableRef}
           top={

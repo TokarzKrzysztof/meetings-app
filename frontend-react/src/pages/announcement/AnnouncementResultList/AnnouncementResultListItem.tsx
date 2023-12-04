@@ -1,6 +1,6 @@
 import { Divider } from '@mui/material';
 import { useMemo } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { UserAnnouncement } from 'src/models/annoucement/user-announcement';
 import { Avatar, Box, Button, Card, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -11,7 +11,6 @@ export type AnnouncementResultListItemProps = {
 };
 
 export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemProps) => {
-  const location = useLocation();
   const age = useMemo(() => calculateAge(data.userBirthDate), [data]);
 
   return (
@@ -37,10 +36,7 @@ export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemP
           size='small'
           variant='text'
           component={Link}
-          to={AppRoutes.PrivateChat({
-            userId: data.userId,
-            returnUrl: location.pathname + location.search,
-          })}
+          to={AppRoutes.PrivateChat({ userId: data.userId })}
         >
           Wyślij wiadomość
         </Button>

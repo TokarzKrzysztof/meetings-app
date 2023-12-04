@@ -94,16 +94,28 @@ export const useLoadAllMessagesAfterDate = (
   return genericUseMutationMethods('loadAllMessagesAfterDate', mutation);
 };
 
-export const useGetCurrentUserChats = (
+export const useGetCurrentUserPrivateChats = (
   options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
-    queryKey: 'GetCurrentUserChats',
-    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserChats`),
+    queryKey: 'GetCurrentUserPrivateChats',
+    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserPrivateChats`),
     ...options,
   });
 
-  return genericUseQueryMethods('currentUserChats', query);
+  return genericUseQueryMethods('currentUserPrivateChats', query);
+};
+
+export const useGetCurrentUserGroupChats = (
+  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: 'GetCurrentUserGroupChats',
+    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserGroupChats`),
+    ...options,
+  });
+
+  return genericUseQueryMethods('currentUserGroupChats', query);
 };
 
 export const useGetUnreadChatsCount = (

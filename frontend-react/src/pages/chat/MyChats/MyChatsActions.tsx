@@ -5,9 +5,9 @@ import { showNewPrivateMessageAtom } from 'src/pages/chat/MyChats/MyChatsNewPriv
 import { Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
-export type MyChatsTabsCreateNewProps = {};
+export type MyChatsActionsProps = {};
 
-export const MyChatsTabsCreateNew = ({ ...props }: MyChatsTabsCreateNewProps) => {
+export const MyChatsActions = ({ ...props }: MyChatsActionsProps) => {
   const menuAnchorRef = useRef<HTMLButtonElement>(null);
   const setShowNewPrivateMessage = useSetAtom(showNewPrivateMessageAtom);
 

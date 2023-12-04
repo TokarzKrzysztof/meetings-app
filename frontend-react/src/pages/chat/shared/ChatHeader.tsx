@@ -1,14 +1,15 @@
-import { Link } from 'react-router-dom';
+import { useNavigateBack } from 'src/hooks/useNavigateBack';
 import { User } from 'src/models/user';
 import { UserActiveStatusBadge } from 'src/pages/chat/shared/UserActiveStatusBadge';
 import { AppBar, Avatar, Button, Icon, Stack, Toolbar, Typography } from 'src/ui-components';
 
 export type ChatHeaderProps = {
   user: User;
-  returnUrl: string;
 };
 
-export const ChatHeader = ({ user, returnUrl }: ChatHeaderProps) => {
+export const ChatHeader = ({ user }: ChatHeaderProps) => {
+  const navigateBack = useNavigateBack();
+
   return (
     <AppBar position='static'>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -16,9 +17,8 @@ export const ChatHeader = ({ user, returnUrl }: ChatHeaderProps) => {
           variant='text'
           startIcon={<Icon name='arrow_back' />}
           size='small'
-          component={Link}
-          to={returnUrl}
           color='inherit'
+          onClick={navigateBack}
         >
           Wróć
         </Button>

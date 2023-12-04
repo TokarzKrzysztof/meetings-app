@@ -16,6 +16,8 @@ export const AppRoutes = {
   PrivateChat: (params?: PrivateChatParams) => makeUrl('/private-chat', params),
   GroupChat: (params?: GroupChatParams) => makeUrl('/group-chat', params),
   MyChats: () => '/my-chats',
+  MyChatsPrivate: () => '/my-chats/private',
+  MyChatsGroup: () => '/my-chats/group',
   NewGroupChat: () => '/new-group-chat',
 } as const;
 
@@ -37,7 +39,6 @@ export type AnnouncementResultListParams = {
 
 export type PrivateChatParams = {
   userId: string;
-  returnUrl: string;
 };
 
 export type GroupChatParams = {

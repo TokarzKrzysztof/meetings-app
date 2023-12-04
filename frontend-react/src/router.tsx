@@ -83,6 +83,26 @@ export const router = createBrowserRouter([
           return { Component: MyChats };
         },
         loader: protectedLoader,
+        children: [
+          {
+            path: AppRoutes.MyChatsPrivate(),
+            lazy: async () => {
+              const { MyChatsPrivate } = await import(
+                './pages/chat/MyChats/sub-pages/MyChatsPrivate'
+              );
+              return { Component: MyChatsPrivate };
+            },
+            loader: protectedLoader,
+          },
+          {
+            path: AppRoutes.MyChatsGroup(),
+            lazy: async () => {
+              const { MyChatsGroup } = await import('./pages/chat/MyChats/sub-pages/MyChatsGroup');
+              return { Component: MyChatsGroup };
+            },
+            loader: protectedLoader,
+          },
+        ],
       },
       {
         path: AppRoutes.NewGroupChat(),
@@ -141,7 +161,6 @@ export const router = createBrowserRouter([
         loader: protectedLoader,
         children: [
           {
-            path: AppRoutes.MyProfileChangeData(),
             lazy: async () => {
               const { MyProfileChangeData } = await import(
                 './pages/account/MyProfile/sub-pages/MyProfileChangeData'

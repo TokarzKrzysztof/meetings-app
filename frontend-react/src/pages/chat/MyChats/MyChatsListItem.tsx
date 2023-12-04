@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { useMemo } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { MessageType } from 'src/models/chat/message';
@@ -16,13 +16,12 @@ const StyledDot = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }));
 
-export type MyChatsTabsListItemProps = {
+export type MyChatsListItemProps = {
   chat: ChatPreview;
 };
 
-export const MyChatsTabsListItem = ({ chat }: MyChatsTabsListItemProps) => {
+export const MyChatsListItem = ({ chat }: MyChatsListItemProps) => {
   const currentUser = useLoggedInUser();
-  const location = useLocation();
 
   const lastMessageText = useMemo(() => {
     if (!chat.hasLastMessage) return null;
@@ -43,13 +42,7 @@ export const MyChatsTabsListItem = ({ chat }: MyChatsTabsListItemProps) => {
 
   const fontWeight = chat.hasUnreadMessages ? 'bold' : undefined;
   return (
-    <ListItemButton
-      component={Link}
-      to={AppRoutes.PrivateChat({
-        userId: chat.participantId,
-        returnUrl: location.pathname + location.search,
-      })}
-    >
+    <ListItemButton component={Link} to={AppRoutes.PrivateChat({ userId: chat.participantId })}>
       <ListItemAvatar sx={{ minWidth: 'auto', mr: 2 }}>
         <UserActiveStatusBadge status={chat.participantActiveStatus}>
           <Avatar size={50} src={chat.participantProfileImageSrc} />

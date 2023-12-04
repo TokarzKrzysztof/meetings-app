@@ -1,10 +1,11 @@
 import { useAtomValue } from 'jotai';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FormField } from 'src/components/FormField';
 import { Header } from 'src/components/header/Header';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
+import { useNavigateBack } from 'src/hooks/useNavigateBack';
 import { NewGroupChatUsers } from 'src/pages/chat/NewGroupChat/NewGroupChatUsers';
 import { NewGroupChatFormData } from 'src/pages/chat/NewGroupChat/new-group-chat-form-data';
 import { useCreateGroupChat } from 'src/queries/chat-queries';
@@ -17,6 +18,7 @@ export const NewGroupChat = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm<NewGroupChatFormData>();
   const navigate = useNavigate();
+  const navigateBack = useNavigateBack();
   const {
     handleSubmit,
     register,
@@ -61,7 +63,7 @@ export const NewGroupChat = () => {
           })}
         ></FormField>
         <Stack mt={4} justifyContent={'space-between'}>
-          <Button type='button' variant='outlined' component={Link} to={AppRoutes.MyChats()}>
+          <Button type='button' variant='outlined' onClick={navigateBack}>
             Anuluj
           </Button>
           <Button type='submit' disabled={createGroupChatInProgress}>

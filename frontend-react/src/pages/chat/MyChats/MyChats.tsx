@@ -1,24 +1,36 @@
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Header } from 'src/components/header/Header';
-import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
+import { MyChatsActions } from 'src/pages/chat/MyChats/MyChatsActions';
 import { MyChatsNewPrivateMessage } from 'src/pages/chat/MyChats/MyChatsNewPrivateMessage';
-import { MyChatsTabs } from 'src/pages/chat/MyChats/MyChatsTabs';
-import { useGetCurrentUserChats } from 'src/queries/chat-queries';
-import { Box } from 'src/ui-components';
+import { Box, Stack, Tab, Tabs } from 'src/ui-components';
+import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export const MyChats = () => {
-  const { currentUserChats, currentUserChatsRefetch } = useGetCurrentUserChats();
+  const location = useLocation();
 
-  useSignalREffect('onGetNewMessage', () => {
-    currentUserChatsRefetch();
-  });
-
-  if (!currentUserChats) return null;
   return (
     <>
       <Header />
       <Box position={'relative'}>
-        {currentUserChats.length && <MyChatsTabs currentUserChats={currentUserChats} />}
         <MyChatsNewPrivateMessage />
+        <Stack justifyContent={'space-between'} alignItems={'center'} pr={1}>
+          <Tabs sx={{ borderBottom: 1, borderColor: 'divider' }} value={location.pathname}>
+            <Tab
+              label='Prywatne'
+              component={Link}
+              to={AppRoutes.MyChatsPrivate()}
+              value={AppRoutes.MyChatsPrivate()}
+            />
+            <Tab
+              label='Grupowe'
+              component={Link}
+              to={AppRoutes.MyChatsGroup()}
+              value={AppRoutes.MyChatsGroup()}
+            />
+          </Tabs>
+          <MyChatsActions />
+        </Stack>
+        <Outlet />
       </Box>
     </>
   );
