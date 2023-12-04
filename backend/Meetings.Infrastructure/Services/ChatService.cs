@@ -104,6 +104,15 @@ namespace Meetings.Infrastructure.Services
 
         private async Task<Message> CreateMessage(Guid authorId, Guid chatId, SendPrivateMessageData data)
         {
+            if (data.ReplyToId != null)
+            {
+                var replyTo = await _messageRepository.GetById((Guid)data.ReplyToId);
+                if (replyTo.ChatId != chatId)
+                {
+                    throw new Exception();
+                }
+            }
+
             if (data.Type == MessageType.Text)
             {
                 return await _messageRepository.Create(new Message()

@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
-import { atom, useAtom } from 'jotai';
+import { atom } from 'jotai';
 import React, { useEffect, useState } from 'react';
+import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { useLongPress } from 'src/hooks/useLongPress';
 import { messageStyles } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
 import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
@@ -35,7 +36,7 @@ export type ChatMessageContentVoiceProps = {
 
 export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageContentVoiceProps) => {
   const [audio, setAudio] = useState<HTMLAudioElement>();
-  const [playingAudio, setPlayingAudio] = useAtom(playingAudioAtom);
+  const [playingAudio, setPlayingAudio] = useClearableAtom(playingAudioAtom);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
 
@@ -77,12 +78,12 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
   }, [playingAudio, audio]);
 
   useEffect(() => {
-    if (audio && currentTime === duration) {
+    if (isPlaying && currentTime === duration) {
       setPlayingAudio(null);
       setCurrentTime(0);
       audio.currentTime = 0;
     }
-  }, [audio, currentTime, duration]);
+  }, [isPlaying, currentTime, duration]);
 
   const handleReplayClick = () => {
     setCurrentTime(0);

@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
+import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useQueue } from 'src/hooks/useQueue';
 import { Chat } from 'src/models/chat/chat';
 import { Message, MessageType } from 'src/models/chat/message';
@@ -16,35 +17,44 @@ import { ChatNewMessageVoice } from 'src/pages/chat/shared/ChatNewMessageVoice';
 import { ChatSendBtn } from 'src/pages/chat/shared/ChatSendBtn';
 import { useSendPrivateMessage } from 'src/queries/chat-queries';
 import { Box, Icon, IconButton, Stack, TextArea } from 'src/ui-components';
+import { replaceItem } from 'src/utils/array-utils';
 import { isBlob } from 'src/utils/file-utils';
 
 export type ChatNewMessageProps = {
   onScrollToBottom: () => void;
-  currentUser: User;
   recipient: User;
   chat: Chat | null | undefined;
   privateChatRefetch: () => void;
-  onAddPendingMessage: (message: Message) => void;
-  onPendingMessageProgressChange: (id: Message['id'], progressPercentage: number) => void;
+  setMessages: (value: React.SetStateAction<Message[]>) => void;
 };
 
 export const ChatNewMessage = ({
   onScrollToBottom,
-  currentUser,
   recipient,
   chat,
   privateChatRefetch,
-  onAddPendingMessage,
-  onPendingMessageProgressChange,
+  setMessages,
 }: ChatNewMessageProps) => {
+  const currentUser = useLoggedInUser();
   const { startTyping } = useSignalRActions();
   const [replyMessage, setReplyMessage] = useAtom(replyMessageAtom);
   const connection = useAtomValue(connectionAtom);
   const [text, setText] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const fieldRef = useRef<HTMLTextAreaElement>(null);
+
+  const handlePendingMessageProgressChange = (id: Message['id'], progressPercentage: number) => {
+    setMessages((prev) => {
+      const item = prev.find((x) => x.id === id)!;
+      item.progressPercentage = progressPercentage;
+      replaceItem(prev, item);
+      return [...prev];
+    });
+  };
+
+  // TODO sendGroupMessage or simply SendMessage
   const { sendPrivateMessage } = useSendPrivateMessage((data, percentage) =>
-    onPendingMessageProgressChange(data.id, percentage)
+    handlePendingMessageProgressChange(data.id, percentage)
   );
   const { addToQueue } = useQueue(sendPrivateMessage, {
     onSuccess: () => {
@@ -76,18 +86,21 @@ export const ChatNewMessage = ({
             value: value,
           }),
     });
-    onAddPendingMessage({
-      id,
-      chatId: chat?.id as string,
-      authorId: currentUser.id,
-      replyTo: replyMessage,
-      createdAt: new Date().toISOString(),
-      reactions: [],
-      isPending: true,
-      progressPercentage: 0,
-      type,
-      value: isBlobType ? URL.createObjectURL(value) : value,
-    });
+    setMessages((prev) => [
+      ...prev,
+      {
+        id,
+        chatId: chat?.id as string,
+        authorId: currentUser.id,
+        replyTo: replyMessage,
+        createdAt: new Date().toISOString(),
+        reactions: [],
+        isPending: true,
+        progressPercentage: 0,
+        type,
+        value: isBlobType ? URL.createObjectURL(value) : value,
+      },
+    ]);
 
     setText(null);
     setReplyMessage(null);

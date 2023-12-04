@@ -1,3 +1,4 @@
+import { useSetAtom } from 'jotai';
 import { RefObject } from 'react';
 import { useLongPress } from 'src/hooks/useLongPress';
 import { Message, MessageType } from 'src/models/chat/message';
@@ -5,6 +6,7 @@ import { StyledMessage } from 'src/pages/chat/shared/ChatMessage/ChatMessage.sty
 import { ChatMessageContentImage } from 'src/pages/chat/shared/ChatMessageContentImage';
 import { ChatMessageContentVoice } from 'src/pages/chat/shared/ChatMessageContentVoice';
 import { ChatVoiceMessageDescription } from 'src/pages/chat/shared/ChatVoiceMessageDescription';
+import { messageToFocusAtom } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
 import { Typography } from 'src/ui-components';
 import { getFocusableId } from 'src/utils/chat-utils';
 
@@ -13,7 +15,6 @@ export type ChatMessageContentProps = {
   isAuthorCurrentUser: boolean;
   repliedMessageWrap: number;
   anchorRef: RefObject<HTMLDivElement>;
-  onFocusRepliedMessage: (toFocus: Message) => void;
   onLongPress: () => void;
 };
 
@@ -22,9 +23,9 @@ export const ChatMessageContent = ({
   isAuthorCurrentUser,
   repliedMessageWrap,
   anchorRef,
-  onFocusRepliedMessage,
   onLongPress,
 }: ChatMessageContentProps) => {
+  const setMessageToFocus = useSetAtom(messageToFocusAtom);
   const longPressEvent = useLongPress(() => onLongPress());
 
   return (
@@ -36,7 +37,7 @@ export const ChatMessageContent = ({
             transform: `translateY(${repliedMessageWrap}px)`,
             pb: `${repliedMessageWrap + 1}px`,
           }}
-          onClick={() => onFocusRepliedMessage(message.replyTo!)}
+          onClick={() => setMessageToFocus(message.replyTo!)}
           isRepliedMessage
           type={message.replyTo.type}
         >

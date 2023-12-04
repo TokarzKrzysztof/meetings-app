@@ -12,7 +12,8 @@ namespace Meetings.Database.QueryExtensions
     {
         public static IQueryable<Chat> ByParticipants(this IQueryable<Chat> query, Guid participant1Id, Guid participant2Id)
         {
-            return query.Where(x => x.Participants.Select(x => x.UserId).Contains(participant1Id) && x.Participants.Select(x => x.UserId).Contains(participant2Id));
+            var ids = new List<Guid>() { participant1Id, participant2Id }.AsEnumerable();
+            return query.Where(x => !x.Participants.Select(x => x.UserId).Except(ids).Any());
         }
         public static IQueryable<Chat> IncludeAllMessagesData(this IQueryable<Chat> query)
         {

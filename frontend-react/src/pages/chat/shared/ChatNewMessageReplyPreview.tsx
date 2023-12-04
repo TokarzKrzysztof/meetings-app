@@ -1,4 +1,5 @@
-import { atom, useAtom } from 'jotai';
+import { atom } from 'jotai';
+import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { Message, MessageType } from 'src/models/chat/message';
 import { ChatVoiceMessageDescription } from 'src/pages/chat/shared/ChatVoiceMessageDescription';
 import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
@@ -8,8 +9,8 @@ export const replyMessageAtom = atom<Message | null>(null);
 export type ChatNewMessageReplyPreviewProps = {};
 
 export const ChatNewMessageReplyPreview = ({ ...props }: ChatNewMessageReplyPreviewProps) => {
-  const [replyMessage, setReplyMessage] = useAtom(replyMessageAtom);
-
+  const [replyMessage, setReplyMessage] = useClearableAtom(replyMessageAtom);
+  
   if (!replyMessage) return null;
   return (
     <Stack p={1} pb={0} alignItems={'center'} justifyContent={'space-between'}>

@@ -17,7 +17,6 @@ export type ChatMessageProps = {
   allMessages: Message[];
   currentUser: User;
   onStartReplyLastMessage: () => void;
-  onFocusRepliedMessage: (toFocus: Message) => void;
 };
 
 export const ChatMessage = ({
@@ -25,7 +24,6 @@ export const ChatMessage = ({
   allMessages,
   currentUser,
   onStartReplyLastMessage,
-  onFocusRepliedMessage,
 }: ChatMessageProps) => {
   const { setMessageReaction } = useSignalRActions();
   const setReplyMessage = useSetAtom(replyMessageAtom);
@@ -82,7 +80,6 @@ export const ChatMessage = ({
             isAuthorCurrentUser={isAuthorCurrentUser}
             repliedMessageWrap={repliedMessageWrap}
             anchorRef={anchorRef}
-            onFocusRepliedMessage={onFocusRepliedMessage}
             onLongPress={() => setOpenReactions(true)}
           />
           {moveX !== 0 && (
