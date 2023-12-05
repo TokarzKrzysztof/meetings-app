@@ -1,13 +1,12 @@
+import { ReactNode } from 'react';
 import { useNavigateBack } from 'src/hooks/useNavigateBack';
-import { User } from 'src/models/user';
-import { UserActiveStatusBadge } from 'src/pages/chat/shared/UserActiveStatusBadge';
-import { AppBar, Avatar, Button, Icon, Stack, Toolbar, Typography } from 'src/ui-components';
+import { AppBar, Button, Icon, Toolbar } from 'src/ui-components';
 
 export type ChatHeaderProps = {
-  user: User;
+  right: ReactNode;
 };
 
-export const ChatHeader = ({ user }: ChatHeaderProps) => {
+export const ChatHeader = ({ right }: ChatHeaderProps) => {
   const navigateBack = useNavigateBack();
 
   return (
@@ -22,14 +21,7 @@ export const ChatHeader = ({ user }: ChatHeaderProps) => {
         >
           Wróć
         </Button>
-        <Stack alignItems={'center'} gap={1}>
-          <UserActiveStatusBadge status={user.activeStatus}>
-            <Avatar src={user.profileImageSrc} size={30} />
-          </UserActiveStatusBadge>
-          <Typography>
-            {user.firstName} {user.lastName}
-          </Typography>
-        </Stack>
+        {right}
       </Toolbar>
     </AppBar>
   );

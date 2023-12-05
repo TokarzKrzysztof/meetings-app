@@ -21,19 +21,19 @@ import { replaceItem } from 'src/utils/array-utils';
 import { isBlob } from 'src/utils/file-utils';
 
 export type ChatNewMessageProps = {
-  onScrollToBottom: () => void;
   recipient: User;
   chat: Chat | null | undefined;
-  privateChatRefetch: () => void;
+  onScrollToBottom: () => void;
   setMessages: (value: React.SetStateAction<Message[]>) => void;
+  onMessageSendSuccess?: () => void;
 };
 
 export const ChatNewMessage = ({
-  onScrollToBottom,
   recipient,
   chat,
-  privateChatRefetch,
+  onScrollToBottom,
   setMessages,
+  onMessageSendSuccess,
 }: ChatNewMessageProps) => {
   const currentUser = useLoggedInUser();
   const { startTyping } = useSignalRActions();
@@ -57,9 +57,7 @@ export const ChatNewMessage = ({
     handlePendingMessageProgressChange(data.id, percentage)
   );
   const { addToQueue } = useQueue(sendPrivateMessage, {
-    onSuccess: () => {
-      if (!chat) privateChatRefetch();
-    },
+    onSuccess: onMessageSendSuccess
   });
 
   useEffect(() => {

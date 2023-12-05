@@ -4,6 +4,7 @@ import { Message } from 'src/models/chat/message';
 import { ChatHeader } from 'src/pages/chat/shared/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/ChatNewMessage';
 import { ChatScrollable, ChatScrollableHandle } from 'src/pages/chat/shared/ChatScrollable';
+import { UserActiveStatusBadge } from 'src/pages/chat/shared/UserActiveStatusBadge';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
@@ -39,7 +40,18 @@ export const PrivateChat = () => {
   return (
     <ChatMessageFocusProvider chat={privateChat} setMessages={setMessages}>
       <Stack height={'100vh'} direction={'column'}>
-        <ChatHeader user={user} />
+        <ChatHeader
+          right={
+            <Stack alignItems={'center'} gap={1}>
+              <UserActiveStatusBadge status={user.activeStatus}>
+                <Avatar src={user.profileImageSrc} size={30} />
+              </UserActiveStatusBadge>
+              <Typography>
+                {user.firstName} {user.lastName}
+              </Typography>
+            </Stack>
+          }
+        />
         <ChatScrollable
           ref={scrollableRef}
           top={
@@ -60,7 +72,7 @@ export const PrivateChat = () => {
           onScrollToBottom={() => scrollableRef.current?.scrollToBottom('smooth')}
           recipient={user}
           chat={privateChat}
-          privateChatRefetch={privateChatRefetch}
+          onMessageSendSuccess={() => !privateChat && privateChatRefetch()}
           setMessages={setMessages}
         />
       </Stack>

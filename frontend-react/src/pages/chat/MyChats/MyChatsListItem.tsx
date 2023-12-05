@@ -1,13 +1,14 @@
 import { styled } from '@mui/material';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { AvatarList } from 'src/components/AvatarList';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { ChatType } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { MessageType } from 'src/models/chat/message';
 import { UserGender } from 'src/models/user';
 import { UserActiveStatusBadge } from 'src/pages/chat/shared/UserActiveStatusBadge';
-import { Avatar, Box, ListItemAvatar, ListItemButton, ListItemText } from 'src/ui-components';
+import { Box, ListItemAvatar, ListItemButton, ListItemText } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 const StyledDot = styled(Box)(({ theme }) => ({
@@ -54,7 +55,7 @@ export const MyChatsListItem = ({ chat }: MyChatsListItemProps) => {
     <ListItemButton component={Link} to={to}>
       <ListItemAvatar sx={{ minWidth: 'auto', mr: 2 }}>
         <UserActiveStatusBadge status={chat.participantActiveStatus}>
-          <Avatar size={50} src={chat.imageSrcs[0]} />
+          <AvatarList srcs={chat.imageSrcs} avatarSize={50} />
         </UserActiveStatusBadge>
       </ListItemAvatar>
       <ListItemText
