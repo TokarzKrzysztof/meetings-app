@@ -22,25 +22,25 @@ namespace Meetings.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetPrivateChat([FromQuery] Guid participantId, [FromQuery] int messagesAmount)
+        public async Task<IActionResult> GetPrivateChat([FromQuery] Guid participantId)
         {
-            ChatDTO? chat = await _chatService.GetPrivateChat(participantId, messagesAmount);
+            ChatDTO? chat = await _chatService.GetPrivateChat(participantId);
             return Ok(chat);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetGroupChat([FromQuery] Guid chatId, [FromQuery] int messagesAmount)
+        public async Task<IActionResult> GetGroupChat([FromQuery] Guid chatId)
         {
-            ChatDTO chat = await _chatService.GetGroupChat(chatId, messagesAmount);
+            ChatDTO chat = await _chatService.GetGroupChat(chatId);
             return Ok(chat);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> LoadMoreChatMessages([FromQuery] Guid chatId, [FromQuery] int skip, [FromQuery] int take)
+        public async Task<IActionResult> LoadChatMessages([FromQuery] Guid chatId, [FromQuery] int skip, [FromQuery] int take)
         {
-            List<MessageDTO> messages = await _chatService.LoadMoreChatMessages(chatId, skip, take);
+            List<MessageDTO> messages = await _chatService.LoadChatMessages(chatId, skip, take);
             return Ok(messages);
         }
 
@@ -78,12 +78,20 @@ namespace Meetings.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> SendPrivateMessage([FromForm] SendPrivateMessageData data)
+        public async Task<IActionResult> SendMessage([FromForm] SendMessageData data)
         {
-            MessageDTO message = await _chatService.SendPrivateMessage(data);
-            await _chatHubContext.Clients.Group(message.ChatId.ToString()).OnGetNewMessage(message);
+            MessageDTO message = await _chatService.SendMessage(data);
+            await _chatHubContext.Clients.Group(message.ChatId.ToString()).OnGetNewMessage(message, message.ChatId);
 
             return Ok(message);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> CreatePrivateChat([FromBody] CreatePrivateChatData data)
+        {
+            ChatDTO chat = await _chatService.CreatePrivateChat(data);
+            return Ok(chat);
         }
 
         [HttpPost]

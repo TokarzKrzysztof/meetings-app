@@ -1,13 +1,11 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import _ from 'lodash';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useQueue } from 'src/hooks/useQueue';
 import { Chat } from 'src/models/chat/chat';
 import { Message, MessageType } from 'src/models/chat/message';
-import { User } from 'src/models/user';
 import { ChatNewMessageImage } from 'src/pages/chat/shared/ChatNewMessageImage';
 import {
   ChatNewMessageReplyPreview,
@@ -15,36 +13,34 @@ import {
 } from 'src/pages/chat/shared/ChatNewMessageReplyPreview';
 import { ChatNewMessageVoice } from 'src/pages/chat/shared/ChatNewMessageVoice';
 import { ChatSendBtn } from 'src/pages/chat/shared/ChatSendBtn';
-import { useSendPrivateMessage } from 'src/queries/chat-queries';
+import { useSendMessage } from 'src/queries/chat-queries';
 import { Box, Icon, IconButton, Stack, TextArea } from 'src/ui-components';
 import { replaceItem } from 'src/utils/array-utils';
 import { isBlob } from 'src/utils/file-utils';
 
 export type ChatNewMessageProps = {
-  recipient: User;
   chat: Chat | null | undefined;
   onScrollToBottom: () => void;
+  onFirstPrivateMessageSend?: () => Promise<Chat>;
   setMessages: (value: React.SetStateAction<Message[]>) => void;
-  onMessageSendSuccess?: () => void;
 };
 
 export const ChatNewMessage = ({
-  recipient,
   chat,
   onScrollToBottom,
+  onFirstPrivateMessageSend,
   setMessages,
-  onMessageSendSuccess,
 }: ChatNewMessageProps) => {
   const currentUser = useLoggedInUser();
   const { startTyping } = useSignalRActions();
   const [replyMessage, setReplyMessage] = useAtom(replyMessageAtom);
-  const connection = useAtomValue(connectionAtom);
   const [text, setText] = useState<string | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const fieldRef = useRef<HTMLTextAreaElement>(null);
 
   const handlePendingMessageProgressChange = (id: Message['id'], progressPercentage: number) => {
     setMessages((prev) => {
+      console.log(prev);
       const item = prev.find((x) => x.id === id)!;
       item.progressPercentage = progressPercentage;
       replaceItem(prev, item);
@@ -52,13 +48,10 @@ export const ChatNewMessage = ({
     });
   };
 
-  // TODO sendGroupMessage or simply SendMessage
-  const { sendPrivateMessage } = useSendPrivateMessage((data, percentage) =>
+  const { sendMessage } = useSendMessage((data, percentage) =>
     handlePendingMessageProgressChange(data.id, percentage)
   );
-  const { addToQueue } = useQueue(sendPrivateMessage, {
-    onSuccess: onMessageSendSuccess
-  });
+  const { addToQueue } = useQueue(sendMessage);
 
   useEffect(() => {
     if (replyMessage && fieldRef.current) {
@@ -66,16 +59,18 @@ export const ChatNewMessage = ({
     }
   }, [replyMessage]);
 
-  const sendMessage = async (value: string | Blob, type: MessageType) => {
+  const handleSend = async (value: string | Blob, type: MessageType) => {
+    if (!chat) {
+      chat = await onFirstPrivateMessageSend!();
+    }
     const id = window.self.crypto.randomUUID();
     const isBlobType = isBlob(value);
 
     addToQueue({
       id,
-      connectionId: connection.connectionId!,
-      recipientId: recipient.id,
       replyToId: replyMessage?.id,
       type,
+      chatId: chat!.id,
       ...(isBlobType
         ? {
             file: value,
@@ -84,21 +79,25 @@ export const ChatNewMessage = ({
             value: value,
           }),
     });
-    setMessages((prev) => [
-      ...prev,
-      {
-        id,
-        chatId: chat?.id as string,
-        authorId: currentUser.id,
-        replyTo: replyMessage,
-        createdAt: new Date().toISOString(),
-        reactions: [],
-        isPending: true,
-        progressPercentage: 0,
-        type,
-        value: isBlobType ? URL.createObjectURL(value) : value,
-      },
-    ]);
+    setMessages((prev) => {
+      const xx = [
+        ...prev,
+        {
+          id,
+          chatId: chat?.id as string,
+          authorId: currentUser.id,
+          replyTo: replyMessage,
+          createdAt: new Date().toISOString(),
+          reactions: [],
+          isPending: true,
+          progressPercentage: 0,
+          type,
+          value: isBlobType ? URL.createObjectURL(value) : value,
+        },
+      ];
+      console.log(xx)
+      return xx;
+    });
 
     setText(null);
     setReplyMessage(null);
@@ -124,7 +123,7 @@ export const ChatNewMessage = ({
           <ChatNewMessageVoice
             onCancel={() => setIsRecording(false)}
             onSend={(blob) => {
-              sendMessage(blob, MessageType.Audio);
+              handleSend(blob, MessageType.Audio);
               setIsRecording(false);
             }}
           />
@@ -138,7 +137,7 @@ export const ChatNewMessage = ({
                 transition,
               }}
             >
-              <ChatNewMessageImage onSend={(image) => sendMessage(image!, MessageType.Image)} />
+              <ChatNewMessageImage onSend={(image) => handleSend(image!, MessageType.Image)} />
               <IconButton onClick={() => setIsRecording(true)}>
                 <Icon name='mic' />
               </IconButton>
@@ -153,7 +152,7 @@ export const ChatNewMessage = ({
               sx={{ flexGrow: 1, marginLeft: text ? 0 : `${margin}px`, transition }}
               InputProps={{ sx: { borderRadius: 3 } }}
             ></TextArea>
-            <ChatSendBtn onClick={() => sendMessage(text!, MessageType.Text)} disabled={!text} />
+            <ChatSendBtn onClick={() => handleSend(text!, MessageType.Text)} disabled={!text} />
           </>
         )}
       </Stack>

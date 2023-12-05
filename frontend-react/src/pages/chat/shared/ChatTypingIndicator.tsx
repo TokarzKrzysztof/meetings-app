@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { useRef, useState } from 'react';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
+import { Chat } from 'src/models/chat/chat';
 import { Box } from 'src/ui-components';
 
 const StyledDotsContainer = styled(Box)(({ theme }) => ({
@@ -41,24 +42,36 @@ const StyledDot = styled('span')({
   },
 });
 
-export type ChatTypingIndicatorProps = {};
+export type ChatTypingIndicatorProps = {
+  chat: Chat | null | undefined;
+};
 
-export const ChatTypingIndicator = ({ ...props }: ChatTypingIndicatorProps) => {
+export const ChatTypingIndicator = ({ chat }: ChatTypingIndicatorProps) => {
   const [isTyping, setIsTyping] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
-  useSignalREffect('onGetNewMessage', () => {
-    setIsTyping(false);
-  });
-
-  useSignalREffect('onOtherUserTyping', (userId) => {
-    clearTimeout(timerRef.current);
-
-    setIsTyping(true);
-    timerRef.current = setTimeout(() => {
+  useSignalREffect(
+    'onGetNewMessage',
+    (message, chatId) => {
+      if (chat?.id !== chatId) return;
       setIsTyping(false);
-    }, 3000);
-  });
+    },
+    [chat]
+  );
+
+  useSignalREffect(
+    'onOtherUserTyping',
+    (userId, chatId) => {
+      if (chat?.id !== chatId) return;
+      clearTimeout(timerRef.current);
+
+      setIsTyping(true);
+      timerRef.current = setTimeout(() => {
+        setIsTyping(false);
+      }, 3000);
+    },
+    [chat]
+  );
 
   if (!isTyping) return null;
   return (

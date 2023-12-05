@@ -51,6 +51,7 @@ export const MyChatsListItem = ({ chat }: MyChatsListItemProps) => {
   }, [chat]);
 
   const fontWeight = chat.hasUnreadMessages ? 'bold' : undefined;
+
   return (
     <ListItemButton component={Link} to={to}>
       <ListItemAvatar sx={{ minWidth: 'auto', mr: 2 }}>

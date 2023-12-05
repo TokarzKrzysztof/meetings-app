@@ -1,22 +1,24 @@
-import { ReactElement, RefObject, useEffect, useState } from 'react';
+import { ReactElement, RefObject, useEffect, useRef, useState } from 'react';
 import { Box, CircularProgress } from 'src/ui-components';
 
 export type InfiniteScrollProps = {
   children: ReactElement[];
   scrollableRef: RefObject<HTMLDivElement>;
   totalAmount: number;
-  next: () => void;
+  next: () => Promise<void>;
   scrollThreshold?: number;
+  loadOnInit?: boolean;
 };
 
 export const InfiniteScroll = ({
+  children,
   scrollableRef,
   totalAmount,
   next,
   scrollThreshold = 0,
-  children,
-  ...props
+  loadOnInit = true,
 }: InfiniteScrollProps) => {
+  const isInitRef = useRef(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const isSomethingToLoad = children.length < totalAmount;
 
@@ -24,20 +26,23 @@ export const InfiniteScroll = ({
     const handler = () => {
       const isScrolled = scrollableRef.current!.scrollTop - scrollThreshold <= 0;
       if (!isLoadingMore && isScrolled && isSomethingToLoad) {
-        next();
         setIsLoadingMore(true);
+        next().then(() => {
+          setIsLoadingMore(false);
+        });
       }
     };
+
+    if (loadOnInit && isInitRef.current === false) {
+      handler();
+      isInitRef.current = true;
+    }
 
     scrollableRef.current!.addEventListener('scroll', handler);
     return () => {
       scrollableRef.current?.removeEventListener('scroll', handler);
     };
   }, [next, isSomethingToLoad, scrollThreshold, isLoadingMore]);
-
-  useEffect(() => {
-    setIsLoadingMore(false);
-  }, [children.length]);
 
   return (
     <>

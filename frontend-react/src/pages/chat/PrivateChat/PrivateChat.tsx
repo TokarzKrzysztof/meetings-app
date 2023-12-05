@@ -1,5 +1,9 @@
+import { useAtomValue } from 'jotai';
 import { useMemo, useRef, useState } from 'react';
+import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useRouteParams } from 'src/hooks/useRouteParams';
+import { useSetQueryData } from 'src/hooks/useSetQueryData';
+import { Chat } from 'src/models/chat/chat';
 import { Message } from 'src/models/chat/message';
 import { ChatHeader } from 'src/pages/chat/shared/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/ChatNewMessage';
@@ -8,7 +12,7 @@ import { UserActiveStatusBadge } from 'src/pages/chat/shared/UserActiveStatusBad
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
-import { useGetPrivateChat } from 'src/queries/chat-queries';
+import { useCreatePrivateChat, useGetPrivateChat } from 'src/queries/chat-queries';
 import { useGetUser } from 'src/queries/user-queries';
 import { Avatar, Stack, Typography } from 'src/ui-components';
 import { PrivateChatParams } from 'src/utils/enums/app-routes';
@@ -19,20 +23,31 @@ export const PrivateChat = () => {
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const { user } = useGetUser(params.userId);
+  const connection = useAtomValue(connectionAtom);
 
-  const pageSize = 20;
-  const { privateChat, privateChatFetching, privateChatRefetch } = useGetPrivateChat(
-    params.userId,
-    pageSize,
-    {
-      onSuccess: (chat) => {
-        if (chat !== null) setMessages(chat.messages);
-      },
-    }
-  );
+  const { privateChat, privateChatFetching } = useGetPrivateChat(params.userId);
+  const { createPrivateChat } = useCreatePrivateChat();
+  const { setPrivateChat } = useSetQueryData();
 
   useSignalRListeners(privateChat, setMessages);
   useUnloadListener(messages);
+
+  const handleCreatePrivateChat = () => {
+    return new Promise<Chat>((resolve) => {
+      createPrivateChat(
+        {
+          participantId: user!.id,
+          connectionId: connection.connectionId!,
+        },
+        {
+          onSuccess: (chat) => {
+            resolve(chat);
+            setPrivateChat(chat);
+          },
+        }
+      );
+    });
+  };
 
   const age = useMemo(() => (user ? calculateAge(user.birthDate) : null), [user]);
 
@@ -66,13 +81,11 @@ export const PrivateChat = () => {
           messages={messages}
           setMessages={setMessages}
           chat={privateChat}
-          pageSize={pageSize}
         />
         <ChatNewMessage
           onScrollToBottom={() => scrollableRef.current?.scrollToBottom('smooth')}
-          recipient={user}
           chat={privateChat}
-          onMessageSendSuccess={() => !privateChat && privateChatRefetch()}
+          onFirstPrivateMessageSend={handleCreatePrivateChat}
           setMessages={setMessages}
         />
       </Stack>

@@ -9,7 +9,8 @@ export enum ChatType {
 export type Chat = {
   id: string;
   name: string | null;
-  participants: User[];
   totalMessagesAmount: number;
   messages: Message[];
+  participants: User[];
+  type: ChatType;
 };

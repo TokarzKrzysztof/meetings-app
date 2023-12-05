@@ -4,9 +4,9 @@ import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { Message } from 'src/models/chat/message';
 
 type SignalRListeners = {
-  onGetNewMessage: (message: Message) => void;
-  onOtherUserTyping: (userId: string) => void;
-  onMessageReactionChange: (message: Message) => void;
+  onGetNewMessage: (message: Message, chatId: string) => void;
+  onOtherUserTyping: (userId: string, chatId: string) => void;
+  onMessageReactionChange: (message: Message, chatId: string) => void;
   onNewChatCreated: (chatId: string) => void;
 };
 export const useSignalREffect = <TName extends keyof SignalRListeners>(

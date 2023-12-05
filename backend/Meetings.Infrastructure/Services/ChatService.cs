@@ -41,31 +41,29 @@ namespace Meetings.Infrastructure.Services
             _fileManager = fileManager;
         }
 
-        public async Task<ChatDTO?> GetPrivateChat(Guid participantId, int messagesAmount)
+        public async Task<ChatDTO?> GetPrivateChat(Guid participantId)
         {
-            return await GetChat(ChatType.Private, messagesAmount, participantId: participantId);
+            return await GetChat(ChatType.Private, participantId: participantId);
         }
 
-        public async Task<ChatDTO> GetGroupChat(Guid chatId, int messagesAmount)
+        public async Task<ChatDTO> GetGroupChat(Guid chatId)
         {
-            var result = await GetChat(ChatType.Group, messagesAmount, chatId: chatId);
+            var result = await GetChat(ChatType.Group, chatId: chatId);
             return result!;
         }
 
-        private async Task<ChatDTO?> GetChat(ChatType type, int messagesAmount, Guid chatId = default, Guid participantId = default)
+        private async Task<ChatDTO?> GetChat(ChatType type, Guid chatId = default, Guid participantId = default)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
 
             var queryResult = await _repository.Data
                 .If(type == ChatType.Private, q => q.ByParticipants(userId, participantId))
                 .If(type == ChatType.Group, q => q.Where(x => x.Id == chatId))
-                .IncludeAllMessagesData()
                 .Select(x => new
                 {
                     x.Id,
                     x.Name,
                     TotalMessagesAmount = x.Messages.Count(),
-                    Messages = x.Messages.OrderByDescending(x => x.CreatedAt).Take(messagesAmount).Reverse(),
                 })
                 .SingleOrDefaultAsync();
 
@@ -77,12 +75,12 @@ namespace Meetings.Infrastructure.Services
             {
                 Id = queryResult.Id,
                 Name = queryResult.Name,
-                Messages = await _extendedMapper.ToMessageDTOList(queryResult.Messages),
-                TotalMessagesAmount = queryResult.TotalMessagesAmount
+                TotalMessagesAmount = queryResult.TotalMessagesAmount,
+                Type = type,
             };
         }
 
-        public async Task<List<MessageDTO>> LoadMoreChatMessages(Guid chatId, int skip, int take)
+        public async Task<List<MessageDTO>> LoadChatMessages(Guid chatId, int skip, int take)
         {
             var messages = await _repository.Data.Where(x => x.Id == chatId)
                 .IncludeAllMessagesData()
@@ -102,13 +100,14 @@ namespace Meetings.Infrastructure.Services
             return await _extendedMapper.ToMessageDTOList(messages);
         }
 
-        private async Task<Message> CreateMessage(Guid authorId, Guid chatId, SendPrivateMessageData data)
+        private async Task<Message> CreateMessage(Guid authorId, Guid chatId, SendMessageData data)
         {
             if (data.ReplyToId != null)
             {
                 var replyTo = await _messageRepository.GetById((Guid)data.ReplyToId);
                 if (replyTo.ChatId != chatId)
                 {
+                    // TODO move to validator class
                     throw new Exception();
                 }
             }
@@ -141,26 +140,14 @@ namespace Meetings.Infrastructure.Services
             }, (x) => x.ReplyTo);
         }
 
-        public async Task<MessageDTO> SendPrivateMessage(SendPrivateMessageData data)
+        public async Task<MessageDTO> SendMessage(SendMessageData data)
         {
             Guid authorId = _claimsReader.GetCurrentUserId();
+            // TODO check if user is in chat
 
-            Guid chatId = await _repository.Data.ByParticipants(authorId, data.RecipientId).Select(x => x.Id).SingleOrDefaultAsync();
-            if (chatId == Guid.Empty)
-            {
-                List<ChatParticipant> participants = new List<ChatParticipant>()
-                {
-                    new ChatParticipant(authorId),
-                    new ChatParticipant(data.RecipientId)
-                    {
-                        HasUnreadMessages = true
-                    }
-                };
-                chatId = await CreateNewChat(data.ConnectionId, participants);
-            }
-            Message entity = await CreateMessage(authorId, chatId, data);
+            Message entity = await CreateMessage(authorId, data.ChatId, data);
 
-            await SetUnreadMessages(chatId, authorId);
+            await SetUnreadMessages(data.ChatId, authorId);
 
             return await _extendedMapper.ToMessageDTO(entity);
         }
@@ -252,17 +239,39 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<Guid> CreateGroupChat(CreateGroupChatData data)
         {
+            Guid userId = _claimsReader.GetCurrentUserId();
             if (data.UserIds.Count < 2)
             {
+                // TODO move to validator class
                 throw new Exception();
             }
 
-            Guid userId = _claimsReader.GetCurrentUserId();
-            List<ChatParticipant> participants = data.UserIds.Select(x => new ChatParticipant(x)).ToList();
-            participants.Add(new ChatParticipant(userId));
+            List<ChatParticipant> participants = new List<ChatParticipant>(data.UserIds.Select(x => new ChatParticipant(x)))
+            {
+               new ChatParticipant(userId),
+            };
             Guid chatId = await CreateNewChat(data.ConnectionId, participants, data.Name);
 
             return chatId;
+        }
+
+
+        public async Task<ChatDTO> CreatePrivateChat(CreatePrivateChatData data)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+            if (await _repository.Data.ByParticipants(data.ParticipantId, userId).AnyAsync())
+            {
+                // TODO move to validator class
+                throw new Exception();
+            }
+
+            List<ChatParticipant> participants = new List<ChatParticipant>()
+            {
+               new ChatParticipant(data.ParticipantId),
+               new ChatParticipant(userId),
+            };            
+            await CreateNewChat(data.ConnectionId, participants);
+            return await GetPrivateChat(data.ParticipantId);
         }
 
         private async Task<Guid> CreateNewChat(string connectionId, List<ChatParticipant> participants, string name = null)

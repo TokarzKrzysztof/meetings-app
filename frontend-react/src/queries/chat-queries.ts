@@ -4,7 +4,7 @@ import axios from 'src/config/axios-config';
 import { Chat, ChatType } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { Message } from 'src/models/chat/message';
-import { SendPrivateMessageData } from 'src/models/chat/send-private-message-data';
+import { SendMessageData } from 'src/models/chat/send-message-data';
 import { apiUrl } from 'src/utils/api-url';
 import { getFormData } from 'src/utils/http-utils';
 import {
@@ -30,15 +30,29 @@ export const useCreateGroupChat = (
   return genericUseMutationMethods('createGroupChat', mutation);
 };
 
+export const useCreatePrivateChat = (
+  options?: UseMutationOptions<
+    Chat,
+    AxiosError<HttpErrorData>,
+    { participantId: string; connectionId: string }
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: (data) => axios.post(`${baseUrl}/CreatePrivateChat`, data),
+    ...options,
+  });
+
+  return genericUseMutationMethods('createPrivateChat', mutation);
+};
+
 export const useGetGroupChat = (
   chatId: string,
-  messagesAmount: number,
   options?: UseQueryOptions<Chat, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
-    queryKey: ['GetGroupChat', chatId, messagesAmount],
+    queryKey: ['GetGroupChat', chatId],
     queryFn: () => {
-      const params = { chatId, messagesAmount };
+      const params = { chatId };
       return axios.get(`${baseUrl}/GetGroupChat`, { params });
     },
     ...options,
@@ -47,15 +61,15 @@ export const useGetGroupChat = (
   return genericUseQueryMethods('groupChat', query);
 };
 
+export const getPrivateChatQueryKey = 'GetPrivateChat';
 export const useGetPrivateChat = (
   participantId: string,
-  messagesAmount: number,
   options?: UseQueryOptions<Chat | null, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
-    queryKey: ['GetPrivateChat', participantId, messagesAmount],
+    queryKey: getPrivateChatQueryKey,
     queryFn: () => {
-      const params = { participantId, messagesAmount };
+      const params = { participantId };
       return axios.get(`${baseUrl}/GetPrivateChat`, { params });
     },
     ...options,
@@ -64,7 +78,7 @@ export const useGetPrivateChat = (
   return genericUseQueryMethods('privateChat', query);
 };
 
-export const useLoadMoreChatMessages = (
+export const useLoadChatMessages = (
   options?: UseMutationOptions<
     Message[],
     AxiosError<HttpErrorData>,
@@ -72,11 +86,11 @@ export const useLoadMoreChatMessages = (
   >
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => axios.get(`${baseUrl}/LoadMoreChatMessages`, { params: data }),
+    mutationFn: (data) => axios.get(`${baseUrl}/LoadChatMessages`, { params: data }),
     ...options,
   });
 
-  return genericUseMutationMethods('loadMoreChatMessages', mutation);
+  return genericUseMutationMethods('loadChatMessages', mutation);
 };
 
 export const useLoadAllMessagesAfterDate = (
@@ -137,14 +151,14 @@ export const useMarkChatAsRead = (
   return genericUseMutationMethods('markChatAsRead', mutation);
 };
 
-export const useSendPrivateMessage = (
-  onUploadProgress: (data: SendPrivateMessageData, percentage: number) => void,
-  options?: UseMutationOptions<Message, AxiosError<HttpErrorData>, SendPrivateMessageData>
+export const useSendMessage = (
+  onUploadProgress: (data: SendMessageData, percentage: number) => void,
+  options?: UseMutationOptions<Message, AxiosError<HttpErrorData>, SendMessageData>
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => {
       const formData = getFormData(data);
-      return axios.post(`${baseUrl}/SendPrivateMessage`, formData, {
+      return axios.post(`${baseUrl}/SendMessage`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -157,5 +171,5 @@ export const useSendPrivateMessage = (
     ...options,
   });
 
-  return genericUseMutationMethods('sendPrivateMessage', mutation);
+  return genericUseMutationMethods('sendMessage', mutation);
 };

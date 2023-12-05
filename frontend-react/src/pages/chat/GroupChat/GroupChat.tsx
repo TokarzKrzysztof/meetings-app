@@ -4,6 +4,8 @@ import { Message } from 'src/models/chat/message';
 import { ChatHeader } from 'src/pages/chat/shared/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/ChatNewMessage';
 import { ChatScrollable, ChatScrollableHandle } from 'src/pages/chat/shared/ChatScrollable';
+import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
+import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
 import { useGetGroupChat } from 'src/queries/chat-queries';
 import { Stack, Typography } from 'src/ui-components';
@@ -14,10 +16,10 @@ export const GroupChat = () => {
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const pageSize = 20;
-  const { groupChat } = useGetGroupChat(params.chatId, pageSize, {
-    onSuccess: (chat) => setMessages(chat.messages),
-  });
+  const { groupChat } = useGetGroupChat(params.chatId);
+
+  useSignalRListeners(groupChat, setMessages);
+  useUnloadListener(messages);
 
   if (!groupChat) return null;
   return (
@@ -48,11 +50,9 @@ export const GroupChat = () => {
           messages={messages}
           setMessages={setMessages}
           chat={groupChat}
-          pageSize={pageSize}
         />
         <ChatNewMessage
           onScrollToBottom={() => scrollableRef.current?.scrollToBottom('smooth')}
-          recipient={user}
           chat={groupChat}
           setMessages={setMessages}
         />

@@ -12,7 +12,7 @@ export const UserActiveStatusBadge = ({ status, children }: UserActiveStatusBadg
       overlap='circular'
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       variant='dot'
-      invisible={!status || status === UserActiveStatus.Offline}
+      invisible={status === null || status === UserActiveStatus.Offline}
       sx={(theme) => ({
         '& .MuiBadge-badge': {
           backgroundColor:

@@ -30,5 +30,6 @@ namespace Meetings.Models.Entities
         public int TotalMessagesAmount { get; set; }
         public List<MessageDTO> Messages { get; set; }
         public List<UserDTO> Participants { get; set; }
+        public ChatType Type { get; set; }
     }
 }

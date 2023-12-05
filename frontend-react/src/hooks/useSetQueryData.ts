@@ -1,5 +1,7 @@
 import { useQueryClient } from 'react-query';
+import { Chat } from 'src/models/chat/chat';
 import { User } from 'src/models/user';
+import { getPrivateChatQueryKey } from 'src/queries/chat-queries';
 import { getCurrentUserQueryKey } from 'src/queries/user-queries';
 
 export const useSetQueryData = () => {
@@ -9,5 +11,9 @@ export const useSetQueryData = () => {
     queryClient.setQueryData(getCurrentUserQueryKey, data);
   };
 
-  return { setCurrentUser };
+  const setPrivateChat = (data: Chat) => {
+    queryClient.setQueryData(getPrivateChatQueryKey, data);
+  };
+
+  return { setCurrentUser, setPrivateChat };
 };

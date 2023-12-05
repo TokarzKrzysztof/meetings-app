@@ -8,11 +8,13 @@ export const genericUseMutationMethods = <TName extends string, TData, TVariable
 ) => {
   return {
     [name]: mutation.mutate,
+    [name + 'Async']: mutation.mutateAsync,
     [name + 'Result']: mutation.data,
     [name + 'Error']: mutation.error?.response?.data,
     [name + 'InProgress']: mutation.isLoading,
     [name + 'Reset']: mutation.reset,
   } as Record<TName, typeof mutation.mutate> &
+    Record<`${TName}Async`, typeof mutation.mutateAsync> &
     Record<`${TName}Result`, TData | undefined> &
     Record<`${TName}Error`, HttpErrorData | undefined> &
     Record<`${TName}InProgress`, boolean> &

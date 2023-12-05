@@ -14,7 +14,8 @@ export const useSignalRListeners = (
 
   useSignalREffect(
     'onGetNewMessage',
-    (msg) => {
+    (msg, chatId) => {
+      if (chat?.id !== chatId) return;
       if (msg.authorId === currentUser.id) {
         setMessages((prev) => {
           // replace pending message
@@ -29,10 +30,15 @@ export const useSignalRListeners = (
     [chat]
   );
 
-  useSignalREffect('onMessageReactionChange', (message) => {
-    setMessages((prev) => {
-      replaceItem(prev, message);
-      return [...prev];
-    });
-  });
+  useSignalREffect(
+    'onMessageReactionChange',
+    (message, chatId) => {
+      if (chat?.id !== chatId) return;
+      setMessages((prev) => {
+        replaceItem(prev, message);
+        return [...prev];
+      });
+    },
+    [chat]
+  );
 };

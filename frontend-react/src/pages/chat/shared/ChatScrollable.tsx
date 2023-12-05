@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { ForwardedRef, ReactNode, useEffect, useImperativeHandle, useRef } from 'react';
+import { ForwardedRef, ReactNode, useImperativeHandle, useRef } from 'react';
 import { InfiniteScroll } from 'src/components/InfiniteScroll';
 import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
@@ -8,7 +8,7 @@ import { Message } from 'src/models/chat/message';
 import { ChatGoDownBtn } from 'src/pages/chat/shared/ChatGoDownBtn';
 import { ChatMessage } from 'src/pages/chat/shared/ChatMessage/ChatMessage';
 import { ChatTypingIndicator } from 'src/pages/chat/shared/ChatTypingIndicator';
-import { useLoadMoreChatMessages } from 'src/queries/chat-queries';
+import { useLoadChatMessages } from 'src/queries/chat-queries';
 import { Box, Container, Stack } from 'src/ui-components';
 import { typedForwardRef } from 'src/utils/types/forward-ref';
 
@@ -25,7 +25,7 @@ const StyledScrollableContainer = styled(Container)(({ theme }) => ({
   '& *': {
     overflowAnchor: 'none',
   },
-}));
+})) as typeof Container;
 
 const StyledScrollingAnchor = styled(Box)({
   // this elements allows content to be automatically scrolled down when new message is added or typing indicator is shown
@@ -42,12 +42,11 @@ export type ChatScrollableProps = {
   messages: Message[];
   top: ReactNode;
   chat: Chat | null | undefined;
-  pageSize: number;
   setMessages: (value: React.SetStateAction<Message[]>) => void;
 };
 
 const ChatScrollableInner = (
-  { messages, top, chat, pageSize, setMessages }: ChatScrollableProps,
+  { messages, top, chat, setMessages }: ChatScrollableProps,
   ref: ForwardedRef<ChatScrollableHandle>
 ) => {
   useImperativeHandle(
@@ -58,9 +57,11 @@ const ChatScrollableInner = (
     []
   );
 
+  const pageSize = 20;
+
   const scrollableRef = useRef<HTMLDivElement>(null);
   const currentUser = useLoggedInUser();
-  const { loadMoreChatMessages } = useLoadMoreChatMessages();
+  const { loadChatMessagesAsync } = useLoadChatMessages();
 
   const scrollToBottom = useDeferredFunction((behavior: ScrollBehavior = 'auto') => {
     scrollableRef.current!.scrollTo({
@@ -74,24 +75,17 @@ const ChatScrollableInner = (
     scrollableRef.current!.scrollTo({ top: currentScrollHeight - prevScrollHeight });
   });
 
-  useEffect(() => {
-    scrollToBottom();
-  }, []);
+  const handleLoadChatMessages = async () => {
+    if (!chat) return;
 
-  const handleLoadMoreMessages = () => {
-    loadMoreChatMessages(
-      {
-        chatId: chat!.id,
-        skip: messages.length,
-        take: pageSize,
-      },
-      {
-        onSuccess: (data) => {
-          setMessages((prev) => [...data, ...prev]);
-          scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
-        },
-      }
-    );
+    const data = await loadChatMessagesAsync({
+      chatId: chat!.id,
+      skip: messages.length,
+      take: pageSize,
+    });
+
+    setMessages((prev) => [...data, ...prev]);
+    scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
   };
 
   return (
@@ -102,7 +96,7 @@ const ChatScrollableInner = (
         <InfiniteScroll
           scrollableRef={scrollableRef}
           totalAmount={chat?.totalMessagesAmount as number}
-          next={handleLoadMoreMessages}
+          next={handleLoadChatMessages}
         >
           {messages.map((x) => (
             <ChatMessage
@@ -115,7 +109,7 @@ const ChatScrollableInner = (
           ))}
         </InfiniteScroll>
       </Stack>
-      <ChatTypingIndicator />
+      <ChatTypingIndicator chat={chat} />
       <StyledScrollingAnchor />
       <ChatGoDownBtn scrollableRef={scrollableRef} onGoDown={() => scrollToBottom('smooth')} />
     </StyledScrollableContainer>
