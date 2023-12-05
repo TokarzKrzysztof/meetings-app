@@ -9,10 +9,10 @@ export const MyChats = () => {
   const location = useLocation();
 
   return (
-    <Stack position={'relative'} height={'100vh'} direction={'column'}>
+    <Stack height={'100vh'} direction={'column'}>
       <Header />
-      <MyChatsNewPrivateMessage />
-      <Stack justifyContent={'space-between'} alignItems={'center'} pr={1}>
+      <Stack position={'relative'} justifyContent={'space-between'} alignItems={'center'} pr={1}>
+        <MyChatsNewPrivateMessage />
         <Tabs sx={{ borderBottom: 1, borderColor: 'divider' }} value={location.pathname}>
           <Tab
             label='Prywatne'
