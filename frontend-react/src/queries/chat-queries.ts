@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
-import { Chat } from 'src/models/chat/chat';
+import { Chat, ChatType } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { Message } from 'src/models/chat/message';
 import { SendPrivateMessageData } from 'src/models/chat/send-private-message-data';
@@ -94,28 +94,20 @@ export const useLoadAllMessagesAfterDate = (
   return genericUseMutationMethods('loadAllMessagesAfterDate', mutation);
 };
 
-export const useGetCurrentUserPrivateChats = (
+export const useGetCurrentUserChats = (
+  type: ChatType,
   options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
-    queryKey: 'GetCurrentUserPrivateChats',
-    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserPrivateChats`),
+    queryKey: ['GetCurrentUserChats', type],
+    queryFn: () => {
+      const params = { type };
+      return axios.get(`${baseUrl}/GetCurrentUserChats`, { params });
+    },
     ...options,
   });
 
-  return genericUseQueryMethods('currentUserPrivateChats', query);
-};
-
-export const useGetCurrentUserGroupChats = (
-  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
-) => {
-  const query = useQuery({
-    queryKey: 'GetCurrentUserGroupChats',
-    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserGroupChats`),
-    ...options,
-  });
-
-  return genericUseQueryMethods('currentUserGroupChats', query);
+  return genericUseQueryMethods('currentUserChats', query);
 };
 
 export const useGetUnreadChatsCount = (
@@ -124,6 +116,7 @@ export const useGetUnreadChatsCount = (
   const query = useQuery({
     queryKey: 'GetUnreadChatsCount',
     queryFn: () => axios.get(`${baseUrl}/GetUnreadChatsCount`),
+    staleTime: Infinity,
     ...options,
   });
 

@@ -21,5 +21,13 @@ namespace Meetings.Database.QueryExtensions
                 .Include(x => x.Messages).ThenInclude(x => x.Reactions)
                 .Include(x => x.Messages).ThenInclude(x => x.ReplyTo);
         }
+        public static IQueryable<Chat> IncludeParticipants(this IQueryable<Chat> query)
+        {
+            return query.Include(x => x.Participants).ThenInclude(x => x.User);
+        }
+        public static IQueryable<Chat> IncludeLastMessageWithAuthor(this IQueryable<Chat> query)
+        {
+            return query.Include(x => x.Messages.OrderByDescending(msg => msg.CreatedAt).Take(1)).ThenInclude(x => x.Author);
+        }
     }
 }

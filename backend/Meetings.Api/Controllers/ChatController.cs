@@ -54,9 +54,9 @@ namespace Meetings.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetCurrentUserChats()
+        public async Task<IActionResult> GetCurrentUserChats([FromQuery] ChatType type)
         {
-            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserChats();
+            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserChats(type);
             return Ok(chats);
         }
 

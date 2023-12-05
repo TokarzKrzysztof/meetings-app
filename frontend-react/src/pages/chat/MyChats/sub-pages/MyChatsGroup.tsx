@@ -1,19 +1,20 @@
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
+import { ChatType } from 'src/models/chat/chat';
 import { MyChatsListItem } from 'src/pages/chat/MyChats/MyChatsListItem';
 import { MyChatsPanel } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsPanel';
-import { useGetCurrentUserGroupChats } from 'src/queries/chat-queries';
+import { useGetCurrentUserChats } from 'src/queries/chat-queries';
 
 export const MyChatsGroup = () => {
-  const { currentUserGroupChats, currentUserGroupChatsRefetch } = useGetCurrentUserGroupChats();
+  const { currentUserChats, currentUserChatsRefetch } = useGetCurrentUserChats(ChatType.Group);
 
   useSignalREffect('onGetNewMessage', () => {
-    currentUserGroupChatsRefetch();
+    currentUserChatsRefetch();
   });
 
-  if (!currentUserGroupChats) return null;
+  if (!currentUserChats) return null;
   return (
     <MyChatsPanel noChatsText={'Brak grupowych rozmów'}>
-      {currentUserGroupChats.map((chat) => (
+      {currentUserChats.map((chat) => (
         <MyChatsListItem key={chat.id} chat={chat} />
       ))}
     </MyChatsPanel>

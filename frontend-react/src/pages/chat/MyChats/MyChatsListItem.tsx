@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
+import { ChatType } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { MessageType } from 'src/models/chat/message';
 import { UserGender } from 'src/models/user';
@@ -27,7 +28,7 @@ export const MyChatsListItem = ({ chat }: MyChatsListItemProps) => {
     if (!chat.hasLastMessage) return null;
 
     const isAuthorCurrentUser = currentUser.id === chat.lastMessageAuthorId;
-    const prefix = isAuthorCurrentUser ? 'Ty:' : `${chat.participantFirstName}:`;
+    const prefix = isAuthorCurrentUser ? 'Ty:' : `${chat.lastMessageAuthorFirstName}:`;
     if (chat.lastMessageType === MessageType.Text) {
       return `${prefix} ${chat.lastMessageValue}`;
     }
@@ -36,20 +37,28 @@ export const MyChatsListItem = ({ chat }: MyChatsListItemProps) => {
     return isAuthorCurrentUser
       ? `${prefix} ${currentUser.gender === UserGender.Male ? 'Wysłałeś' : 'Wysłałaś'} ${itemName}`
       : `${prefix} ${
-          chat.participantGender === UserGender.Male ? 'Wysłał' : 'Wysłała'
+          chat.lastMessageAuthorGender === UserGender.Male ? 'Wysłał' : 'Wysłała'
         } ${itemName}`;
+  }, [chat]);
+
+  const to = useMemo(() => {
+    if (chat.type === ChatType.Private) {
+      return AppRoutes.PrivateChat({ userId: chat.participantId! });
+    } else {
+      return AppRoutes.GroupChat({ chatId: chat.id });
+    }
   }, [chat]);
 
   const fontWeight = chat.hasUnreadMessages ? 'bold' : undefined;
   return (
-    <ListItemButton component={Link} to={AppRoutes.PrivateChat({ userId: chat.participantId })}>
+    <ListItemButton component={Link} to={to}>
       <ListItemAvatar sx={{ minWidth: 'auto', mr: 2 }}>
         <UserActiveStatusBadge status={chat.participantActiveStatus}>
-          <Avatar size={50} src={chat.participantProfileImageSrc} />
+          <Avatar size={50} src={chat.imageSrcs[0]} />
         </UserActiveStatusBadge>
       </ListItemAvatar>
       <ListItemText
-        primary={`${chat.participantFirstName} ${chat.participantLastName}`}
+        primary={chat.name}
         secondary={lastMessageText}
         primaryTypographyProps={{
           fontWeight: fontWeight,

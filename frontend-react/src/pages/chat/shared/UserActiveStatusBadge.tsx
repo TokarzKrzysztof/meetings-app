@@ -3,7 +3,7 @@ import { Badge } from 'src/ui-components';
 import { PropsWithReactElement } from 'src/utils/types/props';
 
 export type UserActiveStatusBadgeProps = PropsWithReactElement<{
-  status: User['activeStatus'];
+  status: User['activeStatus'] | null;
 }>;
 
 export const UserActiveStatusBadge = ({ status, children }: UserActiveStatusBadgeProps) => {
@@ -12,7 +12,7 @@ export const UserActiveStatusBadge = ({ status, children }: UserActiveStatusBadg
       overlap='circular'
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       variant='dot'
-      invisible={status === UserActiveStatus.Offline}
+      invisible={!status || status === UserActiveStatus.Offline}
       sx={(theme) => ({
         '& .MuiBadge-badge': {
           backgroundColor:

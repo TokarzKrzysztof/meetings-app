@@ -189,39 +189,47 @@ namespace Meetings.Infrastructure.Services
             return await _extendedMapper.ToMessageDTO(message);
         }
 
-        public async Task<IEnumerable<ChatPreview>> GetCurrentUserChats()
+        public async Task<IEnumerable<ChatPreview>> GetCurrentUserChats(ChatType type)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
 
             List<Chat> chats = await _repository.Data
-                .Include(x => x.Participants).ThenInclude(x => x.User)
-                .Include(x => x.Messages.OrderByDescending(msg => msg.CreatedAt).Take(1))
+                .IncludeParticipants()
+                .IncludeLastMessageWithAuthor()
                 .Where(x => x.Participants.Select(x => x.UserId).Contains(userId))
+                .If(type == ChatType.Private, q => q.Where(x => x.Participants.Count == 2))
+                .If(type == ChatType.Group, q => q.Where(x => x.Participants.Count > 2))
                 .ToListAsync();
 
             return chats.Select(x =>
             {
-                // TODO participant check for group chat
-                ChatParticipant participant = x.Participants.First(x => x.UserId != userId);
                 ChatParticipant currentUserParticipant = x.Participants.Single(x => x.UserId == userId);
-                Message? lastMessage = x.Messages.OrderByDescending(msg => msg.CreatedAt).FirstOrDefault();
-                return new ChatPreview()
+                Message? lastMessage = x.Messages.SingleOrDefault();
+                ChatPreview result = new ChatPreview()
                 {
                     Id = x.Id,
-                    ParticipantId = participant.UserId,
-                    ParticipantFirstName = participant.User.FirstName,
-                    ParticipantLastName = participant.User.LastName,
-                    ParticipantGender = participant.User.Gender,
-                    ParticipantProfileImageSrc = participant.User.ProfileImagePath,
-                    ParticipantActiveStatus = UserUtils.DetermineUserActiveStatus(participant.User.LastActiveDate),
-                    HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
-                    HasLastMessage = lastMessage != null,
-                    LastMessageAuthorId = lastMessage?.AuthorId,
+                    Name = type == ChatType.Group ? x.Name! : null,
+                    Type = type,
+                    ImageSrcs = x.Participants.Where(x => x.UserId != userId).Select(x => _fileManager.FilePathToSrc(x.User.ProfileImagePath)),
+                    LastMessageAuthorGender = lastMessage?.Author.Gender,
+                    LastMessageAuthorFirstName = lastMessage?.Author.FirstName,
                     LastMessageValue = lastMessage?.Type == MessageType.Text ? lastMessage?.Value : null,
+                    HasLastMessage = lastMessage != null,
+                    HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
+                    LastMessageAuthorId = lastMessage?.AuthorId,
                     LastMessageDate = lastMessage?.CreatedAt,
                     LastMessageType = lastMessage?.Type,
-                    ChatType = x.Participants.Count == 2 ? ChatType.Private : ChatType.Group
                 };
+
+                if (type == ChatType.Private)
+                {
+                    ChatParticipant participant = x.Participants.Single(x => x.UserId != userId);
+                    result.Name = $"{participant.User.FirstName} {participant.User.LastName}";
+                    result.ParticipantId = participant.UserId;
+                    result.ParticipantActiveStatus = UserUtils.DetermineUserActiveStatus(participant.User.LastActiveDate);
+                }
+
+                return result;
             }).OrderByDescending(x => x.LastMessageDate);
         }
 

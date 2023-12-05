@@ -10,24 +10,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Meetings.Utils.Extensions;
+using Meetings.Models.Resources;
+using Meetings.Authentication.Services;
 
 namespace Meetings.Infrastructure.Mappers
 {
     public class ExtendedMapper
     {
         private readonly IMapper _mapper;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IFileManager _fileManager;
-        public ExtendedMapper(IMapper mapper, IHttpContextAccessor httpContextAccessor, IFileManager fileManager)
+        private readonly IClaimsReader _claimsReader;
+        public ExtendedMapper(IMapper mapper, IFileManager fileManager, IClaimsReader claimsReader)
         {
             _mapper = mapper;
-            _httpContextAccessor = httpContextAccessor;
             _fileManager = fileManager;
-        }
-
-        private string FilePathToSrc(string filePath)
-        {
-            return filePath.Replace(_fileManager.Root, _httpContextAccessor.GetAppUrl());
+            _claimsReader = claimsReader;
         }
 
         public UserDTO ToUserDTO(User entity)
@@ -36,7 +33,7 @@ namespace Meetings.Infrastructure.Mappers
             result.ActiveStatus = UserUtils.DetermineUserActiveStatus(entity.LastActiveDate);
             if (entity.ProfileImagePath != null)
             {
-                result.ProfileImageSrc = FilePathToSrc(entity.ProfileImagePath);
+                result.ProfileImageSrc = _fileManager.FilePathToSrc(entity.ProfileImagePath);
             }
 
             return result;
@@ -57,7 +54,7 @@ namespace Meetings.Infrastructure.Mappers
             var result = _mapper.Map<MessageDTO>(entity);
             if (result.Type == MessageType.Image || result.Type == MessageType.Audio)
             {
-                result.Value = FilePathToSrc(entity.Value);
+                result.Value = _fileManager.FilePathToSrc(entity.Value)!;
             }
             if (entity.ReplyTo != null)
             {
