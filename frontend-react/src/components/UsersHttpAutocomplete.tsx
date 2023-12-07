@@ -38,7 +38,7 @@ export const UsersHttpAutocomplete = ({
         />
       )}
       renderOption={(props, opt) => (
-        <Box {...props} component={'li'} key={opt.id}>
+        <Box {...props} component='li' key={opt.id}>
           <Avatar sx={{ mr: 1 }} src={opt.profileImageSrc} size={30} />
           <Typography fontSize={13}>
             {opt.firstName} {opt.lastName}

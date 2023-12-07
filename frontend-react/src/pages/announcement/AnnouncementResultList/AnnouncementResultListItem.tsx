@@ -15,7 +15,7 @@ export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemP
 
   return (
     <Card>
-      <Stack p={1} alignItems={'center'}>
+      <Stack p={1} alignItems='center'>
         <Avatar src={data.userProfileImageSrc} size={50} />
         <Box ml={2}>
           <Typography fontSize={14}>
@@ -27,7 +27,7 @@ export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemP
         </Box>
       </Stack>
       <Divider />
-      <Typography fontSize={13} p={1} whiteSpace={'pre-wrap'}>
+      <Typography fontSize={13} p={1} whiteSpace='pre-wrap'>
         {data.description}
       </Typography>
       <Divider />

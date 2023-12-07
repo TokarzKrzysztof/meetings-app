@@ -8,7 +8,7 @@ export type AvatarListProps = {
 export const AvatarList = ({ srcs, avatarSize }: AvatarListProps) => {
   return (
     <AvatarGroup
-      spacing={'small'}
+      spacing='small'
       slotProps={{ additionalAvatar: { sx: { width: avatarSize, height: avatarSize } } }}
       max={3}
     >

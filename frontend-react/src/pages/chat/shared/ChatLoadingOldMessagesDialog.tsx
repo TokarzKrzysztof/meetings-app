@@ -8,10 +8,10 @@ export const ChatLoadingOldMessagesDialog = ({ onClose }: ChatLoadingOldMessages
   return (
     <Dialog open onClose={onClose}>
       <DialogContent>
-        <DialogContentText textAlign={'center'}>
+        <DialogContentText textAlign='center'>
           Trwa ładowanie wcześniejszych wiadomości
         </DialogContentText>
-        <Box display={'flex'} justifyContent={'center'} mt={2}>
+        <Box display='flex' justifyContent='center' mt={2}>
           <CircularProgress size={20} />
         </Box>
       </DialogContent>

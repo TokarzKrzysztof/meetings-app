@@ -26,7 +26,7 @@ export const ChatMessageContentImage = ({
           height={maxHeight}
         />
       )}
-      <Box position={'relative'} hidden={!show}>
+      <Box position='relative' hidden={!show}>
         <img
           style={{
             opacity: message.isPending ? 0.5 : undefined,

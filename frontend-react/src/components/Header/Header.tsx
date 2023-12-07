@@ -26,7 +26,7 @@ export const Header = ({ leftSlot }: HeaderProps) => {
       <HideOnScroll>
         <AppBar>
           <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Box>{leftSlot ?? <Box component={Link} to={AppRoutes.Home()} color={'white'}>Logo</Box>}</Box>
+            <Box>{leftSlot ?? <Box component={Link} to={AppRoutes.Home()} color='white'>Logo</Box>}</Box>
             <Box>
               <HeaderMenu />
             </Box>

@@ -76,7 +76,7 @@ export const ImageCropDialog = ({ image, onAccept, onClose }: ImageCropDialogPro
               min={1}
               max={3}
             />
-            <Stack justifyContent={'space-between'}>
+            <Stack justifyContent='space-between'>
               <Button variant='outlined' onClick={onClose}>
                 Anuluj
               </Button>

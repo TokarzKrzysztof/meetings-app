@@ -13,17 +13,17 @@ export const ChatNewMessageReplyPreview = ({ ...props }: ChatNewMessageReplyPrev
   
   if (!replyMessage) return null;
   return (
-    <Stack p={1} pb={0} alignItems={'center'} justifyContent={'space-between'}>
-      <Box overflow={'hidden'}>
+    <Stack p={1} pb={0} alignItems='center' justifyContent='space-between'>
+      <Box overflow='hidden'>
         <Typography>Odpowiadanie</Typography>
         {replyMessage.type === MessageType.Image ? (
           <img style={{ maxHeight: 50 }} src={replyMessage.value} />
         ) : (
           <Typography
-            color={'grey'}
-            whiteSpace={'nowrap'}
-            textOverflow={'ellipsis'}
-            overflow={'hidden'}
+            color='grey'
+            whiteSpace='nowrap'
+            textOverflow='ellipsis'
+            overflow='hidden'
           >
             {replyMessage.type === MessageType.Audio ? (
               <ChatVoiceMessageDescription src={replyMessage.value} />

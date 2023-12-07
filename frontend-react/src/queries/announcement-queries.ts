@@ -13,7 +13,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/Announcement`;
 
 export const useGetAnnouncementResultList = (
-  queryParams: Record<string, any>,
+  queryParams: Record<string, unknown>,
   options?: UseQueryOptions<UserAnnouncement[], AxiosError<HttpErrorData>>,
 ) => {
   const query = useQuery({

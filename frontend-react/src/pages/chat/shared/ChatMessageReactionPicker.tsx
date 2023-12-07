@@ -47,7 +47,7 @@ export const ChatMessageReactionPicker = ({
         },
       }}
     >
-      <Stack alignItems={'center'}>
+      <Stack alignItems='center'>
         {suggestedReactions.map((unified) => (
           <IconButton
             key={unified}

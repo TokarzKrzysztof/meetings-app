@@ -60,9 +60,9 @@ export const ChatMessage = ({
       >
         <Box
           alignSelf={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
-          display={'flex'}
-          position={'relative'}
-          flexDirection={'column'}
+          display='flex'
+          position='relative'
+          flexDirection='column'
           alignItems={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           maxWidth={400}
           sx={{

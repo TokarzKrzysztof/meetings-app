@@ -13,7 +13,7 @@ export const MyChatsPrivate = () => {
 
   if (!currentUserChats) return null;
   return (
-    <MyChatsPanel noChatsText={'Brak prywatnych rozmów'}>
+    <MyChatsPanel noChatsText='Brak prywatnych rozmów'>
       {currentUserChats.map((chat) => (
         <MyChatsListItem key={chat.id} chat={chat} />
       ))}

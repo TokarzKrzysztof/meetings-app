@@ -9,6 +9,7 @@ export function useClearableAtom<Value, Args extends unknown[]>(
 
   useEffect(() => {
     return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (setAtom as any)(null);
     };
   }, []);

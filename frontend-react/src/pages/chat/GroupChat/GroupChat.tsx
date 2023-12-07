@@ -24,10 +24,10 @@ export const GroupChat = () => {
   if (!groupChat) return null;
   return (
     <ChatMessageFocusProvider chat={groupChat} dispatch={dispatch}>
-      <Stack height={'100vh'} direction={'column'}>
+      <Stack height='100vh' direction='column'>
         <ChatHeader
           right={
-            <Stack alignItems={'center'} gap={1}>
+            <Stack alignItems='center' gap={1}>
               {/* <UserActiveStatusBadge status={user.activeStatus}>
                 <Avatar src={user.profileImageSrc} size={30} />
               </UserActiveStatusBadge> */}
@@ -38,7 +38,7 @@ export const GroupChat = () => {
         <ChatScrollable
           ref={scrollableRef}
           top={
-            <Stack flexDirection={'column'} alignItems={'center'} mt={'auto'}>
+            <Stack flexDirection='column' alignItems='center' mt='auto'>
               <Typography>Na górze</Typography>
               {/* <Avatar src={user.profileImageSrc} size={100} sx={{ mb: 2 }} />
               <Typography>

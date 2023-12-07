@@ -104,7 +104,7 @@ export const ChatNewMessage = ({
   return (
     <>
       <ChatNewMessageReplyPreview />
-      <Stack position={'relative'} alignItems={'flex-start'} p={1}>
+      <Stack position='relative' alignItems='flex-start' p={1}>
         {isRecording ? (
           <ChatNewMessageVoice
             onCancel={() => setIsRecording(false)}

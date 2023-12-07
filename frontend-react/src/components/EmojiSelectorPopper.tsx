@@ -26,7 +26,7 @@ export const EmojiSelectorPopper = ({
           <Picker
             searchPlaceholder='Wyszukaj'
             emojiStyle={EmojiStyle.NATIVE}
-            width={'100%'}
+            width='100%'
             onEmojiClick={onEmojiClick}
           />
         </Box>

@@ -70,7 +70,7 @@ export const AnnouncementForm = ({
           maxLength: Validators.maxStringLength,
         }}
       />
-      <Stack mt={4} justifyContent={'space-between'}>
+      <Stack mt={4} justifyContent='space-between'>
         <Button type='button' variant='outlined' component={Link} to={AppRoutes.MyAnnouncements()}>
           Anuluj
         </Button>

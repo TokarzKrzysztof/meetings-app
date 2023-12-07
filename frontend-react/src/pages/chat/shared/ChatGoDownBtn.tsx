@@ -39,7 +39,7 @@ export const ChatGoDownBtn = ({ scrollableRef, onGoDown }: ChatGoDownBtnProps) =
         transition: '400ms',
       }}
     >
-      <Icon name={'keyboard_double_arrow_down'} />
+      <Icon name='keyboard_double_arrow_down' />
     </IconButton>
   );
 };

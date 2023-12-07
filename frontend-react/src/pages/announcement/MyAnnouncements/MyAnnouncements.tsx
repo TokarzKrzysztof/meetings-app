@@ -33,7 +33,7 @@ export const MyAnnouncements = () => {
     <>
       <Header />
       <Container sx={{ py: 2 }} maxWidth='sm'>
-        <Typography variant='h5' mb={2} textAlign='center' fontWeight='bold' position={'relative'}>
+        <Typography variant='h5' mb={2} textAlign='center' fontWeight='bold' position='relative'>
           Moje ogłoszenia
           <IconButton
             color='primary'

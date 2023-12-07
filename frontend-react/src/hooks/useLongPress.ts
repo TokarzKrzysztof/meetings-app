@@ -12,7 +12,7 @@ export const useLongPress = (
   const start = useCallback(
     (event: React.TouchEvent | React.MouseEvent) => {
       if (shouldPreventDefault && event.target) {
-        event.target.addEventListener('touchend', preventDefault as any, {
+        event.target.addEventListener('touchend', preventDefault, {
           passive: false,
         });
         target.current = event.target;
@@ -31,7 +31,7 @@ export const useLongPress = (
       shouldTriggerClick && !longPressTriggered && onClick && onClick(event);
       setLongPressTriggered(false);
       if (shouldPreventDefault && target.current) {
-        target.current.removeEventListener('touchend', preventDefault as any);
+        target.current.removeEventListener('touchend', preventDefault);
       }
     },
     [shouldPreventDefault, onClick, longPressTriggered]
@@ -47,7 +47,7 @@ export const useLongPress = (
   } as React.HTMLAttributes<HTMLElement>;
 };
 
-const preventDefault = (event: React.TouchEvent | React.MouseEvent) => {
+const preventDefault = (event: Event) => {
   if (!isTouchEvent(event)) return;
 
   if (event.touches.length < 2 && event.preventDefault) {
@@ -55,6 +55,6 @@ const preventDefault = (event: React.TouchEvent | React.MouseEvent) => {
   }
 };
 
-const isTouchEvent = (event: React.TouchEvent | React.MouseEvent): event is React.TouchEvent => {
+const isTouchEvent = (event: Event): event is TouchEvent => {
   return 'touches' in event;
 };

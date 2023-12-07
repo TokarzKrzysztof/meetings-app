@@ -9,9 +9,9 @@ export const MyChats = () => {
   const location = useLocation();
 
   return (
-    <Stack height={'100vh'} direction={'column'}>
+    <Stack height='100vh' direction='column'>
       <Header />
-      <Stack position={'relative'} justifyContent={'space-between'} alignItems={'center'} pr={1}>
+      <Stack position='relative' justifyContent='space-between' alignItems='center' pr={1}>
         <MyChatsNewPrivateMessage />
         <Tabs sx={{ borderBottom: 1, borderColor: 'divider' }} value={location.pathname}>
           <Tab
@@ -29,7 +29,7 @@ export const MyChats = () => {
         </Tabs>
         <MyChatsActions />
       </Stack>
-      <Box overflow={'auto'}>
+      <Box overflow='auto'>
         <Outlet />
       </Box>
     </Stack>

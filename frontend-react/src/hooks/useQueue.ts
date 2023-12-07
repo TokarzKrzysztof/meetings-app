@@ -5,7 +5,7 @@ import { useArray } from 'src/hooks/useArray';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 export const useQueue = <TData, TResult>(
-  send: UseMutateFunction<TResult, AxiosError<HttpErrorData, any>, TData, unknown>,
+  send: UseMutateFunction<TResult, AxiosError<HttpErrorData, unknown>, TData, unknown>,
   options: UseMutationOptions<TResult, AxiosError<HttpErrorData>, TData> = {}
 ) => {
   const [inProgress, setInProgress] = useState(false);

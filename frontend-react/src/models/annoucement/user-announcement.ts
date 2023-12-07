@@ -1,5 +1,5 @@
-import { Announcement } from "src/models/annoucement/announcement";
-import { User } from "src/models/user";
+import { Announcement } from 'src/models/annoucement/announcement';
+import { User } from 'src/models/user';
 
 export type UserAnnouncement = {
     userId: User['id'];

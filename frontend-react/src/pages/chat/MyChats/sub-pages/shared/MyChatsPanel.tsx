@@ -11,7 +11,7 @@ export const MyChatsPanel = ({ children, noChatsText }: MyChatsPanelProps) => {
     return <List>{children}</List>;
   } else {
     return (
-      <Typography mt={6} textAlign={'center'} color={'grey'}>
+      <Typography mt={6} textAlign='center' color='grey'>
         {noChatsText}
       </Typography>
     );

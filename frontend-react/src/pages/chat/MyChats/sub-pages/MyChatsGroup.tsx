@@ -13,7 +13,7 @@ export const MyChatsGroup = () => {
 
   if (!currentUserChats) return null;
   return (
-    <MyChatsPanel noChatsText={'Brak grupowych rozmów'}>
+    <MyChatsPanel noChatsText='Brak grupowych rozmów'>
       {currentUserChats.map((chat) => (
         <MyChatsListItem key={chat.id} chat={chat} />
       ))}

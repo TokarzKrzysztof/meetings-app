@@ -62,7 +62,7 @@ export const NewGroupChat = () => {
             required: ValidationMessages.required,
           })}
         ></FormField>
-        <Stack mt={4} justifyContent={'space-between'}>
+        <Stack mt={4} justifyContent='space-between'>
           <Button type='button' variant='outlined' onClick={navigateBack}>
             Anuluj
           </Button>

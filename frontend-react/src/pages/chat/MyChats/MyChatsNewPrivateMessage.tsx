@@ -30,7 +30,7 @@ export const MyChatsNewPrivateMessage = ({ ...props }: MyChatsNewPrivateMessageP
         background: 'white',
         zIndex: 1,
       }}
-      justifyContent={'space-between'}
+      justifyContent='space-between'
     >
       <UsersHttpAutocomplete
         onSelectUser={(user) => navigate(AppRoutes.PrivateChat({ userId: user.id }))}

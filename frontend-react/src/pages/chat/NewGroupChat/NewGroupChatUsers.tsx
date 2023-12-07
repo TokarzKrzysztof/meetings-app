@@ -13,7 +13,7 @@ import {
 } from 'src/ui-components';
 
 export type NewGroupChatUsersProps = {
-  form: UseFormReturn<NewGroupChatFormData, any, undefined>;
+  form: UseFormReturn<NewGroupChatFormData, unknown, undefined>;
   inputRef: RefObject<HTMLInputElement>;
 };
 

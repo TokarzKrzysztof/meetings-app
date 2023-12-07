@@ -107,9 +107,9 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
       </Stack>
       <Typography
         p={1}
-        whiteSpace={'nowrap'}
-        textOverflow={'ellipsis'}
-        overflow={'hidden'}
+        whiteSpace='nowrap'
+        textOverflow='ellipsis'
+        overflow='hidden'
         sx={{
           opacity: 0.5,
         }}

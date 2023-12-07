@@ -7,7 +7,7 @@ import { useGetAllCategories } from 'src/queries/category-queries';
 import { Box, Button, Container, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
-const nameOf = <T,>(name: keyof T) => name;
+// const nameOf = <T,>(name: keyof T) => name;
 type SearchParams = {
   categoryId: string;
   maxAge: string;
@@ -22,10 +22,10 @@ const useAnnouncementResultListSearchParams = () => {
   const stringParam = (name: keyof SearchParams) => {
     return searchParams.get(name);
   };
-  const numberParam = (name: keyof SearchParams) => {
-    const value = searchParams.get(name);
-    return value ? +value : null;
-  };
+  // const numberParam = (name: keyof SearchParams) => {
+  //   const value = searchParams.get(name);
+  //   return value ? +value : null;
+  // };
   return [
     {
       categoryId: stringParam('categoryId')!,
@@ -36,9 +36,9 @@ const useAnnouncementResultListSearchParams = () => {
 };
 
 export const AnnouncementResultList = () => {
-  const [params, setParams] = useAnnouncementResultListSearchParams();
+  const [params] = useAnnouncementResultListSearchParams();
   const { allCategories } = useGetAllCategories();
-  const { announcementResultList, announcementResultListFetching } =
+  const { announcementResultList } =
     useGetAnnouncementResultList(params);
 
   const categoryName = allCategories?.find((x) => x.id === params.categoryId)?.name;
@@ -47,7 +47,7 @@ export const AnnouncementResultList = () => {
       <Header />
       <Container>
         <GoBackBtn to={AppRoutes.Home()}>Wyszukaj ogłoszenia z innej kategorii</GoBackBtn>
-        <Stack justifyContent={'space-between'} alignItems={'center'}>
+        <Stack justifyContent='space-between' alignItems='center'>
           <Typography my={2}>
             Ogłoszenia z kategorii:{' '}
             <span style={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>{categoryName}</span>
@@ -62,7 +62,7 @@ export const AnnouncementResultList = () => {
               <AnnouncementResultListItem key={announcement.announcementId} data={announcement} />
             ))
           ) : (
-            <Box mt={6} textAlign={'center'} color={'grey'}>
+            <Box mt={6} textAlign='center' color='grey'>
               <Typography>
                 Brak ogłoszeń z kategorii <br />
                 <b>{categoryName}</b>

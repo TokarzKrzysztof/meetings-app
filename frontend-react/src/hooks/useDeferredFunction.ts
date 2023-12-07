@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 // function that will run after state update
-export const useDeferredFunction = <TParams extends any[]>(fn: (...params: TParams) => void) => {
+export const useDeferredFunction = <TParams extends unknown[]>(fn: (...params: TParams) => void) => {
   const [trigger, setTrigger] = useState<{} | null>(null);
   const paramsRef = useRef<TParams>();
 

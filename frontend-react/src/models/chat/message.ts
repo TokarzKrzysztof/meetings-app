@@ -1,4 +1,4 @@
-import { MessageReaction } from "src/models/chat/message-reaction";
+import { MessageReaction } from 'src/models/chat/message-reaction';
 
 export enum MessageType {
   Text,

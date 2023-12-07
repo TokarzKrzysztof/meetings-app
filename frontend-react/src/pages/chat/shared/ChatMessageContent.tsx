@@ -86,7 +86,7 @@ export const ChatMessageContent = ({
         )}
       </StyledMessage>
       {message.isPending && (
-        <Typography fontSize={11} color={'grey'}>
+        <Typography fontSize={11} color='grey'>
           Trwa wysyłanie...
         </Typography>
       )}

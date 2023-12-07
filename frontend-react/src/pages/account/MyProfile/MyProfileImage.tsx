@@ -33,7 +33,7 @@ export const MyProfileImage = ({ currentUser }: MyProfileImageProps) => {
 
   return (
     <>
-      <Box position={'relative'}>
+      <Box position='relative'>
         <Avatar src={currentUser.profileImageSrc} size={150} />
         <StyledEditButton color='primary' filled ref={menuAnchorRef}>
           <Icon name='edit' />
