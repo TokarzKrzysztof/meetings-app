@@ -1,12 +1,12 @@
-import { useRef, useState } from 'react';
+import { useReducer, useRef } from 'react';
 import { useRouteParams } from 'src/hooks/useRouteParams';
-import { Message } from 'src/models/chat/message';
 import { ChatHeader } from 'src/pages/chat/shared/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/ChatNewMessage';
 import { ChatScrollable, ChatScrollableHandle } from 'src/pages/chat/shared/ChatScrollable';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
+import { messageReducer } from 'src/pages/chat/shared/reducers/message.reducer';
 import { useGetGroupChat } from 'src/queries/chat-queries';
 import { Stack, Typography } from 'src/ui-components';
 import { GroupChatParams } from 'src/utils/enums/app-routes';
@@ -14,16 +14,16 @@ import { GroupChatParams } from 'src/utils/enums/app-routes';
 export const GroupChat = () => {
   const [params] = useRouteParams<GroupChatParams>();
   const scrollableRef = useRef<ChatScrollableHandle>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, dispatch] = useReducer(messageReducer, []);
 
   const { groupChat } = useGetGroupChat(params.chatId);
 
-  useSignalRListeners(groupChat, setMessages);
+  useSignalRListeners(groupChat, dispatch);
   useUnloadListener(messages);
 
   if (!groupChat) return null;
   return (
-    <ChatMessageFocusProvider chat={groupChat} setMessages={setMessages}>
+    <ChatMessageFocusProvider chat={groupChat} dispatch={dispatch}>
       <Stack height={'100vh'} direction={'column'}>
         <ChatHeader
           right={
@@ -48,13 +48,13 @@ export const GroupChat = () => {
             </Stack>
           }
           messages={messages}
-          setMessages={setMessages}
+          dispatch={dispatch}
           chat={groupChat}
         />
         <ChatNewMessage
           onScrollToBottom={() => scrollableRef.current?.scrollToBottom('smooth')}
           chat={groupChat}
-          setMessages={setMessages}
+          dispatch={dispatch}
         />
       </Stack>
     </ChatMessageFocusProvider>

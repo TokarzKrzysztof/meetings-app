@@ -1,11 +1,11 @@
 import { useAtom } from 'jotai';
 import _ from 'lodash';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Dispatch, useEffect, useMemo, useRef, useState } from 'react';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useQueue } from 'src/hooks/useQueue';
 import { Chat } from 'src/models/chat/chat';
-import { Message, MessageType } from 'src/models/chat/message';
+import { MessageType } from 'src/models/chat/message';
 import { ChatNewMessageImage } from 'src/pages/chat/shared/ChatNewMessageImage';
 import {
   ChatNewMessageReplyPreview,
@@ -13,23 +13,23 @@ import {
 } from 'src/pages/chat/shared/ChatNewMessageReplyPreview';
 import { ChatNewMessageVoice } from 'src/pages/chat/shared/ChatNewMessageVoice';
 import { ChatSendBtn } from 'src/pages/chat/shared/ChatSendBtn';
+import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
 import { useSendMessage } from 'src/queries/chat-queries';
 import { Box, Icon, IconButton, Stack, TextArea } from 'src/ui-components';
-import { replaceItem } from 'src/utils/array-utils';
 import { isBlob } from 'src/utils/file-utils';
 
 export type ChatNewMessageProps = {
   chat: Chat | null | undefined;
   onScrollToBottom: () => void;
   onFirstPrivateMessageSend?: () => Promise<Chat>;
-  setMessages: (value: React.SetStateAction<Message[]>) => void;
+  dispatch: Dispatch<MessageAction>;
 };
 
 export const ChatNewMessage = ({
   chat,
   onScrollToBottom,
   onFirstPrivateMessageSend,
-  setMessages,
+  dispatch,
 }: ChatNewMessageProps) => {
   const currentUser = useLoggedInUser();
   const { startTyping } = useSignalRActions();
@@ -38,18 +38,8 @@ export const ChatNewMessage = ({
   const [isRecording, setIsRecording] = useState(false);
   const fieldRef = useRef<HTMLTextAreaElement>(null);
 
-  const handlePendingMessageProgressChange = (id: Message['id'], progressPercentage: number) => {
-    setMessages((prev) => {
-      console.log(prev);
-      const item = prev.find((x) => x.id === id)!;
-      item.progressPercentage = progressPercentage;
-      replaceItem(prev, item);
-      return [...prev];
-    });
-  };
-
   const { sendMessage } = useSendMessage((data, percentage) =>
-    handlePendingMessageProgressChange(data.id, percentage)
+    dispatch({ type: 'update-progress', id: data.id, percentage })
   );
   const { addToQueue } = useQueue(sendMessage);
 
@@ -79,24 +69,20 @@ export const ChatNewMessage = ({
             value: value,
           }),
     });
-    setMessages((prev) => {
-      const xx = [
-        ...prev,
-        {
-          id,
-          chatId: chat?.id as string,
-          authorId: currentUser.id,
-          replyTo: replyMessage,
-          createdAt: new Date().toISOString(),
-          reactions: [],
-          isPending: true,
-          progressPercentage: 0,
-          type,
-          value: isBlobType ? URL.createObjectURL(value) : value,
-        },
-      ];
-      console.log(xx)
-      return xx;
+    dispatch({
+      type: 'append',
+      message: {
+        id,
+        chatId: chat?.id as string,
+        authorId: currentUser.id,
+        replyTo: replyMessage,
+        createdAt: new Date().toISOString(),
+        reactions: [],
+        isPending: true,
+        progressPercentage: 0,
+        type,
+        value: isBlobType ? URL.createObjectURL(value) : value,
+      },
     });
 
     setText(null);

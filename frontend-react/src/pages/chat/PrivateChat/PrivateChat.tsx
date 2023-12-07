@@ -1,10 +1,9 @@
 import { useAtomValue } from 'jotai';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useReducer, useRef } from 'react';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { Chat } from 'src/models/chat/chat';
-import { Message } from 'src/models/chat/message';
 import { ChatHeader } from 'src/pages/chat/shared/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/ChatNewMessage';
 import { ChatScrollable, ChatScrollableHandle } from 'src/pages/chat/shared/ChatScrollable';
@@ -12,6 +11,7 @@ import { UserActiveStatusBadge } from 'src/pages/chat/shared/UserActiveStatusBad
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
+import { messageReducer } from 'src/pages/chat/shared/reducers/message.reducer';
 import { useCreatePrivateChat, useGetPrivateChat } from 'src/queries/chat-queries';
 import { useGetUser } from 'src/queries/user-queries';
 import { Avatar, Stack, Typography } from 'src/ui-components';
@@ -21,7 +21,7 @@ import { calculateAge } from 'src/utils/user-utils';
 export const PrivateChat = () => {
   const [params] = useRouteParams<PrivateChatParams>();
   const scrollableRef = useRef<ChatScrollableHandle>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, dispatch] = useReducer(messageReducer, []);
   const { user } = useGetUser(params.userId);
   const connection = useAtomValue(connectionAtom);
 
@@ -29,7 +29,7 @@ export const PrivateChat = () => {
   const { createPrivateChat } = useCreatePrivateChat();
   const { setPrivateChat } = useSetQueryData();
 
-  useSignalRListeners(privateChat, setMessages);
+  useSignalRListeners(privateChat, dispatch);
   useUnloadListener(messages);
 
   const handleCreatePrivateChat = () => {
@@ -53,7 +53,7 @@ export const PrivateChat = () => {
 
   if (!user || privateChatFetching) return null;
   return (
-    <ChatMessageFocusProvider chat={privateChat} setMessages={setMessages}>
+    <ChatMessageFocusProvider chat={privateChat} dispatch={dispatch}>
       <Stack height={'100vh'} direction={'column'}>
         <ChatHeader
           right={
@@ -79,14 +79,14 @@ export const PrivateChat = () => {
             </Stack>
           }
           messages={messages}
-          setMessages={setMessages}
+          dispatch={dispatch}
           chat={privateChat}
         />
         <ChatNewMessage
           onScrollToBottom={() => scrollableRef.current?.scrollToBottom('smooth')}
           chat={privateChat}
           onFirstPrivateMessageSend={handleCreatePrivateChat}
-          setMessages={setMessages}
+          dispatch={dispatch}
         />
       </Stack>
     </ChatMessageFocusProvider>

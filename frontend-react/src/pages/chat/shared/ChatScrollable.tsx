@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { ForwardedRef, ReactNode, useImperativeHandle, useRef } from 'react';
+import { Dispatch, ForwardedRef, ReactNode, useImperativeHandle, useRef } from 'react';
 import { InfiniteScroll } from 'src/components/InfiniteScroll';
 import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
@@ -8,6 +8,7 @@ import { Message } from 'src/models/chat/message';
 import { ChatGoDownBtn } from 'src/pages/chat/shared/ChatGoDownBtn';
 import { ChatMessage } from 'src/pages/chat/shared/ChatMessage/ChatMessage';
 import { ChatTypingIndicator } from 'src/pages/chat/shared/ChatTypingIndicator';
+import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
 import { useLoadChatMessages } from 'src/queries/chat-queries';
 import { Box, Container, Stack } from 'src/ui-components';
 import { typedForwardRef } from 'src/utils/types/forward-ref';
@@ -42,11 +43,11 @@ export type ChatScrollableProps = {
   messages: Message[];
   top: ReactNode;
   chat: Chat | null | undefined;
-  setMessages: (value: React.SetStateAction<Message[]>) => void;
+  dispatch: Dispatch<MessageAction>;
 };
 
 const ChatScrollableInner = (
-  { messages, top, chat, setMessages }: ChatScrollableProps,
+  { messages, top, chat, dispatch }: ChatScrollableProps,
   ref: ForwardedRef<ChatScrollableHandle>
 ) => {
   useImperativeHandle(
@@ -84,7 +85,7 @@ const ChatScrollableInner = (
       take: pageSize,
     });
 
-    setMessages((prev) => [...data, ...prev]);
+    dispatch({ type: 'prepend-range', messageList: data });
     scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
   };
 

@@ -1,29 +1,25 @@
+import { Dispatch } from 'react';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { Chat } from 'src/models/chat/chat';
-import { Message } from 'src/models/chat/message';
+import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
 import { useMarkChatAsRead } from 'src/queries/chat-queries';
-import { replaceItem } from 'src/utils/array-utils';
 
 export const useSignalRListeners = (
   chat: Chat | null | undefined,
-  setMessages: (value: React.SetStateAction<Message[]>) => void
+  dispatch: Dispatch<MessageAction>
 ) => {
   const currentUser = useLoggedInUser();
   const { markChatAsRead } = useMarkChatAsRead();
 
   useSignalREffect(
     'onGetNewMessage',
-    (msg, chatId) => {
+    (message, chatId) => {
       if (chat?.id !== chatId) return;
-      if (msg.authorId === currentUser.id) {
-        setMessages((prev) => {
-          // replace pending message
-          replaceItem(prev, msg);
-          return [...prev];
-        });
+      if (message.authorId === currentUser.id) {
+        dispatch({ type: 'replace', message });
       } else {
-        setMessages((prev) => [...prev, msg]);
+        dispatch({ type: 'append', message });
         markChatAsRead(chat!.id);
       }
     },
@@ -34,10 +30,7 @@ export const useSignalRListeners = (
     'onMessageReactionChange',
     (message, chatId) => {
       if (chat?.id !== chatId) return;
-      setMessages((prev) => {
-        replaceItem(prev, message);
-        return [...prev];
-      });
+      dispatch({ type: 'replace', message });
     },
     [chat]
   );

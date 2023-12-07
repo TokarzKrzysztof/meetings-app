@@ -1,11 +1,12 @@
 import { useTheme } from '@mui/material';
 import { atom } from 'jotai';
-import { useEffect, useState } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
 import { Chat } from 'src/models/chat/chat';
 import { Message } from 'src/models/chat/message';
 import { ChatLoadingOldMessagesDialog } from 'src/pages/chat/shared/ChatLoadingOldMessagesDialog';
+import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
 import { useLoadAllMessagesAfterDate } from 'src/queries/chat-queries';
 import { getFocusableId } from 'src/utils/chat-utils';
 import { PropsWithReactElement } from 'src/utils/types/props';
@@ -14,10 +15,14 @@ export const messageToFocusAtom = atom<Message | null>(null);
 
 export type ChatMessageFocusProviderProps = PropsWithReactElement<{
   chat: Chat | null | undefined;
-  setMessages: (value: React.SetStateAction<Message[]>) => void;
+  dispatch: Dispatch<MessageAction>;
 }>;
 
-export const ChatMessageFocusProvider = ({ children, chat, setMessages }: ChatMessageFocusProviderProps) => {
+export const ChatMessageFocusProvider = ({
+  children,
+  chat,
+  dispatch,
+}: ChatMessageFocusProviderProps) => {
   const theme = useTheme();
   const [messageToFocus, setMessageToFocus] = useClearableAtom(messageToFocusAtom);
   const [showLoadingOldMessagesDialog, setShowLoadingOldMessagesDialog] = useState(false);
@@ -57,7 +62,7 @@ export const ChatMessageFocusProvider = ({ children, chat, setMessages }: ChatMe
         },
         {
           onSuccess: (data) => {
-            setMessages(data);
+            dispatch({ type: 'replace-all', messageList: data });
             handleFocusRepliedMessageDeferred(repliedMessage);
             setShowLoadingOldMessagesDialog(false);
           },
