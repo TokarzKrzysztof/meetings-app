@@ -18,7 +18,7 @@ namespace Meetings.Infrastructure.Hubs
     public interface IChatHub
     {
         Task OnGetNewMessage(MessageDTO message, Guid ChatId);
-        Task OnOtherUserTyping(Guid userId, Guid ChatId);
+        Task OnOtherUserTyping(Guid userId, string firstName, Guid ChatId);
         Task OnMessageReactionChange(MessageDTO message, Guid ChatId);
         Task OnNewChatCreated(Guid chatId);
     }
@@ -37,7 +37,14 @@ namespace Meetings.Infrastructure.Hubs
         {
             get
             {
-                return new Guid(Context.UserIdentifier);
+                return new Guid(Context.User!.FindFirstValue(UserClaims.Id)!);
+            }
+        }
+        private string CurrentUserFirstName
+        {
+            get
+            {
+                return Context.User!.FindFirstValue(UserClaims.FirstName)!;
             }
         }
 
@@ -55,7 +62,7 @@ namespace Meetings.Infrastructure.Hubs
         [Authorize]
         public async Task StartTyping(StartTypingData data)
         {
-            await Clients.OthersInGroup(data.ChatId.ToString()).OnOtherUserTyping(CurrentUserId, data.ChatId);
+            await Clients.OthersInGroup(data.ChatId.ToString()).OnOtherUserTyping(CurrentUserId, CurrentUserFirstName, data.ChatId);
         }
 
         [Authorize]

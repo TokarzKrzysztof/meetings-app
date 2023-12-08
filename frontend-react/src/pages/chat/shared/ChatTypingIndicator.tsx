@@ -1,84 +1,52 @@
-import { styled } from '@mui/material/styles';
 import { useRef, useState } from 'react';
+import { TypeAnimation } from 'react-type-animation';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { Chat } from 'src/models/chat/chat';
-import { Box } from 'src/ui-components';
-
-const StyledDotsContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignSelf: 'flex-start',
-  padding: '10px 11px',
-  border: '1px solid ' + theme.palette.grey[400],
-  borderRadius: theme.shape.borderRadius * 4,
-  marginBottom: theme.spacing(1),
-}));
-
-const StyledDot = styled('span')({
-  '@keyframes mercuryTypingAnimation': {
-    '0%': {
-      transform: 'translateY(0px)',
-    },
-    '28%': {
-      transform: 'translateY(-5px)',
-    },
-    '44%': {
-      transform: 'translateY(0px)',
-    },
-  },
-  animation: 'mercuryTypingAnimation 1.5s infinite ease-in-out',
-  borderRadius: 2,
-  height: 4,
-  width: 4,
-  marginRight: 2,
-  backgroundColor: '#90949c',
-  '&:nth-of-type(1)': {
-    animationDelay: '200ms',
-  },
-  '&:nth-of-type(2)': {
-    animationDelay: '300ms',
-  },
-  '&:nth-of-type(3)': {
-    animationDelay: '400ms',
-  },
-});
+import { Typography } from 'src/ui-components';
 
 export type ChatTypingIndicatorProps = {
   chat: Chat | null | undefined;
 };
 
 export const ChatTypingIndicator = ({ chat }: ChatTypingIndicatorProps) => {
-  const [isTyping, setIsTyping] = useState(false);
+  const [typingUser, setTypingUser] = useState<string | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
   useSignalREffect(
     'onGetNewMessage',
     (message, chatId) => {
       if (chat?.id !== chatId) return;
-      setIsTyping(false);
+      setTypingUser(null);
     },
     [chat]
   );
 
   useSignalREffect(
     'onOtherUserTyping',
-    (userId, chatId) => {
+    (userId, firstName, chatId) => {
       if (chat?.id !== chatId) return;
       clearTimeout(timerRef.current);
 
-      setIsTyping(true);
+      setTypingUser(firstName);
       timerRef.current = setTimeout(() => {
-        setIsTyping(false);
+        setTypingUser(null);
       }, 3000);
     },
     [chat]
   );
 
-  if (!isTyping) return null;
+  if (!typingUser) return null;
   return (
-    <StyledDotsContainer>
-      <StyledDot></StyledDot>
-      <StyledDot></StyledDot>
-      <StyledDot></StyledDot>
-    </StyledDotsContainer>
+    <Typography pl={0.5} fontSize={12} color={'grey'} fontStyle={'italic'}>
+      {typingUser} pisze{' '}
+      <TypeAnimation
+        sequence={['.', 100, '..', 100, '...', 800, '', 100]}
+        repeat={Infinity}
+        omitDeletionAnimation
+        cursor={false}
+        preRenderFirstString={false}
+        style={{ fontSize: 16 }}
+      />
+    </Typography>
   );
 };

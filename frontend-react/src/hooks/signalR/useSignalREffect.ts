@@ -5,7 +5,7 @@ import { Message } from 'src/models/chat/message';
 
 type SignalRListeners = {
   onGetNewMessage: (message: Message, chatId: string) => void;
-  onOtherUserTyping: (userId: string, chatId: string) => void;
+  onOtherUserTyping: (userId: string, firstName: string, chatId: string) => void;
   onMessageReactionChange: (message: Message, chatId: string) => void;
   onNewChatCreated: (chatId: string) => void;
 };
