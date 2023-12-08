@@ -34,8 +34,10 @@ export const ChatMessageContent = ({
         <StyledMessage
           variant={isAuthorCurrentUser ? 'filled' : 'outlined'}
           sx={{
+            // mt to move it in dom
+            mt: `-${repliedMessageWrap}px`,
+            // transform to move visually
             transform: `translateY(${repliedMessageWrap}px)`,
-            pb: `${repliedMessageWrap + 1}px`,
           }}
           onClick={() => setMessageToFocus(message.replyTo!)}
           isRepliedMessage
@@ -45,10 +47,10 @@ export const ChatMessageContent = ({
             <ChatMessageContentImage
               message={message.replyTo}
               maxHeight={200}
-              style={{ opacity: 0.5, transform: `translateY(${repliedMessageWrap}px)` }}
+              style={{ opacity: 0.5 }}
             />
           ) : (
-            <Typography fontSize={12}>
+            <Typography fontSize={12} pb={1}>
               {message.replyTo.type === MessageType.Audio ? (
                 <ChatVoiceMessageDescription src={message.replyTo.value} />
               ) : (

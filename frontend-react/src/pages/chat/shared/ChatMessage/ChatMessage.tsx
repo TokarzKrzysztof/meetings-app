@@ -10,12 +10,14 @@ import { ChatMessageDragToReply } from 'src/pages/chat/shared/ChatMessageDragToR
 import { ChatMessageReactionPicker } from 'src/pages/chat/shared/ChatMessageReactionPicker';
 import { ChatMessageReactions } from 'src/pages/chat/shared/ChatMessageReactions';
 import { replyMessageAtom } from 'src/pages/chat/shared/ChatNewMessageReplyPreview';
-import { Box } from 'src/ui-components';
+import { Box, Typography } from 'src/ui-components';
 
 export type ChatMessageProps = {
   message: Message;
   allMessages: Message[];
   currentUser: User;
+  showAuthor?: boolean;
+  prevMessage?: Message;
   onStartReplyLastMessage: () => void;
 };
 
@@ -23,6 +25,8 @@ export const ChatMessage = ({
   message,
   allMessages,
   currentUser,
+  showAuthor,
+  prevMessage,
   onStartReplyLastMessage,
 }: ChatMessageProps) => {
   const { setMessageReaction } = useSignalRActions();
@@ -49,6 +53,7 @@ export const ChatMessage = ({
   const isAuthorCurrentUser = message.authorId === currentUser.id;
   const maxMessageMovement = 80;
   const repliedMessageWrap = 15;
+  const isPrevMessageSameAuthor = prevMessage?.authorId === message.authorId;
   return (
     <>
       <ChatMessageDragToReply
@@ -65,16 +70,21 @@ export const ChatMessage = ({
           flexDirection='column'
           alignItems={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           maxWidth={400}
+          mt={0.5}
           sx={{
             ...(isAuthorCurrentUser ? { marginLeft: '20px' } : { marginRight: '20px' }),
             opacity: openReactions ? 0.4 : 1,
             marginBottom: message.reactions.length ? 1 : undefined,
             transition: 'margin 200ms',
-            marginTop: message.replyTo ? `-${repliedMessageWrap}px` : undefined,
             pointerEvents: message.isPending ? 'none' : undefined,
             touchAction: message.isPending ? 'none' : undefined,
           }}
         >
+          {showAuthor && !isAuthorCurrentUser && !isPrevMessageSameAuthor && (
+            <Typography fontSize={12} mt={2}>
+              {message.authorName}
+            </Typography>
+          )}
           <ChatMessageContent
             message={message}
             isAuthorCurrentUser={isAuthorCurrentUser}

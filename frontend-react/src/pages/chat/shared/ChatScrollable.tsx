@@ -3,7 +3,7 @@ import { Dispatch, ForwardedRef, ReactNode, useImperativeHandle, useRef } from '
 import { InfiniteScroll } from 'src/components/InfiniteScroll';
 import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
-import { Chat } from 'src/models/chat/chat';
+import { Chat, ChatType } from 'src/models/chat/chat';
 import { Message } from 'src/models/chat/message';
 import { ChatGoDownBtn } from 'src/pages/chat/shared/ChatGoDownBtn';
 import { ChatMessage } from 'src/pages/chat/shared/ChatMessage/ChatMessage';
@@ -87,18 +87,20 @@ const ChatScrollableInner = (
     <StyledScrollableContainer ref={scrollableRef}>
       {top}
 
-      <Stack direction='column' py={1} gap={1}>
+      <Stack direction='column' py={1}>
         <InfiniteScroll
           scrollableRef={scrollableRef}
           totalAmount={chat?.totalMessagesAmount as number}
           next={handleLoadChatMessages}
         >
-          {messages.map((x) => (
+          {messages.map((x, i) => (
             <ChatMessage
               key={x.id}
               message={x}
               allMessages={messages}
               currentUser={currentUser}
+              showAuthor={chat?.type === ChatType.Group}
+              prevMessage={messages[i - 1]}
               onStartReplyLastMessage={scrollToBottom}
             />
           ))}

@@ -37,7 +37,7 @@ export const ChatTypingIndicator = ({ chat }: ChatTypingIndicatorProps) => {
 
   if (!typingUser) return null;
   return (
-    <Typography pl={0.5} fontSize={12} color={'grey'} fontStyle={'italic'}>
+    <Typography pl={0.5} fontSize={12} color='grey' fontStyle='italic'>
       {typingUser} pisze{' '}
       <TypeAnimation
         sequence={['.', 100, '..', 100, '...', 800, '', 100]}

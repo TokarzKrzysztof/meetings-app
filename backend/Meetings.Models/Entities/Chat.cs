@@ -28,8 +28,6 @@ namespace Meetings.Models.Entities
         public Guid Id { get; set; }
         public string? Name { get; set; }
         public int TotalMessagesAmount { get; set; }
-        public List<MessageDTO> Messages { get; set; }
-        public List<UserDTO> Participants { get; set; }
         public ChatType Type { get; set; }
     }
 }

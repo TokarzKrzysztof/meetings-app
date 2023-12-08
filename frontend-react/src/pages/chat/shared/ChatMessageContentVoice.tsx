@@ -93,7 +93,7 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
 
   const currentTimePercentage = (currentTime / duration) * 100;
   return (
-    <Stack alignItems='center'>
+    <Stack alignItems='center' py={0.5}>
       {isPlaying && (
         <IconButton onClick={handleReplayClick}>
           <Icon name='replay' />

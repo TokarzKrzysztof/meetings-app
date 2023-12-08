@@ -11,7 +11,7 @@ const StyledWrapper = styled(Stack)(({ theme }) => ({
   bottom: 0,
   right: 0,
   borderRadius: theme.shape.borderRadius * 3,
-  transform: 'translateY(50%)',
+  transform: 'translateY(40%)',
 }));
 
 export type ChatMessageReactionsProps = {

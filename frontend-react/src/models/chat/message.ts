@@ -10,6 +10,7 @@ export type Message = {
   id: string;
   chatId?: string;
   authorId: string;
+  authorName: string;
   replyTo: Message | null;
   value: string;
   type: MessageType;

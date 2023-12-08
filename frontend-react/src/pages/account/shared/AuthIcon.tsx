@@ -1,7 +1,7 @@
 import { Box, Icon, IconProps } from 'src/ui-components';
 
 export type AuthIconProps = {
-  iconName: IconProps['name'];
+  iconName: IconProps<'span'>['name'];
 };
 
 export const AuthIcon = ({ iconName }: AuthIconProps) => {

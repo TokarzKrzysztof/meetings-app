@@ -52,6 +52,7 @@ namespace Meetings.Infrastructure.Mappers
         public async Task<MessageDTO> ToMessageDTO(Message entity)
         {
             var result = _mapper.Map<MessageDTO>(entity);
+            result.AuthorName = $"{entity.Author.FirstName} {entity.Author.LastName}";
             if (result.Type == MessageType.Image || result.Type == MessageType.Audio)
             {
                 result.Value = _fileManager.FilePathToSrc(entity.Value)!;

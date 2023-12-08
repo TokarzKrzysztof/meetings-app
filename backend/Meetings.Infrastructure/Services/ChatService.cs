@@ -122,7 +122,7 @@ namespace Meetings.Infrastructure.Services
                     ReplyToId = data.ReplyToId,
                     Value = data.Value!,
                     Type = MessageType.Text,
-                }, (x) => x.ReplyTo);
+                });
             }
 
             string extension = data.Type == MessageType.Image ? "jpg" : "mp3";
@@ -137,7 +137,7 @@ namespace Meetings.Infrastructure.Services
                 ReplyToId = data.ReplyToId,
                 Value = filePath,
                 Type = data.Type,
-            }, (x) => x.ReplyTo);
+            });
         }
 
         public async Task<MessageDTO> SendMessage(SendMessageData data)
@@ -146,6 +146,8 @@ namespace Meetings.Infrastructure.Services
             // TODO check if user is in chat
 
             Message entity = await CreateMessage(authorId, data.ChatId, data);
+            // refetch entity with required dependencies
+            entity = await _messageRepository.GetById(entity.Id, q => q.IncludeAuthors());
 
             await SetUnreadMessages(data.ChatId, authorId);
 
@@ -154,7 +156,7 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<MessageDTO> SetMessageReaction(MessageReactionDTO data)
         {
-            Message message = await _messageRepository.Data.Where(x => x.Id == data.MessageId).Include(x => x.Reactions).Include(x => x.ReplyTo).SingleAsync();
+            Message message = await _messageRepository.Data.Where(x => x.Id == data.MessageId).IncludeAuthors().Include(x => x.Reactions).SingleAsync();
             MessageReaction? authorReaction = message.Reactions.SingleOrDefault(x => x.AuthorId == data.AuthorId);
             if (authorReaction != null)
             {
@@ -269,7 +271,7 @@ namespace Meetings.Infrastructure.Services
             {
                new ChatParticipant(data.ParticipantId),
                new ChatParticipant(userId),
-            };            
+            };
             await CreateNewChat(data.ConnectionId, participants);
             return await GetPrivateChat(data.ParticipantId);
         }
