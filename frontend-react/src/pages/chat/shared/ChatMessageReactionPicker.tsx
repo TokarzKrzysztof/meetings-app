@@ -40,7 +40,6 @@ export const ChatMessageReactionPicker = ({
       slotProps={{
         paper: {
           sx: {
-            gap: 1,
             borderRadius: 4,
             p: 1,
           },

@@ -8,7 +8,6 @@ import { StyledReplyIcon } from 'src/pages/chat/shared/ChatMessage/ChatMessage.s
 import { ChatMessageContent } from 'src/pages/chat/shared/ChatMessageContent';
 import { ChatMessageDragToReply } from 'src/pages/chat/shared/ChatMessageDragToReply';
 import { ChatMessageReactionPicker } from 'src/pages/chat/shared/ChatMessageReactionPicker';
-import { ChatMessageReactions } from 'src/pages/chat/shared/ChatMessageReactions';
 import { replyMessageAtom } from 'src/pages/chat/shared/ChatNewMessageReplyPreview';
 import { Box, Typography } from 'src/ui-components';
 
@@ -70,7 +69,7 @@ export const ChatMessage = ({
           flexDirection='column'
           alignItems={isAuthorCurrentUser ? 'flex-end' : 'flex-start'}
           maxWidth={400}
-          mt={0.5}
+          mt={message.replyTo ? 1.5 : 0.5}
           sx={{
             ...(isAuthorCurrentUser ? { marginLeft: '20px' } : { marginRight: '20px' }),
             opacity: openReactions ? 0.4 : 1,
@@ -100,7 +99,6 @@ export const ChatMessage = ({
               isAuthorCurrentUser={isAuthorCurrentUser}
             />
           )}
-          <ChatMessageReactions reactions={message.reactions} />
         </Box>
       </ChatMessageDragToReply>
 

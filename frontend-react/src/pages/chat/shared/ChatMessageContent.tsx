@@ -4,6 +4,7 @@ import { useLongPress } from 'src/hooks/useLongPress';
 import { Message, MessageType } from 'src/models/chat/message';
 import { StyledMessage } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
 import { ChatMessageContentImage } from 'src/pages/chat/shared/ChatMessageContentImage';
+import { ChatMessageContentReactions } from 'src/pages/chat/shared/ChatMessageContentReactions';
 import { ChatMessageContentVoice } from 'src/pages/chat/shared/ChatMessageContentVoice';
 import { ChatVoiceMessageDescription } from 'src/pages/chat/shared/ChatVoiceMessageDescription';
 import { messageToFocusAtom } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
@@ -61,9 +62,10 @@ export const ChatMessageContent = ({
         </StyledMessage>
       )}
       <StyledMessage
-        {...(message.type !== MessageType.Audio ? longPressEvent : undefined)}
+        {...longPressEvent}
         id={message.type !== MessageType.Audio ? getFocusableId(message.id) : undefined}
         ref={anchorRef}
+        onContextMenu={(e: Event) => e.preventDefault()}
         variant={isAuthorCurrentUser ? 'outlined' : 'filled'}
         // transform to make message overlap
         sx={{
@@ -86,6 +88,7 @@ export const ChatMessageContent = ({
             onLongPress={onLongPress}
           />
         )}
+        <ChatMessageContentReactions message={message} />
       </StyledMessage>
       {message.isPending && (
         <Typography fontSize={11} color='grey'>

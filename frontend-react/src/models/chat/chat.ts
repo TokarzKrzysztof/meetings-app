@@ -1,3 +1,5 @@
+import { User } from "src/models/user";
+
 export enum ChatType {
   Private,
   Group,
@@ -8,4 +10,5 @@ export type Chat = {
   name: string | null;
   totalMessagesAmount: number;
   type: ChatType;
+  participants: User[];
 };

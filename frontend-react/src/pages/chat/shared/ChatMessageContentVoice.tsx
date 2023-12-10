@@ -2,7 +2,6 @@ import { styled } from '@mui/material';
 import { atom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
-import { useLongPress } from 'src/hooks/useLongPress';
 import { messageStyles } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
 import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
 import { getDuration, toDuration } from 'src/utils/audio-utils';
@@ -41,19 +40,6 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
 
-  const handleVoiceMessageClick = (e: React.TouchEvent | React.MouseEvent) => {
-    const target = e.currentTarget as HTMLDivElement;
-    const { left, width } = target.getBoundingClientRect();
-
-    const clientX = 'touches' in e ? e.changedTouches[0].clientX : e.clientX;
-    const clickedPlace = clientX - left;
-    const newTime = inRange((clickedPlace / width) * duration, 0, duration);
-
-    setCurrentTime(newTime);
-    audio!.currentTime = newTime;
-  };
-  const longPressEvent = useLongPress(() => onLongPress(), handleVoiceMessageClick);
-
   const isPlaying = playingAudio === audio;
 
   useEffect(() => {
@@ -91,6 +77,18 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
     audio!.currentTime = 0;
   };
 
+  const handleChangeTime = (e: React.TouchEvent | React.MouseEvent) => {
+    const target = e.currentTarget as HTMLDivElement;
+    const { left, width } = target.getBoundingClientRect();
+
+    const clientX = 'touches' in e ? e.changedTouches[0].clientX : e.clientX;
+    const clickedPlace = clientX - left;
+    const newTime = inRange((clickedPlace / width) * duration, 0, duration);
+
+    setCurrentTime(newTime);
+    audio!.currentTime = newTime;
+  };
+
   const currentTimePercentage = (currentTime / duration) * 100;
   return (
     <Stack alignItems='center' py={0.5}>
@@ -99,10 +97,10 @@ export const ChatMessageContentVoice = ({ src, id, onLongPress }: ChatMessageCon
           <Icon name='replay' />
         </IconButton>
       )}
-      <IconButton onClick={(e) => (isPlaying ? setPlayingAudio(null) : setPlayingAudio(audio!))}>
+      <IconButton onClick={() => (isPlaying ? setPlayingAudio(null) : setPlayingAudio(audio!))}>
         <Icon name={isPlaying ? 'pause' : 'play_arrow'} />
       </IconButton>
-      <StyledVoiceMessage {...longPressEvent} id={id}>
+      <StyledVoiceMessage id={id} onClick={handleChangeTime}>
         <StyledDurationBar
           style={{
             transform: `translateX(${inRange(currentTimePercentage, 0, 100)}%)`,

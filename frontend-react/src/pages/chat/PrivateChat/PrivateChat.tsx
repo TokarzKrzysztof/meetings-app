@@ -1,6 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { useMemo, useReducer, useRef } from 'react';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
+import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { Chat } from 'src/models/chat/chat';
@@ -8,6 +9,7 @@ import { ChatHeader } from 'src/pages/chat/shared/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/ChatNewMessage';
 import { ChatScrollable, ChatScrollableHandle } from 'src/pages/chat/shared/ChatScrollable';
 import { UserActiveStatusBadge } from 'src/pages/chat/shared/UserActiveStatusBadge';
+import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
@@ -24,8 +26,11 @@ export const PrivateChat = () => {
   const [messages, dispatch] = useReducer(messageReducer, []);
   const { user } = useGetUser(params.userId);
   const connection = useAtomValue(connectionAtom);
+  const [_, setChat] = useClearableAtom(chatAtom);
 
-  const { privateChat, privateChatFetching } = useGetPrivateChat(params.userId);
+  const { privateChat, privateChatFetching } = useGetPrivateChat(params.userId, {
+    onSuccess: (chat) => setChat(chat),
+  });
   const { createPrivateChat } = useCreatePrivateChat();
   const { setPrivateChat } = useSetQueryData();
 

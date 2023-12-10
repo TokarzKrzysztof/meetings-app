@@ -64,6 +64,7 @@ namespace Meetings.Infrastructure.Services
                     x.Id,
                     x.Name,
                     TotalMessagesAmount = x.Messages.Count(),
+                    Participants = x.Participants.Select(x => x.User)
                 })
                 .SingleOrDefaultAsync();
 
@@ -73,10 +74,11 @@ namespace Meetings.Infrastructure.Services
 
             return new ChatDTO()
             {
+                Type = type,
                 Id = queryResult.Id,
                 Name = queryResult.Name,
                 TotalMessagesAmount = queryResult.TotalMessagesAmount,
-                Type = type,
+                Participants = _extendedMapper.ToUserDTOList(queryResult.Participants)
             };
         }
 

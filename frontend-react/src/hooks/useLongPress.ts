@@ -1,9 +1,10 @@
 import { useCallback, useRef, useState } from 'react';
 
+// in future set user-select to none
 export const useLongPress = (
   onLongPress: (e: React.TouchEvent | React.MouseEvent) => void,
-  onClick?: (event: React.TouchEvent | React.MouseEvent ) => void,
-  { shouldPreventDefault = true, delay = 300 } = {}
+  onClick?: (event: React.TouchEvent | React.MouseEvent) => void,
+  { shouldPreventDefault = false, delay = 300 } = {}
 ) => {
   const [longPressTriggered, setLongPressTriggered] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout>>();

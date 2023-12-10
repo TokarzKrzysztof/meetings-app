@@ -1,8 +1,10 @@
 import { useReducer, useRef } from 'react';
+import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { ChatHeader } from 'src/pages/chat/shared/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/ChatNewMessage';
 import { ChatScrollable, ChatScrollableHandle } from 'src/pages/chat/shared/ChatScrollable';
+import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
@@ -15,8 +17,11 @@ export const GroupChat = () => {
   const [params] = useRouteParams<GroupChatParams>();
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
-
-  const { groupChat } = useGetGroupChat(params.chatId);
+  const [_, setChat] = useClearableAtom(chatAtom);
+  
+  const { groupChat } = useGetGroupChat(params.chatId, {
+    onSuccess: (chat) => setChat(chat),
+  });
 
   useSignalRListeners(groupChat, dispatch);
   useUnloadListener(messages);
