@@ -24,8 +24,6 @@ export const ChatMessageContentReactions = ({ message }: ChatMessageContentReact
   const [openReactionsPreview, setOpenReactionsPreview] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
 
-  console.log(openReactionsPreview);
-
   if (message.reactions.length === 0) return null;
   return (
     <>
@@ -34,12 +32,13 @@ export const ChatMessageContentReactions = ({ message }: ChatMessageContentReact
           <Emoji key={x.id} size={15} unified={x.unified}></Emoji>
         ))}
       </StyledWrapper>
-      <ChatMessageContentReactionsPreview
-        anchorEl={anchorRef.current}
-        open={openReactionsPreview}
-        message={message}
-        onClose={() => setOpenReactionsPreview(false)}
-      />
+      {openReactionsPreview && (
+        <ChatMessageContentReactionsPreview
+          anchorEl={anchorRef.current}
+          message={message}
+          onClose={() => setOpenReactionsPreview(false)}
+        />
+      )}
     </>
   );
 };

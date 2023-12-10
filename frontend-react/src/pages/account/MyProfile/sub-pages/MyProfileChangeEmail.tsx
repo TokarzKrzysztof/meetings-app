@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormField } from 'src/components/FormField';
-import { Header } from 'src/components/header/Header';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { MyProfileChangeEmailConfirmationDialog } from 'src/pages/account/MyProfile/sub-pages/MyProfileChangeEmailConfirmationDialog';
 import { MyProfileActionButtons } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileActionButtons';
 import { MyProfileForm } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileForm';
+import { MyProfileHeader } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileHeader';
 import { MyProfileTitle } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileTitle';
 import { useSendChangeEmailAddressEmail } from 'src/queries/user-queries';
 import { Typography } from 'src/ui-components';
@@ -46,7 +46,7 @@ export const MyProfileChangeEmail = () => {
 
   return (
     <>
-      <Header />
+      <MyProfileHeader />
       <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
         <MyProfileTitle title='Zmiana adresu email'></MyProfileTitle>
         <Typography mb={2}>

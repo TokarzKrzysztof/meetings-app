@@ -1,11 +1,9 @@
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
 import { Announcement } from 'src/models/annoucement/announcement';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Button, Container, Stack, Typography } from 'src/ui-components';
-import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
 
@@ -70,10 +68,7 @@ export const AnnouncementForm = ({
           maxLength: Validators.maxStringLength,
         }}
       />
-      <Stack mt={4} justifyContent='space-between'>
-        <Button type='button' variant='outlined' component={Link} to={AppRoutes.MyAnnouncements()}>
-          Anuluj
-        </Button>
+      <Stack mt={4} justifyContent='flex-end'>
         <Button type='submit' disabled={(disabledWhenUntouched && !isDirty) || inProgress}>
           {buttonText}
         </Button>

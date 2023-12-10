@@ -1,5 +1,6 @@
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { Announcement } from 'src/models/annoucement/announcement';
@@ -28,7 +29,7 @@ export const EditAnnouncement = () => {
 
   return (
     <>
-      <Header />
+      <Header leftSlot={<GoBackBtn />} />
       <AnnouncementForm
         data={announcement}
         onSubmit={onSubmit}

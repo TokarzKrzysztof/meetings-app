@@ -3,9 +3,9 @@ import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FormField } from 'src/components/FormField';
+import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
-import { useNavigateBack } from 'src/hooks/useNavigateBack';
 import { NewGroupChatUsers } from 'src/pages/chat/NewGroupChat/NewGroupChatUsers';
 import { NewGroupChatFormData } from 'src/pages/chat/NewGroupChat/new-group-chat-form-data';
 import { useCreateGroupChat } from 'src/queries/chat-queries';
@@ -18,7 +18,6 @@ export const NewGroupChat = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const form = useForm<NewGroupChatFormData>();
   const navigate = useNavigate();
-  const navigateBack = useNavigateBack();
   const {
     handleSubmit,
     register,
@@ -44,7 +43,7 @@ export const NewGroupChat = () => {
 
   return (
     <>
-      <Header />
+      <Header leftSlot={<GoBackBtn />} />
       <Container
         maxWidth='sm'
         component='form'
@@ -62,10 +61,7 @@ export const NewGroupChat = () => {
             required: ValidationMessages.required,
           })}
         ></FormField>
-        <Stack mt={4} justifyContent='space-between'>
-          <Button type='button' variant='outlined' onClick={navigateBack}>
-            Anuluj
-          </Button>
+        <Stack mt={4} justifyContent={'flex-end'}>
           <Button type='submit' disabled={createGroupChatInProgress}>
             Utwórz rozmowę grupową
           </Button>

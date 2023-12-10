@@ -161,6 +161,7 @@ export const router = createBrowserRouter([
         loader: protectedLoader,
         children: [
           {
+            path: AppRoutes.MyProfileChangeData(),
             lazy: async () => {
               const { MyProfileChangeData } = await import(
                 './pages/account/MyProfile/sub-pages/MyProfileChangeData'

@@ -3,9 +3,9 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FormField } from 'src/components/FormField';
-import { Header } from 'src/components/header/Header';
 import { MyProfileActionButtons } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileActionButtons';
 import { MyProfileForm } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileForm';
+import { MyProfileHeader } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileHeader';
 import { MyProfileTitle } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileTitle';
 import {
   PasswordFields,
@@ -54,7 +54,7 @@ export const MyProfileChangePassword = () => {
 
   return (
     <>
-      <Header />
+      <MyProfileHeader />
       <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
         <MyProfileTitle title='Zmiana hasła'></MyProfileTitle>
         <FormField

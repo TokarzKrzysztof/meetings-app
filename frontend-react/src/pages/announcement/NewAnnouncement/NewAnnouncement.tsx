@@ -1,5 +1,6 @@
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { Announcement } from 'src/models/annoucement/announcement';
 import { AnnouncementForm } from 'src/pages/announcement/shared/AnnouncementForm';
@@ -25,7 +26,7 @@ export const NewAnnouncement = () => {
 
   return (
     <>
-      <Header />
+      <Header leftSlot={<GoBackBtn />} />
       <AnnouncementForm
         onSubmit={onSubmit}
         title='Nowe ogłoszenie'

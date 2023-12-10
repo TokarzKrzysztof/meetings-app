@@ -17,13 +17,11 @@ import {
 } from 'src/ui-components';
 
 export type ChatMessageContentReactionsPreviewProps = {
-  open: boolean;
   anchorEl: HTMLDivElement | null;
   message: Message;
   onClose: () => void;
 };
 export const ChatMessageContentReactionsPreview = ({
-  open,
   anchorEl,
   message,
   onClose,
@@ -41,7 +39,7 @@ export const ChatMessageContentReactionsPreview = ({
   };
 
   return (
-    <Popover open={open} anchorEl={anchorEl} onClose={onClose}>
+    <Popover open anchorEl={anchorEl} onClose={onClose}>
       <List>
         {message.reactions.map((reaction) => {
           const author = chat!.participants.find((x) => x.id === reaction.authorId)!;

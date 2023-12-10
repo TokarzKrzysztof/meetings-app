@@ -1,11 +1,9 @@
 import { useSearchParams } from 'react-router-dom';
-import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { AnnouncementResultListItem } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListItem';
 import { useGetAnnouncementResultList } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Box, Button, Container, Stack, Typography } from 'src/ui-components';
-import { AppRoutes } from 'src/utils/enums/app-routes';
 
 // const nameOf = <T,>(name: keyof T) => name;
 type SearchParams = {
@@ -46,7 +44,7 @@ export const AnnouncementResultList = () => {
     <>
       <Header />
       <Container>
-        <GoBackBtn to={AppRoutes.Home()}>Wyszukaj ogłoszenia z innej kategorii</GoBackBtn>
+        {/* <GoBackBtn to={AppRoutes.Home()}>Wyszukaj ogłoszenia z innej kategorii</GoBackBtn> */}
         <Stack justifyContent='space-between' alignItems='center'>
           <Typography my={2}>
             Ogłoszenia z kategorii:{' '}

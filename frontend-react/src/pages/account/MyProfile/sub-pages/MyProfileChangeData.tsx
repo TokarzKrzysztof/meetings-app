@@ -3,12 +3,12 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FormField } from 'src/components/FormField';
 import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
-import { Header } from 'src/components/header/Header';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { User } from 'src/models/user';
 import { MyProfileActionButtons } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileActionButtons';
 import { MyProfileForm } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileForm';
+import { MyProfileHeader } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileHeader';
 import { MyProfileTitle } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileTitle';
 import { useChangePersonalData } from 'src/queries/user-queries';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -49,7 +49,7 @@ export const MyProfileChangeData = () => {
 
   return (
     <>
-      <Header />
+      <MyProfileHeader />
       <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
         <MyProfileTitle title='Edycja danych osobowych'></MyProfileTitle>
         <FormField

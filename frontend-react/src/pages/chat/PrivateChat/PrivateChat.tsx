@@ -26,7 +26,7 @@ export const PrivateChat = () => {
   const [messages, dispatch] = useReducer(messageReducer, []);
   const { user } = useGetUser(params.userId);
   const connection = useAtomValue(connectionAtom);
-  const [_, setChat] = useClearableAtom(chatAtom);
+  const setChat = useClearableAtom(chatAtom)[1];
 
   const { privateChat, privateChatFetching } = useGetPrivateChat(params.userId, {
     onSuccess: (chat) => setChat(chat),
