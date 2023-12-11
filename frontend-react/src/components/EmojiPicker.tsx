@@ -7,7 +7,7 @@ import { Icon, IconButtonProps, IconProps } from 'src/ui-components';
 export type EmojiPickerProps = {
   onEmojiSelected: (emoji: EmojiClickData, event: MouseEvent) => void;
   onOpen?: () => void;
-  icon?: IconProps<'span'>['name'];
+  icon?: IconProps['name'];
   buttonSize?: IconButtonProps['size'];
   closeOnSelect?: boolean;
 };

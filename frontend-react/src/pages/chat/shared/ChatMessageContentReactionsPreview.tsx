@@ -5,15 +5,15 @@ import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { Message } from 'src/models/chat/message';
 import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import {
-    Avatar,
-    Icon,
-    IconButton,
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemText,
-    Popover,
-    Stack,
+  Avatar,
+  Icon,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Popover,
+  Stack,
 } from 'src/ui-components';
 
 export type ChatMessageContentReactionsPreviewProps = {
@@ -48,7 +48,7 @@ export const ChatMessageContentReactionsPreview = ({
             <ListItem
               key={reaction.id}
               secondaryAction={
-                <Stack spacing={1} alignItems={'center'}>
+                <Stack spacing={1} alignItems='center'>
                   {isAuthorCurrentUser && (
                     <IconButton size='small' onClick={() => handleRemove(reaction.unified)}>
                       <Icon name='delete'></Icon>

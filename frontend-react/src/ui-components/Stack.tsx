@@ -2,10 +2,10 @@ import { default as MuiStack, StackProps as MuiStackProps } from '@mui/material/
 import { ForwardedRef } from 'react';
 import { typedForwardRef } from 'src/utils/types/forward-ref';
 
-export type StackProps<D extends React.ElementType> = MuiStackProps<D, { component?: D }> & {};
+export type StackProps = MuiStackProps<'div', { component?: 'div' }> & {};
 
-const StackInner = <D extends React.ElementType>(
-  { direction = 'row', ...props }: StackProps<D>,
+const StackInner = (
+  { direction = 'row', ...props }: StackProps,
   ref: ForwardedRef<HTMLDivElement>
 ) => <MuiStack direction={direction} {...props} ref={ref}></MuiStack>;
 
