@@ -125,7 +125,7 @@ export const useGetCurrentUserChats = (
 };
 
 export const useGetUnreadChatsCount = (
-  options?: UseQueryOptions<number, AxiosError<HttpErrorData>>
+  options?: UseQueryOptions<{ private: number; group: number }, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
     queryKey: 'GetUnreadChatsCount',

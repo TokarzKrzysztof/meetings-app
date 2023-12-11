@@ -20,9 +20,16 @@ export const HeaderMenuMessages = ({ ...props }: HeaderMenuMessagesProps) => {
     unreadChatsCountRefetch();
   });
 
+  const badgeContent = unreadChatsCount ? unreadChatsCount.private + unreadChatsCount.group : null;
   return (
-    <IconButton size='large' slot='end' color='inherit' component={Link} to={AppRoutes.MyChatsPrivate()}>
-      <Badge badgeContent={unreadChatsCount} color='error'>
+    <IconButton
+      size='large'
+      slot='end'
+      color='inherit'
+      component={Link}
+      to={AppRoutes.MyChatsPrivate()}
+    >
+      <Badge badgeContent={badgeContent} color='error'>
         <Icon name='question_answer' />
       </Badge>
     </IconButton>

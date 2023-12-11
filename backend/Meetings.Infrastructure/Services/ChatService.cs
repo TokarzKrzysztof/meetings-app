@@ -224,10 +224,18 @@ namespace Meetings.Infrastructure.Services
             }).OrderByDescending(x => x.LastMessageDate);
         }
 
-        public async Task<int> GetUnreadChatsCount()
+        public async Task<UnreadChatsCountData> GetUnreadChatsCount()
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            return await _chatParticipantRepository.Data.Where(x => x.UserId == userId && x.HasUnreadMessages).CountAsync();
+
+            var unread = await _chatParticipantRepository.Data
+                .Where(x => x.UserId == userId && x.HasUnreadMessages)
+                .Select(x => x.Chat.Participants.Count).ToListAsync();
+            return new UnreadChatsCountData()
+            {
+                Private = unread.Where(participantsCount => participantsCount == 2).Count(),
+                Group = unread.Where(participantsCount => participantsCount > 2).Count(),
+            };
         }
 
         public async Task MarkChatAsRead(Guid chatId)

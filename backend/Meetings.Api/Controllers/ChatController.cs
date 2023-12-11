@@ -64,7 +64,7 @@ namespace Meetings.Api.Controllers
         [Authorize]
         public async Task<IActionResult> GetUnreadChatsCount()
         {
-            int count = await _chatService.GetUnreadChatsCount();
+            UnreadChatsCountData count = await _chatService.GetUnreadChatsCount();
             return Ok(count);
         }
 
