@@ -199,7 +199,7 @@ namespace Meetings.Infrastructure.Services
                 return new ChatPreview()
                 {
                     Id = x.Id,
-                    Name = type == ChatType.Group ? x.Name! : null,
+                    Name = x.Name,
                     Type = type,
                     HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
                     LastMessage = lastMessage != null ? _extendedMapper.ToMessageDTO(lastMessage) : null,

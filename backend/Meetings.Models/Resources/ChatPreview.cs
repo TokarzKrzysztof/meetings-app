@@ -11,7 +11,7 @@ namespace Meetings.Models.Resources
     public class ChatPreview
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public ChatType Type { get; set; }
         public bool HasUnreadMessages { get; set; }
         public MessageDTO? LastMessage { get; set; }

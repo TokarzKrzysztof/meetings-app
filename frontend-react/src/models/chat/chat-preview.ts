@@ -4,7 +4,7 @@ import { User } from 'src/models/user';
 
 export type ChatPreview = {
   id: string;
-  name: string;
+  name: string | null;
   type: ChatType;
   hasUnreadMessages: boolean;
   lastMessage: Message | null;
