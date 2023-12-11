@@ -49,28 +49,32 @@ namespace Meetings.Infrastructure.Mappers
             return result;
         }
 
-        public async Task<MessageDTO> ToMessageDTO(Message entity)
+        public MessageDTO ToMessageDTO(Message entity)
         {
             var result = _mapper.Map<MessageDTO>(entity);
-            result.AuthorName = $"{entity.Author.FirstName} {entity.Author.LastName}";
+
+            if (entity.Author != null)
+            {
+                result.AuthorName = $"{entity.Author.FirstName} {entity.Author.LastName}";
+            }
             if (result.Type == MessageType.Image || result.Type == MessageType.Audio)
             {
                 result.Value = _fileManager.FilePathToSrc(entity.Value)!;
             }
             if (entity.ReplyTo != null)
             {
-                result.ReplyTo = await ToMessageDTO(entity.ReplyTo);
+                result.ReplyTo = ToMessageDTO(entity.ReplyTo);
             }
 
             return result;
         }
 
-        public async Task<List<MessageDTO>> ToMessageDTOList(IEnumerable<Message> entities)
+        public List<MessageDTO> ToMessageDTOList(IEnumerable<Message> entities)
         {
             var result = new List<MessageDTO>();
             foreach (var entity in entities)
             {
-                result.Add(await ToMessageDTO(entity));
+                result.Add(ToMessageDTO(entity));
             }
             return result;
         }

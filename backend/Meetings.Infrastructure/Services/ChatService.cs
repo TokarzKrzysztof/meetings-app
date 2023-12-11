@@ -87,9 +87,9 @@ namespace Meetings.Infrastructure.Services
             var messages = await _repository.Data.Where(x => x.Id == chatId)
                 .IncludeAllMessagesData()
                 .Select(x => x.Messages.OrderByDescending(x => x.CreatedAt).Skip(skip).Take(take).Reverse())
-                .SingleOrDefaultAsync();
+                .SingleAsync();
 
-            return await _extendedMapper.ToMessageDTOList(messages);
+            return _extendedMapper.ToMessageDTOList(messages);
         }
 
         public async Task<List<MessageDTO>> LoadAllMessagesAfterDate(Guid chatId, DateTime afterDate)
@@ -97,9 +97,9 @@ namespace Meetings.Infrastructure.Services
             var messages = await _repository.Data.Where(x => x.Id == chatId)
                  .IncludeAllMessagesData()
                  .Select(x => x.Messages.OrderByDescending(x => x.CreatedAt).Where(x => x.CreatedAt >= afterDate).Reverse())
-                 .SingleOrDefaultAsync();
+                 .SingleAsync();
 
-            return await _extendedMapper.ToMessageDTOList(messages);
+            return _extendedMapper.ToMessageDTOList(messages);
         }
 
         private async Task<Message> CreateMessage(Guid authorId, Guid chatId, SendMessageData data)
@@ -153,7 +153,7 @@ namespace Meetings.Infrastructure.Services
 
             await SetUnreadMessages(data.ChatId, authorId);
 
-            return await _extendedMapper.ToMessageDTO(entity);
+            return _extendedMapper.ToMessageDTO(entity);
         }
 
         public async Task<MessageDTO> SetMessageReaction(MessageReactionDTO data)
@@ -177,7 +177,7 @@ namespace Meetings.Infrastructure.Services
             }
             await _messageRepository.Update(message);
 
-            return await _extendedMapper.ToMessageDTO(message);
+            return _extendedMapper.ToMessageDTO(message);
         }
 
         public async Task<IEnumerable<ChatPreview>> GetCurrentUserChats(ChatType type)

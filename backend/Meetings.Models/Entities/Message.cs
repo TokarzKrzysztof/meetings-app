@@ -35,7 +35,10 @@ namespace Meetings.Models.Entities
         public Guid Id { get; set; }
         public Guid ChatId { get; set; }
         public Guid AuthorId { get; set; }
-        public string AuthorName { get; set; }
+        /// <summary>
+        /// null for reply message, for others always has value
+        /// </summary>
+        public string? AuthorName { get; set; }
         public MessageDTO? ReplyTo { get; set; }
         public string Value { get; set; }
         public MessageType Type { get; set; }

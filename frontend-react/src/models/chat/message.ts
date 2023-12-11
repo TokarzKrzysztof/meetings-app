@@ -8,9 +8,9 @@ export enum MessageType {
 
 export type Message = {
   id: string;
-  chatId?: string;
+  chatId: string;
   authorId: string;
-  authorName: string;
+  authorName: string | null;
   replyTo: Message | null;
   value: string;
   type: MessageType;
