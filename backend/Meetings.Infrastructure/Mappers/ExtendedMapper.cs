@@ -55,7 +55,7 @@ namespace Meetings.Infrastructure.Mappers
 
             if (entity.Author != null)
             {
-                result.AuthorName = $"{entity.Author.FirstName} {entity.Author.LastName}";
+                result.Author = ToUserDTO(entity.Author);
             }
             if (result.Type == MessageType.Image || result.Type == MessageType.Audio)
             {

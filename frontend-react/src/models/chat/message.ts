@@ -1,4 +1,5 @@
 import { MessageReaction } from 'src/models/chat/message-reaction';
+import { User } from 'src/models/user';
 
 export enum MessageType {
   Text,
@@ -10,7 +11,7 @@ export type Message = {
   id: string;
   chatId: string;
   authorId: string;
-  authorName: string | null;
+  author: User | null;
   replyTo: Message | null;
   value: string;
   type: MessageType;

@@ -25,42 +25,55 @@ export type MyChatsListItemProps = {
 export const MyChatsListItem = ({ chat }: MyChatsListItemProps) => {
   const currentUser = useLoggedInUser();
 
-  const lastMessageText = useMemo(() => {
-    if (!chat.hasLastMessage) return null;
+  const getPrivateChatParticipant = () => {
+    return chat.participants.find((x) => x.id !== currentUser.id)!;
+  };
 
-    const isAuthorCurrentUser = currentUser.id === chat.lastMessageAuthorId;
-    const prefix = isAuthorCurrentUser ? 'Ty:' : `${chat.lastMessageAuthorFirstName}:`;
-    if (chat.lastMessageType === MessageType.Text) {
-      return `${prefix} ${chat.lastMessageValue}`;
+  const lastMessageText = useMemo(() => {
+    if (!chat.lastMessage) return null;
+
+    const lastMessage = chat.lastMessage;
+
+    const isAuthorCurrentUser = currentUser.id === lastMessage.authorId;
+    const prefix = isAuthorCurrentUser ? 'Ty:' : `${lastMessage.author!.firstName}:`;
+    if (lastMessage.type === MessageType.Text) {
+      return `${prefix} ${lastMessage.value}`;
     }
 
-    const itemName = chat.lastMessageType === MessageType.Image ? 'zdjęcie' : 'wiadomość głosową';
+    const itemName = lastMessage.type === MessageType.Image ? 'zdjęcie' : 'wiadomość głosową';
     return isAuthorCurrentUser
       ? `${prefix} ${currentUser.gender === UserGender.Male ? 'Wysłałeś' : 'Wysłałaś'} ${itemName}`
       : `${prefix} ${
-          chat.lastMessageAuthorGender === UserGender.Male ? 'Wysłał' : 'Wysłała'
+          lastMessage.author!.gender === UserGender.Male ? 'Wysłał' : 'Wysłała'
         } ${itemName}`;
   }, [chat]);
 
   const to = useMemo(() => {
-    if (chat.type === ChatType.Private) {
-      return AppRoutes.PrivateChat({ userId: chat.participantId! });
-    } else {
-      return AppRoutes.GroupChat({ chatId: chat.id });
-    }
-  }, [chat]);
+    if (chat.type === ChatType.Group) return AppRoutes.GroupChat({ chatId: chat.id });
+    return AppRoutes.PrivateChat({ userId: getPrivateChatParticipant().id });
+  }, []);
+
+  const activeStatus = useMemo(() => {
+    if (chat.type === ChatType.Group) return null;
+    return getPrivateChatParticipant().activeStatus;
+  }, []);
+
+  const chatName = useMemo(() => {
+    if (chat.type === ChatType.Group) return chat.name;
+    const participant = getPrivateChatParticipant();
+    return `${participant.firstName} ${participant.lastName}`;
+  }, []);
 
   const fontWeight = chat.hasUnreadMessages ? 'bold' : undefined;
-
   return (
     <ListItemButton component={Link} to={to}>
       <ListItemAvatar sx={{ minWidth: 'auto', mr: 2 }}>
-        <UserActiveStatusBadge status={chat.participantActiveStatus}>
-          <AvatarList srcs={chat.imageSrcs} avatarSize={50} />
+        <UserActiveStatusBadge status={activeStatus}>
+          <AvatarList users={chat.participants} avatarSize={50} />
         </UserActiveStatusBadge>
       </ListItemAvatar>
       <ListItemText
-        primary={chat.name}
+        primary={chatName}
         secondary={lastMessageText}
         primaryTypographyProps={{
           fontWeight: fontWeight,

@@ -196,32 +196,16 @@ namespace Meetings.Infrastructure.Services
             {
                 ChatParticipant currentUserParticipant = x.Participants.Single(x => x.UserId == userId);
                 Message? lastMessage = x.Messages.SingleOrDefault();
-                ChatPreview result = new ChatPreview()
+                return new ChatPreview()
                 {
                     Id = x.Id,
                     Name = type == ChatType.Group ? x.Name! : null,
                     Type = type,
-                    ImageSrcs = x.Participants.Where(x => x.UserId != userId).Select(x => _fileManager.FilePathToSrc(x.User.ProfileImagePath)),
-                    LastMessageAuthorGender = lastMessage?.Author.Gender,
-                    LastMessageAuthorFirstName = lastMessage?.Author.FirstName,
-                    LastMessageValue = lastMessage?.Type == MessageType.Text ? lastMessage?.Value : null,
-                    HasLastMessage = lastMessage != null,
                     HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
-                    LastMessageAuthorId = lastMessage?.AuthorId,
-                    LastMessageDate = lastMessage?.CreatedAt,
-                    LastMessageType = lastMessage?.Type,
+                    LastMessage = lastMessage != null ? _extendedMapper.ToMessageDTO(lastMessage) : null,
+                    Participants = _extendedMapper.ToUserDTOList(x.Participants.Select(x => x.User))
                 };
-
-                if (type == ChatType.Private)
-                {
-                    ChatParticipant participant = x.Participants.Single(x => x.UserId != userId);
-                    result.Name = $"{participant.User.FirstName} {participant.User.LastName}";
-                    result.ParticipantId = participant.UserId;
-                    result.ParticipantActiveStatus = UserUtils.DetermineUserActiveStatus(participant.User.LastActiveDate);
-                }
-
-                return result;
-            }).OrderByDescending(x => x.LastMessageDate);
+            }).OrderByDescending(x => x.LastMessage?.CreatedAt);
         }
 
         public async Task<UnreadChatsCountData> GetUnreadChatsCount()

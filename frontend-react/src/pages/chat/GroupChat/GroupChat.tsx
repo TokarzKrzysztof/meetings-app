@@ -1,5 +1,7 @@
-import { useReducer, useRef } from 'react';
+import { useMemo, useReducer, useRef } from 'react';
+import { AvatarList } from 'src/components/AvatarList';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
+import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { ChatHeader } from 'src/pages/chat/shared/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/ChatNewMessage';
@@ -18,13 +20,23 @@ export const GroupChat = () => {
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
   const [_, setChat] = useClearableAtom(chatAtom);
-  
+  const currentUser = useLoggedInUser();
+
   const { groupChat } = useGetGroupChat(params.chatId, {
     onSuccess: (chat) => setChat(chat),
   });
 
   useSignalRListeners(groupChat, dispatch);
   useUnloadListener(messages);
+
+  const participantNames = useMemo(() => {
+    if (!groupChat) return '';
+
+    const others = groupChat.participants
+      .filter((x) => x.id !== currentUser.id)
+      .map((x) => x.firstName);
+    return ['Ty', ...others].join(', ');
+  }, [groupChat]);
 
   if (!groupChat) return null;
   return (
@@ -44,12 +56,11 @@ export const GroupChat = () => {
           ref={scrollableRef}
           top={
             <Stack flexDirection='column' alignItems='center' mt='auto'>
-              <Typography>Na górze</Typography>
-              {/* <Avatar src={user.profileImageSrc} size={100} sx={{ mb: 2 }} />
-              <Typography>
-                {user.firstName} {user.lastName}, {age}
+              <AvatarList users={groupChat.participants} avatarSize={50} sx={{ mb: 2 }} />
+              <Typography>{groupChat.name}</Typography>
+              <Typography textAlign='center' color='grey'>
+                {participantNames}
               </Typography>
-              <Typography>Limanowa (30 km od Ciebie)</Typography> */}
             </Stack>
           }
           messages={messages}

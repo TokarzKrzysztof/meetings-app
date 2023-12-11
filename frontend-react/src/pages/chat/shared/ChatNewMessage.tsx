@@ -75,7 +75,7 @@ export const ChatNewMessage = ({
         id,
         chatId: chat?.id as string,
         authorId: currentUser.id,
-        authorName: `${currentUser.firstName} ${currentUser.lastName}`,
+        author: currentUser,
         replyTo: replyMessage,
         createdAt: new Date().toISOString(),
         reactions: [],

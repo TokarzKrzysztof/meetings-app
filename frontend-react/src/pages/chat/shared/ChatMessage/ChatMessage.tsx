@@ -81,7 +81,7 @@ export const ChatMessage = ({
         >
           {showAuthor && !isAuthorCurrentUser && !isPrevMessageSameAuthor && (
             <Typography fontSize={12} mt={2}>
-              {message.authorName}
+              {`${message.author?.firstName} ${message.author?.lastName}`}
             </Typography>
           )}
           <ChatMessageContent
