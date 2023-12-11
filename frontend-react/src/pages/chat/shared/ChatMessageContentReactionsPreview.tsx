@@ -39,7 +39,19 @@ export const ChatMessageContentReactionsPreview = ({
   };
 
   return (
-    <Popover open anchorEl={anchorEl} onClose={onClose}>
+    <Popover
+      open
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      anchorEl={anchorEl}
+      onClose={onClose}
+    >
       <List>
         {message.reactions.map((reaction) => {
           const author = chat!.participants.find((x) => x.id === reaction.authorId)!;

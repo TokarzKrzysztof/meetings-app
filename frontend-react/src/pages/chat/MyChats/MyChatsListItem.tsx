@@ -77,6 +77,11 @@ export const MyChatsListItem = ({ chat }: MyChatsListItemProps) => {
         secondary={lastMessageText}
         primaryTypographyProps={{
           fontWeight: fontWeight,
+          sx: {
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+          },
         }}
         secondaryTypographyProps={{
           fontWeight: fontWeight,
