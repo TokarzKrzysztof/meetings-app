@@ -30,16 +30,19 @@ export const GroupChatParticipantsPreview = ({
       }}
     >
       <List>
-        {groupChat.participants
-          .filter((x) => x.id !== currentUser.id)
-          .map((x) => (
-            <ListItem key={x.id}>
-              <ListItemAvatar sx={{ minWidth: 'auto', mr: 1 }}>
-                <Avatar size={30} src={x.profileImageSrc}></Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={`${x.firstName} ${x.lastName}`} />
-            </ListItem>
-          ))}
+        <ListItem>
+          <ListItemText primary={`${groupChat.participants.length} członków`} />
+        </ListItem>
+        {groupChat.participants.map((x) => (
+          <ListItem key={x.id}>
+            <ListItemAvatar sx={{ minWidth: 'auto', mr: 1 }}>
+              <Avatar size={30} src={x.profileImageSrc}></Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={x.id === currentUser.id ? 'Ty' : `${x.firstName} ${x.lastName}`}
+            />
+          </ListItem>
+        ))}
       </List>
     </Popover>
   );

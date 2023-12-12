@@ -26,11 +26,6 @@ export const NewGroupChatUsers = ({ form, inputRef }: NewGroupChatUsersProps) =>
     control,
     keyName: 'key',
     name: 'users',
-    rules: {
-      validate: (users) => {
-        if (users.length < 2) return 'Wybierz minimum dwóch użytkowników';
-      },
-    },
   });
 
   return (

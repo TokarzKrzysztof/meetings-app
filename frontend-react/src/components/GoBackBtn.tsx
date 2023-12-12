@@ -1,10 +1,12 @@
-import { useNavigateBack } from 'src/hooks/useNavigateBack';
+import { useNavigate } from 'react-router-dom';
 import { Button, Icon } from 'src/ui-components';
 
-export type GoBackBtnProps = {};
+export type GoBackBtnProps = {
+  returnUrl?: string;
+};
 
-export const GoBackBtn = ({ ...props }: GoBackBtnProps) => {
-  const navigateBack = useNavigateBack();
+export const GoBackBtn = ({ returnUrl }: GoBackBtnProps) => {
+  const navigate = useNavigate();
 
   return (
     <Button
@@ -12,7 +14,7 @@ export const GoBackBtn = ({ ...props }: GoBackBtnProps) => {
       startIcon={<Icon name='arrow_back' />}
       size='small'
       color='inherit'
-      onClick={navigateBack}
+      onClick={() => (returnUrl ? navigate(returnUrl) : navigate(-1))}
     >
       Wróć
     </Button>

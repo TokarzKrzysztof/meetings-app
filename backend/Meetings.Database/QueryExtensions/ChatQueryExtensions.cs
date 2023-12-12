@@ -10,10 +10,10 @@ namespace Meetings.Database.QueryExtensions
 {
     public static class ChatQueryExtensions
     {
-        public static IQueryable<Chat> ByParticipants(this IQueryable<Chat> query, Guid participant1Id, Guid participant2Id)
+        public static IQueryable<Chat> GetPrivateByParticipants(this IQueryable<Chat> query, Guid participant1Id, Guid participant2Id)
         {
             var ids = new List<Guid>() { participant1Id, participant2Id }.AsEnumerable();
-            return query.Where(x => !x.Participants.Select(x => x.UserId).Except(ids).Any());
+            return query.Where(x => x.Type == ChatType.Private && !x.Participants.Select(x => x.UserId).Except(ids).Any());
         }
         public static IQueryable<Chat> IncludeAllMessagesData(this IQueryable<Chat> query)
         {

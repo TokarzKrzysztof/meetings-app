@@ -14,13 +14,14 @@ const StyledRightSideWrapper = styled(Box)(({ theme }) => ({
 
 export type ChatHeaderProps = {
   right: ReactNode;
+  returnUrl?: string;
 };
 
-export const ChatHeader = ({ right }: ChatHeaderProps) => {
+export const ChatHeader = ({ right, returnUrl }: ChatHeaderProps) => {
   return (
     <AppBar position='static'>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <GoBackBtn />
+        <GoBackBtn returnUrl={returnUrl}/>
         <StyledRightSideWrapper>{right}</StyledRightSideWrapper>
       </Toolbar>
     </AppBar>

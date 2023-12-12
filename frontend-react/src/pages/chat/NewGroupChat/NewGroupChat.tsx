@@ -35,7 +35,7 @@ export const NewGroupChat = () => {
       },
       {
         onSuccess: (chatId) => {
-          navigate(AppRoutes.GroupChat({ chatId }));
+          navigate(AppRoutes.GroupChat({ chatId, returnUrl: AppRoutes.MyChatsGroup() }));
         },
       }
     );

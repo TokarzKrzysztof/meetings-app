@@ -19,6 +19,7 @@ namespace Meetings.Models.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDelete { get; set; }
+        public ChatType Type { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
         public virtual ICollection<ChatParticipant> Participants { get; set; }
     }

@@ -42,6 +42,7 @@ export type PrivateChatParams = {
 };
 
 export type GroupChatParams = {
+  returnUrl?: string;
   chatId: string;
 };
 

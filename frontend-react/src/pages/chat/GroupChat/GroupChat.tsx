@@ -3,6 +3,7 @@ import { AvatarList } from 'src/components/AvatarList';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
+import { GroupChatAloneInfo } from 'src/pages/chat/GroupChat/GroupChatAloneInfo';
 import { GroupChatParticipantsPreview } from 'src/pages/chat/GroupChat/GroupChatParticipantsPreview';
 import { ChatHeader } from 'src/pages/chat/shared/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/ChatNewMessage';
@@ -22,24 +23,33 @@ export const GroupChat = () => {
   const anchorRef = useRef<HTMLDivElement>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
   const [showParticipantsPreview, setShowParticipantsPreview] = useState(false);
+  const [showAloneInfo, setShowAloneInfo] = useState(false);
   const [_, setChat] = useClearableAtom(chatAtom);
   const currentUser = useLoggedInUser();
 
   const { groupChat } = useGetGroupChat(params.chatId, {
-    onSuccess: (chat) => setChat(chat),
+    onSuccess: (chat) => {
+      setChat(chat);
+      if (chat.participants.length === 1) {
+        setShowAloneInfo(true);
+      }
+    },
   });
 
   useSignalRListeners(groupChat, dispatch);
   useUnloadListener(messages);
 
+  const isAloneInChat = groupChat?.participants.length === 1;
+
   const participantNames = useMemo(() => {
     if (!groupChat) return '';
+    if (isAloneInChat) return 'Tylko Ty';
 
     const others = groupChat.participants
       .filter((x) => x.id !== currentUser.id)
       .map((x) => x.firstName);
     return ['Ty', ...others].join(', ');
-  }, [groupChat]);
+  }, [groupChat, isAloneInChat]);
 
   if (!groupChat) return null;
   return (
@@ -47,12 +57,13 @@ export const GroupChat = () => {
       <ChatMessageFocusProvider chat={groupChat} dispatch={dispatch}>
         <Stack height='100vh' direction='column'>
           <ChatHeader
+            returnUrl={params.returnUrl}
             right={
               <Stack
                 ref={anchorRef}
                 alignItems='center'
                 gap={1}
-                onClick={() => setShowParticipantsPreview(true)}
+                onClick={() => !isAloneInChat && setShowParticipantsPreview(true)}
               >
                 <AvatarList users={groupChat.participants} avatarSize={30} />
                 <Typography>{groupChat.name}</Typography>
@@ -87,6 +98,9 @@ export const GroupChat = () => {
           onClose={() => setShowParticipantsPreview(false)}
           groupChat={groupChat}
         />
+      )}
+      {showAloneInfo && (
+        <GroupChatAloneInfo onClose={() => setShowAloneInfo(false)} groupChat={groupChat} />
       )}
     </>
   );
