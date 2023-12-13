@@ -101,5 +101,13 @@ namespace Meetings.Api.Controllers
             Guid chatId = await _chatService.CreateGroupChat(data);
             return Ok(chatId);
         }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> EditGroupChat([FromBody] EditGroupChatData data)
+        {
+            await _chatService.EditGroupChat(data);
+            return Ok();
+        }
     }
 }

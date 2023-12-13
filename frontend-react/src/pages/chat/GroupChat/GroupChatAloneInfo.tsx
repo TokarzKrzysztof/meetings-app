@@ -33,7 +33,11 @@ export const GroupChatAloneInfo = ({ onClose, groupChat }: GroupChatAloneInfoPro
           </Typography>
         </DialogContentText>
         <DialogContentText align='center' mt={4}>
-          <Button component={Link} to={AppRoutes.NewGroupChat()} size='large'>
+          <Button
+            component={Link}
+            to={AppRoutes.EditGroupChat({ chatId: groupChat.id })}
+            size='large'
+          >
             Edytuj
           </Button>
         </DialogContentText>

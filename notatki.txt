@@ -24,6 +24,7 @@ TODO
 - dodac walidacje do wiadomosci (pusta, whitespace itp)
 - dodac notyfication w aplikacji o nowej wiadomosci
 - ponownie utworzyć token po zmianie danych personalnych/emaila bo te dane mogą być używane gdzieś
+- mieć na uwadze to że niektóre entity tworzone przez foreign key mogą nie mieć created/updated date, można dodać extension method dla entity/entities
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)

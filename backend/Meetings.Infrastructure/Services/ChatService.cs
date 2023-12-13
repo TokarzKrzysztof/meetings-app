@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -22,6 +23,7 @@ namespace Meetings.Infrastructure.Services
     {
         private readonly IRepository<Chat> _repository;
         private readonly IRepository<Message> _messageRepository;
+        private readonly IRepository<MessageReaction> _messageReactionRepository;
         private readonly IRepository<ChatParticipant> _chatParticipantRepository;
         private readonly IMapper _mapper;
         private readonly IClaimsReader _claimsReader;
@@ -29,7 +31,7 @@ namespace Meetings.Infrastructure.Services
         private readonly ExtendedMapper _extendedMapper;
         private readonly IFileManager _fileManager;
 
-        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IHubContext<ChatHub, IChatHub> chatHubContext, IRepository<ChatParticipant> chatParticipantRepository, ExtendedMapper extendedMapper, IFileManager fileManager)
+        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IHubContext<ChatHub, IChatHub> chatHubContext, IRepository<ChatParticipant> chatParticipantRepository, ExtendedMapper extendedMapper, IFileManager fileManager, IRepository<MessageReaction> messageReactionRepository)
         {
             _repository = repository;
             _mapper = mapper;
@@ -39,6 +41,7 @@ namespace Meetings.Infrastructure.Services
             _chatParticipantRepository = chatParticipantRepository;
             _extendedMapper = extendedMapper;
             _fileManager = fileManager;
+            _messageReactionRepository = messageReactionRepository;
         }
 
         public async Task<ChatDTO?> GetPrivateChat(Guid participantId)
@@ -175,7 +178,7 @@ namespace Meetings.Infrastructure.Services
             {
                 message.Reactions.Add(_mapper.Map<MessageReaction>(data));
             }
-            await _messageRepository.Update(message);
+            await _messageReactionRepository.UpdateRange(message.Reactions);
 
             return _extendedMapper.ToMessageDTO(message);
         }
@@ -230,20 +233,6 @@ namespace Meetings.Infrastructure.Services
                     s.SetProperty(x => x.HasUnreadMessages, false)
                  );
         }
-
-        public async Task<Guid> CreateGroupChat(CreateGroupChatData data)
-        {
-            Guid userId = _claimsReader.GetCurrentUserId();
-
-            List<ChatParticipant> participants = new List<ChatParticipant>(data.UserIds.Select(x => new ChatParticipant(x)))
-            {
-               new ChatParticipant(userId),
-            };
-            Guid chatId = await CreateNewChat(data.ConnectionId, participants, ChatType.Group, data.Name);
-            return chatId;
-        }
-
-
         public async Task<ChatDTO> CreatePrivateChat(CreatePrivateChatData data)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
@@ -253,13 +242,25 @@ namespace Meetings.Infrastructure.Services
                 throw new Exception();
             }
 
-            List<ChatParticipant> participants = new List<ChatParticipant>()
-            {
-               new ChatParticipant(data.ParticipantId),
-               new ChatParticipant(userId),
-            };
-            await CreateNewChat(data.ConnectionId, participants, ChatType.Private);
+            await CreateNewChat(data.ConnectionId, MakeChatParticipants([data.ParticipantId]), ChatType.Private);
             return await GetPrivateChat(data.ParticipantId);
+        }
+
+        public async Task<Guid> CreateGroupChat(CreateGroupChatData data)
+        {
+            Guid chatId = await CreateNewChat(data.ConnectionId, MakeChatParticipants(data.UserIds), ChatType.Group, data.Name);
+            return chatId;
+        }
+
+        public async Task EditGroupChat(EditGroupChatData data)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            var chat = await _repository.Data.Include(x => x.Participants).SingleAsync(x => x.Id == data.Id);
+            chat.Name = data.Name;
+            await _repository.Update(chat);
+
+            await _chatParticipantRepository.SwapRange(chat.Participants, MakeChatParticipants(data.UserIds, chat.Id), x => x.UserId);
         }
 
         private async Task<Guid> CreateNewChat(string connectionId, List<ChatParticipant> participants, ChatType type, string name = null)
@@ -272,7 +273,6 @@ namespace Meetings.Infrastructure.Services
             });
 
             await _chatHubContext.Groups.AddToGroupAsync(connectionId, createdChat.Id.ToString());
-            await _chatHubContext.Clients.Users(participants.Select(x => x.UserId.ToString())).OnNewChatCreated(createdChat.Id);
 
             return createdChat.Id;
         }
@@ -286,6 +286,14 @@ namespace Meetings.Infrastructure.Services
             });
 
             await _chatParticipantRepository.UpdateRange(participants);
+        }
+
+        private List<ChatParticipant> MakeChatParticipants(IEnumerable<Guid> userIds, Guid? chatId = null)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            Guid[] ids = [userId, .. userIds];
+            return ids.Select(x => new ChatParticipant(x) { ChatId = chatId ?? Guid.Empty }).DistinctBy(x => x.UserId).ToList();
         }
     }
 }

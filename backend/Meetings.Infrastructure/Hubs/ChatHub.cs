@@ -20,7 +20,6 @@ namespace Meetings.Infrastructure.Hubs
         Task OnGetNewMessage(MessageDTO message, Guid ChatId);
         Task OnOtherUserTyping(Guid userId, string firstName, Guid ChatId);
         Task OnMessageReactionChange(MessageDTO message, Guid ChatId);
-        Task OnNewChatCreated(Guid chatId);
     }
 
     public class ChatHub : Hub<IChatHub>
@@ -74,14 +73,8 @@ namespace Meetings.Infrastructure.Hubs
                 MessageId = data.MessageId,
                 Unified = data.ReactionUnified
             });
-
+            
             await Clients.Group(message.ChatId.ToString()).OnMessageReactionChange(message, message.ChatId);
-        }
-
-        [Authorize]
-        public async Task StartListenNewChat(StartListenNewChatData data)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, data.ChatId.ToString());
         }
     }
 }
