@@ -125,7 +125,7 @@ namespace Meetings.Infrastructure.Services
                     AuthorId = authorId,
                     ChatId = chatId,
                     ReplyToId = data.ReplyToId,
-                    Value = data.Value!,
+                    Value = data.Value!.Trim(),
                     Type = MessageType.Text,
                 });
             }

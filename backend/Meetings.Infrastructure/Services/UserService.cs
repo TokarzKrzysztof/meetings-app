@@ -138,9 +138,9 @@ namespace Meetings.Infrastructure.Services
         {
             Guid userId = _claimsReader.GetCurrentUserId();
 
-            string filterLower = filter.ToLower();
+            string filterLower = filter.ToLower().Replace(" ", "");
             List<User> users = await _repository.Data
-                .Where(x => x.FirstName.ToLower().Contains(filterLower) || x.LastName.ToLower().Contains(filterLower))
+                .Where(x => (x.FirstName + x.LastName).ToLower().Contains(filterLower))
                 .If(excludeCurrentUser, q => q.Where(x => x.Id != userId))
                 .Take(take)
                 .ToListAsync();
