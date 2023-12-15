@@ -1,4 +1,5 @@
 import { atom, useAtom } from 'jotai';
+import { ReactNode } from 'react';
 import {
   Button,
   Dialog,
@@ -10,7 +11,7 @@ import {
 import { PropsWithReactElement } from 'src/utils/types/props';
 
 export type ConfirmationDialogData = {
-  message: string;
+  message: ReactNode;
   onAccept: () => void;
   onCancel?: () => void;
   title?: string;

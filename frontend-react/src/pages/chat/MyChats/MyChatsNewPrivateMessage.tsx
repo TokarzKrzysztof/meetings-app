@@ -1,7 +1,8 @@
-import { atom, useAtom } from 'jotai';
+import { atom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UsersHttpAutocomplete } from 'src/components/UsersHttpAutocomplete';
+import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { Icon, IconButton, Stack } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
@@ -12,7 +13,7 @@ export type MyChatsNewPrivateMessageProps = {};
 export const MyChatsNewPrivateMessage = ({ ...props }: MyChatsNewPrivateMessageProps) => {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [showNewPrivateMessage, setShowNewPrivateMessage] = useAtom(showNewPrivateMessageAtom);
+  const [showNewPrivateMessage, setShowNewPrivateMessage] = useClearableAtom(showNewPrivateMessageAtom);
 
   useEffect(() => {
     if (showNewPrivateMessage) inputRef.current!.focus();

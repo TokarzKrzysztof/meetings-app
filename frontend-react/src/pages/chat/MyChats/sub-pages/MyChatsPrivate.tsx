@@ -1,6 +1,6 @@
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { ChatType } from 'src/models/chat/chat';
-import { MyChatsListItem } from 'src/pages/chat/MyChats/MyChatsListItem';
+import { MyChatsListItem } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsListItem';
 import { MyChatsPanel } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsPanel';
 import { useGetCurrentUserChats } from 'src/queries/chat-queries';
 
@@ -15,7 +15,7 @@ export const MyChatsPrivate = () => {
   return (
     <MyChatsPanel noChatsText='Brak prywatnych rozmów'>
       {currentUserChats.map((chat) => (
-        <MyChatsListItem key={chat.id} chat={chat} />
+        <MyChatsListItem key={chat.id} chat={chat} menuItems={<></>} />
       ))}
     </MyChatsPanel>
   );

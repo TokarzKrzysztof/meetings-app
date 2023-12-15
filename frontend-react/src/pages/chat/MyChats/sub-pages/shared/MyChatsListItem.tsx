@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { useMemo } from 'react';
+import { ReactElement, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { AvatarList } from 'src/components/AvatarList';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
@@ -8,7 +8,17 @@ import { ChatPreview } from 'src/models/chat/chat-preview';
 import { MessageType } from 'src/models/chat/message';
 import { UserGender } from 'src/models/user';
 import { UserActiveStatusBadge } from 'src/pages/chat/shared/UserActiveStatusBadge';
-import { Box, ListItemAvatar, ListItemButton, ListItemText } from 'src/ui-components';
+import {
+  Box,
+  Icon,
+  IconButton,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Menu,
+  Stack,
+} from 'src/ui-components';
+import { withNoPropagation } from 'src/utils/dom-utils';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 const StyledDot = styled(Box)(({ theme }) => ({
@@ -19,11 +29,13 @@ const StyledDot = styled(Box)(({ theme }) => ({
 }));
 
 export type MyChatsListItemProps = {
+  menuItems: ReactElement;
   chat: ChatPreview;
 };
 
-export const MyChatsListItem = ({ chat }: MyChatsListItemProps) => {
+export const MyChatsListItem = ({ menuItems, chat }: MyChatsListItemProps) => {
   const currentUser = useLoggedInUser();
+  const menuAnchorRef = useRef<HTMLButtonElement>(null);
 
   const getPrivateChatParticipant = () => {
     return chat.participants.find((x) => x.id !== currentUser.id)!;
@@ -66,33 +78,41 @@ export const MyChatsListItem = ({ chat }: MyChatsListItemProps) => {
 
   const fontWeight = chat.hasUnreadMessages ? 'bold' : undefined;
   return (
-    <ListItemButton component={Link} to={to}>
-      <ListItemAvatar sx={{ minWidth: 'auto', mr: 2 }}>
-        <UserActiveStatusBadge status={activeStatus}>
-          <AvatarList users={chat.participants} avatarSize={50} />
-        </UserActiveStatusBadge>
-      </ListItemAvatar>
-      <ListItemText
-        primary={chatName}
-        secondary={lastMessageText}
-        primaryTypographyProps={{
-          fontWeight: fontWeight,
-          sx: {
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-          },
-        }}
-        secondaryTypographyProps={{
-          fontWeight: fontWeight,
-          sx: {
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-          },
-        }}
-      />
-      {chat.hasUnreadMessages && <StyledDot />}
-    </ListItemButton>
+    <>
+      <ListItemButton component={Link} to={to}>
+        <ListItemAvatar sx={{ minWidth: 'auto', mr: 2 }}>
+          <UserActiveStatusBadge status={activeStatus}>
+            <AvatarList users={chat.participants} avatarSize={50} />
+          </UserActiveStatusBadge>
+        </ListItemAvatar>
+        <ListItemText
+          primary={chatName}
+          secondary={lastMessageText}
+          primaryTypographyProps={{
+            fontWeight: fontWeight,
+            sx: {
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+            },
+          }}
+          secondaryTypographyProps={{
+            fontWeight: fontWeight,
+            sx: {
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+            },
+          }}
+        />
+        <Stack gap={1}>
+          {chat.hasUnreadMessages && <StyledDot />}
+          <IconButton ref={menuAnchorRef} {...withNoPropagation()}>
+            <Icon name='more_vert' />
+          </IconButton>
+        </Stack>
+      </ListItemButton>
+      <Menu anchorRef={menuAnchorRef}>{menuItems}</Menu>
+    </>
   );
 };

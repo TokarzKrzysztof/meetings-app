@@ -212,14 +212,13 @@ namespace Meetings.Infrastructure.Services
         public async Task<UnreadChatsCountData> GetUnreadChatsCount()
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-
             var unread = await _chatParticipantRepository.Data
                 .Where(x => x.UserId == userId && x.HasUnreadMessages)
-                .Select(x => x.Chat.Participants.Count).ToListAsync();
+                .Select(x => x.Chat.Type).ToListAsync();
             return new UnreadChatsCountData()
             {
-                Private = unread.Where(participantsCount => participantsCount == 2).Count(),
-                Group = unread.Where(participantsCount => participantsCount > 2).Count(),
+                Private = unread.Where(type => type == ChatType.Private).Count(),
+                Group = unread.Where(type => type == ChatType.Group).Count(),
             };
         }
 
@@ -261,6 +260,14 @@ namespace Meetings.Infrastructure.Services
             await _repository.Update(chat);
 
             await _chatParticipantRepository.SwapRange(chat.Participants, MakeChatParticipants(data.UserIds, chat.Id), x => x.UserId);
+        }
+
+        public async Task LeaveGroupChat(Guid chatId)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+            var toRemove = await _chatParticipantRepository.Data.SingleAsync(x => x.UserId == userId && x.ChatId == chatId);
+
+            await _chatParticipantRepository.RemovePermanently(toRemove);
         }
 
         private async Task<Guid> CreateNewChat(string connectionId, List<ChatParticipant> participants, ChatType type, string name = null)

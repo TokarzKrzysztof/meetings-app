@@ -8,9 +8,10 @@ export function useClearableAtom<Value, Args extends unknown[]>(
   const setAtom = useSetAtom(atom as WritableAtom<Value, Args, void>);
 
   useEffect(() => {
+    const initValue = atomValue;
     return () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (setAtom as any)(null);
+      (setAtom as any)(initValue);
     };
   }, []);
 

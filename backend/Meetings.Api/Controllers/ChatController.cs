@@ -109,5 +109,13 @@ namespace Meetings.Api.Controllers
             await _chatService.EditGroupChat(data);
             return Ok();
         }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> LeaveGroupChat([FromQuery] Guid chatId)
+        {
+            await _chatService.LeaveGroupChat(chatId);
+            return Ok();
+        }
     }
 }

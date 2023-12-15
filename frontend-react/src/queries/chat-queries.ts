@@ -15,6 +15,20 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Chat`;
 
+export const useLeaveGroupChat = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Chat['id']>
+) => {
+  const mutation = useMutation({
+    mutationFn: (chatId) => {
+      const params = { chatId };
+      return axios.delete(`${baseUrl}/LeaveGroupChat`, { params });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('leaveGroupChat', mutation);
+};
+
 export const useEditGroupChat = (
   options?: UseMutationOptions<
     void,
