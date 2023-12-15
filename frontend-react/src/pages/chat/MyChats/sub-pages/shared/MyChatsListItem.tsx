@@ -105,7 +105,7 @@ export const MyChatsListItem = ({ menuItems, chat }: MyChatsListItemProps) => {
             },
           }}
         />
-        <Stack gap={1}>
+        <Stack gap={1} alignItems={'center'}>
           {chat.hasUnreadMessages && <StyledDot />}
           <IconButton ref={menuAnchorRef} {...withNoPropagation()}>
             <Icon name='more_vert' />

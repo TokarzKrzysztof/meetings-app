@@ -6,6 +6,7 @@ using Meetings.FileManager;
 using Meetings.Infrastructure.Hubs;
 using Meetings.Infrastructure.Mappers;
 using Meetings.Infrastructure.Utils;
+using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Meetings.Utils.Extensions;
@@ -30,8 +31,9 @@ namespace Meetings.Infrastructure.Services
         private readonly IHubContext<ChatHub, IChatHub> _chatHubContext;
         private readonly ExtendedMapper _extendedMapper;
         private readonly IFileManager _fileManager;
+        private readonly ChatValidator _chatValidator;
 
-        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IHubContext<ChatHub, IChatHub> chatHubContext, IRepository<ChatParticipant> chatParticipantRepository, ExtendedMapper extendedMapper, IFileManager fileManager, IRepository<MessageReaction> messageReactionRepository)
+        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IHubContext<ChatHub, IChatHub> chatHubContext, IRepository<ChatParticipant> chatParticipantRepository, ExtendedMapper extendedMapper, IFileManager fileManager, IRepository<MessageReaction> messageReactionRepository, ChatValidator chatValidator)
         {
             _repository = repository;
             _mapper = mapper;
@@ -42,6 +44,7 @@ namespace Meetings.Infrastructure.Services
             _extendedMapper = extendedMapper;
             _fileManager = fileManager;
             _messageReactionRepository = messageReactionRepository;
+            _chatValidator = chatValidator;
         }
 
         public async Task<ChatDTO?> GetPrivateChat(Guid participantId)
@@ -51,7 +54,10 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<ChatDTO> GetGroupChat(Guid chatId)
         {
-            return (await GetChat(ChatType.Group, chatId: chatId))!;
+            var chat = await GetChat(ChatType.Group, chatId: chatId);
+            _chatValidator.AfterGetGroupChat(chat);
+
+            return chat;
         }
 
         private async Task<ChatDTO?> GetChat(ChatType type, Guid chatId = default, Guid participantId = default)
@@ -147,8 +153,9 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<MessageDTO> SendMessage(SendMessageData data)
         {
+            await _chatValidator.WhenSendMessage(data);
+
             Guid authorId = _claimsReader.GetCurrentUserId();
-            // TODO check if user is in chat
 
             Message entity = await CreateMessage(authorId, data.ChatId, data);
             // refetch entity with required dependencies

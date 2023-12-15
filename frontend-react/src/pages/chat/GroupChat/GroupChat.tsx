@@ -1,4 +1,5 @@
 import { useMemo, useReducer, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AvatarList } from 'src/components/AvatarList';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
@@ -15,7 +16,7 @@ import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMe
 import { messageReducer } from 'src/pages/chat/shared/reducers/message.reducer';
 import { useGetGroupChat } from 'src/queries/chat-queries';
 import { Stack, Typography } from 'src/ui-components';
-import { GroupChatParams } from 'src/utils/enums/app-routes';
+import { AppRoutes, GroupChatParams } from 'src/utils/enums/app-routes';
 
 export const GroupChat = () => {
   const [params] = useRouteParams<GroupChatParams>();
@@ -26,12 +27,18 @@ export const GroupChat = () => {
   const [showAloneInfo, setShowAloneInfo] = useState(false);
   const [_, setChat] = useClearableAtom(chatAtom);
   const currentUser = useLoggedInUser();
+  const navigate = useNavigate();
 
   const { groupChat } = useGetGroupChat(params.chatId, {
     onSuccess: (chat) => {
       setChat(chat);
       if (chat.participants.length === 1) {
         setShowAloneInfo(true);
+      }
+    },
+    onError: (err) => {
+      if (err.response?.data.validationErrors.includes('NotInChat')) {
+        navigate(AppRoutes.MyChatsGroup());
       }
     },
   });
