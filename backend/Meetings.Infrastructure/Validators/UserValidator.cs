@@ -63,9 +63,13 @@ namespace Meetings.Infrastructure.Validators
     {
         public const int PasswordMinLength = 5;
         private readonly IRepository<User> _repository;
-        public UserValidator(IRepository<User> userRepository)
+        private readonly IRepository<BlockedUser> _blockedUserRepository;
+        private readonly IClaimsReader _claimsReader;
+        public UserValidator(IRepository<User> userRepository, IRepository<BlockedUser> blockedUserRepository, IClaimsReader claimsReader)
         {
             _repository = userRepository;
+            _blockedUserRepository = blockedUserRepository;
+            _claimsReader = claimsReader;
         }
 
         internal async Task WhenRegister(UserDTO data)
@@ -110,6 +114,16 @@ namespace Meetings.Infrastructure.Validators
             validator.RuleFor(x => x.NewPassword).PasswordMinLength();
 
             await validator.ValidateAndThrowAsync(data);
-        }   
+        }
+
+        internal async Task WhenBlockUser(Guid id)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            if (await _blockedUserRepository.Data.AnyAsync(x => x.UserId == userId && x.BlockedId == id))
+            {
+                ValidatorUtils.ThrowError("UserAlreadyBlocked");
+            }
+        }
     }
 }

@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 import { atom } from 'jotai';
 import React, { useEffect, useState } from 'react';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
-import { messageStyles } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
+import { messageStyles } from 'src/pages/chat/shared/components/ChatMessage/ChatMessage.styled';
 import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
 import { getDuration, toDuration } from 'src/utils/audio-utils';
 import { inRange } from 'src/utils/number-utils';

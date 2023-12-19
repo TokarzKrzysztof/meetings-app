@@ -9,7 +9,7 @@ import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { LoginCredentials } from 'src/models/login-credentials';
 import { AuthButton } from 'src/pages/account/shared/AuthButton';
 import { AuthForm } from 'src/pages/account/shared/AuthForm';
-import { AuthGoBackBtn } from 'src/pages/account/shared/AuthGoBackBtn';
+import { AuthGoToMainPageBtn } from 'src/pages/account/shared/AuthGoToMainPageBtn';
 import { AuthIcon } from 'src/pages/account/shared/AuthIcon';
 import { AuthRedirectInfo } from 'src/pages/account/shared/AuthRedirectInfo';
 import { useLogin, useResendActivationLink } from 'src/queries/auth-queries';
@@ -59,7 +59,7 @@ export const Login = () => {
 
   return (
     <>
-      <Header leftSlot={<AuthGoBackBtn />} />
+      <Header leftSlot={<AuthGoToMainPageBtn />} />
       <AuthForm onSubmit={handleSubmit(onSubmit)} onChange={() => loginError && loginReset()}>
         <AuthIcon iconName='account_circle'></AuthIcon>
         <FormField

@@ -141,3 +141,31 @@ export const useSendUserActivityTick = (
 
   return genericUseMutationMethods('sendUserActivityTick', mutation);
 };
+
+export const useBlockUser = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, User['id']>
+) => {
+  const mutation = useMutation({
+    mutationFn: (id) => {
+      const params = { id };
+      return axios.post(`${baseUrl}/BlockUser`, null, { params });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('blockUser', mutation);
+};
+
+export const useUnblockUser = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, User['id']>
+) => {
+  const mutation = useMutation({
+    mutationFn: (id) => {
+      const params = { id };
+      return axios.delete(`${baseUrl}/UnblockUser`, { params });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('unblockUser', mutation);
+};

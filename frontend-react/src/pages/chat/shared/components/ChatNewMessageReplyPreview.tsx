@@ -1,7 +1,7 @@
 import { atom } from 'jotai';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { Message, MessageType } from 'src/models/chat/message';
-import { ChatVoiceMessageDescription } from 'src/pages/chat/shared/ChatVoiceMessageDescription';
+import { ChatVoiceMessageDescription } from 'src/pages/chat/shared/components/ChatVoiceMessageDescription';
 import { Box, Icon, IconButton, Stack, Typography } from 'src/ui-components';
 
 export const replyMessageAtom = atom<Message | null>(null);

@@ -6,7 +6,7 @@ import { Header } from 'src/components/header/Header';
 import { ForgotPasswordConfirmationDialog } from 'src/pages/account/ForgotPassword/ForgotPasswordConfirmationDialog';
 import { AuthButton } from 'src/pages/account/shared/AuthButton';
 import { AuthForm } from 'src/pages/account/shared/AuthForm';
-import { AuthGoBackBtn } from 'src/pages/account/shared/AuthGoBackBtn';
+import { AuthGoToMainPageBtn } from 'src/pages/account/shared/AuthGoToMainPageBtn';
 import { AuthIcon } from 'src/pages/account/shared/AuthIcon';
 import { AuthRedirectInfo } from 'src/pages/account/shared/AuthRedirectInfo';
 import { useSendForgotPasswordEmail } from 'src/queries/auth-queries';
@@ -30,7 +30,7 @@ export const ForgotPassword = () => {
 
   return (
     <>
-      <Header leftSlot={<AuthGoBackBtn />} />
+      <Header leftSlot={<AuthGoToMainPageBtn />} />
       <AuthForm onSubmit={handleSubmit(onSubmit)}>
         <AuthIcon iconName='email'></AuthIcon>
         <Typography align='center' mb={2}>

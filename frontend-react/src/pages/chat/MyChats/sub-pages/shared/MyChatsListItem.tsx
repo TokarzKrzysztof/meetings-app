@@ -7,7 +7,7 @@ import { ChatType } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { MessageType } from 'src/models/chat/message';
 import { UserGender } from 'src/models/user';
-import { UserActiveStatusBadge } from 'src/pages/chat/shared/UserActiveStatusBadge';
+import { UserActiveStatusBadge } from 'src/pages/chat/shared/components/UserActiveStatusBadge';
 import {
   Box,
   Icon,
@@ -16,7 +16,7 @@ import {
   ListItemButton,
   ListItemText,
   Menu,
-  Stack,
+  Stack
 } from 'src/ui-components';
 import { withNoPropagation } from 'src/utils/dom-utils';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -29,8 +29,8 @@ const StyledDot = styled(Box)(({ theme }) => ({
 }));
 
 export type MyChatsListItemProps = {
-  menuItems: ReactElement;
   chat: ChatPreview;
+  menuItems?: ReactElement;
 };
 
 export const MyChatsListItem = ({ menuItems, chat }: MyChatsListItemProps) => {
@@ -107,12 +107,14 @@ export const MyChatsListItem = ({ menuItems, chat }: MyChatsListItemProps) => {
         />
         <Stack gap={1} alignItems={'center'}>
           {chat.hasUnreadMessages && <StyledDot />}
-          <IconButton ref={menuAnchorRef} {...withNoPropagation()}>
-            <Icon name='more_vert' />
-          </IconButton>
+          {menuItems && (
+            <IconButton ref={menuAnchorRef} {...withNoPropagation()}>
+              <Icon name='more_vert' />
+            </IconButton>
+          )}
         </Stack>
       </ListItemButton>
-      <Menu anchorRef={menuAnchorRef}>{menuItems}</Menu>
+      {menuItems && <Menu anchorRef={menuAnchorRef}>{menuItems}</Menu>}
     </>
   );
 };

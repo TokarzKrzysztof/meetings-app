@@ -6,13 +6,13 @@ import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useQueue } from 'src/hooks/useQueue';
 import { Chat } from 'src/models/chat/chat';
 import { MessageType } from 'src/models/chat/message';
-import { ChatNewMessageImage } from 'src/pages/chat/shared/ChatNewMessageImage';
+import { ChatNewMessageImage } from 'src/pages/chat/shared/components/ChatNewMessageImage';
 import {
   ChatNewMessageReplyPreview,
   replyMessageAtom,
-} from 'src/pages/chat/shared/ChatNewMessageReplyPreview';
-import { ChatNewMessageVoice } from 'src/pages/chat/shared/ChatNewMessageVoice';
-import { ChatSendBtn } from 'src/pages/chat/shared/ChatSendBtn';
+} from 'src/pages/chat/shared/components/ChatNewMessageReplyPreview';
+import { ChatNewMessageVoice } from 'src/pages/chat/shared/components/ChatNewMessageVoice';
+import { ChatSendBtn } from 'src/pages/chat/shared/components/ChatSendBtn';
 import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
 import { useSendMessage } from 'src/queries/chat-queries';
 import { Box, Icon, IconButton, Stack, TextArea } from 'src/ui-components';

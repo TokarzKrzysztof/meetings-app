@@ -31,7 +31,18 @@ namespace Meetings.Infrastructure.Services
         private readonly ExtendedMapper _extendedMapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IFileManager _fileManager;
-        public UserService(IRepository<User> repository, IMapper mapper, IRepository<TempData> tempDataRepository, IClaimsReader claimsReader, UserValidator userValidator, IEmailSender emailSender, ExtendedMapper extendedMapper, IHttpContextAccessor httpContextAccessor, IFileManager fileManager)
+        private readonly IRepository<BlockedUser> _blockedUserRepository;
+
+        public UserService(IRepository<User> repository,
+                           IMapper mapper,
+                           IRepository<TempData> tempDataRepository,
+                           IClaimsReader claimsReader,
+                           UserValidator userValidator,
+                           IEmailSender emailSender,
+                           ExtendedMapper extendedMapper,
+                           IHttpContextAccessor httpContextAccessor,
+                           IFileManager fileManager,
+                           IRepository<BlockedUser> blockedUserRepository)
         {
             _repository = repository;
             _mapper = mapper;
@@ -42,6 +53,7 @@ namespace Meetings.Infrastructure.Services
             _extendedMapper = extendedMapper;
             _httpContextAccessor = httpContextAccessor;
             _fileManager = fileManager;
+            _blockedUserRepository = blockedUserRepository;
         }
 
         public async Task SendChangeEmailAddressEmail(ChangeEmailAddressData data)
@@ -179,6 +191,26 @@ namespace Meetings.Infrastructure.Services
                .ExecuteUpdateAsync(s =>
                     s.SetProperty(x => x.LastActiveDate, DateTime.UtcNow)
                 );
+        }
+
+        public async Task BlockUser(Guid id)
+        {
+            await _userValidator.WhenBlockUser(id);
+
+            BlockedUser item = new BlockedUser()
+            {
+                UserId = _claimsReader.GetCurrentUserId(),
+                BlockedId = id,
+            };
+            await _blockedUserRepository.Create(item);
+        }
+
+        public async Task UnblockUser(Guid id)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            BlockedUser item = await _blockedUserRepository.Data.SingleAsync(x => x.UserId == userId && x.BlockedId == id);
+            await _blockedUserRepository.RemovePermanently(item);
         }
     }
 }

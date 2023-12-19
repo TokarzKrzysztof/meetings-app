@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
-import { GroupChatForm } from 'src/pages/chat/shared/GroupChatForm/GroupChatForm';
-import { GroupChatFormData } from 'src/pages/chat/shared/GroupChatForm/group-chat-form-data';
+import { GroupChatForm } from 'src/pages/chat/shared/components/GroupChatForm/GroupChatForm';
+import { GroupChatFormData } from 'src/pages/chat/shared/components/GroupChatForm/group-chat-form-data';
 import { useEditGroupChat, useGetGroupChat } from 'src/queries/chat-queries';
 import { AppRoutes, EditGroupChatParams } from 'src/utils/enums/app-routes';
 

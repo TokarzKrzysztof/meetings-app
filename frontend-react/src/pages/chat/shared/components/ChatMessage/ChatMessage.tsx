@@ -4,11 +4,11 @@ import { useRef, useState } from 'react';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
 import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';
-import { StyledReplyIcon } from 'src/pages/chat/shared/ChatMessage/ChatMessage.styled';
-import { ChatMessageContent } from 'src/pages/chat/shared/ChatMessageContent';
-import { ChatMessageDragToReply } from 'src/pages/chat/shared/ChatMessageDragToReply';
-import { ChatMessageReactionPicker } from 'src/pages/chat/shared/ChatMessageReactionPicker';
-import { replyMessageAtom } from 'src/pages/chat/shared/ChatNewMessageReplyPreview';
+import { StyledReplyIcon } from 'src/pages/chat/shared/components/ChatMessage/ChatMessage.styled';
+import { ChatMessageContent } from 'src/pages/chat/shared/components/ChatMessageContent';
+import { ChatMessageDragToReply } from 'src/pages/chat/shared/components/ChatMessageDragToReply';
+import { ChatMessageReactionPicker } from 'src/pages/chat/shared/components/ChatMessageReactionPicker';
+import { replyMessageAtom } from 'src/pages/chat/shared/components/ChatNewMessageReplyPreview';
 import { Box, Typography } from 'src/ui-components';
 
 export type ChatMessageProps = {

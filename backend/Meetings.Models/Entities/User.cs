@@ -38,6 +38,7 @@ namespace Meetings.Models.Entities
         public DateTime LastActiveDate { get; set; }
         public virtual ICollection<Announcement> Announcements { get; set; }
         public virtual ICollection<ChatParticipant> Chats { get; set; }
+        public virtual ICollection<BlockedUser> BlockedUsers { get; set; }
 
         public User()
         {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useVoiceRecording } from 'src/hooks/useVoiceRecording';
-import { ChatSendBtn } from 'src/pages/chat/shared/ChatSendBtn';
+import { ChatSendBtn } from 'src/pages/chat/shared/components/ChatSendBtn';
 import { Icon, IconButton, TextField } from 'src/ui-components';
 import { toDuration } from 'src/utils/audio-utils';
 

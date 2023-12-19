@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
-import { Chat, ChatType } from 'src/models/chat/chat';
+import { Chat } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { Message } from 'src/models/chat/message';
 import { SendMessageData } from 'src/models/chat/send-message-data';
@@ -14,6 +14,34 @@ import {
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Chat`;
+
+export const useToggleIgnoreChat = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Chat['id']>
+) => {
+  const mutation = useMutation({
+    mutationFn: (chatId) => {
+      const params = { chatId };
+      return axios.patch(`${baseUrl}/ToggleIgnoreChat`, null, { params });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('toggleIgnoreChat', mutation);
+};
+
+export const useToggleArchiveChat = (
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Chat['id']>
+) => {
+  const mutation = useMutation({
+    mutationFn: (chatId) => {
+      const params = { chatId };
+      return axios.patch(`${baseUrl}/ToggleArchiveChat`, null, { params });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('toggleArchiveChat', mutation);
+};
 
 export const useLeaveGroupChat = (
   options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Chat['id']>
@@ -137,20 +165,52 @@ export const useLoadAllMessagesAfterDate = (
   return genericUseMutationMethods('loadAllMessagesAfterDate', mutation);
 };
 
-export const useGetCurrentUserChats = (
-  type: ChatType,
+export const useGetCurrentUserPrivateChats = (
   options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
-    queryKey: ['GetCurrentUserChats', type],
-    queryFn: () => {
-      const params = { type };
-      return axios.get(`${baseUrl}/GetCurrentUserChats`, { params });
-    },
+    queryKey: 'GetCurrentUserPrivateChats',
+    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserPrivateChats`),
     ...options,
   });
 
-  return genericUseQueryMethods('currentUserChats', query);
+  return genericUseQueryMethods('currentUserPrivateChats', query);
+};
+
+export const useGetCurrentUserGroupChats = (
+  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: 'GetCurrentUserGroupChats',
+    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserGroupChats`),
+    ...options,
+  });
+
+  return genericUseQueryMethods('currentUserGroupChats', query);
+};
+
+export const useGetCurrentUserIgnoredChats = (
+  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: 'GetCurrentUserIgnoredChats',
+    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserIgnoredChats`),
+    ...options,
+  });
+
+  return genericUseQueryMethods('currentUserIgnoredChats', query);
+};
+
+export const useGetCurrentUserArchivedChats = (
+  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: 'GetCurrentUserArchivedChats',
+    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserArchivedChats`),
+    ...options,
+  });
+
+  return genericUseQueryMethods('currentUserArchivedChats', query);
 };
 
 export const useGetUnreadChatsCount = (

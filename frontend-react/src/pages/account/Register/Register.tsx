@@ -7,7 +7,7 @@ import { User } from 'src/models/user';
 import { RegisterSuccess } from 'src/pages/account/Register/RegisterSuccess';
 import { AuthButton } from 'src/pages/account/shared/AuthButton';
 import { AuthForm } from 'src/pages/account/shared/AuthForm';
-import { AuthGoBackBtn } from 'src/pages/account/shared/AuthGoBackBtn';
+import { AuthGoToMainPageBtn } from 'src/pages/account/shared/AuthGoToMainPageBtn';
 import { AuthIcon } from 'src/pages/account/shared/AuthIcon';
 import { AuthRedirectInfo } from 'src/pages/account/shared/AuthRedirectInfo';
 import { PasswordFields } from 'src/pages/account/shared/PasswordFields';
@@ -36,7 +36,7 @@ export const Register = () => {
 
   return (
     <>
-      <Header leftSlot={<AuthGoBackBtn />} />
+      <Header leftSlot={<AuthGoToMainPageBtn />} />
       <AuthForm
         onSubmit={handleSubmit((data: User) => registerUser(data))}
         onChange={() => registerUserError && registerUserReset()}

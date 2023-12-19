@@ -88,5 +88,22 @@ namespace Meetings.EmailTemplates.Controllers
             await _userService.SendUserActivityTick();
             return Ok();
         }
+
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> BlockUser([FromQuery] Guid id)
+        {
+            await _userService.BlockUser(id);
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> UnblockUser([FromQuery] Guid id)
+        {
+            await _userService.UnblockUser(id);
+            return Ok();
+        }
     }
 }

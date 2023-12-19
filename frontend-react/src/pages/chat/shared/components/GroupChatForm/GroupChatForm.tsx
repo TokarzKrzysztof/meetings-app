@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { FormField } from 'src/components/FormField';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { Chat } from 'src/models/chat/chat';
-import { GroupChatFormUsers } from 'src/pages/chat/shared/GroupChatForm/GroupChatFormUsers';
-import { GroupChatFormData } from 'src/pages/chat/shared/GroupChatForm/group-chat-form-data';
+import { GroupChatFormUsers } from 'src/pages/chat/shared/components/GroupChatForm/GroupChatFormUsers';
+import { GroupChatFormData } from 'src/pages/chat/shared/components/GroupChatForm/group-chat-form-data';
 import { Button, Container, Stack, Typography } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 

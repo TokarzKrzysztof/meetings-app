@@ -33,7 +33,16 @@ namespace Meetings.Infrastructure.Services
         private readonly IFileManager _fileManager;
         private readonly ChatValidator _chatValidator;
 
-        public ChatService(IRepository<Chat> repository, IMapper mapper, IClaimsReader claimsReader, IRepository<Message> messageRepository, IHubContext<ChatHub, IChatHub> chatHubContext, IRepository<ChatParticipant> chatParticipantRepository, ExtendedMapper extendedMapper, IFileManager fileManager, IRepository<MessageReaction> messageReactionRepository, ChatValidator chatValidator)
+        public ChatService(IRepository<Chat> repository,
+                           IMapper mapper,
+                           IClaimsReader claimsReader,
+                           IRepository<Message> messageRepository,
+                           IHubContext<ChatHub, IChatHub> chatHubContext,
+                           IRepository<ChatParticipant> chatParticipantRepository,
+                           ExtendedMapper extendedMapper,
+                           IFileManager fileManager,
+                           IRepository<MessageReaction> messageReactionRepository,
+                           ChatValidator chatValidator)
         {
             _repository = repository;
             _mapper = mapper;
@@ -161,7 +170,7 @@ namespace Meetings.Infrastructure.Services
             // refetch entity with required dependencies
             entity = await _messageRepository.GetById(entity.Id, q => q.IncludeAuthors());
 
-            await SetUnreadMessages(data.ChatId, authorId);
+            await UpdateParticipantsData(data.ChatId, authorId);
 
             return _extendedMapper.ToMessageDTO(entity);
         }
@@ -190,37 +199,29 @@ namespace Meetings.Infrastructure.Services
             return _extendedMapper.ToMessageDTO(message);
         }
 
-        public async Task<IEnumerable<ChatPreview>> GetCurrentUserChats(ChatType type)
+        public async Task<IEnumerable<ChatPreview>> GetCurrentUserActiveChatsOfType(ChatType type)
         {
-            Guid userId = _claimsReader.GetCurrentUserId();
+            IEnumerable<ChatPreview> chats = await GetCurrentUserChats(type);
+            return chats.Where(x => !x.IsIgnored && !x.IsArchived);
+        }
 
-            List<Chat> chats = await _repository.Data
-                .IncludeParticipants()
-                .IncludeLastMessageWithAuthor()
-                .Where(x => x.Participants.Select(x => x.UserId).Contains(userId) && x.Type == type)
-                .ToListAsync();
+        public async Task<IEnumerable<ChatPreview>> GetCurrentUserIgnoredChats()
+        {
+            IEnumerable<ChatPreview> chats = await GetCurrentUserChats();
+            return chats.Where(x => x.IsIgnored);
+        }
 
-            return chats.Select(x =>
-            {
-                ChatParticipant currentUserParticipant = x.Participants.Single(x => x.UserId == userId);
-                Message? lastMessage = x.Messages.SingleOrDefault();
-                return new ChatPreview()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Type = type,
-                    HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
-                    LastMessage = lastMessage != null ? _extendedMapper.ToMessageDTO(lastMessage) : null,
-                    Participants = _extendedMapper.ToUserDTOList(x.Participants.Select(x => x.User))
-                };
-            }).OrderByDescending(x => x.LastMessage?.CreatedAt);
+        public async Task<IEnumerable<ChatPreview>> GetCurrentUserArchivedChats()
+        {
+            IEnumerable<ChatPreview> chats = await GetCurrentUserChats();
+            return chats.Where(x => x.IsArchived);
         }
 
         public async Task<UnreadChatsCountData> GetUnreadChatsCount()
         {
             Guid userId = _claimsReader.GetCurrentUserId();
             var unread = await _chatParticipantRepository.Data
-                .Where(x => x.UserId == userId && x.HasUnreadMessages)
+                .Where(x => x.UserId == userId && x.HasUnreadMessages && !x.IsIgnored)
                 .Select(x => x.Chat.Type).ToListAsync();
             return new UnreadChatsCountData()
             {
@@ -229,16 +230,6 @@ namespace Meetings.Infrastructure.Services
             };
         }
 
-        public async Task MarkChatAsRead(Guid chatId)
-        {
-            Guid userId = _claimsReader.GetCurrentUserId();
-
-            await _chatParticipantRepository.Data
-                .Where(x => x.UserId == userId && x.ChatId == chatId)
-                .ExecuteUpdateAsync(s =>
-                    s.SetProperty(x => x.HasUnreadMessages, false)
-                 );
-        }
         public async Task<ChatDTO> CreatePrivateChat(CreatePrivateChatData data)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
@@ -277,6 +268,36 @@ namespace Meetings.Infrastructure.Services
             await _chatParticipantRepository.RemovePermanently(toRemove);
         }
 
+        public async Task MarkChatAsRead(Guid chatId)
+        {
+            await GetCurrentUserParticipantQuery(chatId)
+                .ExecuteUpdateAsync(s =>
+                    s.SetProperty(x => x.HasUnreadMessages, false)
+                 );
+        }
+
+        public async Task ToggleIgnoreChat(Guid chatId)
+        {
+            await GetCurrentUserParticipantQuery(chatId)
+               .ExecuteUpdateAsync(s =>
+                   s.SetProperty(x => x.IsIgnored, x => !x.IsIgnored)
+                );
+        }
+
+        public async Task ToggleArchiveChat(Guid chatId)
+        {
+            await GetCurrentUserParticipantQuery(chatId)
+                .ExecuteUpdateAsync(s =>
+                    s.SetProperty(x => x.IsArchived, x => !x.IsArchived)
+                 );
+        }
+
+        private IQueryable<ChatParticipant> GetCurrentUserParticipantQuery(Guid chatId)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+            return _chatParticipantRepository.Data.Where(x => x.UserId == userId && x.ChatId == chatId);
+        }
+
         private async Task<Guid> CreateNewChat(string connectionId, List<ChatParticipant> participants, ChatType type, string name = null)
         {
             var createdChat = await _repository.Create(new Chat()
@@ -291,12 +312,17 @@ namespace Meetings.Infrastructure.Services
             return createdChat.Id;
         }
 
-        private async Task SetUnreadMessages(Guid chatId, Guid authorId)
+        private async Task UpdateParticipantsData(Guid chatId, Guid authorId)
         {
-            List<ChatParticipant> participants = await _chatParticipantRepository.Data.Where(x => x.ChatId == chatId && x.UserId != authorId).ToListAsync();
+            List<ChatParticipant> participants = await _chatParticipantRepository.Data.Where(x => x.ChatId == chatId).ToListAsync();
             participants.ForEach(x =>
             {
-                x.HasUnreadMessages = true;
+                if (x.UserId != authorId)
+                {
+                    x.HasUnreadMessages = true;
+                }
+                // when new message comes, then set archived state to false for all participants
+                x.IsArchived = false;
             });
 
             await _chatParticipantRepository.UpdateRange(participants);
@@ -308,6 +334,35 @@ namespace Meetings.Infrastructure.Services
 
             Guid[] ids = [userId, .. userIds];
             return ids.Select(x => new ChatParticipant(x) { ChatId = chatId ?? Guid.Empty }).DistinctBy(x => x.UserId).ToList();
+        }
+
+        private async Task<IEnumerable<ChatPreview>> GetCurrentUserChats(ChatType? type = null)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            List<Chat> chats = await _repository.Data
+                .IncludeParticipants()
+                .IncludeLastMessageWithAuthor()
+                .Where(x => x.Participants.Select(x => x.UserId).Contains(userId))
+                .If(type != null, q => q.Where(x => x.Type == type))
+                .ToListAsync();
+
+            return chats.Select(x =>
+            {
+                ChatParticipant currentUserParticipant = x.Participants.Single(x => x.UserId == userId);
+                Message? lastMessage = x.Messages.SingleOrDefault();
+                return new ChatPreview()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Type = x.Type,
+                    HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
+                    LastMessage = lastMessage != null ? _extendedMapper.ToMessageDTO(lastMessage) : null,
+                    Participants = _extendedMapper.ToUserDTOList(x.Participants.Select(x => x.User)),
+                    IsIgnored = currentUserParticipant.IsIgnored,
+                    IsArchived = currentUserParticipant.IsArchived,
+                };
+            }).OrderByDescending(x => x.LastMessage?.CreatedAt);
         }
     }
 }

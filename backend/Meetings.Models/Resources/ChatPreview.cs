@@ -16,5 +16,7 @@ namespace Meetings.Models.Resources
         public bool HasUnreadMessages { get; set; }
         public MessageDTO? LastMessage { get; set; }
         public List<UserDTO> Participants { get; set; }
+        public bool IsArchived { get; set; }
+        public bool IsIgnored { get; set; }
     }
 }

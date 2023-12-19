@@ -18,6 +18,8 @@ export const AppRoutes = {
   MyChats: () => '/my-chats',
   MyChatsPrivate: () => '/my-chats/private',
   MyChatsGroup: () => '/my-chats/group',
+  MyChatsIgnored: () => '/my-chats/ignored',
+  MyChatsArchived: () => '/my-chats/archived',
   NewGroupChat: () => '/new-group-chat',
   EditGroupChat: (params?: EditGroupChatParams) => makeUrl('/edit-group-chat', params),
 } as const;

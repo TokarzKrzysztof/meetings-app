@@ -54,9 +54,33 @@ namespace Meetings.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetCurrentUserChats([FromQuery] ChatType type)
+        public async Task<IActionResult> GetCurrentUserPrivateChats()
         {
-            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserChats(type);
+            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserActiveChatsOfType(ChatType.Private);
+            return Ok(chats);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUserGroupChats()
+        {
+            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserActiveChatsOfType(ChatType.Group);
+            return Ok(chats);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUserIgnoredChats()
+        {
+            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserIgnoredChats();
+            return Ok(chats);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUserArchivedChats()
+        {
+            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserArchivedChats();
             return Ok(chats);
         }
 
@@ -115,6 +139,22 @@ namespace Meetings.Api.Controllers
         public async Task<IActionResult> LeaveGroupChat([FromQuery] Guid chatId)
         {
             await _chatService.LeaveGroupChat(chatId);
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> ToggleIgnoreChat([FromQuery] Guid chatId)
+        {
+            await _chatService.ToggleIgnoreChat(chatId);
+            return Ok();
+        }
+
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> ToggleArchiveChat([FromQuery] Guid chatId)
+        {
+            await _chatService.ToggleArchiveChat(chatId);
             return Ok();
         }
     }

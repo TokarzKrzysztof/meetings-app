@@ -4,7 +4,7 @@ import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { AuthButton } from 'src/pages/account/shared/AuthButton';
 import { AuthForm } from 'src/pages/account/shared/AuthForm';
-import { AuthGoBackBtn } from 'src/pages/account/shared/AuthGoBackBtn';
+import { AuthGoToMainPageBtn } from 'src/pages/account/shared/AuthGoToMainPageBtn';
 import { AuthIcon } from 'src/pages/account/shared/AuthIcon';
 import { AuthRedirectInfo } from 'src/pages/account/shared/AuthRedirectInfo';
 import {
@@ -38,7 +38,7 @@ export const ResetPassword = () => {
 
   return (
     <>
-      <Header leftSlot={<AuthGoBackBtn />} />
+      <Header leftSlot={<AuthGoToMainPageBtn />} />
       <AuthForm onSubmit={handleSubmit(onSubmit)}>
         <AuthIcon iconName='key'></AuthIcon>
         <PasswordFields form={form} labels={['Nowe hasło', 'Powtórz nowe hasło']} />

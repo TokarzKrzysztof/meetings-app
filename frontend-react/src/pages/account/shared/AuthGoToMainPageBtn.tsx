@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 import { Button, Icon } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
-export type AuthGoBackBtnProps = {};
+export type AuthGoToMainPageBtnProps = {};
 
-export const AuthGoBackBtn = ({ ...props }: AuthGoBackBtnProps) => {
+export const AuthGoToMainPageBtn = ({ ...props }: AuthGoToMainPageBtnProps) => {
   return (
     <Button
       sx={{ color: 'inherit' }}

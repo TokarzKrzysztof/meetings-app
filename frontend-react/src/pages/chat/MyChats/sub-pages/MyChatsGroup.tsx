@@ -1,55 +1,54 @@
 import { useSetAtom } from 'jotai';
 import { Link } from 'react-router-dom';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
-import { ChatType } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
+import { MyChatsItemCommonActions } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsItemCommonActions';
+import { MyChatsList } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsList';
 import { MyChatsListItem } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsListItem';
-import { MyChatsPanel } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsPanel';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
-import { useGetCurrentUserChats, useLeaveGroupChat } from 'src/queries/chat-queries';
+import { useGetCurrentUserGroupChats, useLeaveGroupChat } from 'src/queries/chat-queries';
 import { MenuItem } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export const MyChatsGroup = () => {
   const confirm = useSetAtom(confirmationDialogAtom);
-  const { currentUserChats, currentUserChatsRefetch } = useGetCurrentUserChats(ChatType.Group);
+  const { currentUserGroupChats, currentUserGroupChatsRefetch } = useGetCurrentUserGroupChats();
   const { leaveGroupChat } = useLeaveGroupChat();
 
-  const handleConfirmLeaveChat = (chat: ChatPreview) => {
+  const handleLeaveChat = (chat: ChatPreview) => {
     confirm({
       message: (
         <>
           Czy na pewno chcesz opuścić chat <b>{chat.name}</b> ?
         </>
       ),
-      onAccept: () => handleLeaveChat(chat),
-    });
-  };
-  const handleLeaveChat = (chat: ChatPreview) => {
-    leaveGroupChat(chat.id, {
-      onSuccess: () => currentUserChatsRefetch(),
+      onAccept: () =>
+        leaveGroupChat(chat.id, {
+          onSuccess: () => currentUserGroupChatsRefetch(),
+        }),
     });
   };
 
   useSignalREffect('onGetNewMessage', () => {
-    currentUserChatsRefetch();
+    currentUserGroupChatsRefetch();
   });
 
-  if (!currentUserChats) return null;
+  if (!currentUserGroupChats) return null;
   return (
-    <MyChatsPanel noChatsText='Brak grupowych rozmów'>
-      {currentUserChats.map((chat) => (
+    <MyChatsList noChatsText='Brak grupowych rozmów'>
+      {currentUserGroupChats.map((chat) => (
         <MyChatsListItem
           key={chat.id}
           chat={chat}
           menuItems={
             <>
+              <MyChatsItemCommonActions chat={chat} onReload={currentUserGroupChatsRefetch} />
               <MenuItem component={Link} to={AppRoutes.EditGroupChat({ chatId: chat.id })}>
                 Edytuj
               </MenuItem>
               <MenuItem
                 sx={(theme) => ({ color: theme.palette.error.main })}
-                onClick={() => handleConfirmLeaveChat(chat)}
+                onClick={() => handleLeaveChat(chat)}
               >
                 Opuść chat
               </MenuItem>
@@ -57,7 +56,7 @@ export const MyChatsGroup = () => {
           }
         />
       ))}
-    </MyChatsPanel>
+    </MyChatsList>
   );
 };
 

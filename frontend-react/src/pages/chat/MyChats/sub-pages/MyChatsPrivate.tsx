@@ -1,23 +1,30 @@
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
-import { ChatType } from 'src/models/chat/chat';
+import { MyChatsItemCommonActions } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsItemCommonActions';
+import { MyChatsList } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsList';
 import { MyChatsListItem } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsListItem';
-import { MyChatsPanel } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsPanel';
-import { useGetCurrentUserChats } from 'src/queries/chat-queries';
+import { useGetCurrentUserPrivateChats } from 'src/queries/chat-queries';
 
 export const MyChatsPrivate = () => {
-  const { currentUserChats, currentUserChatsRefetch } = useGetCurrentUserChats(ChatType.Private);
+  const { currentUserPrivateChats, currentUserPrivateChatsRefetch } =
+    useGetCurrentUserPrivateChats();
 
   useSignalREffect('onGetNewMessage', () => {
-    currentUserChatsRefetch();
+    currentUserPrivateChatsRefetch();
   });
 
-  if (!currentUserChats) return null;
+  if (!currentUserPrivateChats) return null;
   return (
-    <MyChatsPanel noChatsText='Brak prywatnych rozmów'>
-      {currentUserChats.map((chat) => (
-        <MyChatsListItem key={chat.id} chat={chat} menuItems={<></>} />
+    <MyChatsList noChatsText='Brak prywatnych rozmów'>
+      {currentUserPrivateChats.map((chat) => (
+        <MyChatsListItem
+          key={chat.id}
+          chat={chat}
+          menuItems={
+            <MyChatsItemCommonActions chat={chat} onReload={currentUserPrivateChatsRefetch} />
+          }
+        />
       ))}
-    </MyChatsPanel>
+    </MyChatsList>
   );
 };
 

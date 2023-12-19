@@ -2,7 +2,7 @@ import { styled } from '@mui/material';
 import { Emoji } from 'emoji-picker-react';
 import { useRef, useState } from 'react';
 import { Message } from 'src/models/chat/message';
-import { ChatMessageContentReactionsPreview } from 'src/pages/chat/shared/ChatMessageContentReactionsPreview';
+import { ChatMessageContentReactionsPreview } from 'src/pages/chat/shared/components/ChatMessageContentReactionsPreview';
 import { Stack } from 'src/ui-components';
 
 const StyledWrapper = styled(Stack)(({ theme }) => ({

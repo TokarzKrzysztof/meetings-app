@@ -22,12 +22,14 @@ namespace Meetings.Database
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageReaction> MessageReactions { get; set; }
         public DbSet<ChatParticipant> ChatParticipants { get; set; }
+        public DbSet<BlockedUser> BlockedUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.Entity<Category>().HasData(CategoriesGenerator.AllCategories);
             builder.Entity<MessageReaction>().HasOne(x => x.Author).WithMany().OnDelete(DeleteBehavior.ClientCascade);
+            builder.Entity<User>().HasMany(x => x.BlockedUsers).WithOne(x => x.User).OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

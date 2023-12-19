@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 import { UseFormReturn, useFieldArray } from 'react-hook-form';
 import { UsersHttpAutocomplete } from 'src/components/UsersHttpAutocomplete';
-import { GroupChatFormData } from 'src/pages/chat/shared/GroupChatForm/group-chat-form-data';
+import { GroupChatFormData } from 'src/pages/chat/shared/components/GroupChatForm/group-chat-form-data';
 import {
   Avatar,
   Icon,

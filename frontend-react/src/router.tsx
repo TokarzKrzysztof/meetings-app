@@ -102,6 +102,22 @@ export const router = createBrowserRouter([
             },
             loader: protectedLoader,
           },
+          {
+            path: AppRoutes.MyChatsIgnored(),
+            lazy: async () => {
+              const { MyChatsIgnored } = await import('./pages/chat/MyChats/sub-pages/MyChatsIgnored');
+              return { Component: MyChatsIgnored };
+            },
+            loader: protectedLoader,
+          },
+          {
+            path: AppRoutes.MyChatsArchived(),
+            lazy: async () => {
+              const { MyChatsArchived } = await import('./pages/chat/MyChats/sub-pages/MyChatsArchived');
+              return { Component: MyChatsArchived };
+            },
+            loader: protectedLoader,
+          },
         ],
       },
       {

@@ -17,6 +17,8 @@ namespace Meetings.Models.Entities
         public Guid ChatId { get; set; }
         public virtual Chat Chat { get; set; }
         public bool HasUnreadMessages { get; set; }
+        public bool IsArchived { get; set; }
+        public bool IsIgnored { get; set; }
 
         public ChatParticipant(Guid userId)
         {

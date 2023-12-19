@@ -4,11 +4,14 @@ import { GoBackBtn } from 'src/components/GoBackBtn';
 import { AppBar, Box, Toolbar } from 'src/ui-components';
 
 const StyledRightSideWrapper = styled(Box)(({ theme }) => ({
+  // padding to not clip active dot because of overflow
+  padding: '5px 0',
   marginLeft: theme.spacing(2),
   overflow: 'hidden',
   '.MuiTypography-root': {
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap'
   },
 }));
 

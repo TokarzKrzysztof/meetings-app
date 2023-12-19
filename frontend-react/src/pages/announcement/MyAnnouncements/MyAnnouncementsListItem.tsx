@@ -39,63 +39,57 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
     return <Typography color='grey'>Zakończone</Typography>;
   }, [announcement]);
 
-  const handleConfirmSetAnnouncementAsClosed = () => {
+  const handleSetAnnouncementAsClosed = () => {
     confirm({
       message: `Czy na pewno chcesz zakończyć ogłoszenie z kategorii "${categoryName}"? Ogłoszenie będzie można później aktywować.`,
-      onAccept: handleSetAnnouncementAsClosed,
+      onAccept: () =>
+        setAnnouncementStatus(
+          { id: announcement.id, newStatus: AnnouncementStatus.Closed },
+          {
+            onSuccess: () => {
+              enqueueSnackbar({
+                variant: 'success',
+                message: 'Ogłoszenie zostało zakończone',
+              });
+              currentUserAnnoucementsRefetch();
+            },
+          }
+        ),
     });
   };
-  const handleSetAnnouncementAsClosed = () => {
-    setAnnouncementStatus(
-      { id: announcement.id, newStatus: AnnouncementStatus.Closed },
-      {
-        onSuccess: () => {
-          enqueueSnackbar({
-            variant: 'success',
-            message: 'Ogłoszenie zostało zakończone',
-          });
-          currentUserAnnoucementsRefetch();
-        },
-      }
-    );
-  };
 
-  const handleConfirmSetAnnouncementAsPending = () => {
+  const handleSetAnnouncementAsPending = () => {
     confirm({
       message: `Czy na pewno chcesz aktywować ogłoszenie z kategorii "${categoryName}"?`,
-      onAccept: handleSetAnnouncementAsPending,
+      onAccept: () =>
+        setAnnouncementStatus(
+          { id: announcement.id, newStatus: AnnouncementStatus.Pending },
+          {
+            onSuccess: () => {
+              enqueueSnackbar({
+                variant: 'success',
+                message: 'Ogłoszenie zostało ponownie aktywowane',
+              });
+              currentUserAnnoucementsRefetch();
+            },
+          }
+        ),
     });
-  };
-  const handleSetAnnouncementAsPending = () => {
-    setAnnouncementStatus(
-      { id: announcement.id, newStatus: AnnouncementStatus.Pending },
-      {
-        onSuccess: () => {
-          enqueueSnackbar({
-            variant: 'success',
-            message: 'Ogłoszenie zostało ponownie aktywowane',
-          });
-          currentUserAnnoucementsRefetch();
-        },
-      }
-    );
   };
 
-  const handleConfirmRemoveAnnouncement = () => {
+  const handleRemoveAnnouncement = () => {
     confirm({
       message: `Czy na pewno chcesz usunąć ogłoszenie z kategorii "${categoryName}"? Akcja jest nieodwracalna.`,
-      onAccept: handleRemoveAnnouncement,
-    });
-  };
-  const handleRemoveAnnouncement = () => {
-    removeAnnouncement(announcement.id, {
-      onSuccess: () => {
-        enqueueSnackbar({
-          variant: 'success',
-          message: 'Ogłoszenie zostało usunięte',
-        });
-        currentUserAnnoucementsRefetch();
-      },
+      onAccept: () =>
+        removeAnnouncement(announcement.id, {
+          onSuccess: () => {
+            enqueueSnackbar({
+              variant: 'success',
+              message: 'Ogłoszenie zostało usunięte',
+            });
+            currentUserAnnoucementsRefetch();
+          },
+        }),
     });
   };
 
@@ -135,22 +129,17 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
                 size='small'
                 color='error'
                 variant='text'
-                onClick={handleConfirmSetAnnouncementAsClosed}
+                onClick={handleSetAnnouncementAsClosed}
               >
                 Zakończ
               </Button>
             </>
           ) : (
             <>
-              <Button size='small' variant='text' onClick={handleConfirmSetAnnouncementAsPending}>
+              <Button size='small' variant='text' onClick={handleSetAnnouncementAsPending}>
                 Aktywuj
               </Button>
-              <Button
-                size='small'
-                color='error'
-                variant='text'
-                onClick={handleConfirmRemoveAnnouncement}
-              >
+              <Button size='small' color='error' variant='text' onClick={handleRemoveAnnouncement}>
                 Usuń
               </Button>
             </>
