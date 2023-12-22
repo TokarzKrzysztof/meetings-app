@@ -12,7 +12,7 @@ import {
   useSetAnnouncementStatus,
 } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
-import { Box, Button, Card, Stack, Typography } from 'src/ui-components';
+import { Box, Button, Card, DialogContentText, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type MyAnnouncementsListItemProps = {
@@ -41,7 +41,12 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
 
   const handleSetAnnouncementAsClosed = () => {
     confirm({
-      message: `Czy na pewno chcesz zakończyć ogłoszenie z kategorii "${categoryName}"? Ogłoszenie będzie można później aktywować.`,
+      message: (
+        <DialogContentText>
+          Czy na pewno chcesz zakończyć ogłoszenie z kategorii "{categoryName}"? Ogłoszenie będzie
+          można później aktywować.
+        </DialogContentText>
+      ),
       onAccept: () =>
         setAnnouncementStatus(
           { id: announcement.id, newStatus: AnnouncementStatus.Closed },
@@ -60,7 +65,11 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
 
   const handleSetAnnouncementAsPending = () => {
     confirm({
-      message: `Czy na pewno chcesz aktywować ogłoszenie z kategorii "${categoryName}"?`,
+      message: (
+        <DialogContentText>
+          Czy na pewno chcesz aktywować ogłoszenie z kategorii "{categoryName}"?
+        </DialogContentText>
+      ),
       onAccept: () =>
         setAnnouncementStatus(
           { id: announcement.id, newStatus: AnnouncementStatus.Pending },
@@ -79,7 +88,12 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
 
   const handleRemoveAnnouncement = () => {
     confirm({
-      message: `Czy na pewno chcesz usunąć ogłoszenie z kategorii "${categoryName}"? Akcja jest nieodwracalna.`,
+      message: (
+        <DialogContentText>
+          Czy na pewno chcesz usunąć ogłoszenie z kategorii "{categoryName}"? Akcja jest
+          nieodwracalna.
+        </DialogContentText>
+      ),
       onAccept: () =>
         removeAnnouncement(announcement.id, {
           onSuccess: () => {

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Infrastructure.Validators
 {
@@ -17,29 +18,73 @@ namespace Meetings.Infrastructure.Validators
     {
         private readonly IRepository<Chat> _repository;
         private readonly IRepository<ChatParticipant> _chatParticipantRepository;
+        private readonly IRepository<Message> _messageRepository;
         private readonly IClaimsReader _claimsReader;
-        public ChatValidator(IRepository<Chat> userRepository, IClaimsReader claimsReader, IRepository<ChatParticipant> chatParticipantRepository)
+        public ChatValidator(IRepository<Chat> userRepository, IClaimsReader claimsReader, IRepository<ChatParticipant> chatParticipantRepository, IRepository<Message> messageRepository)
         {
             _repository = userRepository;
             _claimsReader = claimsReader;
             _chatParticipantRepository = chatParticipantRepository;
+            _messageRepository = messageRepository;
         }
 
-        internal void AfterGetGroupChat(ChatDTO chat)
+        private async Task<bool> IsUserInChatAsync(Guid chatId, Guid userId)
+        {
+            return await _chatParticipantRepository.Data.AnyAsync(x => x.UserId == userId && x.ChatId == chatId);
+        }
+        private async Task ValidateIsCurrentUserInChatAsync(Guid chatId)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            if (!chat.Participants.Any(x => x.Id == userId))
+            if (!await IsUserInChatAsync(chatId, userId))
             {
                 ValidatorUtils.ThrowError("NotInChat");
             }
         }
 
+        internal async Task WhenGetGroupChat(Guid chatId)
+        {
+            await ValidateIsCurrentUserInChatAsync(chatId);
+        }
+
+        internal async Task WhenChangeGroupChatName(ChangeGroupChatNameData data)
+        {
+            await ValidateIsCurrentUserInChatAsync(data.ChatId);
+
+            var validator = new InlineValidator<ChangeGroupChatNameData>();
+            validator.RuleFor(x => x.Name).NotEmpty().WithErrorCode("EmptyChatName");
+            await validator.ValidateAndThrowAsync(data);
+        }
+
+        internal async Task WhenAddGroupChatParticipant(Guid chatId, Guid userId)
+        {
+            await ValidateIsCurrentUserInChatAsync(chatId);
+
+            if (await IsUserInChatAsync(chatId, userId))
+            {
+                ValidatorUtils.ThrowError("AlreadyInChat");
+            }
+        }
+
+        internal async Task WhenRemoveGroupChatParticipant(Guid chatId, Guid userId)
+        {
+            await ValidateIsCurrentUserInChatAsync(chatId);
+
+            if (!await IsUserInChatAsync(chatId, userId))
+            {
+                ValidatorUtils.ThrowError("UserIsNotInChat");
+            }
+        }
+
         internal async Task WhenSendMessage(SendMessageData data)
         {
-            Guid userId = _claimsReader.GetCurrentUserId();
-            if (!await _chatParticipantRepository.Data.AnyAsync(x => x.UserId == userId && x.ChatId == data.ChatId))
+            await ValidateIsCurrentUserInChatAsync(data.ChatId);
+
+            if (data.ReplyToId != null)
             {
-                ValidatorUtils.ThrowError("NotInChat");
+                if (!await _messageRepository.Data.AnyAsync(x => x.Id == data.ReplyToId && x.ChatId == data.ChatId))
+                {
+                    ValidatorUtils.ThrowError("ReplyToIsInDifferentChat");
+                }
             }
 
             var validator = new InlineValidator<SendMessageData>();

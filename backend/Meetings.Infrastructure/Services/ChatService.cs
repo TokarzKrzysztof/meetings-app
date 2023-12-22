@@ -63,10 +63,8 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<ChatDTO> GetGroupChat(Guid chatId)
         {
-            var chat = await GetChat(ChatType.Group, chatId: chatId);
-            _chatValidator.AfterGetGroupChat(chat);
-
-            return chat;
+            await _chatValidator.WhenGetGroupChat(chatId);
+            return await GetChat(ChatType.Group, chatId: chatId);
         }
 
         private async Task<ChatDTO?> GetChat(ChatType type, Guid chatId = default, Guid participantId = default)
@@ -122,16 +120,6 @@ namespace Meetings.Infrastructure.Services
 
         private async Task<Message> CreateMessage(Guid authorId, Guid chatId, SendMessageData data)
         {
-            if (data.ReplyToId != null)
-            {
-                var replyTo = await _messageRepository.GetById((Guid)data.ReplyToId);
-                if (replyTo.ChatId != chatId)
-                {
-                    // TODO move to validator class
-                    throw new Exception();
-                }
-            }
-
             if (data.Type == MessageType.Text)
             {
                 return await _messageRepository.Create(new Message()
@@ -249,23 +237,40 @@ namespace Meetings.Infrastructure.Services
             return chatId;
         }
 
-        public async Task EditGroupChat(EditGroupChatData data)
+        public async Task ChangeGroupChatName(ChangeGroupChatNameData data)
         {
+            await _chatValidator.WhenChangeGroupChatName(data);
+
             Guid userId = _claimsReader.GetCurrentUserId();
+            var chat = await _repository.Data.SingleAsync(x => x.Id == data.ChatId);
 
-            var chat = await _repository.Data.Include(x => x.Participants).SingleAsync(x => x.Id == data.Id);
             chat.Name = data.Name;
-            await _repository.Update(chat);
 
-            await _chatParticipantRepository.SwapRange(chat.Participants, MakeChatParticipants(data.UserIds, chat.Id), x => x.UserId);
+            await _repository.Data.Where(x => x.Id == data.ChatId)
+               .ExecuteUpdateAsync(s =>
+                   s.SetProperty(x => x.Name, data.Name)
+                );
+        }
+
+        public async Task AddGroupChatParticipant(Guid chatId, Guid userId)
+        {
+            await _chatValidator.WhenAddGroupChatParticipant(chatId, userId);
+
+            await _chatParticipantRepository.Create(new ChatParticipant(userId, chatId));
+        }
+
+        public async Task RemoveGroupChatParticipant(Guid chatId, Guid userId)
+        {
+            await _chatValidator.WhenRemoveGroupChatParticipant(chatId, userId);
+
+            ChatParticipant item = await _chatParticipantRepository.Data.SingleAsync(x => x.ChatId == chatId && x.UserId == userId);
+            await _chatParticipantRepository.RemovePermanently(item);
         }
 
         public async Task LeaveGroupChat(Guid chatId)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            var toRemove = await _chatParticipantRepository.Data.SingleAsync(x => x.UserId == userId && x.ChatId == chatId);
-
-            await _chatParticipantRepository.RemovePermanently(toRemove);
+            await RemoveGroupChatParticipant(chatId, userId);
         }
 
         public async Task MarkChatAsRead(Guid chatId)
@@ -333,7 +338,7 @@ namespace Meetings.Infrastructure.Services
             Guid userId = _claimsReader.GetCurrentUserId();
 
             Guid[] ids = [userId, .. userIds];
-            return ids.Select(x => new ChatParticipant(x) { ChatId = chatId ?? Guid.Empty }).DistinctBy(x => x.UserId).ToList();
+            return ids.Select(x => new ChatParticipant(x, chatId ?? Guid.Empty)).DistinctBy(x => x.UserId).ToList();
         }
 
         private async Task<IEnumerable<ChatPreview>> GetCurrentUserChats(ChatType? type = null)

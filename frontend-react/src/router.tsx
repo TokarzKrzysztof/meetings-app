@@ -129,14 +129,6 @@ export const router = createBrowserRouter([
         loader: protectedLoader,
       },
       {
-        path: AppRoutes.EditGroupChat(),
-        lazy: async () => {
-          const { EditGroupChat } = await import('./pages/chat/EditGroupChat/EditGroupChat');
-          return { Component: EditGroupChat };
-        },
-        loader: protectedLoader,
-      },
-      {
         path: AppRoutes.AnnouncementResultList(),
         lazy: async () => {
           const { AnnouncementResultList } = await import(

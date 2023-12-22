@@ -16,6 +16,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'react'],
   rules: {
+    "react/no-unescaped-entities": ['off'],
     'react/jsx-curly-brace-presence': ['warn', { props: 'never' }],
     'react/react-in-jsx-scope': ['off'],
     'react-hooks/exhaustive-deps': ['off'],

@@ -6,7 +6,7 @@ import { useDeviceMediaQuery } from 'src/hooks/useDeviceMediaQuery';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import { useLogout } from 'src/queries/auth-queries';
 import { useGetCurrentUser } from 'src/queries/user-queries';
-import { Button } from 'src/ui-components';
+import { Button, DialogContentText } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type HeaderMenuProps = {};
@@ -19,7 +19,7 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
 
   const handleLogout = () => {
     confirm({
-      message: 'Czy na pewno chcesz się wylogować?',
+      message: <DialogContentText>Czy na pewno chcesz się wylogować?</DialogContentText>,
       onAccept: () => {
         logout(undefined, {
           onSuccess: () => {

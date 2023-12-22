@@ -21,7 +21,6 @@ export const AppRoutes = {
   MyChatsIgnored: () => '/my-chats/ignored',
   MyChatsArchived: () => '/my-chats/archived',
   NewGroupChat: () => '/new-group-chat',
-  EditGroupChat: (params?: EditGroupChatParams) => makeUrl('/edit-group-chat', params),
 } as const;
 
 export type HomeParams = {
@@ -46,10 +45,6 @@ export type PrivateChatParams = {
 
 export type GroupChatParams = {
   returnUrl?: string;
-  chatId: string;
-};
-
-export type EditGroupChatParams = {
   chatId: string;
 };
 

@@ -57,19 +57,55 @@ export const useLeaveGroupChat = (
   return genericUseMutationMethods('leaveGroupChat', mutation);
 };
 
-export const useEditGroupChat = (
+export const useChangeGroupChatName = (
   options?: UseMutationOptions<
     void,
     AxiosError<HttpErrorData>,
-    { id: string; name: string; userIds: string[] }
+    { chatId: Chat['id']; name: string }
   >
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => axios.put(`${baseUrl}/EditGroupChat`, data),
+    mutationFn: (data) => axios.patch(`${baseUrl}/ChangeGroupChatName`, data),
     ...options,
   });
 
-  return genericUseMutationMethods('editGroupChat', mutation);
+  return genericUseMutationMethods('changeGroupChatName', mutation);
+};
+
+export const useAddGroupChatParticipant = (
+  options?: UseMutationOptions<
+    void,
+    AxiosError<HttpErrorData>,
+    { chatId: Chat['id']; userId: string }
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: ({ chatId, userId }) => {
+      const params = { chatId, userId };
+      return axios.post(`${baseUrl}/AddGroupChatParticipant`, null, { params });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('addGroupChatParticipant', mutation);
+};
+
+export const useRemoveGroupChatParticipant = (
+  options?: UseMutationOptions<
+    void,
+    AxiosError<HttpErrorData>,
+    { chatId: Chat['id']; userId: string }
+  >
+) => {
+  const mutation = useMutation({
+    mutationFn: ({ chatId, userId }) => {
+      const params = { chatId, userId };
+      return axios.delete(`${baseUrl}/RemoveGroupChatParticipant`, { params });
+    },
+    ...options,
+  });
+
+  return genericUseMutationMethods('removeGroupChatParticipant', mutation);
 };
 
 export const useCreateGroupChat = (

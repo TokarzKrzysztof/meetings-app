@@ -4,7 +4,7 @@ import { ChatPreview } from 'src/models/chat/chat-preview';
 import { archivedChatsTxt, ignoredChatsTxt } from 'src/pages/chat/MyChats/MyChatsMore';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import { useToggleArchiveChat, useToggleIgnoreChat } from 'src/queries/chat-queries';
-import { MenuItem, Typography } from 'src/ui-components';
+import { DialogContentText, MenuItem } from 'src/ui-components';
 
 export type MyChatsItemCommonActionsProps = {
   chat: ChatPreview;
@@ -21,12 +21,12 @@ export const MyChatsItemCommonActions = ({ chat, onReload }: MyChatsItemCommonAc
     confirm({
       message: (
         <>
-          <Typography>Czy na pewno chcesz ignorować tą rozmowę?</Typography>
-          <Typography my={1}>
+          <DialogContentText>Czy na pewno chcesz ignorować tą rozmowę?</DialogContentText>
+          <DialogContentText my={1}>
             Nie będziesz otrzymywać powiadomień o nowych wiadomościach, oraz zostanie ona
-            przeniesiona do sekcji &quot;{ignoredChatsTxt}&quot;.
-          </Typography>
-          <Typography>Tą akcję będzie można w każdym momencie anulować.</Typography>
+            przeniesiona do sekcji "{ignoredChatsTxt}".
+          </DialogContentText>
+          <DialogContentText>Tą akcję będzie można w każdym momencie anulować.</DialogContentText>
         </>
       ),
       onAccept: () => {
@@ -47,14 +47,14 @@ export const MyChatsItemCommonActions = ({ chat, onReload }: MyChatsItemCommonAc
     confirm({
       message: (
         <>
-          <Typography>Czy na pewno chcesz zarchiwizować tą rozmowę?</Typography>
-          <Typography my={1}>
-            Zostanie ona przeniesiona do sekcji &quot;{archivedChatsTxt}&quot;.
-          </Typography>
-          <Typography>
+          <DialogContentText>Czy na pewno chcesz zarchiwizować tą rozmowę?</DialogContentText>
+          <DialogContentText my={1}>
+            Zostanie ona przeniesiona do sekcji "{archivedChatsTxt}".
+          </DialogContentText>
+          <DialogContentText>
             Po otrzymaniu nowej wiadomości zostanie ona przywrócona, jeżeli natomiast nie chcesz
             otrzymywać powiadomień o nowych wiadomościach użyj opcji ignorowania rozmowy.
-          </Typography>
+          </DialogContentText>
         </>
       ),
       onAccept: () => {

@@ -1,44 +1,24 @@
-import { Link } from 'react-router-dom';
-import { Chat } from 'src/models/chat/chat';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogContentText,
-  Icon,
-  IconButton,
-  Typography,
-} from 'src/ui-components';
-import { AppRoutes } from 'src/utils/enums/app-routes';
+import { Button, Dialog, DialogContent, DialogContentText } from 'src/ui-components';
 
 export type GroupChatAloneInfoProps = {
   onClose: () => void;
-  groupChat: Chat;
+  onOpenParticipantsDialog: () => void;
 };
 
-export const GroupChatAloneInfo = ({ onClose, groupChat }: GroupChatAloneInfoProps) => {
+export const GroupChatAloneInfo = ({
+  onClose,
+  onOpenParticipantsDialog,
+}: GroupChatAloneInfoProps) => {
   return (
     <Dialog open onClose={onClose}>
-      <Box textAlign='right'>
-        <IconButton onClick={onClose}>
-          <Icon name='close'></Icon>
-        </IconButton>
-      </Box>
       <DialogContent>
         <DialogContentText align='center'>
-          <Typography>
-            Jesteś aktualnie jedynym uczestnikiem tej rozmowy. Kliknij przycisk poniżej aby dodać
-            innych użytkowników
-          </Typography>
+          Jesteś aktualnie jedynym uczestnikiem tej rozmowy. Kliknij przycisk poniżej aby dodać
+          innych użytkowników
         </DialogContentText>
         <DialogContentText align='center' mt={4}>
-          <Button
-            component={Link}
-            to={AppRoutes.EditGroupChat({ chatId: groupChat.id })}
-            size='large'
-          >
-            Edytuj
+          <Button onClick={onOpenParticipantsDialog} size='large'>
+            Dodaj
           </Button>
         </DialogContentText>
       </DialogContent>

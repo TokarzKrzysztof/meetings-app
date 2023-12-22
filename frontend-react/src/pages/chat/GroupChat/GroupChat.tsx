@@ -1,15 +1,20 @@
-import { useMemo, useReducer, useRef, useState } from 'react';
+import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AvatarList } from 'src/components/AvatarList';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
+import { GroupChatActions } from 'src/pages/chat/GroupChat/GroupChatActions';
 import { GroupChatAloneInfo } from 'src/pages/chat/GroupChat/GroupChatAloneInfo';
-import { GroupChatParticipantsPreview } from 'src/pages/chat/GroupChat/GroupChatParticipantsPreview';
+import { GroupChatChangeName } from 'src/pages/chat/GroupChat/GroupChatChangeName';
+import { GroupChatParticipants } from 'src/pages/chat/GroupChat/GroupChatParticipants';
 import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/components/ChatNewMessage';
-import { ChatScrollable, ChatScrollableHandle } from 'src/pages/chat/shared/components/ChatScrollable';
+import {
+  ChatScrollable,
+  ChatScrollableHandle,
+} from 'src/pages/chat/shared/components/ChatScrollable';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
@@ -21,27 +26,31 @@ import { AppRoutes, GroupChatParams } from 'src/utils/enums/app-routes';
 export const GroupChat = () => {
   const [params] = useRouteParams<GroupChatParams>();
   const scrollableRef = useRef<ChatScrollableHandle>(null);
-  const anchorRef = useRef<HTMLDivElement>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
-  const [showParticipantsPreview, setShowParticipantsPreview] = useState(false);
-  const [showAloneInfo, setShowAloneInfo] = useState(false);
+  const [showParticipantsDialog, setShowParticipantsDialog] = useState(false);
+  const [showAloneInfoDialog, setShowAloneInfoDialog] = useState(false);
+  const [showChangeNameDialog, setShowChangeNameDialog] = useState(false);
   const [_, setChat] = useClearableAtom(chatAtom);
   const currentUser = useLoggedInUser();
   const navigate = useNavigate();
 
-  const { groupChat } = useGetGroupChat(params.chatId, {
-    onSuccess: (chat) => {
-      setChat(chat);
-      if (chat.participants.length === 1) {
-        setShowAloneInfo(true);
-      }
-    },
-    onError: (err) => {
-      if (err.response?.data.validationErrors.includes('NotInChat')) {
-        navigate(AppRoutes.MyChatsGroup());
-      }
-    },
-  });
+  const { groupChat, groupChatRefetch, groupChatFetchedAfterMount } = useGetGroupChat(
+    params.chatId,
+    {
+      onSuccess: (chat) => setChat(chat),
+      onError: (err) => {
+        if (err.response?.data.validationErrors.includes('NotInChat')) {
+          navigate(AppRoutes.MyChatsGroup());
+        }
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (groupChat?.participants.length === 1) {
+      setShowAloneInfoDialog(true);
+    }
+  }, [groupChatFetchedAfterMount]);
 
   useSignalRListeners(groupChat, dispatch);
   useUnloadListener(messages);
@@ -66,14 +75,14 @@ export const GroupChat = () => {
           <ChatHeader
             returnUrl={params.returnUrl}
             right={
-              <Stack
-                ref={anchorRef}
-                alignItems='center'
-                gap={1}
-                onClick={() => !isAloneInChat && setShowParticipantsPreview(true)}
-              >
+              <Stack alignItems='center' gap={1}>
                 <AvatarList users={groupChat.participants} avatarSize={30} />
                 <Typography>{groupChat.name}</Typography>
+                <GroupChatActions
+                  groupChat={groupChat}
+                  onShowParticipantsDialog={() => setShowParticipantsDialog(true)}
+                  onShowChangeNameDialog={() => setShowChangeNameDialog(true)}
+                />
               </Stack>
             }
           />
@@ -99,15 +108,28 @@ export const GroupChat = () => {
           />
         </Stack>
       </ChatMessageFocusProvider>
-      {showParticipantsPreview && (
-        <GroupChatParticipantsPreview
-          anchorEl={anchorRef.current}
-          onClose={() => setShowParticipantsPreview(false)}
+      {showParticipantsDialog && (
+        <GroupChatParticipants
+          onReload={groupChatRefetch}
+          onClose={() => setShowParticipantsDialog(false)}
           groupChat={groupChat}
         />
       )}
-      {showAloneInfo && (
-        <GroupChatAloneInfo onClose={() => setShowAloneInfo(false)} groupChat={groupChat} />
+      {showChangeNameDialog && (
+        <GroupChatChangeName
+          onReload={groupChatRefetch}
+          onClose={() => setShowChangeNameDialog(false)}
+          groupChat={groupChat}
+        />
+      )}
+      {showAloneInfoDialog && (
+        <GroupChatAloneInfo
+          onOpenParticipantsDialog={() => {
+            setShowAloneInfoDialog(false);
+            setShowParticipantsDialog(true);
+          }}
+          onClose={() => setShowAloneInfoDialog(false)}
+        />
       )}
     </>
   );

@@ -20,9 +20,10 @@ namespace Meetings.Models.Entities
         public bool IsArchived { get; set; }
         public bool IsIgnored { get; set; }
 
-        public ChatParticipant(Guid userId)
+        public ChatParticipant(Guid userId, Guid chatId)
         {
             UserId = userId;
+            ChatId = chatId;
         }
     }
 }

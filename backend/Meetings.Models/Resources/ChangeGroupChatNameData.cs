@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Resources
 {
-    public class EditGroupChatData
+    public class ChangeGroupChatNameData
     {
-        public Guid Id { get; set; }
+        public Guid ChatId { get; set; }
         public string Name { get; set; }
-        public List<Guid> UserIds { get; set; }
     }
 }

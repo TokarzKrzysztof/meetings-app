@@ -33,7 +33,7 @@ export const ChatNewMessageVoice = ({ onCancel, onSend }: ChatNewMessageVoicePro
           onCancel();
         }}
       >
-        <Icon name='close' />
+        <Icon name='delete' />
       </IconButton>
       <TextField
         disabled

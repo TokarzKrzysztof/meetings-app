@@ -126,19 +126,35 @@ namespace Meetings.Api.Controllers
             return Ok(chatId);
         }
 
-        [HttpPut]
-        [Authorize]
-        public async Task<IActionResult> EditGroupChat([FromBody] EditGroupChatData data)
-        {
-            await _chatService.EditGroupChat(data);
-            return Ok();
-        }
-
         [HttpDelete]
         [Authorize]
         public async Task<IActionResult> LeaveGroupChat([FromQuery] Guid chatId)
         {
             await _chatService.LeaveGroupChat(chatId);
+            return Ok();
+        }    
+        
+        [HttpPatch]
+        [Authorize]
+        public async Task<IActionResult> ChangeGroupChatName([FromBody] ChangeGroupChatNameData data)
+        {
+            await _chatService.ChangeGroupChatName(data);
+            return Ok();
+        }      
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddGroupChatParticipant([FromQuery] Guid chatId, [FromQuery] Guid userId)
+        {
+            await _chatService.AddGroupChatParticipant(chatId, userId);
+            return Ok();
+        }
+        
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> RemoveGroupChatParticipant([FromQuery] Guid chatId, [FromQuery] Guid userId)
+        {
+            await _chatService.RemoveGroupChatParticipant(chatId, userId);
             return Ok();
         }
 
