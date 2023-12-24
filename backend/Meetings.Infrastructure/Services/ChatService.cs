@@ -32,6 +32,7 @@ namespace Meetings.Infrastructure.Services
         private readonly ExtendedMapper _extendedMapper;
         private readonly IFileManager _fileManager;
         private readonly ChatValidator _chatValidator;
+        private readonly UserService _userService;
 
         public ChatService(IRepository<Chat> repository,
                            IMapper mapper,
@@ -42,7 +43,8 @@ namespace Meetings.Infrastructure.Services
                            ExtendedMapper extendedMapper,
                            IFileManager fileManager,
                            IRepository<MessageReaction> messageReactionRepository,
-                           ChatValidator chatValidator)
+                           ChatValidator chatValidator,
+                           UserService userService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -54,6 +56,7 @@ namespace Meetings.Infrastructure.Services
             _fileManager = fileManager;
             _messageReactionRepository = messageReactionRepository;
             _chatValidator = chatValidator;
+            _userService = userService;
         }
 
         public async Task<ChatDTO?> GetPrivateChat(Guid participantId)
@@ -148,19 +151,37 @@ namespace Meetings.Infrastructure.Services
             });
         }
 
-        public async Task<MessageDTO> SendMessage(SendMessageData data)
+        public async Task SendMessage(SendMessageData data)
         {
             await _chatValidator.WhenSendMessage(data);
 
             Guid authorId = _claimsReader.GetCurrentUserId();
 
             Message entity = await CreateMessage(authorId, data.ChatId, data);
-            // refetch entity with required dependencies
-            entity = await _messageRepository.GetById(entity.Id, q => q.IncludeAuthors());
 
             await UpdateParticipantsData(data.ChatId, authorId);
+            await NotifyAboutMessage(entity.Id);
+        }
 
-            return _extendedMapper.ToMessageDTO(entity);
+        private async Task SendInfoMessage(Guid chatId, string info)
+        {
+            Guid authorId = _claimsReader.GetCurrentUserId();
+            Message entity = await _messageRepository.Create(new Message()
+            {
+                AuthorId = authorId,
+                ChatId = chatId,
+                Value = info,
+                Type = MessageType.Info,
+            });
+
+            await NotifyAboutMessage(entity.Id);
+        }
+
+        private async Task NotifyAboutMessage(Guid messageId)
+        {
+            // refetch entity with required dependencies
+            var message = await _messageRepository.GetById(messageId, q => q.IncludeAuthors());
+            await _chatHubContext.Clients.Group(message.ChatId.ToString()).OnGetNewMessage(_extendedMapper.ToMessageDTO(message), message.ChatId);
         }
 
         public async Task<MessageDTO> SetMessageReaction(MessageReactionDTO data)
@@ -250,6 +271,10 @@ namespace Meetings.Infrastructure.Services
                .ExecuteUpdateAsync(s =>
                    s.SetProperty(x => x.Name, data.Name)
                 );
+
+            string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "zmienił" : "zmieniła";
+            string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} nazwę grupy na {chat.Name}.";
+            await SendInfoMessage(data.ChatId, info);
         }
 
         public async Task AddGroupChatParticipant(Guid chatId, Guid userId)
@@ -257,20 +282,39 @@ namespace Meetings.Infrastructure.Services
             await _chatValidator.WhenAddGroupChatParticipant(chatId, userId);
 
             await _chatParticipantRepository.Create(new ChatParticipant(userId, chatId));
+
+            var user = await _userService.GetUser(userId);
+            string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "dodał" : "dodała";
+            string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} użytkownika {user.FirstName + " " + user.LastName} do grupy.";
+            await SendInfoMessage(chatId, info);
         }
 
-        public async Task RemoveGroupChatParticipant(Guid chatId, Guid userId)
+        public async Task RemoveGroupChatParticipant(Guid chatId, Guid userId, bool isFromLeaveChat = false)
         {
             await _chatValidator.WhenRemoveGroupChatParticipant(chatId, userId);
 
             ChatParticipant item = await _chatParticipantRepository.Data.SingleAsync(x => x.ChatId == chatId && x.UserId == userId);
             await _chatParticipantRepository.RemovePermanently(item);
+
+            if (isFromLeaveChat)
+            {
+                string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "opuścił" : "opuściła";
+                string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} grupę.";
+                await SendInfoMessage(chatId, info);
+            }
+            else
+            {
+                var user = await _userService.GetUser(userId);
+                string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "usunął" : "usunęła";
+                string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} użytkownika {user.FirstName + " " + user.LastName} z grupy.";
+                await SendInfoMessage(chatId, info);
+            }   
         }
 
         public async Task LeaveGroupChat(Guid chatId)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            await RemoveGroupChatParticipant(chatId, userId);
+            await RemoveGroupChatParticipant(chatId, userId, true);
         }
 
         public async Task MarkChatAsRead(Guid chatId)

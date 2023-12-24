@@ -2,6 +2,7 @@ import { Dispatch } from 'react';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { Chat } from 'src/models/chat/chat';
+import { MessageType } from 'src/models/chat/message';
 import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
 import { useMarkChatAsRead } from 'src/queries/chat-queries';
 
@@ -16,7 +17,7 @@ export const useSignalRListeners = (
     'onGetNewMessage',
     (message, chatId) => {
       if (chat?.id !== chatId) return;
-      if (message.authorId === currentUser.id) {
+      if (message.authorId === currentUser.id && message.type !== MessageType.Info) {
         dispatch({ type: 'replace', message });
       } else {
         dispatch({ type: 'append', message });

@@ -104,10 +104,8 @@ namespace Meetings.Api.Controllers
         [Authorize]
         public async Task<IActionResult> SendMessage([FromForm] SendMessageData data)
         {
-            MessageDTO message = await _chatService.SendMessage(data);
-            await _chatHubContext.Clients.Group(message.ChatId.ToString()).OnGetNewMessage(message, message.ChatId);
-
-            return Ok(message);
+            await _chatService.SendMessage(data);
+            return Ok();
         }
 
         [HttpPost]
@@ -132,15 +130,15 @@ namespace Meetings.Api.Controllers
         {
             await _chatService.LeaveGroupChat(chatId);
             return Ok();
-        }    
-        
+        }
+
         [HttpPatch]
         [Authorize]
         public async Task<IActionResult> ChangeGroupChatName([FromBody] ChangeGroupChatNameData data)
         {
             await _chatService.ChangeGroupChatName(data);
             return Ok();
-        }      
+        }
 
         [HttpPost]
         [Authorize]
@@ -149,7 +147,7 @@ namespace Meetings.Api.Controllers
             await _chatService.AddGroupChatParticipant(chatId, userId);
             return Ok();
         }
-        
+
         [HttpDelete]
         [Authorize]
         public async Task<IActionResult> RemoveGroupChatParticipant([FromQuery] Guid chatId, [FromQuery] Guid userId)

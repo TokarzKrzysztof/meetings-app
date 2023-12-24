@@ -36,14 +36,14 @@ namespace Meetings.Infrastructure.Hubs
         {
             get
             {
-                return new Guid(Context.User!.FindFirstValue(UserClaims.Id)!);
+                return new Guid(Context.User!.FindFirstValue(CustomClaims.Id)!);
             }
         }
         private string CurrentUserFirstName
         {
             get
             {
-                return Context.User!.FindFirstValue(UserClaims.FirstName)!;
+                return Context.User!.FindFirstValue(CustomClaims.FirstName)!;
             }
         }
 

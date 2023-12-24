@@ -51,6 +51,9 @@ export const MyChatsListItem = ({ menuItems, chat }: MyChatsListItemProps) => {
     if (lastMessage.type === MessageType.Text) {
       return `${prefix} ${lastMessage.value}`;
     }
+    if (lastMessage.type === MessageType.Info) {
+      return lastMessage.value;
+    }
 
     const itemName = lastMessage.type === MessageType.Image ? 'zdjęcie' : 'wiadomość głosową';
     return isAuthorCurrentUser
@@ -63,18 +66,18 @@ export const MyChatsListItem = ({ menuItems, chat }: MyChatsListItemProps) => {
   const to = useMemo(() => {
     if (chat.type === ChatType.Group) return AppRoutes.GroupChat({ chatId: chat.id });
     return AppRoutes.PrivateChat({ userId: getPrivateChatParticipant().id });
-  }, []);
+  }, [chat]);
 
   const activeStatus = useMemo(() => {
     if (chat.type === ChatType.Group) return null;
     return getPrivateChatParticipant().activeStatus;
-  }, []);
+  }, [chat]);
 
   const chatName = useMemo(() => {
     if (chat.type === ChatType.Group) return chat.name;
     const participant = getPrivateChatParticipant();
     return `${participant.firstName} ${participant.lastName}`;
-  }, []);
+  }, [chat]);
 
   const fontWeight = chat.hasUnreadMessages ? 'bold' : undefined;
   return (

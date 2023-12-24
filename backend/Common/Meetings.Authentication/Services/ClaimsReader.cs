@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Meetings.Models.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace Meetings.Authentication.Services
     {
         Guid GetCurrentUserId();
         Guid? TryGetCurrentUserId();
+        string GetCurrentUserFirstName();
+        UserGender GetCurrentUserGender();
     }
     internal class ClaimsReader : IClaimsReader
     {
@@ -19,6 +22,17 @@ namespace Meetings.Authentication.Services
         public ClaimsReader(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        public UserGender GetCurrentUserGender()
+        {
+            string gender = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Gender)!;
+            return Enum.Parse<UserGender>(gender);
+        }
+
+        public string GetCurrentUserFirstName()
+        {
+            return _httpContextAccessor.HttpContext.User.FindFirstValue(CustomClaims.FirstName)!;
         }
 
         public Guid GetCurrentUserId()
@@ -34,7 +48,7 @@ namespace Meetings.Authentication.Services
                 return null;
             }
 
-            Guid userId = new Guid(claims.Single(x => x.Type == UserClaims.Id).Value);
+            Guid userId = new Guid(claims.Single(x => x.Type == CustomClaims.Id).Value);
             return userId;
         }
     }

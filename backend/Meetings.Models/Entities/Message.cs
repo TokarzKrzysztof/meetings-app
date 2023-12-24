@@ -10,8 +10,9 @@ namespace Meetings.Models.Entities
     {
         Text,
         Image,
-        Audio
-    }
+        Audio,
+        Info,
+    } 
 
     public class Message : IEntityBase
     {

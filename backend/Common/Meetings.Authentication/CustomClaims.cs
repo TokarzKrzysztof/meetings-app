@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Meetings.Authentication
 {
-    public class UserClaims
+    public class CustomClaims
     {
         public const string Id = "id";
         public const string FirstName = "firstName";

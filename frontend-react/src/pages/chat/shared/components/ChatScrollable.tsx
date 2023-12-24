@@ -4,8 +4,9 @@ import { InfiniteScroll } from 'src/components/InfiniteScroll';
 import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { Chat, ChatType } from 'src/models/chat/chat';
-import { Message } from 'src/models/chat/message';
+import { Message, MessageType } from 'src/models/chat/message';
 import { ChatGoDownBtn } from 'src/pages/chat/shared/components/ChatGoDownBtn';
+import { ChatInfoMessage } from 'src/pages/chat/shared/components/ChatInfoMessage';
 import { ChatMessage } from 'src/pages/chat/shared/components/ChatMessage/ChatMessage';
 import { ChatTypingIndicator } from 'src/pages/chat/shared/components/ChatTypingIndicator';
 import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
@@ -93,17 +94,21 @@ const ChatScrollableInner = (
           totalAmount={chat?.totalMessagesAmount as number}
           next={handleLoadChatMessages}
         >
-          {messages.map((x, i) => (
-            <ChatMessage
-              key={x.id}
-              message={x}
-              allMessages={messages}
-              currentUser={currentUser}
-              showAuthor={chat?.type === ChatType.Group}
-              prevMessage={messages[i - 1]}
-              onStartReplyLastMessage={scrollToBottom}
-            />
-          ))}
+          {messages.map((x, i) =>
+            x.type === MessageType.Info ? (
+              <ChatInfoMessage key={x.id} message={x} />
+            ) : (
+              <ChatMessage
+                key={x.id}
+                message={x}
+                allMessages={messages}
+                currentUser={currentUser}
+                showAuthor={chat?.type === ChatType.Group}
+                prevMessage={messages[i - 1]}
+                onStartReplyLastMessage={scrollToBottom}
+              />
+            )
+          )}
         </InfiniteScroll>
       </Stack>
       <ChatTypingIndicator chat={chat} />

@@ -278,7 +278,7 @@ export const useMarkChatAsRead = (
 
 export const useSendMessage = (
   onUploadProgress: (data: SendMessageData, percentage: number) => void,
-  options?: UseMutationOptions<Message, AxiosError<HttpErrorData>, SendMessageData>
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, SendMessageData>
 ) => {
   const mutation = useMutation({
     mutationFn: (data) => {

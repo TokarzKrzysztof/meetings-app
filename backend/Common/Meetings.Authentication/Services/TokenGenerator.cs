@@ -33,9 +33,10 @@ namespace Meetings.Authentication.Services
             {
                 Subject = new ClaimsIdentity(new List<Claim>
                 {
-                    new Claim(UserClaims.Id,  user.Id.ToString()),
-                    new Claim(UserClaims.FirstName,  user.FirstName),
-                    new Claim(UserClaims.LastName,  user.LastName),
+                    new Claim(CustomClaims.Id,  user.Id.ToString()),
+                    new Claim(CustomClaims.FirstName,  user.FirstName),
+                    new Claim(CustomClaims.LastName,  user.LastName),
+                    new Claim(JwtRegisteredClaimNames.Gender,  user.Gender.ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 }),
                 Issuer = issuer,
