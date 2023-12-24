@@ -6,5 +6,5 @@ export type ChatInfoMessageProps = {
 };
 
 export const ChatInfoMessage = ({ message }: ChatInfoMessageProps) => {
-  return <Typography align='center' fontSize={13} color={'grey'}>{message.value}</Typography>;
+  return <Typography align='center' mt={1} fontSize={13} color={'grey'}>{message.value}</Typography>;
 };

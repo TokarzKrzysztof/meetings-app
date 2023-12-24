@@ -2,6 +2,7 @@ import { useSetAtom } from 'jotai';
 import _ from 'lodash';
 import { useRef, useState } from 'react';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
+import { Chat, ChatType } from 'src/models/chat/chat';
 import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';
 import { StyledReplyIcon } from 'src/pages/chat/shared/components/ChatMessage/ChatMessage.styled';
@@ -9,25 +10,27 @@ import { ChatMessageContent } from 'src/pages/chat/shared/components/ChatMessage
 import { ChatMessageDragToReply } from 'src/pages/chat/shared/components/ChatMessageDragToReply';
 import { ChatMessageReactionPicker } from 'src/pages/chat/shared/components/ChatMessageReactionPicker';
 import { replyMessageAtom } from 'src/pages/chat/shared/components/ChatNewMessageReplyPreview';
+import { useGetParticipant } from 'src/pages/chat/shared/hooks/useGetParticipant';
 import { Box, Typography } from 'src/ui-components';
 
 export type ChatMessageProps = {
+  chat: Chat;
   message: Message;
   allMessages: Message[];
   currentUser: User;
-  showAuthor?: boolean;
   prevMessage?: Message;
   onStartReplyLastMessage: () => void;
 };
 
 export const ChatMessage = ({
+  chat,
   message,
   allMessages,
   currentUser,
-  showAuthor,
   prevMessage,
   onStartReplyLastMessage,
 }: ChatMessageProps) => {
+  const author = useGetParticipant(chat, message.authorId);
   const { setMessageReaction } = useSignalRActions();
   const setReplyMessage = useSetAtom(replyMessageAtom);
   const [openReactions, setOpenReactions] = useState(false);
@@ -49,9 +52,9 @@ export const ChatMessage = ({
     }
   };
 
-  const isAuthorCurrentUser = message.authorId === currentUser.id;
   const maxMessageMovement = 80;
   const repliedMessageWrap = 15;
+  const isAuthorCurrentUser = message.authorId === currentUser.id;
   const isPrevMessageSameAuthor = prevMessage?.authorId === message.authorId;
   return (
     <>
@@ -79,9 +82,9 @@ export const ChatMessage = ({
             touchAction: message.isPending ? 'none' : undefined,
           }}
         >
-          {showAuthor && !isAuthorCurrentUser && !isPrevMessageSameAuthor && (
+          {chat.type === ChatType.Group && !isAuthorCurrentUser && !isPrevMessageSameAuthor && (
             <Typography fontSize={12} mt={2}>
-              {`${message.author?.firstName} ${message.author?.lastName}`}
+              {`${author?.firstName} ${author?.lastName}`}
             </Typography>
           )}
           <ChatMessageContent

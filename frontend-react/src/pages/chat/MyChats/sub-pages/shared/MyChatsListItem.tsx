@@ -16,7 +16,7 @@ import {
   ListItemButton,
   ListItemText,
   Menu,
-  Stack
+  Stack,
 } from 'src/ui-components';
 import { withNoPropagation } from 'src/utils/dom-utils';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -42,12 +42,10 @@ export const MyChatsListItem = ({ menuItems, chat }: MyChatsListItemProps) => {
   };
 
   const lastMessageText = useMemo(() => {
-    if (!chat.lastMessage) return null;
-
     const lastMessage = chat.lastMessage;
 
     const isAuthorCurrentUser = currentUser.id === lastMessage.authorId;
-    const prefix = isAuthorCurrentUser ? 'Ty:' : `${lastMessage.author!.firstName}:`;
+    const prefix = isAuthorCurrentUser ? 'Ty:' : `${chat.lastMessageAuthor.firstName}:`;
     if (lastMessage.type === MessageType.Text) {
       return `${prefix} ${lastMessage.value}`;
     }
@@ -59,7 +57,7 @@ export const MyChatsListItem = ({ menuItems, chat }: MyChatsListItemProps) => {
     return isAuthorCurrentUser
       ? `${prefix} ${currentUser.gender === UserGender.Male ? 'Wysłałeś' : 'Wysłałaś'} ${itemName}`
       : `${prefix} ${
-          lastMessage.author!.gender === UserGender.Male ? 'Wysłał' : 'Wysłała'
+          chat.lastMessageAuthor.gender === UserGender.Male ? 'Wysłał' : 'Wysłała'
         } ${itemName}`;
   }, [chat]);
 

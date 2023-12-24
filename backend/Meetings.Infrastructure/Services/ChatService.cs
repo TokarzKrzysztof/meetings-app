@@ -159,7 +159,7 @@ namespace Meetings.Infrastructure.Services
 
             Message entity = await CreateMessage(authorId, data.ChatId, data);
 
-            await NotifyAboutNewMessage(entity.Id, authorId);
+            await NotifyAboutNewMessage(entity);
         }
 
         private async Task SendInfoMessage(Guid chatId, string info)
@@ -173,15 +173,15 @@ namespace Meetings.Infrastructure.Services
                 Type = MessageType.Info,
             });
 
-            await NotifyAboutNewMessage(entity.Id, authorId);
+            await NotifyAboutNewMessage(entity);
         }
 
-        private async Task NotifyAboutNewMessage(Guid messageId, Guid authorId)
+        private async Task NotifyAboutNewMessage(Message entity)
         {
-            List<ChatParticipant> participants = await _chatParticipantRepository.Data.Where(x => x.ChatId == chatId).ToListAsync();
+            List<ChatParticipant> participants = await _chatParticipantRepository.Data.Where(x => x.ChatId == entity.ChatId).ToListAsync();
             participants.ForEach(x =>
             {
-                if (x.UserId != authorId)
+                if (x.UserId != entity.AuthorId)
                 {
                     x.HasUnreadMessages = true;
                 }
@@ -191,13 +191,13 @@ namespace Meetings.Infrastructure.Services
             await _chatParticipantRepository.UpdateRange(participants);
 
             // refetch entity with required dependencies
-            var message = await _messageRepository.GetById(messageId, q => q.IncludeAuthors());
+            var message = await _messageRepository.GetById(entity.Id);
             await _chatHubContext.Clients.Group(message.ChatId.ToString()).OnGetNewMessage(_extendedMapper.ToMessageDTO(message), message.ChatId);
         }
 
         public async Task<MessageDTO> SetMessageReaction(MessageReactionDTO data)
         {
-            Message message = await _messageRepository.Data.Where(x => x.Id == data.MessageId).IncludeAuthors().Include(x => x.Reactions).SingleAsync();
+            Message message = await _messageRepository.Data.Where(x => x.Id == data.MessageId).Include(x => x.Reactions).SingleAsync();
             MessageReaction? authorReaction = message.Reactions.SingleOrDefault(x => x.AuthorId == data.AuthorId);
             if (authorReaction != null)
             {
@@ -266,6 +266,11 @@ namespace Meetings.Infrastructure.Services
         public async Task<Guid> CreateGroupChat(CreateGroupChatData data)
         {
             Guid chatId = await CreateNewChat(data.ConnectionId, MakeChatParticipants(data.UserIds), ChatType.Group, data.Name);
+
+            string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "utworzył" : "utworzyła";
+            string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} grupę.";
+            await SendInfoMessage(chatId, info);
+
             return chatId;
         }
 
@@ -394,14 +399,15 @@ namespace Meetings.Infrastructure.Services
             return chats.Select(x =>
             {
                 ChatParticipant currentUserParticipant = x.Participants.Single(x => x.UserId == userId);
-                Message? lastMessage = x.Messages.SingleOrDefault();
+                Message lastMessage = x.Messages.Single();
                 return new ChatPreview()
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Type = x.Type,
                     HasUnreadMessages = currentUserParticipant.HasUnreadMessages,
-                    LastMessage = lastMessage != null ? _extendedMapper.ToMessageDTO(lastMessage) : null,
+                    LastMessage = _extendedMapper.ToMessageDTO(lastMessage),
+                    LastMessageAuthor = _extendedMapper.ToUserDTO(lastMessage.Author),
                     Participants = _extendedMapper.ToUserDTOList(x.Participants.Select(x => x.User)),
                     IsIgnored = currentUserParticipant.IsIgnored,
                     IsArchived = currentUserParticipant.IsArchived,

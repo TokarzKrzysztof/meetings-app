@@ -19,7 +19,6 @@ namespace Meetings.Database.QueryExtensions
         {
             return query
                 .Include(x => x.Messages).ThenInclude(x => x.Reactions)
-                .Include(x => x.Messages).ThenInclude(x => x.Author)
                 .Include(x => x.Messages).ThenInclude(x => x.ReplyTo);
         }
         public static IQueryable<Chat> IncludeParticipants(this IQueryable<Chat> query)

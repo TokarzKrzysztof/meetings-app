@@ -7,6 +7,7 @@ export type ChatPreview = {
   name: string | null;
   type: ChatType;
   hasUnreadMessages: boolean;
-  lastMessage: Message | null;
+  lastMessage: Message;
+  lastMessageAuthor: User;
   participants: User[];
 };

@@ -53,10 +53,6 @@ namespace Meetings.Infrastructure.Mappers
         {
             var result = _mapper.Map<MessageDTO>(entity);
 
-            if (entity.Author != null)
-            {
-                result.Author = ToUserDTO(entity.Author);
-            }
             if (result.Type == MessageType.Image || result.Type == MessageType.Audio)
             {
                 result.Value = _fileManager.FilePathToSrc(entity.Value)!;
