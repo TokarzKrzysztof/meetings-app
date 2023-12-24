@@ -159,8 +159,7 @@ namespace Meetings.Infrastructure.Services
 
             Message entity = await CreateMessage(authorId, data.ChatId, data);
 
-            await UpdateParticipantsData(data.ChatId, authorId);
-            await NotifyAboutMessage(entity.Id);
+            await NotifyAboutNewMessage(entity.Id, authorId);
         }
 
         private async Task SendInfoMessage(Guid chatId, string info)
@@ -174,11 +173,23 @@ namespace Meetings.Infrastructure.Services
                 Type = MessageType.Info,
             });
 
-            await NotifyAboutMessage(entity.Id);
+            await NotifyAboutNewMessage(entity.Id, authorId);
         }
 
-        private async Task NotifyAboutMessage(Guid messageId)
+        private async Task NotifyAboutNewMessage(Guid messageId, Guid authorId)
         {
+            List<ChatParticipant> participants = await _chatParticipantRepository.Data.Where(x => x.ChatId == chatId).ToListAsync();
+            participants.ForEach(x =>
+            {
+                if (x.UserId != authorId)
+                {
+                    x.HasUnreadMessages = true;
+                }
+                // when new message comes, then set archived state to false for all participants
+                x.IsArchived = false;
+            });
+            await _chatParticipantRepository.UpdateRange(participants);
+
             // refetch entity with required dependencies
             var message = await _messageRepository.GetById(messageId, q => q.IncludeAuthors());
             await _chatHubContext.Clients.Group(message.ChatId.ToString()).OnGetNewMessage(_extendedMapper.ToMessageDTO(message), message.ChatId);
@@ -359,22 +370,6 @@ namespace Meetings.Infrastructure.Services
             await _chatHubContext.Groups.AddToGroupAsync(connectionId, createdChat.Id.ToString());
 
             return createdChat.Id;
-        }
-
-        private async Task UpdateParticipantsData(Guid chatId, Guid authorId)
-        {
-            List<ChatParticipant> participants = await _chatParticipantRepository.Data.Where(x => x.ChatId == chatId).ToListAsync();
-            participants.ForEach(x =>
-            {
-                if (x.UserId != authorId)
-                {
-                    x.HasUnreadMessages = true;
-                }
-                // when new message comes, then set archived state to false for all participants
-                x.IsArchived = false;
-            });
-
-            await _chatParticipantRepository.UpdateRange(participants);
         }
 
         private List<ChatParticipant> MakeChatParticipants(IEnumerable<Guid> userIds, Guid? chatId = null)
