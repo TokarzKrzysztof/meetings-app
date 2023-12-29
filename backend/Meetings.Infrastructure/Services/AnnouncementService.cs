@@ -16,6 +16,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -38,7 +39,7 @@ namespace Meetings.Infrastructure.Services
 
         public async Task CreateNewAnnouncement(AnnouncementDTO data)
         {
-            _announcementValidator.WhenCreateOrEdit(data);
+            _announcementValidator.WhenCreateNewAnnouncement(data);
 
             data.UserId = _claimsReader.GetCurrentUserId();
             data.Status = Utilities.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
@@ -50,7 +51,7 @@ namespace Meetings.Infrastructure.Services
 
         public async Task EditAnnouncement(AnnouncementDTO data)
         {
-            _announcementValidator.WhenCreateOrEdit(data);
+            await _announcementValidator.WhenEditAnnouncement(data);
 
             var item = await _repository.GetById(data.Id);
             item.Description = data.Description;
@@ -63,13 +64,15 @@ namespace Meetings.Infrastructure.Services
         public async Task<List<AnnouncementDTO>> GetCurrentUserAnnouncements()
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            var data = await _repository.Data.Where(x => x.UserId == userId).ToListAsync();
+            List<Announcement> data = await _repository.Data.Where(x => x.UserId == userId).ToListAsync();
 
             return _mapper.Map<List<AnnouncementDTO>>(data);
         }
 
         public async Task SetAnnouncementStatus(Guid id, AnnoucementStatus newStatus)
         {
+            await _announcementValidator.WhenSetAnnouncementStatus(id);
+
             await _repository.Data
                .Where(x => x.Id == id)
                .ExecuteUpdateAsync(s =>
@@ -79,6 +82,7 @@ namespace Meetings.Infrastructure.Services
 
         public async Task RemoveAnnouncement(Guid id)
         {
+            await _announcementValidator.WhenRemoveAnnouncement(id);
             await _repository.Remove(id);
         }
 
