@@ -10,5 +10,9 @@ namespace Meetings.Database.QueryExtensions
 {
     public static class MessageQueryExtensions
     {
+        public static IQueryable<Message> IncludeAllMessagesData(this IQueryable<Message> query)
+        {
+            return query.Include(x => x.Reactions).Include(x => x.ReplyTo);
+        }
     }
 }

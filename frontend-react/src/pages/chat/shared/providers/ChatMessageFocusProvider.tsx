@@ -7,7 +7,7 @@ import { Chat } from 'src/models/chat/chat';
 import { Message } from 'src/models/chat/message';
 import { ChatLoadingOldMessagesDialog } from 'src/pages/chat/shared/components/ChatLoadingOldMessagesDialog';
 import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
-import { useLoadAllMessagesAfterDate } from 'src/queries/chat-queries';
+import { useLoadAllMessagesAfterDate } from 'src/queries/message-queries';
 import { getFocusableId } from 'src/utils/chat-utils';
 import { PropsWithReactElement } from 'src/utils/types/props';
 

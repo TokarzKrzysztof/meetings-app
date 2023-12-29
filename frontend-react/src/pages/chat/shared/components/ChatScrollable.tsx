@@ -10,7 +10,7 @@ import { ChatInfoMessage } from 'src/pages/chat/shared/components/ChatInfoMessag
 import { ChatMessage } from 'src/pages/chat/shared/components/ChatMessage/ChatMessage';
 import { ChatTypingIndicator } from 'src/pages/chat/shared/components/ChatTypingIndicator';
 import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
-import { useLoadChatMessages } from 'src/queries/chat-queries';
+import { useLoadChatMessages } from 'src/queries/message-queries';
 import { Box, Container, Stack } from 'src/ui-components';
 import { typedForwardRef } from 'src/utils/types/forward-ref';
 

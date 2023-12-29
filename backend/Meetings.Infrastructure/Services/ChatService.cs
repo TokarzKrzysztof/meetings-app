@@ -23,8 +23,6 @@ namespace Meetings.Infrastructure.Services
     public class ChatService
     {
         private readonly IRepository<Chat> _repository;
-        private readonly IRepository<Message> _messageRepository;
-        private readonly IRepository<MessageReaction> _messageReactionRepository;
         private readonly IRepository<ChatParticipant> _chatParticipantRepository;
         private readonly IMapper _mapper;
         private readonly IClaimsReader _claimsReader;
@@ -33,30 +31,29 @@ namespace Meetings.Infrastructure.Services
         private readonly IFileManager _fileManager;
         private readonly ChatValidator _chatValidator;
         private readonly UserService _userService;
+        private readonly MessageService _messageService;
 
         public ChatService(IRepository<Chat> repository,
                            IMapper mapper,
                            IClaimsReader claimsReader,
-                           IRepository<Message> messageRepository,
                            IHubContext<ChatHub, IChatHub> chatHubContext,
                            IRepository<ChatParticipant> chatParticipantRepository,
                            ExtendedMapper extendedMapper,
                            IFileManager fileManager,
-                           IRepository<MessageReaction> messageReactionRepository,
                            ChatValidator chatValidator,
-                           UserService userService)
+                           UserService userService,
+                           MessageService messageService)
         {
             _repository = repository;
             _mapper = mapper;
             _claimsReader = claimsReader;
-            _messageRepository = messageRepository;
             _chatHubContext = chatHubContext;
             _chatParticipantRepository = chatParticipantRepository;
             _extendedMapper = extendedMapper;
             _fileManager = fileManager;
-            _messageReactionRepository = messageReactionRepository;
             _chatValidator = chatValidator;
             _userService = userService;
+            _messageService = messageService;
         }
 
         public async Task<ChatDTO?> GetPrivateChat(Guid participantId)
@@ -99,124 +96,6 @@ namespace Meetings.Infrastructure.Services
                 TotalMessagesAmount = queryResult.TotalMessagesAmount,
                 Participants = _extendedMapper.ToUserDTOList(queryResult.Participants)
             };
-        }
-
-        public async Task<List<MessageDTO>> LoadChatMessages(Guid chatId, int skip, int take)
-        {
-            var messages = await _repository.Data.Where(x => x.Id == chatId)
-                .IncludeAllMessagesData()
-                .Select(x => x.Messages.OrderByDescending(x => x.CreatedAt).Skip(skip).Take(take).Reverse())
-                .SingleAsync();
-
-            return _extendedMapper.ToMessageDTOList(messages);
-        }
-
-        public async Task<List<MessageDTO>> LoadAllMessagesAfterDate(Guid chatId, DateTime afterDate)
-        {
-            var messages = await _repository.Data.Where(x => x.Id == chatId)
-                 .IncludeAllMessagesData()
-                 .Select(x => x.Messages.OrderByDescending(x => x.CreatedAt).Where(x => x.CreatedAt >= afterDate).Reverse())
-                 .SingleAsync();
-
-            return _extendedMapper.ToMessageDTOList(messages);
-        }
-
-        private async Task<Message> CreateMessage(Guid authorId, Guid chatId, SendMessageData data)
-        {
-            if (data.Type == MessageType.Text)
-            {
-                return await _messageRepository.Create(new Message()
-                {
-                    Id = data.Id,
-                    AuthorId = authorId,
-                    ChatId = chatId,
-                    ReplyToId = data.ReplyToId,
-                    Value = data.Value!.Trim(),
-                    Type = MessageType.Text,
-                });
-            }
-
-            string extension = data.Type == MessageType.Image ? "jpg" : "mp3";
-            var filePath = Path.Combine(_fileManager.Root, "Chats", chatId.ToString(), $"{Guid.NewGuid()}.{extension}");
-            await _fileManager.Save(filePath, data.File!);
-
-            return await _messageRepository.Create(new Message()
-            {
-                Id = data.Id,
-                AuthorId = authorId,
-                ChatId = chatId,
-                ReplyToId = data.ReplyToId,
-                Value = filePath,
-                Type = data.Type,
-            });
-        }
-
-        public async Task SendMessage(SendMessageData data)
-        {
-            await _chatValidator.WhenSendMessage(data);
-
-            Guid authorId = _claimsReader.GetCurrentUserId();
-
-            Message entity = await CreateMessage(authorId, data.ChatId, data);
-
-            await NotifyAboutNewMessage(entity);
-        }
-
-        private async Task SendInfoMessage(Guid chatId, string info)
-        {
-            Guid authorId = _claimsReader.GetCurrentUserId();
-            Message entity = await _messageRepository.Create(new Message()
-            {
-                AuthorId = authorId,
-                ChatId = chatId,
-                Value = info,
-                Type = MessageType.Info,
-            });
-
-            await NotifyAboutNewMessage(entity);
-        }
-
-        private async Task NotifyAboutNewMessage(Message entity)
-        {
-            List<ChatParticipant> participants = await _chatParticipantRepository.Data.Where(x => x.ChatId == entity.ChatId).ToListAsync();
-            participants.ForEach(x =>
-            {
-                if (x.UserId != entity.AuthorId)
-                {
-                    x.HasUnreadMessages = true;
-                }
-                // when new message comes, then set archived state to false for all participants
-                x.IsArchived = false;
-            });
-            await _chatParticipantRepository.UpdateRange(participants);
-
-            // refetch entity with required dependencies
-            var message = await _messageRepository.GetById(entity.Id);
-            await _chatHubContext.Clients.Group(message.ChatId.ToString()).OnGetNewMessage(_extendedMapper.ToMessageDTO(message), message.ChatId);
-        }
-
-        public async Task<MessageDTO> SetMessageReaction(MessageReactionDTO data)
-        {
-            Message message = await _messageRepository.Data.Where(x => x.Id == data.MessageId).Include(x => x.Reactions).SingleAsync();
-            MessageReaction? authorReaction = message.Reactions.SingleOrDefault(x => x.AuthorId == data.AuthorId);
-            if (authorReaction != null)
-            {
-                if (authorReaction.Unified == data.Unified)
-                {
-                    message.Reactions.Remove(authorReaction);
-                }
-                else
-                {
-                    authorReaction.Unified = data.Unified;
-                }
-            }
-            else
-            {
-                message.Reactions.Add(_mapper.Map<MessageReaction>(data));
-            }
-            await _messageReactionRepository.UpdateRange(message.Reactions);
-
-            return _extendedMapper.ToMessageDTO(message);
         }
 
         public async Task<IEnumerable<ChatPreview>> GetCurrentUserActiveChatsOfType(ChatType type)
@@ -269,7 +148,7 @@ namespace Meetings.Infrastructure.Services
 
             string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "utworzył" : "utworzyła";
             string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} grupę.";
-            await SendInfoMessage(chatId, info);
+            await _messageService.SendInfoMessage(chatId, info);
 
             return chatId;
         }
@@ -290,7 +169,7 @@ namespace Meetings.Infrastructure.Services
 
             string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "zmienił" : "zmieniła";
             string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} nazwę grupy na {chat.Name}.";
-            await SendInfoMessage(data.ChatId, info);
+            await _messageService.SendInfoMessage(data.ChatId, info);
         }
 
         public async Task AddGroupChatParticipant(Guid chatId, Guid userId)
@@ -302,7 +181,7 @@ namespace Meetings.Infrastructure.Services
             var user = await _userService.GetUser(userId);
             string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "dodał" : "dodała";
             string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} użytkownika {user.FirstName + " " + user.LastName} do grupy.";
-            await SendInfoMessage(chatId, info);
+            await _messageService.SendInfoMessage(chatId, info);
         }
 
         public async Task RemoveGroupChatParticipant(Guid chatId, Guid userId, bool isFromLeaveChat = false)
@@ -316,15 +195,15 @@ namespace Meetings.Infrastructure.Services
             {
                 string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "opuścił" : "opuściła";
                 string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} grupę.";
-                await SendInfoMessage(chatId, info);
+                await _messageService.SendInfoMessage(chatId, info);
             }
             else
             {
                 var user = await _userService.GetUser(userId);
                 string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "usunął" : "usunęła";
                 string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} użytkownika {user.FirstName + " " + user.LastName} z grupy.";
-                await SendInfoMessage(chatId, info);
-            }   
+                await _messageService.SendInfoMessage(chatId, info);
+            }
         }
 
         public async Task LeaveGroupChat(Guid chatId)

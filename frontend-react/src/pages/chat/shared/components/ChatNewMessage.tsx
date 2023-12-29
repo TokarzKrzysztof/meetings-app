@@ -14,7 +14,7 @@ import {
 import { ChatNewMessageVoice } from 'src/pages/chat/shared/components/ChatNewMessageVoice';
 import { ChatSendBtn } from 'src/pages/chat/shared/components/ChatSendBtn';
 import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
-import { useSendMessage } from 'src/queries/chat-queries';
+import { useSendMessage } from 'src/queries/message-queries';
 import { Box, Icon, IconButton, Stack, TextArea } from 'src/ui-components';
 import { isBlob } from 'src/utils/file-utils';
 

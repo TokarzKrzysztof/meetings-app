@@ -25,11 +25,13 @@ namespace Meetings.Infrastructure.Hubs
     public class ChatHub : Hub<IChatHub>
     {
         private readonly ChatService _chatService;
+        private readonly MessageReactionService _messageReactionService;
         private readonly IRepository<ChatParticipant> _chatParticipantRepository;
-        public ChatHub(ChatService chatService, IRepository<ChatParticipant> chatParticipantRepository)
+        public ChatHub(ChatService chatService, IRepository<ChatParticipant> chatParticipantRepository, MessageReactionService messageReactionService)
         {
             _chatService = chatService;
             _chatParticipantRepository = chatParticipantRepository;
+            _messageReactionService = messageReactionService;
         }
 
         private Guid CurrentUserId
@@ -67,7 +69,7 @@ namespace Meetings.Infrastructure.Hubs
         [Authorize]
         public async Task SetMessageReaction(SetMessageReactionData data)
         {
-            MessageDTO message = await _chatService.SetMessageReaction(new MessageReactionDTO()
+            MessageDTO message = await _messageReactionService.SetMessageReaction(new MessageReactionDTO()
             {
                 AuthorId = CurrentUserId,
                 MessageId = data.MessageId,

@@ -13,11 +13,9 @@ namespace Meetings.Api.Controllers
     public class ChatController : AppControllerBase
     {
         private readonly ChatService _chatService;
-        private readonly IHubContext<ChatHub, IChatHub> _chatHubContext;
-        public ChatController(ChatService chatService, IHubContext<ChatHub, IChatHub> chatHubContext)
+        public ChatController(ChatService chatService)
         {
             _chatService = chatService;
-            _chatHubContext = chatHubContext;
         }
 
         [HttpGet]
@@ -34,22 +32,6 @@ namespace Meetings.Api.Controllers
         {
             ChatDTO chat = await _chatService.GetGroupChat(chatId);
             return Ok(chat);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> LoadChatMessages([FromQuery] Guid chatId, [FromQuery] int skip, [FromQuery] int take)
-        {
-            List<MessageDTO> messages = await _chatService.LoadChatMessages(chatId, skip, take);
-            return Ok(messages);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> LoadAllMessagesAfterDate([FromQuery] Guid chatId, [FromQuery] DateTime afterDate)
-        {
-            List<MessageDTO> messages = await _chatService.LoadAllMessagesAfterDate(chatId, afterDate);
-            return Ok(messages);
         }
 
         [HttpGet]
@@ -97,14 +79,6 @@ namespace Meetings.Api.Controllers
         public async Task<IActionResult> MarkChatAsRead([FromQuery] Guid chatId)
         {
             await _chatService.MarkChatAsRead(chatId);
-            return Ok();
-        }
-
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> SendMessage([FromForm] SendMessageData data)
-        {
-            await _chatService.SendMessage(data);
             return Ok();
         }
 
