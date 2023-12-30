@@ -4,6 +4,7 @@ using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
 using Meetings.EmailSender;
 using Meetings.FileManager;
+using Meetings.Infrastructure.Mappers;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
@@ -27,14 +28,15 @@ namespace Meetings.Infrastructure.Services
         private readonly IClaimsReader _claimsReader;
         private readonly AnnouncementValidator _announcementValidator;
         private readonly IFileManager _fileManager;
-
-        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IClaimsReader claimsReader, AnnouncementValidator announcementValidator, IFileManager fileManager)
+        private readonly ExtendedMapper _extendedMapper;
+        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IClaimsReader claimsReader, AnnouncementValidator announcementValidator, IFileManager fileManager, ExtendedMapper extendedMapper)
         {
             _repository = repository;
             _mapper = mapper;
             _claimsReader = claimsReader;
             _announcementValidator = announcementValidator;
             _fileManager = fileManager;
+            _extendedMapper = extendedMapper;
         }
 
         public async Task CreateNewAnnouncement(AnnouncementDTO data)
@@ -108,9 +110,7 @@ namespace Meetings.Infrastructure.Services
                 AnnouncementId = x.Id,
                 UserId = x.UserId,
                 Description = x.Description,
-                UserBirthDate = x.User.BirthDate,
-                UserFirstName = x.User.FirstName,
-                UserProfileImageSrc = _fileManager.FilePathToSrc(x.User.ProfileImagePath)
+                Author = _extendedMapper.ToUserDTO(x.User)
             }).ToListAsync();
 
             return result;

@@ -10,15 +10,17 @@ import { MyProfileActionButtons } from 'src/pages/account/MyProfile/sub-pages/sh
 import { MyProfileForm } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileForm';
 import { MyProfileHeader } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileHeader';
 import { MyProfileTitle } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileTitle';
+import { useGetLocations } from 'src/queries/location-queries';
 import { useChangePersonalData } from 'src/queries/user-queries';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
 import { genderOptions } from 'src/utils/user-utils';
 
-type FormData = Pick<User, 'firstName' | 'lastName' | 'birthDate' | 'gender'>;
+type FormData = Pick<User, 'firstName' | 'lastName' | 'birthDate' | 'gender' | 'locationId'>;
 
 export const MyProfileChangeData = () => {
+  const { locations } = useGetLocations();
   const currentUser = useLoggedInUser();
   const form = useForm<FormData>({
     defaultValues: currentUser,
@@ -64,6 +66,19 @@ export const MyProfileChangeData = () => {
           label='Nazwisko'
           {...register('lastName', { required: ValidationMessages.required })}
         ></FormField>
+        <ControlledFormField
+          control={control}
+          element='autocomplete'
+          name='locationId'
+          label='Miejsce zamieszkania'
+          rules={{
+            required: ValidationMessages.required,
+          }}
+          ElementProps={{
+            optionsAsync: locations,
+            getOptionLabel: (opt) => `${opt.city}, ${opt.adminName}`,
+          }}
+        ></ControlledFormField>
         <ControlledFormField
           control={control}
           element='date-picker'

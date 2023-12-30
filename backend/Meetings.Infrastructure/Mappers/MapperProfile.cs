@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Meetings.Models.Entites;
 using Meetings.Models.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,18 +18,21 @@ namespace Meetings.Infrastructure.Mappers
 
             CreateMap<Announcement, AnnouncementDTO>();
             CreateMap<AnnouncementDTO, Announcement>();
-            
+
             CreateMap<Category, CategoryDTO>();
             CreateMap<CategoryDTO, Category>();
-            
+
             CreateMap<Chat, ChatDTO>();
             CreateMap<ChatDTO, Chat>();
-            
+
             CreateMap<Message, MessageDTO>();
-            CreateMap<MessageDTO, Message>();    
-            
+            CreateMap<MessageDTO, Message>();
+
             CreateMap<MessageReaction, MessageReactionDTO>();
             CreateMap<MessageReactionDTO, MessageReaction>();
+
+            CreateMap<UserLocation, UserLocationDTO>();
+            CreateMap<UserLocationDTO, UserLocation>();
         }
     }
 }

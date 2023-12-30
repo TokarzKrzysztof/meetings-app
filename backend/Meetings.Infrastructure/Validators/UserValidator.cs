@@ -26,6 +26,7 @@ namespace Meetings.Infrastructure.Validators
             validator.RuleFor(x => x.LastName).NotEmpty().WithErrorCode("LastNameEmpty");
             validator.RuleFor(x => x.BirthDate).LessThan(DateTime.UtcNow).WithErrorCode("BirthDateIncorrect");
             validator.RuleFor(x => x.Gender).IsInEnum().WithErrorCode("GenderIncorrect");
+            validator.RuleFor(x => x.LocationId).NotEmpty().WithErrorCode("LocationIncorrect");
         }
 
         public static IRuleBuilderOptions<T, string> PasswordMinLength<T>(this IRuleBuilder<T, string> ruleBuilder)

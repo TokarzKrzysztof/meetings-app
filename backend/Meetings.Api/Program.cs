@@ -5,8 +5,11 @@ using Meetings.ErrorHandlingMiddleware.StartupExtensions;
 using Meetings.FileManager.StartupExtensions;
 using Meetings.Infrastructure.Hubs;
 using Meetings.Infrastructure.StartupExtensions;
+using Meetings.Models.Resources;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Newtonsoft.Json;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +67,18 @@ app.MapHub<ChatHub>("/api/chat-hub");
 
 using (var scope = app.Services.CreateScope())
 {
+    //using (StreamReader r = new StreamReader("StaticData/cities.json"))
+    //{
+    //    string json = r.ReadToEnd();
+    //    List<dynamic> items = JsonConvert.DeserializeObject<List<dynamic>>(json);
+    //    foreach (var item in items)
+    //    {
+    //        item.id = Guid.NewGuid();
+    //    }
+
+    //    string createText = JsonConvert.SerializeObject(items);
+    //    File.WriteAllText("newcities.json", createText);
+    //}
     //IEmailSender emailS = scope.ServiceProvider.GetRequiredService<IEmailSender>();
 
     //var receivers = new List<EmailReceiver>()
@@ -75,7 +90,5 @@ using (var scope = app.Services.CreateScope())
     //await emailS.Send(new EmailData(receivers, "Aktywacja konta", "ConfirmAccount", confirmAccountModel));
     //Console.WriteLine(123);
 }
-
-
 
 app.Run();

@@ -109,7 +109,7 @@ export const useChangePersonalData = (
   options?: UseMutationOptions<
     User,
     AxiosError<HttpErrorData>,
-    Pick<User, 'firstName' | 'lastName' | 'birthDate' | 'gender'>
+    Pick<User, 'firstName' | 'lastName' | 'birthDate' | 'gender' | 'locationId'>
   >
 ) => {
   const mutation = useMutation({

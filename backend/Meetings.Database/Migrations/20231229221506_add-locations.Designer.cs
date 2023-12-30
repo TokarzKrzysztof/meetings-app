@@ -4,6 +4,7 @@ using Meetings.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Meetings.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231229221506_add-locations")]
+    partial class addlocations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace Meetings.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Meetings.Models.Entites.UserLocation", b =>
+            modelBuilder.Entity("Meetings.Models.Entites.Location", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +56,7 @@ namespace Meetings.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserLocations");
+                    b.ToTable("Locations");
 
                     b.HasData(
                         new
@@ -5464,9 +5467,6 @@ namespace Meetings.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("LocationId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -5478,8 +5478,6 @@ namespace Meetings.Database.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LocationId");
 
                     b.ToTable("Users");
                 });
@@ -5583,17 +5581,6 @@ namespace Meetings.Database.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Message");
-                });
-
-            modelBuilder.Entity("Meetings.Models.Entities.User", b =>
-                {
-                    b.HasOne("Meetings.Models.Entites.UserLocation", "Location")
-                        .WithMany()
-                        .HasForeignKey("LocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("Meetings.Models.Entities.Chat", b =>

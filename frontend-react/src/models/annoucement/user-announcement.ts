@@ -5,7 +5,5 @@ export type UserAnnouncement = {
     userId: User['id'];
     announcementId: Announcement['id'];
     description: Announcement['description'];
-    userBirthDate: string;
-    userFirstName: string;
-    userProfileImageSrc: string | null;
+    author: User;
 };

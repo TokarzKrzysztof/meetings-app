@@ -1,16 +1,22 @@
-﻿using Meetings.Models.Entities;
+﻿using Meetings.Models.Entites;
+using Meetings.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Meetings.Infrastructure.Helpers
 {
-    public static class CategoriesGenerator
+    public static class DbSeed
     {
-        public static readonly List<Category> AllCategories = new List<Category>()
+        public static List<Category> AllCategories
+        {
+            get
             {
+                return new List<Category>()
+                {
                    new Category() { Id = new Guid("1bd18285-1050-46f2-96c2-05df35c56a9c"), Name = "Bilard" },
                    new Category() { Id = new Guid("26312a46-3e5f-453e-934c-da909d6dfe19"), Name = "Szachy" },
                    new Category() { Id = new Guid("2b4793ab-5bd8-4611-a49b-0bcda4194f9d"), Name = "Wyjście na imprezę" },
@@ -23,7 +29,24 @@ namespace Meetings.Infrastructure.Helpers
                    new Category() { Id = new Guid("b6f5cf4f-2008-45a9-acb8-0857b1a9190b"), Name = "Warcaby" },
                    new Category() { Id = new Guid("dc7a3995-c967-4ff9-9e90-3abee528bf66"), Name = "Planszówki" },
                    new Category() { Id = new Guid("fd6cc017-d0ae-45ee-9548-a654ef50aa5d"), Name = "Siatkówka" }
-            };
+                };
+            }
+        }
+
+        public static List<UserLocation> AllPolishLocations
+        {
+            get
+            {
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "StaticData", "cities.json");
+                string json = File.ReadAllText(filePath);
+
+                return JsonSerializer.Deserialize<List<UserLocation>>(json, new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+                })!;
+            }
+        }
 
     }
 }

@@ -12,6 +12,7 @@ import { AuthIcon } from 'src/pages/account/shared/AuthIcon';
 import { AuthRedirectInfo } from 'src/pages/account/shared/AuthRedirectInfo';
 import { PasswordFields } from 'src/pages/account/shared/PasswordFields';
 import { useRegister } from 'src/queries/auth-queries';
+import { useGetLocations } from 'src/queries/location-queries';
 import { Button, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
@@ -20,6 +21,7 @@ import { Validators } from 'src/utils/helpers/validators';
 import { genderOptions } from 'src/utils/user-utils';
 
 export const Register = () => {
+  const { locations } = useGetLocations();
   const form = useForm<User>();
   const { register, handleSubmit, control } = form;
   const {
@@ -65,6 +67,19 @@ export const Register = () => {
           label='Nazwisko'
           {...register('lastName', { required: ValidationMessages.required })}
         ></FormField>
+        <ControlledFormField
+          control={control}
+          element='autocomplete'
+          name='locationId'
+          label='Miejsce zamieszkania'
+          rules={{
+            required: ValidationMessages.required,
+          }}
+          ElementProps={{
+            optionsAsync: locations,
+            getOptionLabel: (opt) => `${opt.city}, ${opt.adminName}`,
+          }}
+        ></ControlledFormField>
         <PasswordFields
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           form={form as any}

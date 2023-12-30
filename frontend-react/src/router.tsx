@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter, redirect } from 'react-router-dom';
+import { Navigate, RouteObject, createBrowserRouter, redirect } from 'react-router-dom';
 import { queryClient } from 'src/config/query-config';
 import { User } from 'src/models/user';
 import { getCurrentUserQueryFn, getCurrentUserQueryKey } from 'src/queries/user-queries';
@@ -15,51 +15,65 @@ const protectedLoader = async () => {
   return currentUser ? null : redirect(AppRoutes.Login());
 };
 
+const publicRoutes: RouteObject[] = [
+  {
+    index: true,
+    lazy: async () => {
+      const { Home } = await import('./pages/Home/Home');
+      return { Component: Home };
+    },
+    loader: () => null,
+  },
+  {
+    path: AppRoutes.Login(),
+    lazy: async () => {
+      const { Login } = await import('./pages/account/Login/Login');
+      return { Component: Login };
+    },
+    loader: () => null,
+  },
+  {
+    path: AppRoutes.Register(),
+    lazy: async () => {
+      const { Register } = await import('./pages/account/Register/Register');
+      return { Component: Register };
+    },
+    loader: () => null,
+  },
+  {
+    path: AppRoutes.ForgotPassword(),
+    lazy: async () => {
+      const { ForgotPassword } = await import('./pages/account/ForgotPassword/ForgotPassword');
+      return { Component: ForgotPassword };
+    },
+    loader: () => null,
+  },
+  {
+    path: AppRoutes.ResetPassword(),
+    lazy: async () => {
+      const { ResetPassword } = await import('./pages/account/ResetPassword/ResetPassword');
+      return { Component: ResetPassword };
+    },
+    loader: () => null,
+  },
+  {
+    path: AppRoutes.AnnouncementResultList(),
+    lazy: async () => {
+      const { AnnouncementResultList } = await import(
+        './pages/announcement/AnnouncementResultList/AnnouncementResultList'
+      );
+      return { Component: AnnouncementResultList };
+    },
+    loader: () => null,
+  },
+];
+
 export const router = createBrowserRouter([
   {
     path: AppRoutes.Home(),
     element: <App />,
     children: [
-      {
-        index: true,
-        lazy: async () => {
-          const { Home } = await import('./pages/Home/Home');
-          return { Component: Home };
-        },
-        loader: () => null,
-      },
-      {
-        path: AppRoutes.Login(),
-        lazy: async () => {
-          const { Login } = await import('./pages/account/Login/Login');
-          return { Component: Login };
-        },
-        loader: () => null,
-      },
-      {
-        path: AppRoutes.Register(),
-        lazy: async () => {
-          const { Register } = await import('./pages/account/Register/Register');
-          return { Component: Register };
-        },
-        loader: () => null,
-      },
-      {
-        path: AppRoutes.ForgotPassword(),
-        lazy: async () => {
-          const { ForgotPassword } = await import('./pages/account/ForgotPassword/ForgotPassword');
-          return { Component: ForgotPassword };
-        },
-        loader: () => null,
-      },
-      {
-        path: AppRoutes.ResetPassword(),
-        lazy: async () => {
-          const { ResetPassword } = await import('./pages/account/ResetPassword/ResetPassword');
-          return { Component: ResetPassword };
-        },
-        loader: () => null,
-      },
+      ...publicRoutes,
       {
         path: AppRoutes.PrivateChat(),
         lazy: async () => {
@@ -105,7 +119,9 @@ export const router = createBrowserRouter([
           {
             path: AppRoutes.MyChatsIgnored(),
             lazy: async () => {
-              const { MyChatsIgnored } = await import('./pages/chat/MyChats/sub-pages/MyChatsIgnored');
+              const { MyChatsIgnored } = await import(
+                './pages/chat/MyChats/sub-pages/MyChatsIgnored'
+              );
               return { Component: MyChatsIgnored };
             },
             loader: protectedLoader,
@@ -113,7 +129,9 @@ export const router = createBrowserRouter([
           {
             path: AppRoutes.MyChatsArchived(),
             lazy: async () => {
-              const { MyChatsArchived } = await import('./pages/chat/MyChats/sub-pages/MyChatsArchived');
+              const { MyChatsArchived } = await import(
+                './pages/chat/MyChats/sub-pages/MyChatsArchived'
+              );
               return { Component: MyChatsArchived };
             },
             loader: protectedLoader,
@@ -125,16 +143,6 @@ export const router = createBrowserRouter([
         lazy: async () => {
           const { NewGroupChat } = await import('./pages/chat/NewGroupChat/NewGroupChat');
           return { Component: NewGroupChat };
-        },
-        loader: protectedLoader,
-      },
-      {
-        path: AppRoutes.AnnouncementResultList(),
-        lazy: async () => {
-          const { AnnouncementResultList } = await import(
-            './pages/announcement/AnnouncementResultList/AnnouncementResultList'
-          );
-          return { Component: AnnouncementResultList };
         },
         loader: protectedLoader,
       },

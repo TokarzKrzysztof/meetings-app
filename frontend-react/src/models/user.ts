@@ -1,3 +1,5 @@
+import { UserLocation } from "src/models/user-location";
+
 export enum UserGender {
   Male,
   Female,
@@ -19,4 +21,5 @@ export type User = {
   gender: UserGender;
   profileImageSrc: string | null;
   activeStatus: UserActiveStatus;
+  locationId: UserLocation['id'];
 };

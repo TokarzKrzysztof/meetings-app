@@ -113,6 +113,7 @@ namespace Meetings.Infrastructure.Services
                      .SetProperty(x => x.LastName, data.LastName)
                      .SetProperty(x => x.Gender, data.Gender)
                      .SetProperty(x => x.BirthDate, data.BirthDate)
+                     .SetProperty(x => x.LocationId, data.LocationId)
                  );
 
             return await GetUser(userId);

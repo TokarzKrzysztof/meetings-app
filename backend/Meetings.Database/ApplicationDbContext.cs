@@ -1,5 +1,6 @@
 ﻿using Meetings.Infrastructure.Helpers;
 using Meetings.Models;
+using Meetings.Models.Entites;
 using Meetings.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
@@ -23,11 +24,13 @@ namespace Meetings.Database
         public DbSet<MessageReaction> MessageReactions { get; set; }
         public DbSet<ChatParticipant> ChatParticipants { get; set; }
         public DbSet<BlockedUser> BlockedUsers { get; set; }
+        public DbSet<UserLocation> UserLocations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Category>().HasData(CategoriesGenerator.AllCategories);
+            builder.Entity<Category>().HasData(DbSeed.AllCategories);
+            builder.Entity<UserLocation>().HasData(DbSeed.AllPolishLocations);
             builder.Entity<MessageReaction>().HasOne(x => x.Author).WithMany().OnDelete(DeleteBehavior.ClientCascade);
             builder.Entity<User>().HasMany(x => x.BlockedUsers).WithOne(x => x.User).OnDelete(DeleteBehavior.ClientCascade);
         }

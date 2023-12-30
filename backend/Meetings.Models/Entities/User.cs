@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Validators;
+using Meetings.Models.Entites;
 using Meetings.Utils;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,8 @@ namespace Meetings.Models.Entities
         public bool IsConfirmed { get; set; }
         public string? ProfileImagePath { get; set; }
         public DateTime LastActiveDate { get; set; }
+        public Guid LocationId { get; set; }
+        public virtual UserLocation Location { get; set; }
         public virtual ICollection<Announcement> Announcements { get; set; }
         public virtual ICollection<ChatParticipant> Chats { get; set; }
         public virtual ICollection<BlockedUser> BlockedUsers { get; set; }
@@ -61,5 +64,6 @@ namespace Meetings.Models.Entities
         public UserGender Gender { get; set; }
         public string? ProfileImageSrc { get; set; }
         public UserActiveStatus ActiveStatus { get; set; }
+        public Guid LocationId { get; set; }
     }
 }

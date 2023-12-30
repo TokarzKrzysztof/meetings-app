@@ -1,5 +1,6 @@
 import { useAtomValue } from 'jotai';
 import { useMemo, useReducer, useRef } from 'react';
+import { LocationText } from 'src/components/LocationText';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { useRouteParams } from 'src/hooks/useRouteParams';
@@ -8,7 +9,10 @@ import { Chat } from 'src/models/chat/chat';
 import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/components/ChatNewMessage';
-import { ChatScrollable, ChatScrollableHandle } from 'src/pages/chat/shared/components/ChatScrollable';
+import {
+  ChatScrollable,
+  ChatScrollableHandle,
+} from 'src/pages/chat/shared/components/ChatScrollable';
 import { UserActiveStatusBadge } from 'src/pages/chat/shared/components/UserActiveStatusBadge';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
@@ -80,7 +84,7 @@ export const PrivateChat = () => {
               <Typography>
                 {user.firstName} {user.lastName}, {age}
               </Typography>
-              <Typography>Limanowa (30 km od Ciebie)</Typography>
+              <LocationText locationId={user.locationId} />
             </Stack>
           }
           messages={messages}
