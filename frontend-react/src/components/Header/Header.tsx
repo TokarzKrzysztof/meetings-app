@@ -18,22 +18,31 @@ const HideOnScroll = ({ children }: PropsWithReactElement) => {
 
 export type HeaderProps = {
   leftSlot?: ReactNode;
+  secondToolbar?: ReactNode;
 };
 
-export const Header = ({ leftSlot }: HeaderProps) => {
+export const Header = ({ leftSlot, secondToolbar }: HeaderProps) => {
   return (
     <>
       <HideOnScroll>
         <AppBar>
           <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Box>{leftSlot ?? <Box component={Link} to={AppRoutes.Home()} color='white'>Logo</Box>}</Box>
+            <Box>
+              {leftSlot ?? (
+                <Box component={Link} to={AppRoutes.Home()} color='white'>
+                  Logo
+                </Box>
+              )}
+            </Box>
             <Box>
               <HeaderMenu />
             </Box>
           </Toolbar>
+          {secondToolbar}
         </AppBar>
       </HideOnScroll>
       <Toolbar />
+      {secondToolbar && <Toolbar />}
     </>
   );
 };
