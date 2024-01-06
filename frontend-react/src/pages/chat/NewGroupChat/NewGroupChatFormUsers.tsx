@@ -1,7 +1,7 @@
 import { RefObject } from 'react';
 import { UseFormReturn, useFieldArray } from 'react-hook-form';
 import { UsersHttpAutocomplete } from 'src/components/UsersHttpAutocomplete';
-import { GroupChatFormData } from 'src/pages/chat/shared/components/GroupChatForm/group-chat-form-data';
+import { NewGroupChatFormData } from 'src/pages/chat/NewGroupChat/new-group-chat-form-data';
 import {
   Avatar,
   Icon,
@@ -12,12 +12,12 @@ import {
   ListItemText,
 } from 'src/ui-components';
 
-export type GroupChatFormUsersProps = {
-  form: UseFormReturn<GroupChatFormData, unknown, undefined>;
+export type NewGroupChatFormUsersProps = {
+  form: UseFormReturn<NewGroupChatFormData, unknown, undefined>;
   inputRef: RefObject<HTMLInputElement>;
 };
 
-export const GroupChatFormUsers = ({ form, inputRef }: GroupChatFormUsersProps) => {
+export const NewGroupChatFormUsers = ({ form, inputRef }: NewGroupChatFormUsersProps) => {
   const {
     control,
     formState: { errors },

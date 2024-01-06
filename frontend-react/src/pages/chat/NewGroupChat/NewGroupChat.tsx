@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
-import { GroupChatForm } from 'src/pages/chat/shared/components/GroupChatForm/GroupChatForm';
-import { GroupChatFormData } from 'src/pages/chat/shared/components/GroupChatForm/group-chat-form-data';
+import { NewGroupChatForm } from 'src/pages/chat/NewGroupChat/NewGroupChatForm';
+import { NewGroupChatFormData } from 'src/pages/chat/NewGroupChat/new-group-chat-form-data';
 import { useCreateGroupChat } from 'src/queries/chat-queries';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
@@ -14,7 +14,7 @@ export const NewGroupChat = () => {
 
   const { createGroupChat, createGroupChatInProgress } = useCreateGroupChat();
 
-  const onSubmit = (data: GroupChatFormData) => {
+  const onSubmit = (data: NewGroupChatFormData) => {
     createGroupChat(
       {
         name: data.name,
@@ -32,12 +32,7 @@ export const NewGroupChat = () => {
   return (
     <>
       <Header leftSlot={<GoBackBtn />} />
-      <GroupChatForm
-        onSubmit={onSubmit}
-        title={'Nowa rozmowa grupowa'}
-        inProgress={createGroupChatInProgress}
-        buttonText={'Utwórz rozmowę grupową'}
-      />
+      <NewGroupChatForm onSubmit={onSubmit} inProgress={createGroupChatInProgress} />
     </>
   );
 };

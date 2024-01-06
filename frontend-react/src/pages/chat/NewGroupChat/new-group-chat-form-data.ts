@@ -1,6 +1,6 @@
 import { User } from 'src/models/user';
 
-export type GroupChatFormData = {
+export type NewGroupChatFormData = {
   name: string;
   users: User[];
 };
