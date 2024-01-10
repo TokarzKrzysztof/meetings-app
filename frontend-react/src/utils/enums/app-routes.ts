@@ -1,20 +1,23 @@
+import { AnnouncementResultListParams } from 'src/utils/announcement-utils';
+import { parseIntoURLParams } from 'src/utils/url-utils';
+
 export const AppRoutes = {
   Home: (params?: HomeParams) => makeUrl('/', params),
   Login: (params?: LoginParams) => makeUrl('/login', params),
   Register: () => '/register',
   ForgotPassword: () => '/forgot-password',
-  ResetPassword: (params?: ResetPasswordParams) => makeUrl('/reset-password', params),
-  AnnouncementResultList: (params?: AnnouncementResultListParams) =>
-    makeUrl('/announcement-result-list', params),
+  ResetPassword: (params: ResetPasswordParams) => makeUrl('/reset-password', params),
+  AnnouncementResultList: (params: AnnouncementResultListParams) =>
+    makeUrl('/announcement-result-list', parseIntoURLParams(params)),
   NewAnnouncement: () => '/new-announcement',
-  EditAnnouncement: (params?: EditAnnouncementParams) => makeUrl('/edit-announcement', params),
+  EditAnnouncement: (params: EditAnnouncementParams) => makeUrl('/edit-announcement', params),
   MyAnnouncements: () => '/my-announcements',
   MyProfile: () => '/my-profile',
   MyProfileChangeData: () => '/my-profile/change-data',
   MyProfileChangePassword: () => '/my-profile/change-password',
   MyProfileChangeEmail: () => '/my-profile/change-email',
-  PrivateChat: (params?: PrivateChatParams) => makeUrl('/private-chat', params),
-  GroupChat: (params?: GroupChatParams) => makeUrl('/group-chat', params),
+  PrivateChat: (params: PrivateChatParams) => makeUrl('/private-chat', params),
+  GroupChat: (params: GroupChatParams) => makeUrl('/group-chat', params),
   MyChats: () => '/my-chats',
   MyChatsPrivate: () => '/my-chats/private',
   MyChatsGroup: () => '/my-chats/group',
@@ -33,10 +36,6 @@ export type EditAnnouncementParams = {
 
 export type ResetPasswordParams = {
   tempId: string;
-};
-
-export type AnnouncementResultListParams = {
-  categoryId: string;
 };
 
 export type PrivateChatParams = {

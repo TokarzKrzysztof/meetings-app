@@ -2,6 +2,7 @@
 
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Infrastructure.Utils
 {
@@ -23,6 +24,19 @@ namespace Meetings.Infrastructure.Utils
             {
                 return UserActiveStatus.Offline;
             }
+        }
+
+        public static int CalculateAge(DateTime birthDate)
+        {
+            DateTime today = DateTime.UtcNow;
+            int age = today.Year - birthDate.Year;
+            int m = today.Month - birthDate.Month;
+            if (m < 0 || (m == 0 && today.Date < birthDate.Date))
+            {
+                age--;
+            }
+
+            return age;
         }
     }
 }

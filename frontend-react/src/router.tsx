@@ -3,7 +3,9 @@ import { queryClient } from 'src/config/query-config';
 import { User } from 'src/models/user';
 import { getCurrentUserQueryFn, getCurrentUserQueryKey } from 'src/queries/user-queries';
 import App from './App';
-import { AppRoutes } from './utils/enums/app-routes';
+import {
+  AppRoutes
+} from './utils/enums/app-routes';
 
 const protectedLoader = async () => {
   // undefined when user is not yet fetched, null when user is not logged in
@@ -49,7 +51,7 @@ const publicRoutes: RouteObject[] = [
     loader: () => null,
   },
   {
-    path: AppRoutes.ResetPassword(),
+    path: AppRoutes.ResetPassword({} as any),
     lazy: async () => {
       const { ResetPassword } = await import('./pages/account/ResetPassword/ResetPassword');
       return { Component: ResetPassword };
@@ -57,7 +59,7 @@ const publicRoutes: RouteObject[] = [
     loader: () => null,
   },
   {
-    path: AppRoutes.AnnouncementResultList(),
+    path: AppRoutes.AnnouncementResultList({} as any),
     lazy: async () => {
       const { AnnouncementResultList } = await import(
         './pages/announcement/AnnouncementResultList/AnnouncementResultList'
@@ -75,7 +77,7 @@ export const router = createBrowserRouter([
     children: [
       ...publicRoutes,
       {
-        path: AppRoutes.PrivateChat(),
+        path: AppRoutes.PrivateChat({} as any),
         lazy: async () => {
           const { PrivateChat } = await import('./pages/chat/PrivateChat/PrivateChat');
           return { Component: PrivateChat };
@@ -83,7 +85,7 @@ export const router = createBrowserRouter([
         loader: protectedLoader,
       },
       {
-        path: AppRoutes.GroupChat(),
+        path: AppRoutes.GroupChat({} as any),
         lazy: async () => {
           const { GroupChat } = await import('./pages/chat/GroupChat/GroupChat');
           return { Component: GroupChat };
@@ -157,7 +159,7 @@ export const router = createBrowserRouter([
         loader: protectedLoader,
       },
       {
-        path: AppRoutes.EditAnnouncement(),
+        path: AppRoutes.EditAnnouncement({} as any),
         lazy: async () => {
           const { EditAnnouncement } = await import(
             './pages/announcement/EditAnnouncement/EditAnnouncement'

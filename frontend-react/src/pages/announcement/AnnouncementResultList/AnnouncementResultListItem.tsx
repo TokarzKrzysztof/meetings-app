@@ -12,16 +12,16 @@ export type AnnouncementResultListItemProps = {
 };
 
 export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemProps) => {
-  const age = useMemo(() => calculateAge(data.author.birthDate), [data]);
+  const age = useMemo(() => calculateAge(data.user.birthDate), [data]);
   return (
     <Card>
       <Stack p={1} alignItems='center'>
-        <Avatar src={data.author.profileImageSrc} size={50} />
+        <Avatar src={data.user.profileImageSrc} size={50} />
         <Box ml={2}>
           <Typography fontSize={14}>
-            {data.author.firstName}, {age}
+            {data.user.firstName}, {age}
           </Typography>
-          <LocationText locationId={data.author.locationId} />
+          <LocationText locationId={data.user.locationId} />
         </Box>
       </Stack>
       <Divider />

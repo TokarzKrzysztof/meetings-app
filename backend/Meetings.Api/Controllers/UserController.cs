@@ -30,7 +30,7 @@ namespace Meetings.EmailTemplates.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCurrentUser()
         {
-            UserDTO? currentUser = await _userService.GetCurrentUser();
+            UserDTO? currentUser = await _userService.TryGetCurrentUser();
             return Ok(currentUser);
         }
 

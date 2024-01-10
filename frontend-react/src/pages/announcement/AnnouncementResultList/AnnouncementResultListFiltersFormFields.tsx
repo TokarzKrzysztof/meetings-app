@@ -1,0 +1,69 @@
+import { UseFormReturn } from 'react-hook-form';
+import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
+import { Container } from 'src/ui-components';
+import { AnnouncementResultListParams, GenderFilter, announcementFilterConstants } from 'src/utils/announcement-utils';
+import { ValidationMessages } from 'src/utils/helpers/validation-messages';
+
+const filterGenderOptions = [
+  {
+    value: GenderFilter.All,
+    label: 'Wszyscy',
+  },
+  {
+    value: GenderFilter.Males,
+    label: 'Mężczyźni',
+  },
+  {
+    value: GenderFilter.Females,
+    label: 'Kobiety',
+  },
+] as const;
+
+export type AnnouncementResultListFiltersFormFieldsProps = {
+  form: UseFormReturn<AnnouncementResultListParams, any, undefined>;
+};
+
+export const AnnouncementResultListFiltersFormFields = ({
+  form,
+}: AnnouncementResultListFiltersFormFieldsProps) => {
+  const { control } = form;
+
+  return (
+    <Container sx={{ mt: 3 }}>
+      <ControlledFormField
+        control={control}
+        element='slider'
+        name='ageRange'
+        label='Wiek'
+        rules={{ required: ValidationMessages.required }}
+        ElementProps={{
+          isRange: true,
+          min: announcementFilterConstants.minAge,
+          max: announcementFilterConstants.maxAge,
+          renderPreview: (values) => `${values[0]} - ${values[1]} lat`,
+        }}
+      ></ControlledFormField>
+      <ControlledFormField
+        control={control}
+        element='slider'
+        name='distanceMax'
+        label='Odległość'
+        rules={{ required: ValidationMessages.required }}
+        ElementProps={{
+          max: announcementFilterConstants.distanceMax,
+          renderPreview: (value) => `do ${value} km`,
+        }}
+      ></ControlledFormField>
+      <ControlledFormField
+        control={control}
+        element='radio-group'
+        name='gender'
+        label='Płeć'
+        rules={{ required: ValidationMessages.required }}
+        ElementProps={{
+          options: filterGenderOptions,
+        }}
+      ></ControlledFormField>
+    </Container>
+  );
+};

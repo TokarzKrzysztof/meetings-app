@@ -130,7 +130,7 @@ namespace Meetings.Infrastructure.Services
             await _tempDataRepository.RemovePermanently(tempData);
         }
 
-        public async Task<UserDTO> GetCurrentUser()
+        public async Task<UserDTO> TryGetCurrentUser(bool includeLocation = false)
         {
             Guid? userId = _claimsReader.TryGetCurrentUserId();
             if (userId == null)
@@ -138,12 +138,12 @@ namespace Meetings.Infrastructure.Services
                 return null;
             }
 
-            return await GetUser((Guid)userId);
+            return await GetUser((Guid)userId, includeLocation);
         }
 
-        public async Task<UserDTO> GetUser(Guid id)
+        public async Task<UserDTO> GetUser(Guid id, bool includeLocation = false)
         {
-            var user = await _repository.GetById(id);
+            var user = await _repository.GetById(id, includeLocation ? q => q.Include(x => x.Location) : null);
             return _extendedMapper.ToUserDTO(user);
         }
 

@@ -12,6 +12,8 @@ using Meetings.Database.Repositories;
 using Meetings.Utils;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.EntityFrameworkCore;
+using Meetings.Models.Resources;
+using Humanizer;
 
 namespace Meetings.Infrastructure.Validators
 {
@@ -21,6 +23,23 @@ namespace Meetings.Infrastructure.Validators
         {
             validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
             validator.RuleFor(x => x.Description).NotEmpty().WithErrorCode("DescriptionEmpty");
+        }
+        public static IRuleBuilderOptions<T, IEnumerable<int>> InRange<T>(this IRuleBuilder<T, IEnumerable<int>> ruleBuilder, int from, int to)
+        {
+            return ruleBuilder.Must(values =>
+            {
+                var list = values.ToList();
+
+                if (list.Count != 2) return false;
+                if (list[0] < from || list[0] > to) return false;
+                if (list[1] < from || list[1] > to) return false;
+                if (list[0] > list[1]) return false;
+                return true;
+            });
+        }
+        public static IRuleBuilderOptions<T, string> InCollection<T>(this IRuleBuilder<T, string> ruleBuilder, IEnumerable<string> collection)
+        {
+            return ruleBuilder.Must(value => collection.Contains(value));
         }
     }
 
@@ -70,6 +89,17 @@ namespace Meetings.Infrastructure.Validators
         internal async Task WhenRemoveAnnouncement(Guid id)
         {
             await ValidateIsAuthorCurrentUser(id);
+        }
+
+        internal void WhenGetAnnouncementResultList(AnnouncementSearchParams data)
+        {
+            var validator = new InlineValidator<AnnouncementSearchParams>();
+            validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
+            validator.RuleFor(x => x.Gender).InCollection(GenderFilter.AvailableFilters).WithErrorCode("IncorrectGender");
+            validator.RuleFor(x => x.DistanceMax).LessThanOrEqualTo(AnnouncementFilterConstants.DistanceMax).WithErrorCode("DistanceTooHigh");
+            validator.RuleFor(x => x.AgeRange).InRange(AnnouncementFilterConstants.MinAge, AnnouncementFilterConstants.MaxAge).WithErrorCode("IncorrectAgeRange");
+
+            validator.ValidateAndThrow(data);
         }
     }
 }

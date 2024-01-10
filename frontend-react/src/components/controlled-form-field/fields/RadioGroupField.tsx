@@ -15,7 +15,7 @@ export type RadioGroupFieldProps<
   TFieldValues extends FieldValues,
   TName extends FieldPath<TFieldValues>,
 > = RadioGroupProps & {
-  options: { label: string; value: TFieldValues[TName] }[];
+  options: readonly { label: string; value: TFieldValues[TName] }[];
 };
 
 export const RadioGroupField = <

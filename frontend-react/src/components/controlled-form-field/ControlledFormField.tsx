@@ -16,6 +16,10 @@ import {
   RadioGroupFieldProps,
 } from 'src/components/controlled-form-field/fields/RadioGroupField';
 import {
+  SliderField,
+  SliderFieldProps,
+} from 'src/components/controlled-form-field/fields/SliderField';
+import {
   TextareaField,
   TextareaFieldProps,
 } from 'src/components/controlled-form-field/fields/TextareaField';
@@ -54,6 +58,10 @@ export type ControlledFormFieldProps<
       element: 'textarea';
       ElementProps?: TextareaFieldProps;
     }
+  | {
+      element: 'slider';
+      ElementProps: SliderFieldProps<TFieldValues, TName>;
+    }
 );
 
 export const ControlledFormField = <
@@ -89,6 +97,10 @@ export const ControlledFormField = <
 
   if (element === 'textarea') {
     return <TextareaField {...ElementProps} controller={controller} label={label} />;
+  }
+
+  if (element === 'slider') {
+    return <SliderField {...ElementProps} controller={controller} label={label} />;
   }
 
   return null;

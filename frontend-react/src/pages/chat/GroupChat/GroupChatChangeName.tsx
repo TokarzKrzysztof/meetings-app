@@ -55,7 +55,7 @@ export const GroupChatChangeName = ({ onClose, onReload, groupChat }: GroupChatC
           <Icon name='close'></Icon>
         </IconButton>
       </Box>
-      <Box component={'form'} onSubmit={handleSubmit(onSubmit)}>
+      <Box component='form' onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <FormField
             form={form}
@@ -66,7 +66,7 @@ export const GroupChatChangeName = ({ onClose, onReload, groupChat }: GroupChatC
           ></FormField>
         </DialogContent>
         <DialogActions>
-          <Button type='button' variant='text' onClick={onClose}>
+          <Button variant='text' onClick={onClose}>
             Anuluj
           </Button>
           <Button type='submit' disabled={!isDirty}>

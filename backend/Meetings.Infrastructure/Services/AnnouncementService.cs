@@ -5,6 +5,7 @@ using Meetings.Database.Repositories;
 using Meetings.EmailSender;
 using Meetings.FileManager;
 using Meetings.Infrastructure.Mappers;
+using Meetings.Infrastructure.Utils;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
@@ -29,7 +30,8 @@ namespace Meetings.Infrastructure.Services
         private readonly AnnouncementValidator _announcementValidator;
         private readonly IFileManager _fileManager;
         private readonly ExtendedMapper _extendedMapper;
-        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IClaimsReader claimsReader, AnnouncementValidator announcementValidator, IFileManager fileManager, ExtendedMapper extendedMapper)
+        private readonly UserService _userService;
+        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IClaimsReader claimsReader, AnnouncementValidator announcementValidator, IFileManager fileManager, ExtendedMapper extendedMapper, UserService userService)
         {
             _repository = repository;
             _mapper = mapper;
@@ -37,6 +39,7 @@ namespace Meetings.Infrastructure.Services
             _announcementValidator = announcementValidator;
             _fileManager = fileManager;
             _extendedMapper = extendedMapper;
+            _userService = userService;
         }
 
         public async Task CreateNewAnnouncement(AnnouncementDTO data)
@@ -94,24 +97,48 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<AnnouncementDTO>(item);
         }
 
-        public async Task<List<UserAnnouncement>> GetAnnouncementResultList(AnnouncementQueryParams data)
+        public async Task<List<UserAnnouncement>> GetAnnouncementResultList(AnnouncementSearchParams data)
         {
-            var query = _repository.Data.Where(x => x.CategoryId == data.CategoryId && x.Status == AnnoucementStatus.Active);
+            _announcementValidator.WhenGetAnnouncementResultList(data);
 
-            Guid? userId = _claimsReader.TryGetCurrentUserId();
-            if (userId != null)
+            var currentUser = await _userService.TryGetCurrentUser(includeLocation: true);
+
+            var query = _repository.Data.Where(x => x.CategoryId == data.CategoryId && x.Status == AnnoucementStatus.Active);
+            if (data.Gender == GenderFilter.Males)
             {
-                query = query.Where(x => x.UserId != userId);
+                query = query.Where(x => x.User.Gender == UserGender.Male);
+            }
+            else if (data.Gender == GenderFilter.Females)
+            {
+                query = query.Where(x => x.User.Gender == UserGender.Female);
+            }
+            if (currentUser != null)
+            {
+                query = query.Where(x => x.UserId != currentUser.Id);
             }
 
-            var dateNow = DateTime.UtcNow;
-            var result = await query.Select(x => new UserAnnouncement()
+            var queryResult = (await query
+                .Include(x => x.User).ThenInclude(x => x.Location)
+                .Select(x => new UserAnnouncement()
+                {
+                    AnnouncementId = x.Id,
+                    UserId = x.UserId,
+                    Description = x.Description,
+                    User = _extendedMapper.ToUserDTO(x.User),
+                }).ToListAsync());
+            queryResult.ForEach((x) =>
             {
-                AnnouncementId = x.Id,
-                UserId = x.UserId,
-                Description = x.Description,
-                Author = _extendedMapper.ToUserDTO(x.User)
-            }).ToListAsync();
+                x.UserAge = UserUtils.CalculateAge(x.User.BirthDate);
+                if (currentUser != null)
+                {
+                    x.DistanceFromCurrentUser = LocationUtils.GetDistanceFromLatLonInKm(x.User.Location, currentUser.Location);
+                }
+            });
+
+            var result = queryResult
+                .Where(x => x.UserAge >= data.AgeRange[0] && x.UserAge <= data.AgeRange[1])
+                .Where(x => currentUser == null || x.DistanceFromCurrentUser <= data.DistanceMax)
+                .ToList();
 
             return result;
         }

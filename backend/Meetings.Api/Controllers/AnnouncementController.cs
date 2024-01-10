@@ -17,8 +17,8 @@ namespace Meetings.Api.Controllers
             _announcementService = announcementService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAnnouncementResultList([FromQuery] AnnouncementQueryParams data)
+        [HttpPost]
+        public async Task<IActionResult> GetAnnouncementResultList([FromBody] AnnouncementSearchParams data)
         {
             List<UserAnnouncement> announcements = await _announcementService.GetAnnouncementResultList(data);
             return Ok(announcements);

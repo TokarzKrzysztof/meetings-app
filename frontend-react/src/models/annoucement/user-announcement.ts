@@ -5,5 +5,5 @@ export type UserAnnouncement = {
     userId: User['id'];
     announcementId: Announcement['id'];
     description: Announcement['description'];
-    author: User;
+    user: User;
 };

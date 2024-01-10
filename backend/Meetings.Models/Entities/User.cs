@@ -65,5 +65,6 @@ namespace Meetings.Models.Entities
         public string? ProfileImageSrc { get; set; }
         public UserActiveStatus ActiveStatus { get; set; }
         public Guid LocationId { get; set; }
+        public UserLocation Location { get; set; }
     }
 }

@@ -1,44 +1,16 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { Header } from 'src/components/header/Header';
 import { AnnouncementResultListFilters } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListFilters';
 import { AnnouncementResultListItem } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListItem';
+import { useAnnouncementResultListFilterParams } from 'src/pages/announcement/AnnouncementResultList/hooks/useAnnouncementResultListParams';
 import { useGetAnnouncementResultList } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Box, Button, Container, Stack, Toolbar, Typography } from 'src/ui-components';
 
-// const nameOf = <T,>(name: keyof T) => name;
-type SearchParams = {
-  categoryId: string;
-  maxAge: string;
-};
-
-const useAnnouncementResultListSearchParams = () => {
-  const [searchParams, setSearchParams] = useSearchParams({ maxAge: '23' });
-  const setParams = (params: SearchParams) => {
-    setSearchParams(params);
-  };
-
-  const stringParam = (name: keyof SearchParams) => {
-    return searchParams.get(name);
-  };
-  // const numberParam = (name: keyof SearchParams) => {
-  //   const value = searchParams.get(name);
-  //   return value ? +value : null;
-  // };
-  return [
-    {
-      categoryId: stringParam('categoryId')!,
-      maxAge: stringParam('maxAge'),
-    },
-    setParams,
-  ] as const;
-};
-
 export const AnnouncementResultList = () => {
-  const [showFiltersDialog, setShowFiltersDialog] = useState(false);
-  const [params] = useAnnouncementResultListSearchParams();
+  const [showFiltersDialog, setShowFiltersDialog] = useState(true);
   const { allCategories } = useGetAllCategories();
+  const [params, setParams] = useAnnouncementResultListFilterParams();
   const { announcementResultList } = useGetAnnouncementResultList(params);
 
   const categoryName = allCategories?.find((x) => x.id === params.categoryId)?.name;
@@ -77,8 +49,10 @@ export const AnnouncementResultList = () => {
           )}
         </Stack>
       </Container>
-      {/* this needs to be like this for hiding animation */}
+      {/* this needs to be like this for hiding animation to work */}
       <AnnouncementResultListFilters
+        params={params}
+        setParams={setParams}
         open={showFiltersDialog}
         onClose={() => setShowFiltersDialog(false)}
       />
