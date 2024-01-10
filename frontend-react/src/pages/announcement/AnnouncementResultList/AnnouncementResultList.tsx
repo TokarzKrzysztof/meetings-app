@@ -8,7 +8,7 @@ import { useGetAllCategories } from 'src/queries/category-queries';
 import { Box, Button, Container, Stack, Toolbar, Typography } from 'src/ui-components';
 
 export const AnnouncementResultList = () => {
-  const [showFiltersDialog, setShowFiltersDialog] = useState(true);
+  const [showFiltersDialog, setShowFiltersDialog] = useState(false);
   const { allCategories } = useGetAllCategories();
   const [params, setParams] = useAnnouncementResultListFilterParams();
   const { announcementResultList } = useGetAnnouncementResultList(params);
@@ -52,7 +52,10 @@ export const AnnouncementResultList = () => {
       {/* this needs to be like this for hiding animation to work */}
       <AnnouncementResultListFilters
         params={params}
-        setParams={setParams}
+        onSubmit={(params) => {
+          setParams(params);
+          setShowFiltersDialog(false);
+        }}
         open={showFiltersDialog}
         onClose={() => setShowFiltersDialog(false)}
       />

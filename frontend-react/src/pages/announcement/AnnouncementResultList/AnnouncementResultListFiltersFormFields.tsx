@@ -1,7 +1,11 @@
 import { UseFormReturn } from 'react-hook-form';
 import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
-import { Container } from 'src/ui-components';
-import { AnnouncementResultListParams, GenderFilter, announcementFilterConstants } from 'src/utils/announcement-utils';
+import { Container, InputAdornment } from 'src/ui-components';
+import {
+  AnnouncementResultListParams,
+  GenderFilter,
+  announcementFilterConstants,
+} from 'src/utils/announcement-utils';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 
 const filterGenderOptions = [
@@ -40,7 +44,10 @@ export const AnnouncementResultListFiltersFormFields = ({
           isRange: true,
           min: announcementFilterConstants.minAge,
           max: announcementFilterConstants.maxAge,
-          renderPreview: (values) => `${values[0]} - ${values[1]} lat`,
+          renderPreview: (values) => {
+            const [from, to] = values as number[];
+            return `${from} - ${to} lat`;
+          },
         }}
       ></ControlledFormField>
       <ControlledFormField
@@ -50,8 +57,8 @@ export const AnnouncementResultListFiltersFormFields = ({
         label='Odległość'
         rules={{ required: ValidationMessages.required }}
         ElementProps={{
-          max: announcementFilterConstants.distanceMax,
-          renderPreview: (value) => `do ${value} km`,
+          renderPreview: (value) => `do ${value ?? '---'} km`,
+          inputEndAdornment: <InputAdornment position='end'>km</InputAdornment>,
         }}
       ></ControlledFormField>
       <ControlledFormField

@@ -17,7 +17,6 @@ namespace Meetings.Models.Resources
     }
     public class AnnouncementFilterConstants
     {
-        public const int DistanceMax = 500;
         public const int MinAge = 0;
         public const int MaxAge = 100;
     }

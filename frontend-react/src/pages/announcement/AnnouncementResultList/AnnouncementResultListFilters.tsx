@@ -28,14 +28,14 @@ const Transition = React.forwardRef(function Transition(
 export type AnnouncementResultListFiltersProps = {
   open: boolean;
   params: AnnouncementResultListParams;
-  setParams: (params: AnnouncementResultListParams) => void;
+  onSubmit: (data: AnnouncementResultListParams) => void;
   onClose: () => void;
 };
 
 export const AnnouncementResultListFilters = ({
   open,
   params,
-  setParams,
+  onSubmit,
   onClose,
 }: AnnouncementResultListFiltersProps) => {
   const form = useForm<AnnouncementResultListParams>();
@@ -56,7 +56,7 @@ export const AnnouncementResultListFilters = ({
 
   return (
     <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-      <Box component='form' onSubmit={handleSubmit(setParams)}>
+      <Box component='form' onSubmit={handleSubmit(onSubmit)}>
         <AppBar sx={{ position: 'relative' }}>
           <Toolbar sx={{ justifyContent: 'space-between' }}>
             <Stack alignItems={'center'}>

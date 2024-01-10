@@ -35,6 +35,8 @@ export * from './ListItemIcon';
 export * from './ListItemText';
 export * from './Menu';
 export * from './MenuItem';
+export * from './NumberInput';
+export * from './OutlinedInput';
 export * from './Popover';
 export * from './Popper';
 export * from './Radio';

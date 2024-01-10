@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Category } from 'src/models/category';
 import { Autocomplete, Box, Button, Icon, TextField } from 'src/ui-components';
-import { defaultAnnouncementResultListParams } from 'src/utils/announcement-utils';
+import { getDefaultAnnouncementResultListParams } from 'src/utils/announcement-utils';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 const StyledSearchFieldBox = styled(Box)({
@@ -68,10 +68,9 @@ export const HomeCategoriesSearch = ({ data }: HomeCategoriesSearchProps) => {
           size='large'
           endIcon={<Icon name='arrow_forward' />}
           component={Link}
-          to={AppRoutes.AnnouncementResultList({
-            ...defaultAnnouncementResultListParams,
-            categoryId: selectedCategory?.id as string,
-          })}
+          to={AppRoutes.AnnouncementResultList(
+            getDefaultAnnouncementResultListParams(selectedCategory?.id as string)
+          )}
         >
           Sprawdź
         </Button>
