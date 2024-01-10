@@ -1,5 +1,5 @@
 import { useSearchParams } from 'react-router-dom';
-import { AnnouncementResultListParams } from 'src/utils/announcement-utils';
+import { AnnouncementResultListParams } from 'src/utils/announcement-filters-utils';
 import { parseIntoURLParams } from 'src/utils/url-utils';
 
 export const useAnnouncementResultListFilterParams = () => {

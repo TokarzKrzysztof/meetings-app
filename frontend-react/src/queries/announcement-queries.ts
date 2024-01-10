@@ -3,7 +3,7 @@ import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'reac
 import axios from 'src/config/axios-config';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { UserAnnouncement } from 'src/models/annoucement/user-announcement';
-import { AnnouncementResultListParams } from 'src/utils/announcement-utils';
+import { AnnouncementResultListParams } from 'src/utils/announcement-filters-utils';
 import { apiUrl } from 'src/utils/api-url';
 import {
   genericUseMutationMethods,

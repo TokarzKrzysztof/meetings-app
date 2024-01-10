@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Category } from 'src/models/category';
 import { Autocomplete, Box, Button, Icon, TextField } from 'src/ui-components';
-import { getDefaultAnnouncementResultListParams } from 'src/utils/announcement-utils';
+import { getDefaultAnnouncementResultListParams } from 'src/utils/announcement-filters-utils';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 const StyledSearchFieldBox = styled(Box)({

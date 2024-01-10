@@ -1,12 +1,15 @@
+import { useSetAtom } from 'jotai';
 import { TransitionProps } from 'notistack';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { AnnouncementResultListFiltersFormFields } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListFiltersFormFields';
+import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import {
   AppBar,
   Box,
   Button,
   Dialog,
+  DialogContentText,
   Icon,
   IconButton,
   Slide,
@@ -14,7 +17,11 @@ import {
   Toolbar,
   Typography,
 } from 'src/ui-components';
-import { AnnouncementResultListParams } from 'src/utils/announcement-utils';
+import {
+  AnnouncementResultListParams,
+  areAnnouncementResultListParamsDefault,
+  getDefaultAnnouncementResultListParams,
+} from 'src/utils/announcement-filters-utils';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -38,6 +45,7 @@ export const AnnouncementResultListFilters = ({
   onSubmit,
   onClose,
 }: AnnouncementResultListFiltersProps) => {
+  const confirm = useSetAtom(confirmationDialogAtom);
   const form = useForm<AnnouncementResultListParams>();
   const {
     handleSubmit,
@@ -54,6 +62,16 @@ export const AnnouncementResultListFilters = ({
     onClose();
   };
 
+  const handleClearFilters = () => {
+    confirm({
+      message: (
+        <DialogContentText>Czy na pewno chcesz wyczyścić filtry wyszukiwania?</DialogContentText>
+      ),
+      onAccept: () => onSubmit(getDefaultAnnouncementResultListParams(params.categoryId)),
+    });
+  };
+
+  const areParamsDefault = useMemo(() => areAnnouncementResultListParamsDefault(params), [params]);
   return (
     <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
       <Box component='form' onSubmit={handleSubmit(onSubmit)}>
@@ -67,9 +85,16 @@ export const AnnouncementResultListFilters = ({
                 Filtry
               </Typography>
             </Stack>
-            <Button type='submit' color='inherit' variant='text' disabled={!isDirty}>
-              ZAPISZ
-            </Button>
+            <Stack alignItems={'center'}>
+              {!areParamsDefault && (
+                <Button color='inherit' variant='text' onClick={handleClearFilters}>
+                  WYCZYŚĆ
+                </Button>
+              )}
+              <Button type='submit' color='inherit' variant='text' disabled={!isDirty}>
+                ZAPISZ
+              </Button>
+            </Stack>
           </Toolbar>
         </AppBar>
         <AnnouncementResultListFiltersFormFields form={form} />

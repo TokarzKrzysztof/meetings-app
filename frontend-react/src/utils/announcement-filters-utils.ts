@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export enum GenderFilter {
   All = 'all',
   Males = 'males',
@@ -23,3 +25,10 @@ export const getDefaultAnnouncementResultListParams = (
   distanceMax: 500,
   ageRange: [announcementFilterConstants.minAge, announcementFilterConstants.maxAge],
 });
+
+export const areAnnouncementResultListParamsDefault = (
+  params: AnnouncementResultListParams
+): boolean => {
+  const defaults = getDefaultAnnouncementResultListParams(params.categoryId);
+  return _.isEqual(params, defaults);
+};

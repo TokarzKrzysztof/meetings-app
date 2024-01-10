@@ -5,7 +5,7 @@ import {
   AnnouncementResultListParams,
   GenderFilter,
   announcementFilterConstants,
-} from 'src/utils/announcement-utils';
+} from 'src/utils/announcement-filters-utils';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 
 const filterGenderOptions = [
