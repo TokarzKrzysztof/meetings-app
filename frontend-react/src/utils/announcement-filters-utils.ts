@@ -17,16 +17,16 @@ export const announcementFilterConstants = {
   maxAge: 100,
 } as const;
 
-export type AnnouncementResultListParams = {
+export type AnnouncementResultListQueryParams = {
   categoryId: string;
   gender: GenderFilter;
   distanceMax: number;
   ageRange: [number, number];
   sortBy: SortOption;
 };
-export const getDefaultAnnouncementResultListParams = (
+export const getDefaultAnnouncementResultListQueryParams = (
   categoryId: string
-): AnnouncementResultListParams => ({
+): AnnouncementResultListQueryParams => ({
   categoryId,
   gender: GenderFilter.All,
   distanceMax: 500,
@@ -35,8 +35,8 @@ export const getDefaultAnnouncementResultListParams = (
 });
 
 export const areAnnouncementResultListFiltersDefault = (
-  params: AnnouncementResultListParams
+  params: AnnouncementResultListQueryParams
 ): boolean => {
-  const defaults = getDefaultAnnouncementResultListParams(params.categoryId);
+  const defaults = getDefaultAnnouncementResultListQueryParams(params.categoryId);
   return isEqual(params, defaults, ['categoryId', 'sortBy']);
 };

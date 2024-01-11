@@ -1,9 +1,0 @@
-import { Announcement } from 'src/models/annoucement/announcement';
-import { User } from 'src/models/user';
-
-export type UserAnnouncement = {
-    userId: User['id'];
-    announcementId: Announcement['id'];
-    description: Announcement['description'];
-    user: User;
-};

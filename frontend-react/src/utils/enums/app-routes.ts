@@ -1,4 +1,4 @@
-import { AnnouncementResultListParams } from 'src/utils/announcement-filters-utils';
+import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
 import { parseIntoURLParams } from 'src/utils/url-utils';
 
 export const AppRoutes = {
@@ -7,7 +7,7 @@ export const AppRoutes = {
   Register: () => '/register',
   ForgotPassword: () => '/forgot-password',
   ResetPassword: (params: ResetPasswordParams) => makeUrl('/reset-password', params),
-  AnnouncementResultList: (params: AnnouncementResultListParams) =>
+  AnnouncementResultList: (params: AnnouncementResultListQueryParams) =>
     makeUrl('/announcement-result-list', parseIntoURLParams(params)),
   NewAnnouncement: () => '/new-announcement',
   EditAnnouncement: (params: EditAnnouncementParams) => makeUrl('/edit-announcement', params),

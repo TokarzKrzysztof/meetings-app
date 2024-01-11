@@ -2,9 +2,9 @@ import { UseFormReturn } from 'react-hook-form';
 import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
 import { Container, InputAdornment } from 'src/ui-components';
 import {
-  AnnouncementResultListParams,
-  GenderFilter,
-  announcementFilterConstants,
+    AnnouncementResultListQueryParams,
+    GenderFilter,
+    announcementFilterConstants,
 } from 'src/utils/announcement-filters-utils';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 
@@ -24,7 +24,7 @@ const filterGenderOptions = [
 ] as const;
 
 export type AnnouncementResultListFiltersFormFieldsProps = {
-  form: UseFormReturn<AnnouncementResultListParams, any, undefined>;
+  form: UseFormReturn<AnnouncementResultListQueryParams, any, undefined>;
 };
 
 export const AnnouncementResultListFiltersFormFields = ({

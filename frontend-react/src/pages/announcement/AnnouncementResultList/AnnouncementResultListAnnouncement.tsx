@@ -2,16 +2,16 @@ import { Divider } from '@mui/material';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { LocationText } from 'src/components/LocationText';
-import { UserAnnouncement } from 'src/models/annoucement/user-announcement';
+import { AnnouncementResultListItem } from 'src/models/annoucement/announcement-result-list';
 import { Avatar, Box, Button, Card, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { calculateAge } from 'src/utils/user-utils';
 
-export type AnnouncementResultListItemProps = {
-  data: UserAnnouncement;
+export type AnnouncementResultListAnnouncementProps = {
+  data: AnnouncementResultListItem;
 };
 
-export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemProps) => {
+export const AnnouncementResultListAnnouncement = ({ data }: AnnouncementResultListAnnouncementProps) => {
   const age = useMemo(() => calculateAge(data.user.birthDate), [data]);
   return (
     <Card>

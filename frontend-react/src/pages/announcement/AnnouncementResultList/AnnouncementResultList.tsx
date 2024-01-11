@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { InfiniteScroll, InfiniteScrollHandle } from 'src/components/InfiniteScroll';
 import { Header } from 'src/components/header/Header';
+import { AnnouncementResultListItem } from 'src/models/annoucement/announcement-result-list';
+import { AnnouncementResultListAnnouncement } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListAnnouncement';
 import { AnnouncementResultListFilters } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListFilters';
-import { AnnouncementResultListItem } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListItem';
-import { useAnnouncementResultListFilterParams } from 'src/pages/announcement/AnnouncementResultList/hooks/useAnnouncementResultListParams';
-import { useGetAnnouncementResultList } from 'src/queries/announcement-queries';
+import { useAnnouncementResultListQueryParams } from 'src/pages/announcement/AnnouncementResultList/hooks/useAnnouncementResultQueryParams';
+import { useLoadAnnouncementResultList } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import {
   Box,
@@ -15,13 +17,41 @@ import {
   Toolbar,
   Typography,
 } from 'src/ui-components';
-import { SortOption } from 'src/utils/announcement-filters-utils';
+import {
+  AnnouncementResultListQueryParams,
+  SortOption,
+} from 'src/utils/announcement-filters-utils';
 
 export const AnnouncementResultList = () => {
+  const pageSize = 10;
+  const infiniteScrollRef = useRef<InfiniteScrollHandle>(null);
   const [showFiltersDialog, setShowFiltersDialog] = useState(false);
   const { allCategories } = useGetAllCategories();
-  const [params, setParams] = useAnnouncementResultListFilterParams();
-  const { announcementResultList } = useGetAnnouncementResultList(params);
+  const [params, setParams] = useAnnouncementResultListQueryParams();
+  const [announcements, setAnnouncements] = useState<AnnouncementResultListItem[]>([]);
+  const [totalAmount, setTotalAmount] = useState(pageSize);
+  const { loadAnnouncementResultListAsync } = useLoadAnnouncementResultList();
+
+  const handleLoadAnnouncements = async () => {
+    const result = await loadAnnouncementResultListAsync({
+      ...params,
+      skip: announcements.length,
+      take: pageSize,
+    });
+
+    setAnnouncements((prev) => prev.concat(result.data));
+    setTotalAmount(result.totalCount);
+  };
+
+  const updateQueryParams = (params: AnnouncementResultListQueryParams) => {
+    setParams(params);
+    setAnnouncements([]);
+    // timeout to wait for setAnnouncements
+    setTimeout(() => {
+      console.log('next from parent');
+      infiniteScrollRef.current?.load();
+    });
+  };
 
   const categoryName = allCategories?.find((x) => x.id === params.categoryId)?.name;
   return (
@@ -37,7 +67,8 @@ export const AnnouncementResultList = () => {
               size='small'
               value={params.sortBy}
               SelectProps={{
-                onChange: (e) => setParams({ ...params, sortBy: e.target.value as SortOption }),
+                onChange: (e) =>
+                  updateQueryParams({ ...params, sortBy: e.target.value as SortOption }),
               }}
             >
               <MenuItem value={SortOption.Newest}>Od najnowszych</MenuItem>
@@ -52,20 +83,11 @@ export const AnnouncementResultList = () => {
         }
       />
       <Container>
-        {/* <GoBackBtn to={AppRoutes.Home()}>Wyszukaj ogłoszenia z innej kategorii</GoBackBtn> */}
-
-        {announcementResultList?.length ? (
-          <>
-            <Typography color={'black'} my={2}>
-              Ogłoszenia z kategorii:{' '}
-              <span style={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>{categoryName}</span>
-            </Typography>
-            <Stack direction='column' gap={2} py={2}>
-              {announcementResultList.map((announcement) => (
-                <AnnouncementResultListItem key={announcement.announcementId} data={announcement} />
-              ))}
-            </Stack>
-          </>
+        {totalAmount !== 0 ? (
+          <Typography color={'black'} my={2}>
+            Ogłoszenia z kategorii:{' '}
+            <span style={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>{categoryName}</span>
+          </Typography>
         ) : (
           <Box mt={6} textAlign='center' color='grey'>
             <Typography>
@@ -77,12 +99,24 @@ export const AnnouncementResultList = () => {
             </Typography>
           </Box>
         )}
+        <Stack direction='column' gap={2} py={2}>
+          <InfiniteScroll
+            ref={infiniteScrollRef}
+            direction='down'
+            totalAmount={totalAmount}
+            next={handleLoadAnnouncements}
+          >
+            {announcements.map((x) => (
+              <AnnouncementResultListAnnouncement key={x.announcementId} data={x} />
+            ))}
+          </InfiniteScroll>
+        </Stack>
       </Container>
       {/* this needs to be like this for hiding animation to work */}
       <AnnouncementResultListFilters
         params={params}
         onSubmit={(params) => {
-          setParams(params);
+          updateQueryParams(params);
           setShowFiltersDialog(false);
         }}
         open={showFiltersDialog}

@@ -18,9 +18,9 @@ import {
   Typography,
 } from 'src/ui-components';
 import {
-  AnnouncementResultListParams,
+  AnnouncementResultListQueryParams,
   areAnnouncementResultListFiltersDefault,
-  getDefaultAnnouncementResultListParams,
+  getDefaultAnnouncementResultListQueryParams,
 } from 'src/utils/announcement-filters-utils';
 
 const Transition = React.forwardRef(function Transition(
@@ -34,8 +34,8 @@ const Transition = React.forwardRef(function Transition(
 
 export type AnnouncementResultListFiltersProps = {
   open: boolean;
-  params: AnnouncementResultListParams;
-  onSubmit: (data: AnnouncementResultListParams) => void;
+  params: AnnouncementResultListQueryParams;
+  onSubmit: (data: AnnouncementResultListQueryParams) => void;
   onClose: () => void;
 };
 
@@ -46,7 +46,7 @@ export const AnnouncementResultListFilters = ({
   onClose,
 }: AnnouncementResultListFiltersProps) => {
   const confirm = useSetAtom(confirmationDialogAtom);
-  const form = useForm<AnnouncementResultListParams>();
+  const form = useForm<AnnouncementResultListQueryParams>();
   const {
     handleSubmit,
     reset,
@@ -67,7 +67,7 @@ export const AnnouncementResultListFilters = ({
       message: (
         <DialogContentText>Czy na pewno chcesz wyczyścić filtry wyszukiwania?</DialogContentText>
       ),
-      onAccept: () => onSubmit(getDefaultAnnouncementResultListParams(params.categoryId)),
+      onAccept: () => onSubmit(getDefaultAnnouncementResultListQueryParams(params.categoryId)),
     });
   };
 

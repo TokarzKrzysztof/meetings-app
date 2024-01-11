@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Resources
 {
-    public class UserAnnouncement
+    public class AnnouncementResultListItem
     {
         public Guid UserId { get; set; }
         public Guid AnnouncementId { get; set; }
@@ -16,5 +16,11 @@ namespace Meetings.Models.Resources
         public UserDTO User { get; set; }
         public int UserAge { get; set; }
         public int? DistanceFromCurrentUser { get; set; }
+    }
+
+    public class AnnouncementResultList
+    {
+        public List<AnnouncementResultListItem> Data { get; set; }
+        public int TotalCount { get; set; }
     }
 }

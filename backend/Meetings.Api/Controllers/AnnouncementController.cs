@@ -18,12 +18,12 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetAnnouncementResultList([FromBody] AnnouncementSearchParams data)
+        public async Task<IActionResult> LoadAnnouncementResultList([FromBody] LoadAnnouncementResultListParams data)
         {
-            List<UserAnnouncement> announcements = await _announcementService.GetAnnouncementResultList(data);
-            return Ok(announcements);
-        } 
-        
+            AnnouncementResultList result = await _announcementService.LoadAnnouncementResultList(data);
+            return Ok(result);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateNewAnnouncement([FromBody] AnnouncementDTO data)

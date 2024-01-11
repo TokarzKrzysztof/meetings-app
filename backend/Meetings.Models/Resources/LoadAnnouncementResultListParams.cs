@@ -25,13 +25,15 @@ namespace Meetings.Models.Resources
         public const int MinAge = 0;
         public const int MaxAge = 100;
     }
-    public class AnnouncementSearchParams
+    public class LoadAnnouncementResultListParams
     {
         public Guid CategoryId { get; set; }
         public GenderFilter Gender { get; set; }
         public int DistanceMax { get; set; }
         public int[] AgeRange { get; set; }
         public SortOption SortBy { get; set; }
+        public int Skip { get; set; }
+        public int Take { get; set; }
     }
 }
 

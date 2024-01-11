@@ -51,8 +51,6 @@ const ChatScrollableInner = (
   { messages, top, chat, dispatch }: ChatScrollableProps,
   ref: ForwardedRef<ChatScrollableHandle>
 ) => {
-  useImperativeHandle(ref, () => ({ scrollToBottom }), []);
-
   const pageSize = 20;
 
   const scrollableRef = useRef<HTMLDivElement>(null);
@@ -84,13 +82,15 @@ const ChatScrollableInner = (
     scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
   };
 
+  useImperativeHandle(ref, () => ({ scrollToBottom }), []);
   return (
     <StyledScrollableContainer ref={scrollableRef}>
       {top}
 
       <Stack direction='column' py={1}>
         <InfiniteScroll
-          scrollableRef={scrollableRef}
+          direction='up'
+          scrollable={scrollableRef.current}
           totalAmount={chat?.totalMessagesAmount as number}
           next={handleLoadChatMessages}
         >

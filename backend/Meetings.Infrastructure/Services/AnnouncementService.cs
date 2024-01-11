@@ -86,7 +86,7 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<AnnouncementDTO>(item);
         }
 
-        public async Task<List<UserAnnouncement>> GetAnnouncementResultList(AnnouncementSearchParams data)
+        public async Task<AnnouncementResultList> LoadAnnouncementResultList(LoadAnnouncementResultListParams data)
         {
             _announcementValidator.WhenGetAnnouncementResultList(data);
 
@@ -108,7 +108,7 @@ namespace Meetings.Infrastructure.Services
 
             var queryResult = (await query
                 .Include(x => x.User).ThenInclude(x => x.Location)
-                .Select(x => new UserAnnouncement()
+                .Select(x => new AnnouncementResultListItem()
                 {
                     AnnouncementId = x.Id,
                     AnnouncementCreatedAt = x.CreatedAt,
@@ -145,7 +145,11 @@ namespace Meetings.Infrastructure.Services
                 result = result.OrderByDescending(x => x.DistanceFromCurrentUser);
             }
 
-            return result.ToList();
+            return new AnnouncementResultList()
+            {
+                Data = result.Skip(data.Skip).Take(data.Take).ToList(),
+                TotalCount = result.Count()
+            };
         }
     }
 }

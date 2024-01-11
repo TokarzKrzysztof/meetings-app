@@ -25,9 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.EmailTemplates", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.FileManager", "Common\Meetings.FileManager\Meetings.FileManager.csproj", "{F84F5899-C855-4227-B0A6-80E53A2E5F2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meetings.Mock", "Common\Meetings.Mock\Meetings.Mock.csproj", "{80E0F55B-D0F1-4D85-BC44-1D49972377BA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.Utilities", "Common\Meetings.Utilities\Meetings.Utilities.csproj", "{67686352-322D-4FA4-93A6-51C7498FFC1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.Mock", "Common\Meetings.Mock\Meetings.Mock.csproj", "{80E0F55B-D0F1-4D85-BC44-1D49972377BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,10 +77,6 @@ Global
 		{80E0F55B-D0F1-4D85-BC44-1D49972377BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80E0F55B-D0F1-4D85-BC44-1D49972377BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80E0F55B-D0F1-4D85-BC44-1D49972377BA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{67686352-322D-4FA4-93A6-51C7498FFC1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{67686352-322D-4FA4-93A6-51C7498FFC1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{67686352-322D-4FA4-93A6-51C7498FFC1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{67686352-322D-4FA4-93A6-51C7498FFC1E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,7 +89,6 @@ Global
 		{22ACD42D-B6EE-4B59-A983-CA29891D520A} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 		{F84F5899-C855-4227-B0A6-80E53A2E5F2F} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 		{80E0F55B-D0F1-4D85-BC44-1D49972377BA} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
-		{67686352-322D-4FA4-93A6-51C7498FFC1E} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {051323AE-1851-400B-B379-2E6EC46C5D63}

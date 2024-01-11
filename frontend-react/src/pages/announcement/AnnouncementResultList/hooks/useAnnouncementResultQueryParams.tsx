@@ -1,23 +1,21 @@
 import { useSearchParams } from 'react-router-dom';
-import { AnnouncementResultListParams } from 'src/utils/announcement-filters-utils';
+import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
 import { parseIntoURLParams } from 'src/utils/url-utils';
 
-export const useAnnouncementResultListFilterParams = () => {
+export const useAnnouncementResultListQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const setParams = (params: AnnouncementResultListParams) => {
+  const setParams = (params: AnnouncementResultListQueryParams) => {
     setSearchParams(parseIntoURLParams(params));
   };
 
-  const stringParam = <TName extends keyof AnnouncementResultListParams>(
-    name: TName
-  ): AnnouncementResultListParams[TName] => {
-    return searchParams.get(name) as AnnouncementResultListParams[TName];
+  const stringParam = (name: keyof AnnouncementResultListQueryParams): string => {
+    return searchParams.get(name)!;
   };
-  const numberParam = (name: keyof AnnouncementResultListParams): number => {
+  const numberParam = (name: keyof AnnouncementResultListQueryParams): number => {
     return +searchParams.get(name)!;
   };
-  const rangeParam = (name: keyof AnnouncementResultListParams): [number, number] => {
+  const rangeParam = (name: keyof AnnouncementResultListQueryParams): [number, number] => {
     try {
       const result = searchParams
         .get(name)!
@@ -31,7 +29,7 @@ export const useAnnouncementResultListFilterParams = () => {
     }
   };
 
-  const params: AnnouncementResultListParams = {
+  const params: AnnouncementResultListQueryParams = {
     categoryId: stringParam('categoryId'),
     gender: numberParam('gender'),
     distanceMax: numberParam('distanceMax'),

@@ -91,9 +91,9 @@ namespace Meetings.Infrastructure.Validators
             await ValidateIsAuthorCurrentUser(id);
         }
 
-        internal void WhenGetAnnouncementResultList(AnnouncementSearchParams data)
+        internal void WhenGetAnnouncementResultList(LoadAnnouncementResultListParams data)
         {
-            var validator = new InlineValidator<AnnouncementSearchParams>();
+            var validator = new InlineValidator<LoadAnnouncementResultListParams>();
             validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
             validator.RuleFor(x => x.DistanceMax).GreaterThanOrEqualTo(0).WithErrorCode("DistanceMaxNegative");
             validator.RuleFor(x => x.AgeRange).InRange(AnnouncementFilterConstants.MinAge, AnnouncementFilterConstants.MaxAge).WithErrorCode("IncorrectAgeRange");

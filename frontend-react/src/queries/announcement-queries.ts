@@ -2,8 +2,8 @@ import { AxiosError } from 'axios';
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
-import { UserAnnouncement } from 'src/models/annoucement/user-announcement';
-import { AnnouncementResultListParams } from 'src/utils/announcement-filters-utils';
+import { AnnouncementResultList } from 'src/models/annoucement/announcement-result-list';
+import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
 import { apiUrl } from 'src/utils/api-url';
 import {
   genericUseMutationMethods,
@@ -13,18 +13,19 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Announcement`;
 
-export const useGetAnnouncementResultList = (
-  params: AnnouncementResultListParams,
-  options?: UseQueryOptions<UserAnnouncement[], AxiosError<HttpErrorData>>
+export const useLoadAnnouncementResultList = (
+  options?: UseMutationOptions<
+    AnnouncementResultList,
+    AxiosError<HttpErrorData>,
+    AnnouncementResultListQueryParams & { skip: number; take: number }
+  >
 ) => {
-  const query = useQuery({
-    queryKey: ['GetAnnouncementResultList', params],
-    queryFn: () => axios.post(`${baseUrl}/GetAnnouncementResultList`, params),
-    staleTime: Infinity,
+  const mutation = useMutation({
+    mutationFn: (data) => axios.post(`${baseUrl}/LoadAnnouncementResultList`, data),
     ...options,
   });
 
-  return genericUseQueryMethods('announcementResultList', query);
+  return genericUseMutationMethods('loadAnnouncementResultList', mutation);
 };
 
 export const useCreateNewAnnouncement = (
