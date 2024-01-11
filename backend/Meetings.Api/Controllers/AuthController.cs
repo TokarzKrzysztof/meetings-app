@@ -4,7 +4,7 @@ using Meetings.Infrastructure.Services;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
-using Meetings.Utils;
+using Meetings.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

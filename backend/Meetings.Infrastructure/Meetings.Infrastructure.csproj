@@ -11,7 +11,7 @@
     <ProjectReference Include="..\Common\Meetings.Authentication\Meetings.Authentication.csproj" />
     <ProjectReference Include="..\Common\Meetings.FileManager\Meetings.FileManager.csproj" />
     <ProjectReference Include="..\Common\Meetings.MailSender\Meetings.EmailSender.csproj" />
-    <ProjectReference Include="..\Common\Meetings.Utils\Meetings.Utils.csproj" />
+    <ProjectReference Include="..\Common\Meetings.Utilities\Meetings.Utilities.csproj" />
     <ProjectReference Include="..\Meetings.Database\Meetings.Database.csproj" />
     <ProjectReference Include="..\Meetings.Models\Meetings.Models.csproj" />
   </ItemGroup>

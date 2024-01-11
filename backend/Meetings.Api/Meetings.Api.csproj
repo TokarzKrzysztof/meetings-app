@@ -23,6 +23,7 @@
     <ProjectReference Include="..\Common\Meetings.ErrorHandlingMiddleware\Meetings.ErrorHandlingMiddleware.csproj" />
     <ProjectReference Include="..\Common\Meetings.FileManager\Meetings.FileManager.csproj" />
     <ProjectReference Include="..\Common\Meetings.MailSender\Meetings.EmailSender.csproj" />
+    <ProjectReference Include="..\Common\Meetings.Mock\Meetings.Mock.csproj" />
     <ProjectReference Include="..\Meetings.Database\Meetings.Database.csproj" />
     <ProjectReference Include="..\Meetings.Infrastructure\Meetings.Infrastructure.csproj" />
     <ProjectReference Include="..\Meetings.Models\Meetings.Models.csproj" />

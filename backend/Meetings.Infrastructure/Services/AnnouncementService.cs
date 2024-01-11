@@ -1,24 +1,13 @@
 ﻿using AutoMapper;
-using Meetings.Authentication;
 using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
-using Meetings.EmailSender;
 using Meetings.FileManager;
 using Meetings.Infrastructure.Mappers;
 using Meetings.Infrastructure.Utils;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
-using Meetings.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -47,7 +36,7 @@ namespace Meetings.Infrastructure.Services
             _announcementValidator.WhenCreateNewAnnouncement(data);
 
             data.UserId = _claimsReader.GetCurrentUserId();
-            data.Status = Utilities.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
+            data.Status = Utilities.Utils.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
 
             var newAnnouncement = _mapper.Map<Announcement>(data);
             await _repository.Create(newAnnouncement);
@@ -61,7 +50,7 @@ namespace Meetings.Infrastructure.Services
             var item = await _repository.GetById(data.Id);
             item.Description = data.Description;
             item.CategoryId = data.CategoryId;
-            data.Status = Utilities.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
+            data.Status = Utilities.Utils.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
 
             await _repository.Update(item);
         }

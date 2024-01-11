@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Validators;
 using Meetings.Models.Entites;
-using Meetings.Utils;
+using Meetings.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +45,7 @@ namespace Meetings.Models.Entities
 
         public User()
         {
-            if (Utilities.IsDebug())
+            if (Utils.IsDebug())
             {
                 IsConfirmed = true;
             }

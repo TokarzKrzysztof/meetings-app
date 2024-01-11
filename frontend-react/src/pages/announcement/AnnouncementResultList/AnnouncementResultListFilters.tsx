@@ -19,7 +19,7 @@ import {
 } from 'src/ui-components';
 import {
   AnnouncementResultListParams,
-  areAnnouncementResultListParamsDefault,
+  areAnnouncementResultListFiltersDefault,
   getDefaultAnnouncementResultListParams,
 } from 'src/utils/announcement-filters-utils';
 
@@ -71,7 +71,7 @@ export const AnnouncementResultListFilters = ({
     });
   };
 
-  const areParamsDefault = useMemo(() => areAnnouncementResultListParamsDefault(params), [params]);
+  const areParamsDefault = useMemo(() => areAnnouncementResultListFiltersDefault(params), [params]);
   return (
     <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
       <Box component='form' onSubmit={handleSubmit(onSubmit)}>

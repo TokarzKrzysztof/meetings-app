@@ -2,7 +2,7 @@
 using Meetings.Database.Repositories;
 using Meetings.Infrastructure.Services;
 using Meetings.Models.Entities;
-using Meetings.Utils.Extensions;
+using Meetings.Utilities.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;

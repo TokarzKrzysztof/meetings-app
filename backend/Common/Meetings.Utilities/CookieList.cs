@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Meetings.Utils
+namespace Meetings.Utilities
 {
     public class CookieList
     {

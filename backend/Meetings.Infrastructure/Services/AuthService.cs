@@ -8,7 +8,7 @@ using Meetings.Infrastructure.Helpers;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
-using Meetings.Utils;
+using Meetings.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,7 +17,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Meetings.Utils.Extensions;
+using Meetings.Utilities.Extensions;
 
 namespace Meetings.Infrastructure.Services
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Meetings.Utils.Extensions;
+using Meetings.Utilities.Extensions;
 
 namespace Meetings.FileManager
 {

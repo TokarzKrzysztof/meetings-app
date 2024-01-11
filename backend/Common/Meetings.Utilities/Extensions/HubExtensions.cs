@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Meetings.Utils.Extensions
+namespace Meetings.Utilities.Extensions
 {
     public static class HubExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Meetings.Utils.Extensions
+namespace Meetings.Utilities.Extensions
 {
     public static class HttpContextAccessorExtensions
     {

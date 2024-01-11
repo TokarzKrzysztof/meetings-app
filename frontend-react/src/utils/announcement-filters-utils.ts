@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { isEqual } from 'src/utils/utils';
 
 export enum GenderFilter {
   All,
@@ -31,12 +31,12 @@ export const getDefaultAnnouncementResultListParams = (
   gender: GenderFilter.All,
   distanceMax: 500,
   ageRange: [announcementFilterConstants.minAge, announcementFilterConstants.maxAge],
-  sortBy: SortOption.Newest
+  sortBy: SortOption.Newest,
 });
 
-export const areAnnouncementResultListParamsDefault = (
+export const areAnnouncementResultListFiltersDefault = (
   params: AnnouncementResultListParams
 ): boolean => {
   const defaults = getDefaultAnnouncementResultListParams(params.categoryId);
-  return _.isEqual(params, defaults);
+  return isEqual(params, defaults, ['categoryId', 'sortBy']);
 };

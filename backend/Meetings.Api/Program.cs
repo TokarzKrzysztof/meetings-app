@@ -1,3 +1,4 @@
+using Meetings.Api;
 using Meetings.Authentication.StartupExtensions;
 using Meetings.Database.StartupExtensions;
 using Meetings.EmailTemplates.StartupExtensions;
@@ -5,6 +6,8 @@ using Meetings.ErrorHandlingMiddleware.StartupExtensions;
 using Meetings.FileManager.StartupExtensions;
 using Meetings.Infrastructure.Hubs;
 using Meetings.Infrastructure.StartupExtensions;
+using Meetings.Mock;
+using Meetings.Mock.StartupExtensions;
 using Meetings.Models.Resources;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -42,6 +45,7 @@ builder.AddInfrastructure();
 builder.AddEmailSender();
 builder.AddEmailTemplates();
 builder.AddFileManager();
+builder.AddMock();
 
 var app = builder.Build();
 
@@ -65,8 +69,11 @@ app.AddErrorHandlingMiddleware();
 app.MapControllers();
 app.MapHub<ChatHub>("/api/chat-hub");
 
-using (var scope = app.Services.CreateScope())
+using (IServiceScope scope = app.Services.CreateScope())
 {
+    //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomUsers(1000);
+    //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomAnnouncements(1000, "Tenis");
+    Console.WriteLine(123);
     //using (StreamReader r = new StreamReader("StaticData/cities.json"))
     //{
     //    string json = r.ReadToEnd();

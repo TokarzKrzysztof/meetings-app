@@ -1,6 +1,6 @@
 ﻿using Meetings.Models;
 using Meetings.Models.Entities;
-using Meetings.Utils.Extensions;
+using Meetings.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;

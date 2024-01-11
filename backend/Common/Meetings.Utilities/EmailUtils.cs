@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Meetings.Utils
+namespace Meetings.Utilities
 {
     public static class EmailUtils
     {

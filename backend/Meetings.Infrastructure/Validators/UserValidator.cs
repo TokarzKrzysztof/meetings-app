@@ -10,7 +10,7 @@ using Meetings.Database.Repositories;
 using Meetings.Infrastructure.Services;
 using Meetings.Models.Resources;
 using Meetings.Authentication.Services;
-using Meetings.Utils;
+using Meetings.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 

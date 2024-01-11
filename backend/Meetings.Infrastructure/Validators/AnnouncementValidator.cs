@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Meetings.Infrastructure.Helpers;
 using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
-using Meetings.Utils;
+using Meetings.Utilities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.EntityFrameworkCore;
 using Meetings.Models.Resources;

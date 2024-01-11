@@ -9,7 +9,7 @@ using Meetings.Infrastructure.Utils;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
-using Meetings.Utils.Extensions;
+using Meetings.Utilities.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;

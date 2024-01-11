@@ -1,6 +1,6 @@
 ﻿using Meetings.Database.Repositories;
 using Meetings.Models.Entities;
-using Meetings.Utils;
+using Meetings.Utilities;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
 using AutoMapper;
@@ -16,7 +16,7 @@ using Meetings.Infrastructure.Utils;
 using Meetings.Infrastructure.Mappers;
 using Meetings.FileManager;
 using Meetings.Infrastructure.Helpers;
-using Meetings.Utils.Extensions;
+using Meetings.Utilities.Extensions;
 
 namespace Meetings.Infrastructure.Services
 {

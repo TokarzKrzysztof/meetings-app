@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Meetings.Utils;
+using Meetings.Utilities;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -48,7 +48,7 @@ namespace Meetings.ErrorHandlingMiddleware
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 }
 
-                var result = JsonSerializer.Serialize(new { statusCode = response.StatusCode, validationErrors, message = Utilities.IsDebug() ? ex.Message : null });
+                var result = JsonSerializer.Serialize(new { statusCode = response.StatusCode, validationErrors, message = Utils.IsDebug() ? ex.Message : null });
                 await response.WriteAsync(result);
             }
         }

@@ -9,6 +9,6 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.7.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Common\Meetings.Utils\Meetings.Utils.csproj" />
+    <ProjectReference Include="..\Common\Meetings.Utilities\Meetings.Utilities.csproj" />
   </ItemGroup>
 </Project>

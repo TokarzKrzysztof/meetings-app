@@ -2,7 +2,7 @@
 using Meetings.Database.Repositories;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
-using Meetings.Utils;
+using Meetings.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
