@@ -1,9 +1,15 @@
 import _ from 'lodash';
 
 export enum GenderFilter {
-  All = 'all',
-  Males = 'males',
-  Females = 'females',
+  All,
+  Males,
+  Females,
+}
+export enum SortOption {
+  Newest,
+  Oldest,
+  DistanceMin,
+  DistanceMax,
 }
 
 export const announcementFilterConstants = {
@@ -16,6 +22,7 @@ export type AnnouncementResultListParams = {
   gender: GenderFilter;
   distanceMax: number;
   ageRange: [number, number];
+  sortBy: SortOption;
 };
 export const getDefaultAnnouncementResultListParams = (
   categoryId: string
@@ -24,6 +31,7 @@ export const getDefaultAnnouncementResultListParams = (
   gender: GenderFilter.All,
   distanceMax: 500,
   ageRange: [announcementFilterConstants.minAge, announcementFilterConstants.maxAge],
+  sortBy: SortOption.Newest
 });
 
 export const areAnnouncementResultListParamsDefault = (

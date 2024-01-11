@@ -1,5 +1,5 @@
 import useScrollTrigger from '@mui/material/useScrollTrigger';
-import { ReactNode } from 'react';
+import { ReactElement, ReactNode, cloneElement } from 'react';
 import { Link } from 'react-router-dom';
 import { HeaderMenu } from 'src/components/header/HeaderMenu';
 import { AppBar, Box, Slide, Toolbar } from 'src/ui-components';
@@ -18,7 +18,7 @@ const HideOnScroll = ({ children }: PropsWithReactElement) => {
 
 export type HeaderProps = {
   leftSlot?: ReactNode;
-  secondToolbar?: ReactNode;
+  secondToolbar?: ReactElement;
 };
 
 export const Header = ({ leftSlot, secondToolbar }: HeaderProps) => {
@@ -42,7 +42,7 @@ export const Header = ({ leftSlot, secondToolbar }: HeaderProps) => {
         </AppBar>
       </HideOnScroll>
       <Toolbar />
-      {secondToolbar && <Toolbar />}
+      {secondToolbar && cloneElement(secondToolbar, { children: null })}
     </>
   );
 };

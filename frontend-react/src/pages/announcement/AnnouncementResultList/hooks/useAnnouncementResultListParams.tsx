@@ -33,9 +33,10 @@ export const useAnnouncementResultListFilterParams = () => {
 
   const params: AnnouncementResultListParams = {
     categoryId: stringParam('categoryId'),
-    gender: stringParam('gender'),
+    gender: numberParam('gender'),
     distanceMax: numberParam('distanceMax'),
     ageRange: rangeParam('ageRange'),
+    sortBy: numberParam('sortBy'),
   };
 
   return [params, setParams] as const;

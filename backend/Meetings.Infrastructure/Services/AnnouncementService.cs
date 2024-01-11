@@ -122,6 +122,7 @@ namespace Meetings.Infrastructure.Services
                 .Select(x => new UserAnnouncement()
                 {
                     AnnouncementId = x.Id,
+                    AnnouncementCreatedAt = x.CreatedAt,
                     UserId = x.UserId,
                     Description = x.Description,
                     User = _extendedMapper.ToUserDTO(x.User),
@@ -137,10 +138,25 @@ namespace Meetings.Infrastructure.Services
 
             var result = queryResult
                 .Where(x => x.UserAge >= data.AgeRange[0] && x.UserAge <= data.AgeRange[1])
-                .Where(x => currentUser == null || x.DistanceFromCurrentUser <= data.DistanceMax)
-                .ToList();
+                .Where(x => currentUser == null || x.DistanceFromCurrentUser <= data.DistanceMax);
+            if (data.SortBy == SortOption.Newest)
+            {
+                result = result.OrderByDescending(x => x.AnnouncementCreatedAt);
+            }
+            else if (data.SortBy == SortOption.Oldest)
+            {
+                result = result.OrderBy(x => x.AnnouncementCreatedAt);
+            }
+            else if (data.SortBy == SortOption.DistanceMin)
+            {
+                result = result.OrderBy(x => x.DistanceFromCurrentUser);
+            }
+            else
+            {
+                result = result.OrderByDescending(x => x.DistanceFromCurrentUser);
+            }
 
-            return result;
+            return result.ToList();
         }
     }
 }

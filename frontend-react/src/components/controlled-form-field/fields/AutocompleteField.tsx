@@ -9,7 +9,7 @@ export type AutocompleteFieldProps<TOption> = {
   getOptionLabel: (opt: TOption) => string;
 };
 
-type AutcompleteOption = { label: string; value: string };
+type SelectOption = { label: string; value: string };
 
 export const AutocompleteField = <
   TFieldValues extends FieldValues = FieldValues,
@@ -23,7 +23,7 @@ export const AutocompleteField = <
   valueKey = 'id' as keyof TOption,
   ...props
 }: AutocompleteFieldProps<TOption> & ControlledFieldProps<TFieldValues, TName>) => {
-  const [options, setOptions] = useState<AutcompleteOption[]>();
+  const [options, setOptions] = useState<SelectOption[]>();
 
   useEffect(() => {
     if (optionsAsync) {
@@ -44,7 +44,7 @@ export const AutocompleteField = <
       value={selectedOption}
       isOptionEqualToValue={(opt, current) => opt.value === current.value}
       onChange={(_, option) => {
-        return field.onChange(option ? (option as AutcompleteOption).value : null);
+        return field.onChange(option ? (option as SelectOption).value : null);
       }}
       renderInput={(params) => (
         <TextField

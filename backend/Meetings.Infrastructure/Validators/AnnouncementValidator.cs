@@ -95,7 +95,6 @@ namespace Meetings.Infrastructure.Validators
         {
             var validator = new InlineValidator<AnnouncementSearchParams>();
             validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
-            validator.RuleFor(x => x.Gender).InCollection(GenderFilter.AvailableFilters).WithErrorCode("IncorrectGender");
             validator.RuleFor(x => x.DistanceMax).GreaterThanOrEqualTo(0).WithErrorCode("DistanceMaxNegative");
             validator.RuleFor(x => x.AgeRange).InRange(AnnouncementFilterConstants.MinAge, AnnouncementFilterConstants.MaxAge).WithErrorCode("IncorrectAgeRange");
 

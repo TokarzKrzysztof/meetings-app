@@ -7,13 +7,18 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Models.Resources
 {
-    public class GenderFilter
+    public enum GenderFilter
     {
-        public const string All = "all";
-        public const string Males = "males";
-        public const string Females = "females";
-
-        public static string[] AvailableFilters => new string[] { All, Males, Females };
+        All,
+        Males,
+        Females
+    }
+    public enum SortOption
+    {
+        Newest,
+        Oldest,
+        DistanceMin,
+        DistanceMax,
     }
     public class AnnouncementFilterConstants
     {
@@ -23,9 +28,10 @@ namespace Meetings.Models.Resources
     public class AnnouncementSearchParams
     {
         public Guid CategoryId { get; set; }
-        public string Gender { get; set; }
+        public GenderFilter Gender { get; set; }
         public int DistanceMax { get; set; }
         public int[] AgeRange { get; set; }
+        public SortOption SortBy { get; set; }
     }
 }
 
