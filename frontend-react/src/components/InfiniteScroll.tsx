@@ -1,49 +1,30 @@
-import {
-  ForwardedRef,
-  ReactElement,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
-import { useInitEffect } from 'src/hooks/useInitEffect';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { Box, CircularProgress } from 'src/ui-components';
-import { typedForwardRef } from 'src/utils/types/forward-ref';
 
 const isWindow = (element: any): element is Window => {
   return element === window;
 };
 
-export type InfiniteScrollHandle = {
-  load: () => void;
-};
-
 export type InfiniteScrollProps = {
+  next: () => void;
   children: ReactElement[];
-  scrollable?: HTMLElement | Window | null;
-  totalAmount: number;
-  next: () => Promise<void>;
+  hasMore: boolean;
   direction: 'up' | 'down';
   scrollThreshold?: number;
-  loadOnInit?: boolean;
+  scrollable?: HTMLElement | Window | null;
 };
 
-export const InfiniteScrollInner = (
-  {
-    children,
-    scrollable = window,
-    totalAmount,
-    next,
-    direction,
-    loadOnInit = true,
-    scrollThreshold = 50,
-  }: InfiniteScrollProps,
-  ref: ForwardedRef<InfiniteScrollHandle>
-) => {
+export const InfiniteScroll = ({
+  next,
+  children,
+  hasMore,
+  direction,
+  scrollThreshold = 50,
+  scrollable = window,
+}: InfiniteScrollProps) => {
   // ref to always get synchronous value
   const isLoadingMoreRef = useRef(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const isSomethingToLoad = children.length < totalAmount;
 
   const isScrolled = () => {
     if (isWindow(scrollable)) {
@@ -71,19 +52,11 @@ export const InfiniteScrollInner = (
     isLoadingMoreRef.current = value;
   };
 
-  const load = () => {
-    if (isLoadingMoreRef.current) return;
-
-    setLoading(true);
-    next();
-    // for testing later
-    // next();
-  };
-
   useEffect(() => {
     const handler = () => {
-      if (isScrolled() && isSomethingToLoad) {
-        load();
+      if (!isLoadingMoreRef.current && isScrolled() && hasMore) {
+        setLoading(true);
+        next();
       }
     };
 
@@ -94,12 +67,8 @@ export const InfiniteScrollInner = (
   });
 
   useEffect(() => {
-    setLoading(false)
+    setLoading(false);
   }, [children.length]);
-
-  useInitEffect(() => {
-    if (loadOnInit) load();
-  });
 
   const spinner = (
     <Box
@@ -112,14 +81,11 @@ export const InfiniteScrollInner = (
       <CircularProgress size={25} />
     </Box>
   );
-  useImperativeHandle(ref, () => ({ load }), [load]);
   return (
     <>
-      {isSomethingToLoad && direction === 'up' && spinner}
+      {hasMore && direction === 'up' && spinner}
       {children}
-      {isSomethingToLoad && direction === 'down' && spinner}
+      {hasMore && direction === 'down' && spinner}
     </>
   );
 };
-
-export const InfiniteScroll = typedForwardRef(InfiniteScrollInner);

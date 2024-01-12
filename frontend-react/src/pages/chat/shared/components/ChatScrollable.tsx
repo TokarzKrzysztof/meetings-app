@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import { Dispatch, ForwardedRef, ReactNode, useImperativeHandle, useRef } from 'react';
 import { InfiniteScroll } from 'src/components/InfiniteScroll';
 import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
+import { useInitEffect } from 'src/hooks/useInitEffect';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { Chat } from 'src/models/chat/chat';
 import { Message, MessageType } from 'src/models/chat/message';
@@ -57,6 +58,10 @@ const ChatScrollableInner = (
   const currentUser = useLoggedInUser();
   const { loadChatMessagesAsync } = useLoadChatMessages();
 
+  useInitEffect(() => {
+    handleLoadChatMessages();
+  });
+
   const scrollToBottom = useDeferredFunction((behavior: ScrollBehavior = 'auto') => {
     scrollableRef.current!.scrollTo({
       left: 0,
@@ -84,15 +89,15 @@ const ChatScrollableInner = (
 
   useImperativeHandle(ref, () => ({ scrollToBottom }), []);
   return (
-    <StyledScrollableContainer ref={scrollableRef}>
+    <StyledScrollableContainer ref={scrollableRef} id='scrollableDiv'>
       {top}
 
       <Stack direction='column' py={1}>
         <InfiniteScroll
           direction='up'
-          scrollable={scrollableRef.current}
-          totalAmount={chat?.totalMessagesAmount as number}
           next={handleLoadChatMessages}
+          hasMore={!chat ? true : messages.length < chat.totalMessagesAmount}
+          scrollable={scrollableRef.current}
         >
           {messages.map((x, i) =>
             x.type === MessageType.Info ? (

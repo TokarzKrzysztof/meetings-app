@@ -2,7 +2,7 @@ import { useSetAtom } from 'jotai';
 import { TransitionProps } from 'notistack';
 import React, { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { AnnouncementResultListFiltersFormFields } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListFiltersFormFields';
+import { AnnouncementResultListHeaderFiltersFormFields } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListHeaderFiltersFormFields';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import {
   AppBar,
@@ -32,19 +32,19 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-export type AnnouncementResultListFiltersProps = {
+export type AnnouncementResultListHeaderFiltersProps = {
   open: boolean;
   params: AnnouncementResultListQueryParams;
   onSubmit: (data: AnnouncementResultListQueryParams) => void;
   onClose: () => void;
 };
 
-export const AnnouncementResultListFilters = ({
+export const AnnouncementResultListHeaderFilters = ({
   open,
   params,
   onSubmit,
   onClose,
-}: AnnouncementResultListFiltersProps) => {
+}: AnnouncementResultListHeaderFiltersProps) => {
   const confirm = useSetAtom(confirmationDialogAtom);
   const form = useForm<AnnouncementResultListQueryParams>();
   const {
@@ -97,7 +97,7 @@ export const AnnouncementResultListFilters = ({
             </Stack>
           </Toolbar>
         </AppBar>
-        <AnnouncementResultListFiltersFormFields form={form} />
+        <AnnouncementResultListHeaderFiltersFormFields form={form} />
       </Box>
     </Dialog>
   );

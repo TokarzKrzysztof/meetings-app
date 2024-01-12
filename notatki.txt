@@ -55,3 +55,6 @@ test1@fake.com - 1-10
 
 https://bulldogjob.pl/readme/prosto-o-websocket
 https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
+
+faker
+https://www.npmjs.com/package/@faker-js/faker

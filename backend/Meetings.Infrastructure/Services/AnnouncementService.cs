@@ -86,7 +86,7 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<AnnouncementDTO>(item);
         }
 
-        public async Task<AnnouncementResultList> LoadAnnouncementResultList(LoadAnnouncementResultListParams data)
+        public async Task<AnnouncementResultList> GetAnnouncementResultList(LoadAnnouncementResultListParams data)
         {
             _announcementValidator.WhenGetAnnouncementResultList(data);
 

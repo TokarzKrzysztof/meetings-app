@@ -1,5 +1,11 @@
 import { AxiosError } from 'axios';
-import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from 'react-query';
 import axios from 'src/config/axios-config';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { AnnouncementResultList } from 'src/models/annoucement/announcement-result-list';
@@ -13,19 +19,29 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Announcement`;
 
-export const useLoadAnnouncementResultList = (
-  options?: UseMutationOptions<
-    AnnouncementResultList,
-    AxiosError<HttpErrorData>,
-    AnnouncementResultListQueryParams & { skip: number; take: number }
-  >
-) => {
-  const mutation = useMutation({
-    mutationFn: (data) => axios.post(`${baseUrl}/LoadAnnouncementResultList`, data),
-    ...options,
+export const useGetAnnouncementResultList = (params: AnnouncementResultListQueryParams) => {
+  const pageSize = 10;
+
+  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery<AnnouncementResultList>({
+    queryKey: ['GetAnnouncementResultList', params],
+    queryFn: ({ pageParam }) =>
+      axios.post(`${baseUrl}/GetAnnouncementResultList`, {
+        ...params,
+        skip: pageParam,
+        take: pageSize,
+      }),
+    staleTime: Infinity,
+    getNextPageParam: (lastPage, pages) => {
+      const length = pages.flatMap((x) => x.data).length;
+      return length < lastPage.totalCount ? length : null;
+    },
   });
 
-  return genericUseMutationMethods('loadAnnouncementResultList', mutation);
+  return {
+    announcements: data?.pages.flatMap((x) => x.data),
+    fetchNextPage,
+    hasNextPage,
+  };
 };
 
 export const useCreateNewAnnouncement = (
