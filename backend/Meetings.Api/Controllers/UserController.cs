@@ -43,7 +43,7 @@ namespace Meetings.EmailTemplates.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetUsersByFilter([FromQuery] string filter, [FromQuery] int take = 20, [FromQuery] bool excludeCurrentUser = true)
+        public async Task<IActionResult> GetUsersByFilter([FromQuery] string filter, [FromQuery] int take = 50, [FromQuery] bool excludeCurrentUser = true)
         {
             List<UserDTO> users = await _userService.GetUsersByFilter(filter, take, excludeCurrentUser);
             return Ok(users);

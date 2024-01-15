@@ -71,9 +71,17 @@ app.MapHub<ChatHub>("/api/chat-hub");
 
 using (IServiceScope scope = app.Services.CreateScope())
 {
-    //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomUsers(1000);
-    //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomAnnouncements(1000, "Tenis");
-    Console.WriteLine(123);
+    try
+    {
+        //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomUsers(9000);
+        //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomAnnouncements(30000, "Bilard");
+
+        Console.WriteLine(123);
+    }
+    catch (Exception ex)
+    {
+
+    }
     //using (StreamReader r = new StreamReader("StaticData/cities.json"))
     //{
     //    string json = r.ReadToEnd();

@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{03B850
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.Authentication", "Common\Meetings.Authentication\Meetings.Authentication.csproj", "{9A82C538-24D5-43F5-9CE9-7C01E0AEB128}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.Utilities", "Common\Meetings.Utils\Meetings.Utilities.csproj", "{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.ErrorHandlingMiddleware", "Common\Meetings.ErrorHandlingMiddleware\Meetings.ErrorHandlingMiddleware.csproj", "{C5551EBB-4083-4867-B261-3A598198335E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.EmailSender", "Common\Meetings.MailSender\Meetings.EmailSender.csproj", "{D018C71D-F41A-47EB-9701-D77292CD7E1A}"
@@ -26,6 +24,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.FileManager", "Common\Meetings.FileManager\Meetings.FileManager.csproj", "{F84F5899-C855-4227-B0A6-80E53A2E5F2F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.Mock", "Common\Meetings.Mock\Meetings.Mock.csproj", "{80E0F55B-D0F1-4D85-BC44-1D49972377BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meetings.Utilities", "Common\Meetings.Utilities\Meetings.Utilities.csproj", "{52F337C8-4000-46A5-9C79-7F37C9B0AF06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +53,6 @@ Global
 		{9A82C538-24D5-43F5-9CE9-7C01E0AEB128}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A82C538-24D5-43F5-9CE9-7C01E0AEB128}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A82C538-24D5-43F5-9CE9-7C01E0AEB128}.Release|Any CPU.Build.0 = Release|Any CPU
-		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5551EBB-4083-4867-B261-3A598198335E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C5551EBB-4083-4867-B261-3A598198335E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5551EBB-4083-4867-B261-3A598198335E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -77,18 +73,22 @@ Global
 		{80E0F55B-D0F1-4D85-BC44-1D49972377BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80E0F55B-D0F1-4D85-BC44-1D49972377BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80E0F55B-D0F1-4D85-BC44-1D49972377BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52F337C8-4000-46A5-9C79-7F37C9B0AF06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52F337C8-4000-46A5-9C79-7F37C9B0AF06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52F337C8-4000-46A5-9C79-7F37C9B0AF06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52F337C8-4000-46A5-9C79-7F37C9B0AF06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{9A82C538-24D5-43F5-9CE9-7C01E0AEB128} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
-		{486F8925-E8BE-4B68-BDCA-F3FE7DE8E8FE} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 		{C5551EBB-4083-4867-B261-3A598198335E} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 		{D018C71D-F41A-47EB-9701-D77292CD7E1A} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 		{22ACD42D-B6EE-4B59-A983-CA29891D520A} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 		{F84F5899-C855-4227-B0A6-80E53A2E5F2F} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 		{80E0F55B-D0F1-4D85-BC44-1D49972377BA} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
+		{52F337C8-4000-46A5-9C79-7F37C9B0AF06} = {03B85092-11AD-4A11-A7B2-A04B90B344A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {051323AE-1851-400B-B379-2E6EC46C5D63}

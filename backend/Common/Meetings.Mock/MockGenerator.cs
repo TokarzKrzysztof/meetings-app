@@ -1,4 +1,5 @@
-﻿using Meetings.Database.Repositories;
+﻿using Meetings.Database;
+using Meetings.Database.Repositories;
 using Meetings.Infrastructure.Services;
 using Meetings.Mock.Helpers;
 using Meetings.Models.Entites;
@@ -12,23 +13,19 @@ namespace Meetings.Mock
 {
     public class MockGenerator
     {
-
-        private readonly UserService _userService;
-        private readonly AuthService _authService;
-        private readonly AnnouncementService _annoucementService;
+        private readonly ApplicationDbContext _db;
         private readonly IRepository<UserLocation> _userLocationRepository;
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Category> _categoryRepository;
-        private readonly IRepository<Announcement> _announcementRepository;
-        public MockGenerator(UserService userService, AuthService authService, IRepository<UserLocation> userLocationRepository, AnnouncementService annoucementService, IRepository<User> userRepository, IRepository<Category> categoryRepository, IRepository<Announcement> announcementRepository)
+        public MockGenerator(IRepository<UserLocation> userLocationRepository,
+                             IRepository<User> userRepository,
+                             IRepository<Category> categoryRepository,
+                             ApplicationDbContext db)
         {
-            _userService = userService;
-            _authService = authService;
+            _db = db;
             _userLocationRepository = userLocationRepository;
-            _annoucementService = annoucementService;
             _userRepository = userRepository;
             _categoryRepository = categoryRepository;
-            _announcementRepository = announcementRepository;
         }
 
         public async Task GenerateRandomUsers(int count)
@@ -40,8 +37,12 @@ namespace Meetings.Mock
                 UserGender gender = EnumUtils.GetRandomValue<UserGender>();
                 (string firstName, string lastName) = NameGenerator.Generate(gender);
                 var birthDate = DateUtils.GetRandomDate(new DateTime(1980, 1, 1), new DateTime(2010, 1, 1));
-                await _userRepository.Create(new User()
+
+                _db.Users.Add(new User()
                 {
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
                     FirstName = firstName,
                     LastName = lastName,
                     BirthDate = birthDate,
@@ -52,6 +53,7 @@ namespace Meetings.Mock
                     LocationId = locations.Random().Id,
                 });
             }
+            await _db.SaveChangesAsync();
         }
 
         public async Task GenerateRandomAnnouncements(int count, string categoryName)
@@ -61,14 +63,18 @@ namespace Meetings.Mock
 
             for (int i = 0; i < count; i++)
             {
-                await _announcementRepository.Create(new Announcement()
+                _db.Announcements.Add(new Announcement()
                 {
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
                     CategoryId = categoryId,
                     UserId = users.Random().Id,
                     Status = AnnoucementStatus.Active,
                     Description = $"Opis do ogłoszenia - {categoryName}",
                 });
             }
+            await _db.SaveChangesAsync();
         }
     }
 }

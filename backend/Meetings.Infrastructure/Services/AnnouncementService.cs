@@ -106,7 +106,7 @@ namespace Meetings.Infrastructure.Services
                 query = query.Where(x => x.UserId != currentUser.Id);
             }
 
-            var queryResult = (await query
+            var queryResult = await query
                 .Include(x => x.User).ThenInclude(x => x.Location)
                 .Select(x => new AnnouncementResultListItem()
                 {
@@ -115,7 +115,9 @@ namespace Meetings.Infrastructure.Services
                     UserId = x.UserId,
                     Description = x.Description,
                     User = _extendedMapper.ToUserDTO(x.User),
-                }).ToListAsync());
+                })
+                .ToListAsync();
+
             queryResult.ForEach((x) =>
             {
                 x.UserAge = UserUtils.CalculateAge(x.User.BirthDate);
