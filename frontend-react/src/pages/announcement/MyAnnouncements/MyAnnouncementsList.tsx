@@ -1,17 +1,15 @@
-import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
+import { Announcement } from 'src/models/annoucement/announcement';
 import { MyAnnouncementsListItem } from 'src/pages/announcement/MyAnnouncements/MyAnnouncementsListItem';
 import { Box, Stack, Typography } from 'src/ui-components';
 
 export type MyAnnouncementsListProps = {
   data: Announcement[];
-  status: AnnouncementStatus;
   title: string;
   noAnnoucementsText: string;
 };
 
 export const MyAnnouncementsList = ({
   data,
-  status,
   title,
   noAnnoucementsText,
 }: MyAnnouncementsListProps) => {
