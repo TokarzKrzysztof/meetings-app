@@ -6,12 +6,12 @@ import { ElementType } from 'react';
 
 export type ListItemTextProps<
   PrimaryTypographyComponent extends ElementType = 'span',
-  SecondaryTypographyComponent extends ElementType = 'p',
+  SecondaryTypographyComponent extends ElementType = 'p'
 > = MuiListItemTextProps<PrimaryTypographyComponent, SecondaryTypographyComponent> & {};
 
 export const ListItemText = <
   PrimaryTypographyComponent extends ElementType = 'span',
-  SecondaryTypographyComponent extends ElementType = 'p',
+  SecondaryTypographyComponent extends ElementType = 'p'
 >({
   ...props
 }: ListItemTextProps<PrimaryTypographyComponent, SecondaryTypographyComponent>) => (

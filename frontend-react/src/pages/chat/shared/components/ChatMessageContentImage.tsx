@@ -1,5 +1,6 @@
 import { CSSProperties, useState } from 'react';
 import { Message } from 'src/models/chat/message';
+import { ChatMessageContentImagePreview } from 'src/pages/chat/shared/components/ChatMessageContentImagePreview';
 import { Box, CircularProgress, Skeleton } from 'src/ui-components';
 
 export type ChatMessageContentImageProps = {
@@ -14,6 +15,7 @@ export const ChatMessageContentImage = ({
   style,
 }: ChatMessageContentImageProps) => {
   const [show, setShow] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const borderRadius = '16px';
   return (
@@ -37,6 +39,7 @@ export const ChatMessageContentImage = ({
           }}
           src={message.value}
           onLoad={() => setShow(true)}
+          onClick={() => setShowPreview(true)}
         />
         {message.isPending && (
           <Box
@@ -51,6 +54,9 @@ export const ChatMessageContentImage = ({
           </Box>
         )}
       </Box>
+      {showPreview && (
+        <ChatMessageContentImagePreview message={message} onClose={() => setShowPreview(false)} />
+      )}
     </>
   );
 };
