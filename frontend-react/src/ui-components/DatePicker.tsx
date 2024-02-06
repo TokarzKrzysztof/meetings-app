@@ -1,12 +1,9 @@
-import {
-  DatePicker as MuiDatePicker,
-  DatePickerProps as MuiDatePickerProps,
-} from '@mui/x-date-pickers';
+import { DesktopDatePicker, DesktopDatePickerProps } from '@mui/x-date-pickers';
 
-export type DatePickerProps<TDate> = MuiDatePickerProps<TDate> & {};
+export type DatePickerProps<TDate> = DesktopDatePickerProps<TDate> & {};
 
 export const DatePicker = <TDate,>({ slotProps, ...props }: DatePickerProps<TDate>) => (
-  <MuiDatePicker
+  <DesktopDatePicker
     slotProps={{
       textField: {
         variant: 'standard',
@@ -16,5 +13,5 @@ export const DatePicker = <TDate,>({ slotProps, ...props }: DatePickerProps<TDat
     }}
     timezone='UTC'
     {...props}
-  ></MuiDatePicker>
+  ></DesktopDatePicker>
 );
