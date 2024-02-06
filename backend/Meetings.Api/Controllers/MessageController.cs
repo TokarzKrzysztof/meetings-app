@@ -41,5 +41,13 @@ namespace Meetings.Api.Controllers
             await _messageService.SendMessage(data);
             return Ok();
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetAllImageMessages([FromQuery] Guid chatId)
+        {
+            List<MessageDTO> messages = await _messageService.GetAllImageMessages(chatId);
+            return Ok(messages);
+        }
     }
 }

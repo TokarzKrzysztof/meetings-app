@@ -1,6 +1,7 @@
 import { Dispatch } from 'react';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
+import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { Chat } from 'src/models/chat/chat';
 import { MessageType } from 'src/models/chat/message';
 import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
@@ -12,6 +13,7 @@ export const useSignalRListeners = (
 ) => {
   const currentUser = useLoggedInUser();
   const { markChatAsRead } = useMarkChatAsRead();
+  const { addImageMessage } = useSetQueryData();
 
   useSignalREffect(
     'onGetNewMessage',
@@ -22,6 +24,9 @@ export const useSignalRListeners = (
       } else {
         dispatch({ type: 'append', message });
         markChatAsRead(chat!.id);
+      }
+      if (message.type === MessageType.Image) {
+        addImageMessage(chatId, message);
       }
     },
     [chat]

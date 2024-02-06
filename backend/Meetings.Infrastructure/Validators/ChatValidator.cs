@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Meetings.Authentication.Services;
 using Meetings.Database.Repositories;
+using Meetings.Infrastructure.Mappers;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -20,12 +21,14 @@ namespace Meetings.Infrastructure.Validators
         private readonly IRepository<ChatParticipant> _chatParticipantRepository;
         private readonly IRepository<Message> _messageRepository;
         private readonly IClaimsReader _claimsReader;
-        public ChatValidator(IRepository<Chat> userRepository, IClaimsReader claimsReader, IRepository<ChatParticipant> chatParticipantRepository, IRepository<Message> messageRepository)
+        private readonly ExtendedMapper _extendedMapper;
+        public ChatValidator(IRepository<Chat> userRepository, IClaimsReader claimsReader, IRepository<ChatParticipant> chatParticipantRepository, IRepository<Message> messageRepository, ExtendedMapper extendedMapper)
         {
             _repository = userRepository;
             _claimsReader = claimsReader;
             _chatParticipantRepository = chatParticipantRepository;
             _messageRepository = messageRepository;
+            _extendedMapper = extendedMapper;
         }
 
         private async Task<bool> IsUserInChatAsync(Guid chatId, Guid userId)
@@ -101,6 +104,11 @@ namespace Meetings.Infrastructure.Validators
             }).WithErrorCode("IncorrectValueForType");
 
             await validator.ValidateAndThrowAsync(data);
+        }
+
+        internal async Task WhenGetAllImageMessages(Guid chatId)
+        {
+            await ValidateIsCurrentUserInChatAsync(chatId);
         }
     }
 }

@@ -1,12 +1,15 @@
 import { AxiosError } from 'axios';
-import { UseMutationOptions, useMutation } from 'react-query';
+import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
 import { Chat } from 'src/models/chat/chat';
 import { Message } from 'src/models/chat/message';
 import { SendMessageData } from 'src/models/chat/send-message-data';
 import { apiUrl } from 'src/utils/api-url';
 import { getFormData } from 'src/utils/http-utils';
-import { genericUseMutationMethods } from 'src/utils/types/generic-query-methods';
+import {
+  genericUseMutationMethods,
+  genericUseQueryMethods,
+} from 'src/utils/types/generic-query-methods';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Message`;
@@ -62,4 +65,23 @@ export const useSendMessage = (
   });
 
   return genericUseMutationMethods('sendMessage', mutation);
+};
+
+export type GetAllImageMessagesData = Pick<Message, 'id' | 'value'>[]
+export const getAllImageMessagesQueryKey = (chatId: Chat['id']) => ['GetAllImageMessages', chatId]
+export const useGetAllImageMessages = (
+  chatId: Message['id'],
+  options?: UseQueryOptions<GetAllImageMessagesData, AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: getAllImageMessagesQueryKey(chatId),
+    queryFn: () => {
+      const params = { chatId };
+      return axios.get(`${baseUrl}/GetAllImageMessages`, { params });
+    },
+    staleTime: Infinity,
+    ...options,
+  });
+
+  return genericUseQueryMethods('allImageMessages', query);
 };

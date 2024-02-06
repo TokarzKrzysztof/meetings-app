@@ -13,11 +13,11 @@ export const useUserActivityWatcher = () => {
 
     const events = ['mousedown', 'mousemove', 'touchstart', 'scroll', 'keydown'];
     events.forEach((event) => {
-      document.addEventListener(event, handler);
+      document.addEventListener(event, handler, { capture: true });
     });
     return () => {
       events.forEach((event) => {
-        document.removeEventListener(event, handler);
+        document.removeEventListener(event, handler, { capture: true });
       });
     };
   }, [currentUser]);

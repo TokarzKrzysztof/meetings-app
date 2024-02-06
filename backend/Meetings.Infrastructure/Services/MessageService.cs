@@ -9,6 +9,7 @@ using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -88,6 +89,15 @@ namespace Meetings.Infrastructure.Services
             });
 
             await NotifyAboutNewMessage(entity);
+        }
+
+        public async Task<List<MessageDTO>> GetAllImageMessages(Guid chatId)
+        {
+            await _chatValidator.WhenGetAllImageMessages(chatId);
+
+            var messages = await _repository.Data.Where(x => x.Type == MessageType.Image)
+                .OrderBy(x => x.CreatedAt).Select(x => new { x.Id, x.Value }).ToListAsync();
+            return messages.Select(x => new MessageDTO() { Id = x.Id, Value = _fileManager.FilePathToSrc(x.Value)! }).ToList();
         }
 
         private async Task<Message> CreateMessage(Guid authorId, Guid chatId, SendMessageData data)

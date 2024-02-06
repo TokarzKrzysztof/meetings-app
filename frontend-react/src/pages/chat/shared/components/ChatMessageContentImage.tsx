@@ -1,21 +1,49 @@
 import { CSSProperties, useState } from 'react';
+import { Gallery } from 'src/components/Gallery';
 import { Message } from 'src/models/chat/message';
-import { ChatMessageContentImagePreview } from 'src/pages/chat/shared/components/ChatMessageContentImagePreview';
+import { useGetAllImageMessages } from 'src/queries/message-queries';
 import { Box, CircularProgress, Skeleton } from 'src/ui-components';
+import { SlideImage } from 'yet-another-react-lightbox';
 
 export type ChatMessageContentImageProps = {
   maxHeight: number;
   message: Message;
   style?: CSSProperties;
+  showPreviewOnClick?: boolean;
 };
 
 export const ChatMessageContentImage = ({
   maxHeight,
   message,
   style,
+  showPreviewOnClick,
 }: ChatMessageContentImageProps) => {
   const [show, setShow] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  const [galleryState, setGalleryState] = useState({
+    open: false,
+    index: 0,
+    slides: [] as SlideImage[],
+  });
+  const { allImageMessages, allImageMessagesFetching, allImageMessagesRefetch } =
+    useGetAllImageMessages(message.chatId, {
+      enabled: false,
+    });
+
+  const handleOpenGallery = async () => {
+    if (!showPreviewOnClick || allImageMessagesFetching) return;
+
+    const images =
+      allImageMessages !== undefined ? allImageMessages : (await allImageMessagesRefetch()).data!;
+    setGalleryState({
+      open: true,
+      index: images.findIndex((x) => x.id === message.id),
+      slides: images.map((x) => ({ src: x.value })),
+    });
+  };
+
+  const handleCloseGallery = () => {
+    setGalleryState((prev) => ({ ...prev, open: false }));
+  };
 
   const borderRadius = '16px';
   return (
@@ -39,7 +67,7 @@ export const ChatMessageContentImage = ({
           }}
           src={message.value}
           onLoad={() => setShow(true)}
-          onClick={() => setShowPreview(true)}
+          onClick={handleOpenGallery}
         />
         {message.isPending && (
           <Box
@@ -54,9 +82,7 @@ export const ChatMessageContentImage = ({
           </Box>
         )}
       </Box>
-      {showPreview && (
-        <ChatMessageContentImagePreview message={message} onClose={() => setShowPreview(false)} />
-      )}
+      <Gallery state={galleryState} onClose={handleCloseGallery} />
     </>
   );
 };

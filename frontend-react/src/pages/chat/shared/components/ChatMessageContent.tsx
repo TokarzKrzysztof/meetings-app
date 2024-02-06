@@ -79,7 +79,7 @@ export const ChatMessageContent = ({
           </Typography>
         )}
         {message.type === MessageType.Image && (
-          <ChatMessageContentImage message={message} maxHeight={300} />
+          <ChatMessageContentImage showPreviewOnClick message={message} maxHeight={300} />
         )}
         {message.type === MessageType.Audio && (
           <ChatMessageContentVoice
