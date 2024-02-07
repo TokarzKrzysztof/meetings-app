@@ -1,5 +1,6 @@
 import { UseFormReturn } from 'react-hook-form';
 import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
+import { useGetCurrentUser } from 'src/queries/user-queries';
 import { Container, InputAdornment } from 'src/ui-components';
 import {
   AnnouncementResultListQueryParams,
@@ -30,6 +31,7 @@ export type AnnouncementResultListHeaderFiltersFormFieldsProps = {
 export const AnnouncementResultListHeaderFiltersFormFields = ({
   form,
 }: AnnouncementResultListHeaderFiltersFormFieldsProps) => {
+  const { currentUser } = useGetCurrentUser();
   const { control } = form;
 
   return (
@@ -50,17 +52,19 @@ export const AnnouncementResultListHeaderFiltersFormFields = ({
           },
         }}
       ></ControlledFormField>
-      <ControlledFormField
-        control={control}
-        element='slider'
-        name='distanceMax'
-        label='Odległość'
-        rules={{ required: ValidationMessages.required }}
-        ElementProps={{
-          renderPreview: (value) => `do ${value ?? '---'} km`,
-          inputEndAdornment: <InputAdornment position='end'>km</InputAdornment>,
-        }}
-      ></ControlledFormField>
+      {currentUser && (
+        <ControlledFormField
+          control={control}
+          element='slider'
+          name='distanceMax'
+          label='Odległość'
+          rules={{ required: ValidationMessages.required }}
+          ElementProps={{
+            renderPreview: (value) => `do ${value ?? '---'} km`,
+            inputEndAdornment: <InputAdornment position='end'>km</InputAdornment>,
+          }}
+        ></ControlledFormField>
+      )}
       <ControlledFormField
         control={control}
         element='radio-group'

@@ -23,7 +23,8 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
       onAccept: () => {
         logout(undefined, {
           onSuccess: () => {
-            window.location.reload();
+            // reload page
+            window.location.href = AppRoutes.Home();
           },
         });
       },

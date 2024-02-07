@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Header } from 'src/components/header/Header';
 import { AnnouncementResultListHeaderFilters } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListHeaderFilters';
+import { useGetCurrentUser } from 'src/queries/user-queries';
 import { Button, MenuItem, TextField, Toolbar } from 'src/ui-components';
 import {
   AnnouncementResultListQueryParams,
@@ -16,6 +17,7 @@ export const AnnouncementResultListHeader = ({
   params,
   onUpdateQueryParams,
 }: AnnouncementResultListHeaderProps) => {
+  const { currentUser } = useGetCurrentUser();
   const [showFiltersDialog, setShowFiltersDialog] = useState(false);
 
   return (
@@ -37,8 +39,13 @@ export const AnnouncementResultListHeader = ({
             >
               <MenuItem value={SortOption.Newest}>Od najnowszych</MenuItem>
               <MenuItem value={SortOption.Oldest}>Od najstarszych</MenuItem>
-              <MenuItem value={SortOption.DistanceMin}>Odległość: od najmniejszej</MenuItem>
-              <MenuItem value={SortOption.DistanceMax}>Odległość: od największej</MenuItem>
+              {/* cannot use fragment here */}
+              {currentUser && (
+                <MenuItem value={SortOption.DistanceMin}>Odległość: od najmniejszej</MenuItem>
+              )}
+              {currentUser && (
+                <MenuItem value={SortOption.DistanceMax}>Odległość: od największej</MenuItem>
+              )}
             </TextField>
             <Button size='small' onClick={() => setShowFiltersDialog(true)}>
               Filtruj
