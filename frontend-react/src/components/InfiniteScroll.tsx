@@ -26,7 +26,6 @@ export const InfiniteScroll = ({
 }: InfiniteScrollProps) => {
   // ref to always get synchronous value
   const isFetchingRef = useRef(false);
-  // const [isLoadingMore, setIsLoadingMore] = useState(true);
 
   const isScrolled = () => {
     if (isWindow(scrollable)) {
@@ -48,11 +47,6 @@ export const InfiniteScroll = ({
       }
     }
   };
-
-  // const setLoading = (value: boolean) => {
-  //   setIsLoadingMore(value);
-  //   isLoadingMoreRef.current = value;
-  // };
 
   useEffect(() => {
     const handler = () => {
