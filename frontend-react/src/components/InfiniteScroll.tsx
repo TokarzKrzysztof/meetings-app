@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useRef } from 'react';
 import { Box, CircularProgress } from 'src/ui-components';
 
 const isWindow = (element: any): element is Window => {
@@ -10,6 +10,7 @@ export type InfiniteScrollProps = {
   children: ReactElement[];
   hasMore: boolean;
   direction: 'up' | 'down';
+  isFetching: boolean;
   scrollThreshold?: number;
   scrollable?: HTMLElement | Window | null;
 };
@@ -19,12 +20,13 @@ export const InfiniteScroll = ({
   children,
   hasMore,
   direction,
+  isFetching,
   scrollThreshold = 50,
   scrollable = window,
 }: InfiniteScrollProps) => {
   // ref to always get synchronous value
-  const isLoadingMoreRef = useRef(false);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const isFetchingRef = useRef(false);
+  // const [isLoadingMore, setIsLoadingMore] = useState(true);
 
   const isScrolled = () => {
     if (isWindow(scrollable)) {
@@ -47,15 +49,15 @@ export const InfiniteScroll = ({
     }
   };
 
-  const setLoading = (value: boolean) => {
-    setIsLoadingMore(value);
-    isLoadingMoreRef.current = value;
-  };
+  // const setLoading = (value: boolean) => {
+  //   setIsLoadingMore(value);
+  //   isLoadingMoreRef.current = value;
+  // };
 
   useEffect(() => {
     const handler = () => {
-      if (!isLoadingMoreRef.current && isScrolled() && hasMore) {
-        setLoading(true);
+      if (!isFetchingRef.current && isScrolled() && hasMore) {
+        isFetchingRef.current = true;
         next();
       }
     };
@@ -67,8 +69,10 @@ export const InfiniteScroll = ({
   });
 
   useEffect(() => {
-    setLoading(false);
-  }, [children.length]);
+    if (!isFetching) {
+      isFetchingRef.current = false;
+    }
+  }, [isFetching]);
 
   const spinner = (
     <Box
@@ -76,16 +80,16 @@ export const InfiniteScroll = ({
       justifyContent='center'
       p={2}
       // change only visibility to avoid scroll jumping
-      visibility={isLoadingMore ? 'visible' : 'hidden'}
+      visibility={isFetching ? 'visible' : 'hidden'}
     >
       <CircularProgress size={25} />
     </Box>
   );
   return (
     <>
-      {hasMore && direction === 'up' && spinner}
+      {(isFetching || hasMore) && direction === 'up' && spinner}
       {children}
-      {hasMore && direction === 'down' && spinner}
+      {(isFetching || hasMore) && direction === 'down' && spinner}
     </>
   );
 };

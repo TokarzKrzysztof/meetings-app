@@ -22,7 +22,7 @@ const baseUrl = `${apiUrl}/Announcement`;
 export const useGetAnnouncementResultList = (params: AnnouncementResultListQueryParams) => {
   const pageSize = 10;
 
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery<AnnouncementResultList>({
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery<AnnouncementResultList>({
     queryKey: ['GetAnnouncementResultList', params],
     queryFn: ({ pageParam }) =>
       axios.post(`${baseUrl}/GetAnnouncementResultList`, {
@@ -41,6 +41,7 @@ export const useGetAnnouncementResultList = (params: AnnouncementResultListQuery
     announcements: data?.pages.flatMap((x) => x.data),
     fetchNextPage,
     hasNextPage,
+    isFetching
   };
 };
 

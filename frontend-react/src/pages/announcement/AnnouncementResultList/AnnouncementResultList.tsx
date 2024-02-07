@@ -12,7 +12,7 @@ export const AnnouncementResultList = () => {
   const [params, setParams] = useAnnouncementResultListQueryParams();
   const scrollable = window;
 
-  const { announcements, fetchNextPage, hasNextPage } = useGetAnnouncementResultList(params);
+  const { announcements, fetchNextPage, hasNextPage , isFetching} = useGetAnnouncementResultList(params);
 
   const updateQueryParams = (params: AnnouncementResultListQueryParams) => {
     scrollable.scrollTo({ top: 0 });
@@ -46,6 +46,7 @@ export const AnnouncementResultList = () => {
             next={fetchNextPage}
             hasMore={!!hasNextPage}
             scrollable={scrollable}
+            isFetching={isFetching}
           >
             {(announcements ?? []).map((x) => (
               <AnnouncementResultListAnnouncement key={x.announcementId} data={x} />

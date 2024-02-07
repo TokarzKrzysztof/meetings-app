@@ -1,8 +1,7 @@
 import { styled } from '@mui/material';
-import { Dispatch, ForwardedRef, ReactNode, useImperativeHandle, useRef } from 'react';
+import { Dispatch, ForwardedRef, ReactNode, useEffect, useImperativeHandle, useRef } from 'react';
 import { InfiniteScroll } from 'src/components/InfiniteScroll';
 import { useDeferredFunction } from 'src/hooks/useDeferredFunction';
-import { useInitEffect } from 'src/hooks/useInitEffect';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { Chat } from 'src/models/chat/chat';
 import { Message, MessageType } from 'src/models/chat/message';
@@ -56,11 +55,12 @@ const ChatScrollableInner = (
 
   const scrollableRef = useRef<HTMLDivElement>(null);
   const currentUser = useLoggedInUser();
-  const { loadChatMessagesAsync } = useLoadChatMessages();
+  const { loadChatMessagesInProgress, loadChatMessages } = useLoadChatMessages();
 
-  useInitEffect(() => {
+  useEffect(() => {
+    // api call will be called twice in strict mode, but onSuccess only once, because of useMutation internal implementation
     handleLoadChatMessages();
-  });
+  }, []);
 
   const scrollToBottom = useDeferredFunction((behavior: ScrollBehavior = 'auto') => {
     scrollableRef.current!.scrollTo({
@@ -74,17 +74,22 @@ const ChatScrollableInner = (
     scrollableRef.current!.scrollTo({ top: currentScrollHeight - prevScrollHeight });
   });
 
-  const handleLoadChatMessages = async () => {
-    if (!chat) return;
+  const handleLoadChatMessages = () => {
+    if (!chat || loadChatMessagesInProgress) return;
 
-    const data = await loadChatMessagesAsync({
-      chatId: chat!.id,
-      skip: messages.length,
-      take: pageSize,
-    });
-
-    dispatch({ type: 'prepend-range', messageList: data });
-    scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
+    loadChatMessages(
+      {
+        chatId: chat!.id,
+        skip: messages.length,
+        take: pageSize,
+      },
+      {
+        onSuccess: (data) => {
+          dispatch({ type: 'prepend-range', messageList: data });
+          scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
+        },
+      }
+    );
   };
 
   useImperativeHandle(ref, () => ({ scrollToBottom }), []);
@@ -98,6 +103,7 @@ const ChatScrollableInner = (
           next={handleLoadChatMessages}
           hasMore={!chat ? false : messages.length < chat.totalMessagesAmount}
           scrollable={scrollableRef.current}
+          isFetching={loadChatMessagesInProgress}
         >
           {messages.map((x, i) =>
             x.type === MessageType.Info ? (
