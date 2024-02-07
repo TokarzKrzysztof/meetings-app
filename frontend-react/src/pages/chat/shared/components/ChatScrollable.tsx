@@ -96,7 +96,7 @@ const ChatScrollableInner = (
         <InfiniteScroll
           direction='up'
           next={handleLoadChatMessages}
-          hasMore={!chat ? true : messages.length < chat.totalMessagesAmount}
+          hasMore={!chat ? false : messages.length < chat.totalMessagesAmount}
           scrollable={scrollableRef.current}
         >
           {messages.map((x, i) =>
