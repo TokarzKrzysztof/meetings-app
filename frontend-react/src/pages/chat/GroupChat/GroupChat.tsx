@@ -76,7 +76,7 @@ export const GroupChat = () => {
             returnUrl={params.returnUrl}
             right={
               <Stack alignItems='center' gap={1}>
-                <AvatarList users={groupChat.participants} avatarSize={30} />
+                <AvatarList users={groupChat.participants} avatarSize={'small'} />
                 <Typography>{groupChat.name}</Typography>
                 <GroupChatActions
                   groupChat={groupChat}
@@ -90,7 +90,7 @@ export const GroupChat = () => {
             ref={scrollableRef}
             top={
               <Stack flexDirection='column' alignItems='center' mt='auto'>
-                <AvatarList users={groupChat.participants} avatarSize={50} sx={{ mb: 2 }} />
+                <AvatarList users={groupChat.participants} avatarSize={'large'} sx={{ mb: 2 }} />
                 <Typography>{groupChat.name}</Typography>
                 <Typography textAlign='center' color='grey'>
                   {participantNames}

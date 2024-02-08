@@ -5,7 +5,7 @@ import { Avatar, AvatarGroup, AvatarGroupProps } from 'src/ui-components';
 
 export type AvatarListProps = AvatarGroupProps & {
   users: User[];
-  avatarSize: number;
+  avatarSize: 'large' | 'small';
   excludeCurrentUser?: boolean;
 };
 
@@ -25,15 +25,36 @@ export const AvatarList = ({
     }
   }, [users, excludeCurrentUser]);
 
+  const { size, additionalAvatarFontSize, additionalAvatarMarginLeft } = useMemo(() => {
+    if (avatarSize === 'large') {
+      return {
+        size: 50,
+        additionalAvatarMarginLeft: -15,
+        additionalAvatarFontSize: undefined,
+      };
+    } else {
+      return {
+        size: 30,
+        additionalAvatarMarginLeft: -8,
+        additionalAvatarFontSize: 14,
+      };
+    }
+  }, [avatarSize]);
+  
   return (
     <AvatarGroup
       spacing='small'
-      slotProps={{ additionalAvatar: { sx: { width: avatarSize, height: avatarSize } } }}
+      slotProps={{
+        additionalAvatar: {
+          sx: { width: size, height: size },
+          style: { marginLeft: additionalAvatarMarginLeft, fontSize: additionalAvatarFontSize },
+        },
+      }}
       max={3}
       {...props}
     >
       {srcs.map((src, i) => (
-        <Avatar key={i} size={avatarSize} src={src}></Avatar>
+        <Avatar key={i} size={size} src={src}></Avatar>
       ))}
     </AvatarGroup>
   );

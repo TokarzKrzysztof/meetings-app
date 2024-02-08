@@ -83,7 +83,7 @@ export const MyChatsListItem = ({ menuItems, chat }: MyChatsListItemProps) => {
       <ListItemButton component={Link} to={to}>
         <ListItemAvatar sx={{ minWidth: 'auto', mr: 2 }}>
           <UserActiveStatusBadge status={activeStatus}>
-            <AvatarList users={chat.participants} avatarSize={50} />
+            <AvatarList users={chat.participants} avatarSize={'large'} />
           </UserActiveStatusBadge>
         </ListItemAvatar>
         <ListItemText
