@@ -11,7 +11,9 @@ export type AnnouncementResultListAnnouncementProps = {
   data: AnnouncementResultListItem;
 };
 
-export const AnnouncementResultListAnnouncement = ({ data }: AnnouncementResultListAnnouncementProps) => {
+export const AnnouncementResultListAnnouncement = ({
+  data,
+}: AnnouncementResultListAnnouncementProps) => {
   const age = useMemo(() => calculateAge(data.user.birthDate), [data]);
   return (
     <Card>
@@ -34,7 +36,7 @@ export const AnnouncementResultListAnnouncement = ({ data }: AnnouncementResultL
           size='small'
           variant='text'
           component={Link}
-          to={AppRoutes.PrivateChat({ userId: data.userId })}
+          to={AppRoutes.PrivateChat({ userId: data.userId, announcementId: data.announcementId })}
         >
           Wyślij wiadomość
         </Button>

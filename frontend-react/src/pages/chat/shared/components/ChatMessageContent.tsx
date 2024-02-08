@@ -39,6 +39,7 @@ export const ChatMessageContent = ({
             mt: `-${repliedMessageWrap}px`,
             // transform to move visually
             transform: `translateY(${repliedMessageWrap}px)`,
+            pb: 2
           }}
           onClick={() => setMessageToFocus(message.replyTo!)}
           isRepliedMessage
@@ -51,7 +52,7 @@ export const ChatMessageContent = ({
               style={{ opacity: 0.5 }}
             />
           ) : (
-            <Typography fontSize={12} pb={1}>
+            <Typography fontSize={12}>
               {message.replyTo.type === MessageType.Audio ? (
                 <ChatVoiceMessageDescription src={message.replyTo.value} />
               ) : (

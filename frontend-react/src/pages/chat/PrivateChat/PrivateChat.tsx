@@ -6,6 +6,7 @@ import { useClearableAtom } from 'src/hooks/useClearableAtom';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { Chat } from 'src/models/chat/chat';
+import { PrivateChatReplyToAnnouncementInfo } from 'src/pages/chat/PrivateChat/PrivateChatReplyToAnnouncementInfo';
 import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/components/ChatNewMessage';
@@ -18,6 +19,7 @@ import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListe
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
 import { messageReducer } from 'src/pages/chat/shared/reducers/message.reducer';
+import { useGetAnnouncement } from 'src/queries/announcement-queries';
 import { useCreatePrivateChat, useGetPrivateChat } from 'src/queries/chat-queries';
 import { useGetUser } from 'src/queries/user-queries';
 import { Avatar, Stack, Typography } from 'src/ui-components';
@@ -29,6 +31,9 @@ export const PrivateChat = () => {
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
   const { user } = useGetUser(params.userId);
+  const { announcement } = useGetAnnouncement(params.announcementId!, {
+    enabled: !!params.announcementId,
+  });
   const connection = useAtomValue(connectionAtom);
   const setChat = useClearableAtom(chatAtom)[1];
 
@@ -76,6 +81,7 @@ export const PrivateChat = () => {
             </Stack>
           }
         />
+
         <ChatScrollable
           ref={scrollableRef}
           top={
@@ -91,6 +97,9 @@ export const PrivateChat = () => {
           dispatch={dispatch}
           chat={privateChat}
         />
+        {announcement && (
+          <PrivateChatReplyToAnnouncementInfo description={announcement.description} />
+        )}
         <ChatNewMessage
           onScrollToBottom={() => scrollableRef.current?.scrollToBottom('smooth')}
           chat={privateChat}

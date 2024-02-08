@@ -2,6 +2,7 @@ import { CSSObject, styled } from '@mui/material';
 import { theme } from 'src/config/theme-config';
 import { MessageType } from 'src/models/chat/message';
 import { Box, Icon } from 'src/ui-components';
+import { limitLinesVertical } from 'src/utils/style-utils';
 import { shouldNotForwardPropsWithKeys } from 'src/utils/types/should-not-forward-props';
 
 type ReplyIconProps = { dystans: number; isAuthorCurrentUser: boolean };
@@ -42,12 +43,7 @@ export const StyledMessage = styled(Box, {
       ? { background: theme.palette.grey[200] }
       : { background: 'white', border: messageStyles.border }),
     '.MuiTypography-root': {
-      ...(isRepliedMessage && {
-        display: '-webkit-box',
-        WebkitLineClamp: 4,
-        WebkitBoxOrient: 'vertical',
-        overflow: 'hidden',
-      }),
+      ...(isRepliedMessage && limitLinesVertical(4)),
       whiteSpace: 'pre-wrap',
       wordBreak: 'break-word',
     },

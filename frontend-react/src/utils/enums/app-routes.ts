@@ -40,6 +40,7 @@ export type ResetPasswordParams = {
 
 export type PrivateChatParams = {
   userId: string;
+  announcementId?: string;
 };
 
 export type GroupChatParams = {
