@@ -4,7 +4,7 @@ import { parseIntoURLParams } from 'src/utils/url-utils';
 export const AppRoutes = {
   Home: (params?: HomeParams) => makeUrl('/', params),
   Login: (params?: LoginParams) => makeUrl('/login', params),
-  Register: () => '/register',
+  Register: (params?: RegisterParams) => makeUrl('/register', params),
   ForgotPassword: () => '/forgot-password',
   ResetPassword: (params: ResetPasswordParams) => makeUrl('/reset-password', params),
   AnnouncementResultList: (params: AnnouncementResultListQueryParams) =>
@@ -44,13 +44,18 @@ export type PrivateChatParams = {
 };
 
 export type GroupChatParams = {
-  returnUrl?: string;
   chatId: string;
+  returnUrl?: string;
 };
 
 export type LoginParams = {
   isFromResetPassword?: 'true';
   isFromActivation?: 'true';
+  redirectUrl?: string;
+};
+
+export type RegisterParams = {
+  redirectUrl?: string;
 };
 
 const makeUrl = (url: string, params?: Record<string, string>) => {

@@ -42,7 +42,7 @@ export const useGetCurrentUser = (
 
 export const useGetUser = (
   id: string,
-  options?: UseQueryOptions<User | null, AxiosError<HttpErrorData>>
+  options?: UseQueryOptions<User, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
     queryKey: ['GetUser', id],

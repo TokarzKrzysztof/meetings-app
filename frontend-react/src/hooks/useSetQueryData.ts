@@ -23,8 +23,8 @@ export const useSetQueryData = () => {
     const data = queryClient.getQueryData(queryKey) as GetAllImageMessagesData | undefined;
     if (data === undefined) return;
 
-    queryClient.setQueryData(queryKey, [...data, message])
-  }
+    queryClient.setQueryData(queryKey, [...data, message]);
+  };
 
   return { setCurrentUser, setPrivateChat, addImageMessage };
 };

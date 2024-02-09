@@ -1,20 +1,18 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from 'src/ui-components';
 
 export type MyProfileChangeEmailConfirmationDialogProps = {
-  show: boolean;
   onRetry: () => void;
   onClose: () => void;
   inProgress: boolean;
 };
 
 export const MyProfileChangeEmailConfirmationDialog = ({
-  show,
   onRetry,
   onClose,
   inProgress,
 }: MyProfileChangeEmailConfirmationDialogProps) => {
   return (
-    <Dialog open={show}>
+    <Dialog open>
       <DialogContent>
         <DialogContentText align='center'>
           W ciągu kilku minut otrzymasz wiadomość na Twój nowy adres email z potwierdzeniem

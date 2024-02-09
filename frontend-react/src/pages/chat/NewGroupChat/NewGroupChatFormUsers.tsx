@@ -36,24 +36,22 @@ export const NewGroupChatFormUsers = ({ form, inputRef }: NewGroupChatFormUsersP
         error={errors.users?.root?.message}
       />
       <List>
-        {fields.map((user, i) => {
-          return (
-            <ListItem
-              key={user.key}
-              disableGutters
-              secondaryAction={
-                <IconButton aria-label='comment' onClick={() => remove(i)}>
-                  <Icon name='delete' />
-                </IconButton>
-              }
-            >
-              <ListItemAvatar>
-                <Avatar src={user.profileImageSrc} size={30} />
-              </ListItemAvatar>
-              <ListItemText primary={`${user.firstName} ${user.lastName}`} />
-            </ListItem>
-          );
-        })}
+        {fields.map((user, i) => (
+          <ListItem
+            key={user.key}
+            disableGutters
+            secondaryAction={
+              <IconButton aria-label='comment' onClick={() => remove(i)}>
+                <Icon name='delete' />
+              </IconButton>
+            }
+          >
+            <ListItemAvatar>
+              <Avatar src={user.profileImageSrc} size={30} />
+            </ListItemAvatar>
+            <ListItemText primary={`${user.firstName} ${user.lastName}`} />
+          </ListItem>
+        ))}
       </List>
     </>
   );

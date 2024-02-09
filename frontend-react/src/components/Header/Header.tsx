@@ -49,7 +49,8 @@ const HideOnScroll = ({ children }: PropsWithReactElement) => {
 
     const handler = () => {
       if (!ignoreRef.current) {
-        setShow(prevScrollYRef.current > window.scrollY);
+        const threshold = 100;
+        setShow(window.scrollY < threshold || prevScrollYRef.current > window.scrollY);
         prevScrollYRef.current = window.scrollY;
       }
     };

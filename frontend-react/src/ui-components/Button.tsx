@@ -4,13 +4,14 @@ import {
   ButtonProps as MuiButtonProps,
 } from '@mui/material/Button';
 
-export type ButtonProps = {};
+export type ButtonProps<D extends React.ElementType = ButtonTypeMap['defaultComponent']> =
+  MuiButtonProps<D, { component?: D }> & {};
 
 export const Button = <D extends React.ElementType = ButtonTypeMap['defaultComponent']>({
   variant = 'contained',
   sx,
   ...props
-}: MuiButtonProps<D, { component?: D }> & ButtonProps) => (
+}: ButtonProps<D>) => (
   <MuiButton
     {...props}
     variant={variant}

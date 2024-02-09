@@ -75,12 +75,13 @@ export const MyProfileChangeEmail = () => {
           isSaveDisabled={sendChangeEmailAddressEmailInProgress}
         ></MyProfileActionButtons>
       </MyProfileForm>
-      <MyProfileChangeEmailConfirmationDialog
-        show={showDialog}
-        onRetry={() => onSubmit(getValues())}
-        onClose={() => setShowDialog(false)}
-        inProgress={sendChangeEmailAddressEmailInProgress}
-      />
+      {showDialog && (
+        <MyProfileChangeEmailConfirmationDialog
+          onRetry={() => onSubmit(getValues())}
+          onClose={() => setShowDialog(false)}
+          inProgress={sendChangeEmailAddressEmailInProgress}
+        />
+      )}
     </>
   );
 };

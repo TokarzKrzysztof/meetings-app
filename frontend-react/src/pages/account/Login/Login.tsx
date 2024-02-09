@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormField } from 'src/components/FormField';
+import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
@@ -32,7 +33,7 @@ export const Login = () => {
     login(data, {
       onSuccess: (user) => {
         setCurrentUser(user);
-        navigate(AppRoutes.Home());
+        navigate(params.redirectUrl ?? AppRoutes.Home());
       },
       onError: (err) => {
         if (err.response?.data.statusCode === 403) {
@@ -59,7 +60,7 @@ export const Login = () => {
 
   return (
     <>
-      <Header leftSlot={<AuthGoToMainPageBtn />} />
+      <Header leftSlot={params.redirectUrl ? <GoBackBtn /> : <AuthGoToMainPageBtn />} />
       <AuthForm onSubmit={handleSubmit(onSubmit)} onChange={() => loginError && loginReset()}>
         <AuthIcon iconName='account_circle'></AuthIcon>
         <FormField

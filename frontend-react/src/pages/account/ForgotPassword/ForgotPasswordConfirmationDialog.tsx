@@ -1,20 +1,18 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from 'src/ui-components';
 
 export type ForgotPasswordConfirmationDialogProps = {
-  show: boolean;
   onRetry: () => void;
   onClose: () => void;
   inProgress: boolean;
 };
 
 export const ForgotPasswordConfirmationDialog = ({
-  show,
   onRetry,
   onClose,
   inProgress,
 }: ForgotPasswordConfirmationDialogProps) => {
   return (
-    <Dialog open={show}>
+    <Dialog open>
       <DialogContent>
         <DialogContentText align='center'>
           W ciągu kilku minut na podany adres email otrzymasz link dzięki któremu będzie można

@@ -1,11 +1,14 @@
 import { useAtomValue } from 'jotai';
-import { useMemo, useReducer, useRef } from 'react';
+import { useEffect, useMemo, useReducer, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { LocationText } from 'src/components/LocationText';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useClearableAtom } from 'src/hooks/useClearableAtom';
+import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { Chat } from 'src/models/chat/chat';
+import { User } from 'src/models/user';
 import { PrivateChatReplyToAnnouncementInfo } from 'src/pages/chat/PrivateChat/PrivateChatReplyToAnnouncementInfo';
 import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
@@ -23,7 +26,7 @@ import { useGetAnnouncement } from 'src/queries/announcement-queries';
 import { useCreatePrivateChat, useGetPrivateChat } from 'src/queries/chat-queries';
 import { useGetUser } from 'src/queries/user-queries';
 import { Avatar, Stack, Typography } from 'src/ui-components';
-import { PrivateChatParams } from 'src/utils/enums/app-routes';
+import { AppRoutes, PrivateChatParams } from 'src/utils/enums/app-routes';
 import { calculateAge } from 'src/utils/user-utils';
 
 export const PrivateChat = () => {
@@ -33,6 +36,7 @@ export const PrivateChat = () => {
   const { user } = useGetUser(params.userId);
   const { announcement } = useGetAnnouncement(params.announcementId!, {
     enabled: !!params.announcementId,
+    staleTime: Infinity,
   });
   const connection = useAtomValue(connectionAtom);
   const setChat = useClearableAtom(chatAtom)[1];
@@ -43,6 +47,7 @@ export const PrivateChat = () => {
   const { createPrivateChat } = useCreatePrivateChat();
   const { setPrivateChat } = useSetQueryData();
 
+  useParticipantValidator(user);
   useSignalRListeners(privateChat, dispatch);
   useUnloadListener(messages);
 
@@ -109,6 +114,17 @@ export const PrivateChat = () => {
       </Stack>
     </ChatMessageFocusProvider>
   );
+};
+
+const useParticipantValidator = (participant: User | undefined) => {
+  const currentUser = useLoggedInUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser && participant && currentUser.id === participant.id) {
+      navigate(AppRoutes.Home());
+    }
+  }, [currentUser, participant]);
 };
 
 PrivateChat.displayName = 'PrivateChat';

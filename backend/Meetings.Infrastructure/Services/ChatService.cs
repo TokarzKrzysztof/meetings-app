@@ -131,12 +131,7 @@ namespace Meetings.Infrastructure.Services
 
         public async Task<ChatDTO> CreatePrivateChat(CreatePrivateChatData data)
         {
-            Guid userId = _claimsReader.GetCurrentUserId();
-            if (await _repository.Data.GetPrivateByParticipants(data.ParticipantId, userId).AnyAsync())
-            {
-                // TODO move to validator class
-                throw new Exception();
-            }
+            await _chatValidator.WhenCreatePrivateChat(data);
 
             await CreateNewChat(data.ConnectionId, MakeChatParticipants([data.ParticipantId]), ChatType.Private);
             return await GetPrivateChat(data.ParticipantId);

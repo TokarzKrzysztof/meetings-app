@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using Meetings.Authentication.Services;
+using Meetings.Database.QueryExtensions;
 using Meetings.Database.Repositories;
 using Meetings.Infrastructure.Mappers;
 using Meetings.Models.Entities;
@@ -109,6 +110,19 @@ namespace Meetings.Infrastructure.Validators
         internal async Task WhenGetAllImageMessages(Guid chatId)
         {
             await ValidateIsCurrentUserInChatAsync(chatId);
+        }
+
+        internal async Task WhenCreatePrivateChat(CreatePrivateChatData data)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+            if (data.ParticipantId == userId)
+            {
+                ValidatorUtils.ThrowError("CannotCreateChatWithSelf");
+            }
+            if (await _repository.Data.GetPrivateByParticipants(data.ParticipantId, userId).AnyAsync())
+            {
+                ValidatorUtils.ThrowError("PrivateChatAlreadyExists");
+            }
         }
     }
 }

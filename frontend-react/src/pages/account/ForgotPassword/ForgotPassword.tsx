@@ -55,12 +55,13 @@ export const ForgotPassword = () => {
           </Button>
         </AuthRedirectInfo>
       </AuthForm>
-      <ForgotPasswordConfirmationDialog
-        show={showDialog}
-        onRetry={() => onSubmit(getValues())}
-        onClose={() => setShowDialog(false)}
-        inProgress={sendForgotPasswordEmailInProgress}
-      />
+      {showDialog && (
+        <ForgotPasswordConfirmationDialog
+          onRetry={() => onSubmit(getValues())}
+          onClose={() => setShowDialog(false)}
+          inProgress={sendForgotPasswordEmailInProgress}
+        />
+      )}
     </>
   );
 };
