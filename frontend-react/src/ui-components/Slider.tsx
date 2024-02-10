@@ -9,4 +9,4 @@ export type SliderProps<D extends React.ElementType = SliderTypeMap['defaultComp
 
 export const Slider = <D extends React.ElementType = SliderTypeMap['defaultComponent']>({
   ...props
-}: SliderProps<D>) => <MuiSlider {...props}></MuiSlider>;
+}: SliderProps<D>) => <MuiSlider sx={{ width: '95%', margin: '0 auto' }} {...props}></MuiSlider>;
