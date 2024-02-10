@@ -18,6 +18,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Meetings.Utilities.Extensions;
+using Meetings.Models.TempDataModels;
+using System.Text.Json;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -64,27 +66,28 @@ namespace Meetings.Infrastructure.Services
 
         public async Task Logout()
         {
+            // TODO remember to call it when removing user
             UpdateAuthCookie("", DateTime.UtcNow.AddDays(-1));
         }
 
-        public async Task Register(UserDTO data)
+        public async Task Register(RegisterData data)
         {
             await _userValidator.WhenRegister(data);
 
             data.Password = Hasher.Hash(data.Password);
 
             var user = await _repository.Create(_mapper.Map(data, new User()));
-            var tempData = await _tempDataRepository.Create(new TempData(user.Id.ToString()));
+            var tempData = await _tempDataRepository.Create(RegisterTempData.ToTemp(data.RedirectUrl, user.Id));
 
-            SendUserActivationLink(user, tempData);
+            SendUserActivationLink(user, tempData.Id);
         }
 
         public async Task ResendActivationLink(string email)
         {
             var user = await _repository.Data.SingleAsync(x => x.Email == email);
-            var tempData = await _tempDataRepository.Data.SingleAsync(x => x.Data == user.Id.ToString());
+            var tempData = await _tempDataRepository.Data.SingleAsync(x => x.Data2 == user.Id.ToString());
 
-            SendUserActivationLink(user, tempData);
+            SendUserActivationLink(user, tempData.Id);
         }
 
         public async Task ResetPassword(ResetPasswordData data)
@@ -93,8 +96,9 @@ namespace Meetings.Infrastructure.Services
 
             var tempData = await _tempDataRepository.GetById(data.TempId);
 
+            string email = ForgotPasswordTempData.FromTemp(tempData).Email;
             await _repository.Data
-                .Where(x => x.Email == tempData.Data)
+                .Where(x => x.Email == email)
                 .ExecuteUpdateAsync(s =>
                      s.SetProperty(x => x.Password, Hasher.Hash(data.NewPassword))
                  );
@@ -102,7 +106,7 @@ namespace Meetings.Infrastructure.Services
 
         public async Task SendForgotPasswordEmail(string email)
         {
-            var tempData = await _tempDataRepository.Create(new TempData(email));
+            var tempData = await _tempDataRepository.Create(ForgotPasswordTempData.ToTemp(email));
             EmailData emailData = new EmailData(
                new EmailReceiver(email, email),
                "Reset hasła",
@@ -119,13 +123,13 @@ namespace Meetings.Infrastructure.Services
             return await _repository.Data.SingleOrDefaultAsync(x => x.Email == email);
         }
 
-        private void SendUserActivationLink(User user, TempData tempData)
+        private void SendUserActivationLink(User user, Guid tempId)
         {
             EmailData emailData = new EmailData(
                 new EmailReceiver(user.Email, $"{user.FirstName} {user.LastName}"),
                 "Aktywacja konta",
                 "ConfirmAccount",
-                new ConfirmAccountModel(user.FirstName, $"{_httpContextAccessor.GetAppUrl()}/api/Email/ConfirmAccount?tempId={tempData.Id}")
+                new ConfirmAccountModel(user.FirstName, $"{_httpContextAccessor.GetAppUrl()}/api/Email/ConfirmAccount?tempId={tempId}")
             );
 
             // non blocking action

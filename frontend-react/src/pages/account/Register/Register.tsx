@@ -1,8 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { FormField } from 'src/components/FormField';
+import { GoBackBtn } from 'src/components/GoBackBtn';
 import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
 import { Header } from 'src/components/header/Header';
+import { useRouteParams } from 'src/hooks/useRouteParams';
 import { User } from 'src/models/user';
 import { RegisterSuccess } from 'src/pages/account/Register/RegisterSuccess';
 import { AuthButton } from 'src/pages/account/shared/AuthButton';
@@ -14,13 +16,14 @@ import { PasswordFields } from 'src/pages/account/shared/PasswordFields';
 import { useRegister } from 'src/queries/auth-queries';
 import { useGetLocations } from 'src/queries/location-queries';
 import { Button, Typography } from 'src/ui-components';
-import { AppRoutes } from 'src/utils/enums/app-routes';
+import { AppRoutes, RegisterParams } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 import { Validators } from 'src/utils/helpers/validators';
 import { genderOptions } from 'src/utils/user-utils';
 
 export const Register = () => {
+  const [params] = useRouteParams<RegisterParams>();
   const { locations } = useGetLocations();
   const form = useForm<User>();
   const { register, handleSubmit, control } = form;
@@ -32,15 +35,19 @@ export const Register = () => {
     registerUserResult,
   } = useRegister();
 
+  const onSubmit = (data: User) => {
+    registerUser({ ...data, redirectUrl: params.redirectUrl });
+  };
+
   if (registerUserResult) {
     return <RegisterSuccess email={registerUserResult} />;
   }
 
   return (
     <>
-      <Header leftSlot={<AuthGoToMainPageBtn />} />
+      <Header leftSlot={params.redirectUrl ? <GoBackBtn /> : <AuthGoToMainPageBtn />} />
       <AuthForm
-        onSubmit={handleSubmit((data: User) => registerUser(data))}
+        onSubmit={handleSubmit(onSubmit)}
         onChange={() => registerUserError && registerUserReset()}
       >
         <AuthIcon iconName='person_add'></AuthIcon>

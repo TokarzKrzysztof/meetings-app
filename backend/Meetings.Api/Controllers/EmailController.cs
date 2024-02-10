@@ -1,5 +1,6 @@
 ﻿using Meetings.Infrastructure.Helpers;
 using Meetings.Infrastructure.Services;
+using Meetings.Models.TempDataModels;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,8 +20,10 @@ namespace Meetings.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmAccount([FromQuery] Guid tempId)
         {
-            await _userService.ConfirmAccount(tempId);
-            return Redirect($"{GetClientUrl()}/login?isFromActivation=true");
+            RegisterTempData data = await _userService.ConfirmAccount(tempId);
+
+            string redirectUrlParam = !string.IsNullOrWhiteSpace(data.RedirectUrl) ? $"&redirectUrl={data.RedirectUrl}" : "";
+            return Redirect($"{GetClientUrl()}/login?isFromActivation=true{redirectUrlParam}");
         }
 
         [HttpGet]

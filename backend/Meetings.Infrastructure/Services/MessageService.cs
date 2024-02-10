@@ -95,7 +95,7 @@ namespace Meetings.Infrastructure.Services
         {
             await _chatValidator.WhenGetAllImageMessages(chatId);
 
-            var messages = await _repository.Data.Where(x => x.Type == MessageType.Image)
+            var messages = await _repository.Data.Where(x => x.ChatId == chatId && x.Type == MessageType.Image)
                 .OrderBy(x => x.CreatedAt).Select(x => new { x.Id, x.Value }).ToListAsync();
             return messages.Select(x => new MessageDTO() { Id = x.Id, Value = _fileManager.FilePathToSrc(x.Value)! }).ToList();
         }

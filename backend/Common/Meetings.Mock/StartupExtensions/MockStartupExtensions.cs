@@ -14,6 +14,7 @@ namespace Meetings.Mock.StartupExtensions
         public static void AddMock(this WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<MockGenerator>();
+            builder.Services.AddScoped<DebugActions>();
         }
     }
 }

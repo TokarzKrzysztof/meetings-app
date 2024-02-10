@@ -63,8 +63,7 @@ namespace Meetings.Infrastructure.Services
 
             await _userValidator.WhenChangeEmailAddress(data, user);
 
-            var serializedData = JsonSerializer.Serialize(new ChangeEmailAddressTempData(data.Email, userId));
-            var tempData = await _tempDataRepository.Create(new TempData(serializedData));
+            var tempData = await _tempDataRepository.Create(ChangeEmailAddressTempData.ToTemp(data.Email, userId));
             EmailData emailData = new EmailData(
                new EmailReceiver(data.Email, data.Email),
                "Zmiana adresu email",
@@ -79,7 +78,7 @@ namespace Meetings.Infrastructure.Services
         public async Task ChangeEmailAddress(Guid tempId)
         {
             var tempData = await _tempDataRepository.GetById(tempId);
-            var data = JsonSerializer.Deserialize<ChangeEmailAddressTempData>(tempData.Data);
+            var data = ChangeEmailAddressTempData.FromTemp(tempData);
 
             await _repository.Data
                 .Where(x => x.Id == data.UserId)
@@ -119,15 +118,19 @@ namespace Meetings.Infrastructure.Services
             return await GetUser(userId);
         }
 
-        public async Task ConfirmAccount(Guid tempId)
+        public async Task<RegisterTempData> ConfirmAccount(Guid tempId)
         {
             var tempData = await _tempDataRepository.GetById(tempId);
-            var user = await _repository.GetById(new Guid(tempData.Data));
+            var data = RegisterTempData.FromTemp(tempData);
+
+            var user = await _repository.GetById(data.UserId);
 
             user.IsConfirmed = true;
 
             await _repository.Update(user);
             await _tempDataRepository.RemovePermanently(tempData);
+
+            return data;
         }
 
         public async Task<UserDTO> TryGetCurrentUser(bool includeLocation = false)

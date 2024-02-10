@@ -38,7 +38,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] UserDTO data)
+        public async Task<IActionResult> Register([FromBody] RegisterData data)
         {
             await _authService.Register(data);
             return Ok(data.Email);

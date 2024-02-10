@@ -4,29 +4,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Models.TempDataModels
 {
-    public class ChangeEmailAddressTempData
+    public class RegisterTempData
     {
-        public string Email { get; set; }
+        public string? RedirectUrl { get; set; }
         public Guid UserId { get; set; }
 
-        public static TempData ToTemp(string email, Guid userId)
+        public static TempData ToTemp(string? redirectUrl, Guid userId)
         {
             return new TempData()
             {
-                Data1 = email,
+                Data1 = redirectUrl,
                 Data2 = userId.ToString()
             };
         }
 
-        public static ChangeEmailAddressTempData FromTemp(TempData temp)
+        public static RegisterTempData FromTemp(TempData temp)
         {
-            return new ChangeEmailAddressTempData()
+            return new RegisterTempData()
             {
-                Email = temp.Data1!,
+                RedirectUrl = temp.Data1!,
                 UserId = new Guid(temp.Data2!)
             };
         }

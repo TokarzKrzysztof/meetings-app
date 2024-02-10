@@ -14,11 +14,7 @@ namespace Meetings.Models.Entities
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDelete { get; set; }
-        public string Data { get; set; }
-
-        public TempData(string data)
-        {
-            Data = data;
-        }
+        public string? Data1 { get; set; }
+        public string? Data2 { get; set; }
     }
 }

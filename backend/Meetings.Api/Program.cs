@@ -68,11 +68,13 @@ app.AddErrorHandlingMiddleware();
 
 app.MapControllers();
 app.MapHub<ChatHub>("/api/chat-hub");
+app.MapRazorPages();
 
 using (IServiceScope scope = app.Services.CreateScope())
 {
     try
     {
+        //await scope.ServiceProvider.GetRequiredService<DebugActions>().RemoveUserWithEmail("krzysiek210796@gmail.com");
         //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomUsers(9000);
         //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomAnnouncements(30000, "Bilard");
 

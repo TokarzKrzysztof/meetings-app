@@ -20,7 +20,7 @@ namespace Meetings.Infrastructure.Validators
     {
         private const int _passwordMinLength = 5;
 
-        public static void AddPersonalDataRules(this InlineValidator<UserDTO> validator)
+        public static void AddPersonalDataRules<T>(this InlineValidator<T> validator) where T: UserDTO
         {
             validator.RuleFor(x => x.FirstName).NotEmpty().WithErrorCode("FirstNameEmpty");
             validator.RuleFor(x => x.LastName).NotEmpty().WithErrorCode("LastNameEmpty");
@@ -73,9 +73,9 @@ namespace Meetings.Infrastructure.Validators
             _claimsReader = claimsReader;
         }
 
-        internal async Task WhenRegister(UserDTO data)
+        internal async Task WhenRegister(RegisterData data)
         {
-            var validator = new InlineValidator<UserDTO>();
+            var validator = new InlineValidator<RegisterData>();
             validator.AddPersonalDataRules();
             validator.RuleFor(x => x.Password).Equal(x => x.PasswordRepeat).WithErrorCode("PasswordsNotMatch");
             validator.RuleFor(x => x.Password).PasswordMinLength();
