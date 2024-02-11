@@ -42,12 +42,13 @@ export const useGetCurrentUser = (
 
 export const useGetUser = (
   id: string,
-  options?: UseQueryOptions<User, AxiosError<HttpErrorData>>
+  options?: UseQueryOptions<User, AxiosError<HttpErrorData>>,
+  includeDeleted = true
 ) => {
   const query = useQuery({
     queryKey: ['GetUser', id],
     queryFn: () => {
-      const params = { id };
+      const params = { id, includeDeleted };
       return axios.get(`${baseUrl}/GetUser`, { params });
     },
     staleTime: Infinity,

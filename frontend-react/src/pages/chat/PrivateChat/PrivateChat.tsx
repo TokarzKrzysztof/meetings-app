@@ -9,6 +9,7 @@ import { useRouteParams } from 'src/hooks/useRouteParams';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { Chat } from 'src/models/chat/chat';
 import { User } from 'src/models/user';
+import { PrivateChatDeletedParticipantInfo } from 'src/pages/chat/PrivateChat/PrivateChatDeletedParticipantInfo';
 import { PrivateChatReplyToAnnouncementInfo } from 'src/pages/chat/PrivateChat/PrivateChatReplyToAnnouncementInfo';
 import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
@@ -33,17 +34,18 @@ export const PrivateChat = () => {
   const [params] = useRouteParams<PrivateChatParams>();
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
-  const { user } = useGetUser(params.userId);
-  const { announcement } = useGetAnnouncement(params.announcementId!, {
-    enabled: !!params.announcementId,
-    staleTime: Infinity,
-  });
   const connection = useAtomValue(connectionAtom);
   const setChat = useClearableAtom(chatAtom)[1];
 
   const { privateChat, privateChatFetching } = useGetPrivateChat(params.userId, {
     onSuccess: (chat) => setChat(chat),
   });
+  const { user } = useGetUser(params.userId);
+  const { announcement } = useGetAnnouncement(params.announcementId!, {
+    enabled: !!params.announcementId,
+    staleTime: Infinity,
+  });
+
   const { createPrivateChat } = useCreatePrivateChat();
   const { setPrivateChat } = useSetQueryData();
 
@@ -78,7 +80,7 @@ export const PrivateChat = () => {
           right={
             <Stack alignItems='center' gap={1}>
               <UserActiveStatusBadge status={user.activeStatus}>
-                <Avatar src={user.profileImageSrc} size={30} />
+                <Avatar src={user.profileImageSrc} size={30} isDelete={user.isDelete} />
               </UserActiveStatusBadge>
               <Typography>
                 {user.firstName} {user.lastName}
@@ -91,7 +93,12 @@ export const PrivateChat = () => {
           ref={scrollableRef}
           top={
             <Stack flexDirection='column' alignItems='center' mt='auto'>
-              <Avatar src={user.profileImageSrc} size={100} sx={{ mb: 2 }} />
+              <Avatar
+                src={user.profileImageSrc}
+                size={100}
+                isDelete={user.isDelete}
+                sx={{ mb: 2 }}
+              />
               <Typography>
                 {user.firstName} {user.lastName}, {age}
               </Typography>
@@ -105,12 +112,16 @@ export const PrivateChat = () => {
         {announcement && (
           <PrivateChatReplyToAnnouncementInfo description={announcement.description} />
         )}
-        <ChatNewMessage
-          onScrollToBottom={() => scrollableRef.current?.scrollToBottom('smooth')}
-          chat={privateChat}
-          onFirstPrivateMessageSend={handleCreatePrivateChat}
-          dispatch={dispatch}
-        />
+        {user.isDelete ? (
+          <PrivateChatDeletedParticipantInfo />
+        ) : (
+          <ChatNewMessage
+            onScrollToBottom={() => scrollableRef.current?.scrollToBottom('smooth')}
+            chat={privateChat}
+            onFirstPrivateMessageSend={handleCreatePrivateChat}
+            dispatch={dispatch}
+          />
+        )}
       </Stack>
     </ChatMessageFocusProvider>
   );

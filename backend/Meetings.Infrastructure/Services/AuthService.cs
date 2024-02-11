@@ -28,12 +28,15 @@ namespace Meetings.Infrastructure.Services
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IRepository<User> _repository;
         private readonly IRepository<TempData> _tempDataRepository;
+        private readonly IRepository<Announcement> _announcementRepository;
+        private readonly IRepository<ChatParticipant> _chatParticipantRepository;
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserService _userService;
         private readonly UserValidator _userValidator;
-        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, UserService userService, UserValidator userValidator)
+        private readonly IClaimsReader _claimsReader;
+        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, UserService userService, UserValidator userValidator, IClaimsReader claimsReader, IRepository<Announcement> announcementRepository, IRepository<ChatParticipant> chatParticipantRepository)
         {
             _tokenGenerator = tokenGenerator;
             _repository = repository;
@@ -43,6 +46,9 @@ namespace Meetings.Infrastructure.Services
             _httpContextAccessor = httpContextAccessor;
             _userService = userService;
             _userValidator = userValidator;
+            _claimsReader = claimsReader;
+            _announcementRepository = announcementRepository;
+            _chatParticipantRepository = chatParticipantRepository;
         }
 
         public async Task<UserDTO> Login(LoginCredentials data)
@@ -121,6 +127,23 @@ namespace Meetings.Infrastructure.Services
         public async Task<User> TryGetUserByEmail(string email)
         {
             return await _repository.Data.SingleOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task RemoveAccount()
+        {
+            await Logout();
+
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            List<Announcement> announcements = await _announcementRepository.Data.Where(x => x.UserId == userId).ToListAsync();
+            await _announcementRepository.RemoveRange(announcements);
+
+            List<ChatParticipant> participantsInGroupChats = await _chatParticipantRepository.Data.Where(x => x.UserId == userId && x.Chat.Type == ChatType.Group).ToListAsync();
+            await _chatParticipantRepository.RemovePermanentlyRange(participantsInGroupChats);
+
+            await _userService.UpdateProfileImage(userId, null);
+
+            await _repository.Remove(userId);
         }
 
         private void SendUserActivationLink(User user, Guid tempId)

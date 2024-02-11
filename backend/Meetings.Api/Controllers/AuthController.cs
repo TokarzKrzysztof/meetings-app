@@ -64,5 +64,13 @@ namespace Meetings.EmailTemplates.Controllers
             await _authService.ResetPassword(data);
             return Ok();
         }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> RemoveAccount()
+        {
+            await _authService.RemoveAccount();
+            return Ok();
+        }
     }
 }

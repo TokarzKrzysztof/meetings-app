@@ -51,7 +51,7 @@ export const useLogin = (
 
 export const useLogout = (options?: UseMutationOptions<void, AxiosError<HttpErrorData>, void>) => {
   const mutation = useMutation({
-    mutationFn: (data) => axios.post(`${baseUrl}/Logout`, data),
+    mutationFn: () => axios.post(`${baseUrl}/Logout`),
     ...options,
   });
 
@@ -74,7 +74,7 @@ export const useSendForgotPasswordEmail = (
 
 export const useResetPassword = (
   options?: UseMutationOptions<
-    unknown,
+    void,
     AxiosError<HttpErrorData>,
     { tempId: string; newPassword: string }
   >
@@ -85,4 +85,15 @@ export const useResetPassword = (
   });
 
   return genericUseMutationMethods('resetPassword', mutation);
+};
+
+export const useRemoveAccount = (
+  options?: UseMutationOptions<unknown, AxiosError<HttpErrorData>, void>
+) => {
+  const mutation = useMutation({
+    mutationFn: () => axios.delete(`${baseUrl}/RemoveAccount`),
+    ...options,
+  });
+
+  return genericUseMutationMethods('removeAccount', mutation);
 };

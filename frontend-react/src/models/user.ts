@@ -12,6 +12,7 @@ export enum UserActiveStatus {
 
 export type User = {
   id: string;
+  isDelete: boolean;
   email: string;
   password: string | null;
   firstName: string;

@@ -21,7 +21,7 @@ export const MyProfile = () => {
               {currentUser.firstName} {currentUser.lastName}
             </Typography>
           </Stack>
-          <MyProfileActionList />
+          <MyProfileActionList currentUser={currentUser}/>
         </Container>
       </>
     );

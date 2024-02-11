@@ -11,6 +11,7 @@ namespace Meetings.Database.Repositories
     public interface IRepository<TEntity> where TEntity : class, IEntityBase
     {
         IQueryable<TEntity> Data { get; }
+        IQueryable<TEntity> RawData { get; }
 
         Task<TEntity> GetById(Guid id, Func<IQueryable<TEntity>, IQueryable<TEntity>> transform = null);
         Task<TEntity> TryGetById(Guid id);
@@ -23,6 +24,8 @@ namespace Meetings.Database.Repositories
         Task UpdateRange(IEnumerable<TEntity> entities);
         Task<TEntity> Create(TEntity entity, Expression<Func<TEntity, object>>? includeReference = null);
         Task SwapRange<TKey>(IEnumerable<TEntity> dbData, IEnumerable<TEntity> newData, Func<TEntity, TKey> keySelector, bool shouldUpdate = false);
+        Task RemoveRange(IEnumerable<TEntity> entities);
+        Task RemovePermanentlyRange(IEnumerable<TEntity> entities);
     }
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntityBase
@@ -32,6 +35,14 @@ namespace Meetings.Database.Repositories
         public Repository(ApplicationDbContext db)
         {
             _db = db;
+        }
+
+        public IQueryable<TEntity> RawData
+        {
+            get
+            {
+                return _db.Set<TEntity>();
+            }
         }
 
         public IQueryable<TEntity> Data
@@ -72,6 +83,16 @@ namespace Meetings.Database.Repositories
             await _db.SaveChangesAsync();
         }
 
+        public async Task RemoveRange(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                entity.IsDelete = true;
+            }
+            _db.UpdateRange(entities);
+            await _db.SaveChangesAsync();
+        }
+
         public async Task RemovePermanently(Guid id)
         {
             TEntity item = await Data.SingleAsync(x => x.Id == id);
@@ -81,6 +102,15 @@ namespace Meetings.Database.Repositories
         public async Task RemovePermanently(TEntity entity)
         {
             _db.Remove(entity);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task RemovePermanentlyRange(IEnumerable<TEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                _db.Remove(entity);
+            }
             await _db.SaveChangesAsync();
         }
 

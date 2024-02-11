@@ -35,9 +35,9 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUser([FromQuery] Guid id)
+        public async Task<IActionResult> GetUser([FromQuery] Guid id, [FromQuery] bool includeDeleted)
         {
-            UserDTO user = await _userService.GetUser(id);
+            UserDTO user = await _userService.GetUser(id, includeDeleted: includeDeleted);
             return Ok(user);
         }
 

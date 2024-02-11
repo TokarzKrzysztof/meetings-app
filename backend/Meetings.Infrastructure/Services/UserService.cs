@@ -141,12 +141,15 @@ namespace Meetings.Infrastructure.Services
                 return null;
             }
 
-            return await GetUser((Guid)userId, includeLocation);
+            return await GetUser((Guid)userId, includeLocation: includeLocation);
         }
 
-        public async Task<UserDTO> GetUser(Guid id, bool includeLocation = false)
+        public async Task<UserDTO> GetUser(Guid id, bool includeLocation = false, bool includeDeleted = false)
         {
-            var user = await _repository.GetById(id, includeLocation ? q => q.Include(x => x.Location) : null);
+            User user = await _repository.RawData
+                .Where(x => x.Id == id && (includeDeleted || !x.IsDelete))
+                .If(includeLocation, q => q.Include(x => x.Location))
+                .SingleAsync();
             return _extendedMapper.ToUserDTO(user);
         }
 
@@ -176,6 +179,11 @@ namespace Meetings.Infrastructure.Services
             var filePath = Path.Combine(_fileManager.Root, "ProfileImages", $"{Guid.NewGuid()}.jpg");
             await _fileManager.Save(filePath, image);
 
+            await UpdateProfileImage(userId, filePath);
+        }
+
+        public async Task UpdateProfileImage(Guid userId, string? filePath)
+        {
             var user = await _repository.GetById(userId);
             if (user.ProfileImagePath != null)
             {
