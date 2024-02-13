@@ -39,7 +39,6 @@ export const ChatMessageContent = ({
             mt: `-${repliedMessageWrap}px`,
             // transform to move visually
             transform: `translateY(${repliedMessageWrap}px)`,
-            pb: 2
           }}
           onClick={() => setMessageToFocus(message.replyTo!)}
           isRepliedMessage

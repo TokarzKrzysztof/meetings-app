@@ -56,6 +56,9 @@ export const StyledMessage = styled(Box, {
     result.border = undefined;
     result.lineHeight = 0;
   }
+  if (isRepliedMessage && type !== MessageType.Image) {
+    result.paddingBottom = theme.spacing(2);
+  }
 
   return result;
 });
