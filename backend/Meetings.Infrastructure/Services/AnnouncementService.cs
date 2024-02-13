@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Meetings.Authentication.Services;
+using Meetings.Database.QueryExtensions;
 using Meetings.Database.Repositories;
 using Meetings.FileManager;
 using Meetings.Infrastructure.Mappers;
@@ -8,6 +9,7 @@ using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Infrastructure.Services
 {
@@ -33,7 +35,7 @@ namespace Meetings.Infrastructure.Services
 
         public async Task CreateNewAnnouncement(AnnouncementDTO data)
         {
-            _announcementValidator.WhenCreateNewAnnouncement(data);
+            await _announcementValidator.WhenCreateNewAnnouncement(data);
 
             data.UserId = _claimsReader.GetCurrentUserId();
             data.Status = Utilities.Utils.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
@@ -49,18 +51,32 @@ namespace Meetings.Infrastructure.Services
 
             var item = await _repository.GetById(data.Id);
             item.Description = data.Description;
-            item.CategoryId = data.CategoryId;
             data.Status = Utilities.Utils.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
 
             await _repository.Update(item);
         }
 
-        public async Task<List<AnnouncementDTO>> GetCurrentUserAnnouncements()
+        public async Task<PaginatedData<AnnouncementDTO>> GetCurrentUserAnnouncements(AnnoucementStatus status, int skip, int take)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            List<Announcement> data = await _repository.Data.Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedAt).ToListAsync();
+            List<Announcement> result = await _repository.Data.Where(x => x.UserId == userId && x.Status == status)
+                .OrderByDescending(x => x.UpdatedAt)
+                .ToListAsync();
 
-            return _mapper.Map<List<AnnouncementDTO>>(data);
+            return new PaginatedData<AnnouncementDTO>()
+            {
+                Data = _mapper.Map<List<AnnouncementDTO>>(result.Skip(skip).Take(take)),
+                TotalCount = result.Count()
+            };
+        }
+
+        public async Task<List<Guid>> GetCurrentUserOccupiedCategoryIds()
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+            return await _repository.Data
+                .GetActivelyOccupiedByUser(userId)
+                .Select(x => x.CategoryId)
+                .ToListAsync();
         }
 
         public async Task SetAnnouncementStatus(Guid id, AnnoucementStatus newStatus)
@@ -86,7 +102,7 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<AnnouncementDTO>(item);
         }
 
-        public async Task<AnnouncementResultList> GetAnnouncementResultList(LoadAnnouncementResultListParams data)
+        public async Task<PaginatedData<AnnouncementResultListItem>> GetAnnouncementResultList(LoadAnnouncementResultListParams data)
         {
             _announcementValidator.WhenGetAnnouncementResultList(data);
 
@@ -147,10 +163,23 @@ namespace Meetings.Infrastructure.Services
                 result = result.OrderByDescending(x => x.DistanceFromCurrentUser);
             }
 
-            return new AnnouncementResultList()
+            return new PaginatedData<AnnouncementResultListItem>()
             {
                 Data = result.Skip(data.Skip).Take(data.Take).ToList(),
                 TotalCount = result.Count()
+            };
+        }
+
+        public async Task<AnnouncementsCount> GetCurrentUserAnnouncementsCount()
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+
+            var statuses = await _repository.Data.Where(x => x.UserId == userId).Select(x => x.Status).ToListAsync();
+            return new AnnouncementsCount()
+            {
+                Active = statuses.Count(x => x == AnnoucementStatus.Active),
+                Pending = statuses.Count(x => x == AnnoucementStatus.Pending),
+                Closed = statuses.Count(x => x == AnnoucementStatus.Closed),
             };
         }
     }

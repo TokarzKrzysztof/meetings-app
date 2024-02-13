@@ -9,8 +9,3 @@ export type AnnouncementResultListItem = {
   userAge: number;
   distanceFromCurrentUser: number | null;
 };
-
-export type AnnouncementResultList = {
-  data: AnnouncementResultListItem[];
-  totalCount: number;
-};

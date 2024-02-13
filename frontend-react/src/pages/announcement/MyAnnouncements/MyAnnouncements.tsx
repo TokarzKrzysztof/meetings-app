@@ -1,66 +1,76 @@
-import { Divider } from '@mui/material';
-import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Header } from 'src/components/header/Header';
-import { AnnouncementStatus } from 'src/models/annoucement/announcement';
-import { MyAnnouncementsList } from 'src/pages/announcement/MyAnnouncements/MyAnnouncementsList';
-import { useGetCurrentUserAnnouncements } from 'src/queries/announcement-queries';
-import { useGetAllCategories } from 'src/queries/category-queries';
-import { Container, Icon, IconButton, Typography } from 'src/ui-components';
+import { useGetCurrentUserAnnouncementsCount } from 'src/queries/announcement-queries';
+import {
+  Box,
+  Button,
+  Container,
+  Icon,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export const MyAnnouncements = () => {
-  const { currentUserAnnoucements } = useGetCurrentUserAnnouncements();
-  const { allCategories } = useGetAllCategories();
+  const { currentUserAnnouncementsCount, currentUserAnnouncementsCountFetching } =
+    useGetCurrentUserAnnouncementsCount();
 
-  const data = useMemo(() => {
-    if (!currentUserAnnoucements) return null;
-    return {
-      activeAnnouncements: currentUserAnnoucements.filter(
-        (x) => x.status === AnnouncementStatus.Active
-      ),
-      pendingAnnouncements: currentUserAnnoucements.filter(
-        (x) => x.status === AnnouncementStatus.Pending
-      ),
-      closedAnnouncements: currentUserAnnoucements.filter(
-        (x) => x.status === AnnouncementStatus.Closed
-      ),
-    };
-  }, [currentUserAnnoucements]);
-
-  if (!allCategories || !data) return null;
+  if (currentUserAnnouncementsCountFetching) return null;
   return (
     <>
       <Header />
       <Container sx={{ py: 2 }} maxWidth='sm'>
-        <Typography variant='h5' mb={2} textAlign='center' fontWeight='bold' position='relative'>
+        <Typography variant='h6' mb={2} textAlign='center' fontWeight='bold' position='relative'>
           Moje ogłoszenia
-          <IconButton
-            color='primary'
-            sx={{ position: 'absolute', right: 0, top: -1 }}
+        </Typography>
+
+        <List sx={{ mt: 1 }} color='primary'>
+          <ListItemButton
+            component={Link}
+            to={AppRoutes.MyAnnouncementsList({ status: 'Active' })}
+            sx={{ pr: 0 }}
+          >
+            <ListItemText primary={`Aktywne (${currentUserAnnouncementsCount!.active})`} />
+            <ListItemIcon sx={{ minWidth: 'initial' }}>
+              <Icon name='navigate_next' />
+            </ListItemIcon>
+          </ListItemButton>
+
+          <ListItemButton
+            component={Link}
+            to={AppRoutes.MyAnnouncementsList({ status: 'Pending' })}
+            sx={{ pr: 0 }}
+          >
+            <ListItemText primary={`Oczekujące (${currentUserAnnouncementsCount!.pending})`} />
+            <ListItemIcon sx={{ minWidth: 'initial' }}>
+              <Icon name='navigate_next' />
+            </ListItemIcon>
+          </ListItemButton>
+
+          <ListItemButton
+            component={Link}
+            to={AppRoutes.MyAnnouncementsList({ status: 'Closed' })}
+            sx={{ pr: 0 }}
+          >
+            <ListItemText primary={`Zakończone (${currentUserAnnouncementsCount!.closed})`} />
+            <ListItemIcon sx={{ minWidth: 'initial' }}>
+              <Icon name='navigate_next' />
+            </ListItemIcon>
+          </ListItemButton>
+        </List>
+        <Box textAlign='center' my={3}>
+          <Button
+            variant='outlined'
+            sx={{ width: '100%' }}
             component={Link}
             to={AppRoutes.NewAnnouncement()}
-            size='small'
           >
-            <Icon name='add' />
-          </IconButton>
-        </Typography>
-        <Divider></Divider>
-        <MyAnnouncementsList
-          data={data.activeAnnouncements}
-          title='Aktywne'
-          noAnnoucementsText='Brak aktywnych ogłoszeń'
-        />
-        <MyAnnouncementsList
-          data={data.pendingAnnouncements}
-          title='Oczekujące'
-          noAnnoucementsText='Brak oczekujących ogłoszeń'
-        />
-        <MyAnnouncementsList
-          data={data.closedAnnouncements}
-          title='Zakończone'
-          noAnnoucementsText='Brak zakończonych ogłoszeń'
-        />
+            Dodaj nowe ogłoszenie
+          </Button>
+        </Box>
       </Container>
     </>
   );

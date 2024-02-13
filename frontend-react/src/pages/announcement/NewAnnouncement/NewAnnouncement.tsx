@@ -32,6 +32,7 @@ export const NewAnnouncement = () => {
         title='Nowe ogłoszenie'
         inProgress={createNewAnnouncementInProgress}
         buttonText='Dodaj ogłoszenie'
+        isCategoryEditable
       />
     </>
   );

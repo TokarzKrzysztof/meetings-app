@@ -2,27 +2,30 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
 import { Announcement } from 'src/models/annoucement/announcement';
+import { useGetCurrentUserOccupiedCategoryIds } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Button, Container, Stack, Typography } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
 
 export type AnnouncementFormProps = {
-  data?: Announcement;
-  disabledWhenUntouched?: boolean;
   onSubmit: (data: Announcement) => void;
   title: string;
   inProgress: boolean;
   buttonText: string;
+  data?: Announcement;
+  disabledWhenUntouched?: boolean;
+  isCategoryEditable?: boolean;
 };
 
 export const AnnouncementForm = ({
-  data,
   onSubmit,
-  disabledWhenUntouched,
   title,
   inProgress,
   buttonText,
+  data,
+  disabledWhenUntouched,
+  isCategoryEditable,
 }: AnnouncementFormProps) => {
   const form = useForm<Announcement>();
   const {
@@ -32,6 +35,8 @@ export const AnnouncementForm = ({
     formState: { isDirty },
   } = form;
   const { allCategories } = useGetAllCategories();
+  const { currentUserOccupiedCategoryIds, currentUserOccupiedCategoryIdsFetching } =
+    useGetCurrentUserOccupiedCategoryIds();
 
   useEffect(() => {
     if (allCategories && data) {
@@ -39,6 +44,7 @@ export const AnnouncementForm = ({
     }
   }, [allCategories, data]);
 
+  if (currentUserOccupiedCategoryIdsFetching) return null;
   return (
     <Container maxWidth='sm' component='form' onSubmit={handleSubmit(onSubmit)}>
       <Typography variant='h5' sx={{ my: 8 }} textAlign='center' fontWeight='bold'>
@@ -56,8 +62,13 @@ export const AnnouncementForm = ({
         ElementProps={{
           optionsAsync: allCategories,
           getOptionLabel: (opt) => opt.name,
+          getOptionDisabled: (opt) => currentUserOccupiedCategoryIds!.includes(opt.id),
+          helperText: 'Możesz mieć maksymalnie jedno aktywne ogłoszenie na daną kategorię',
+          disabledOnBottom: true,
+          disabled: !isCategoryEditable,
         }}
       />
+
       <ControlledFormField
         control={control}
         element='textarea'

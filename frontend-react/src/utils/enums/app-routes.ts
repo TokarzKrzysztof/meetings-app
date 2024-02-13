@@ -1,3 +1,4 @@
+import { AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
 import { parseIntoURLParams } from 'src/utils/url-utils';
 
@@ -12,6 +13,8 @@ export const AppRoutes = {
   NewAnnouncement: () => '/new-announcement',
   EditAnnouncement: (params: EditAnnouncementParams) => makeUrl('/edit-announcement', params),
   MyAnnouncements: () => '/my-announcements',
+  MyAnnouncementsList: (params: MyAnnouncementsListParams) =>
+    makeUrl('/my-announcements-list', params),
   MyProfile: () => '/my-profile',
   MyProfileChangeData: () => '/my-profile/change-data',
   MyProfileChangePassword: () => '/my-profile/change-password',
@@ -56,6 +59,10 @@ export type LoginParams = {
 
 export type RegisterParams = {
   redirectUrl?: string;
+};
+
+export type MyAnnouncementsListParams = {
+  status: keyof typeof AnnouncementStatus
 };
 
 const makeUrl = (url: string, params?: Record<string, string>) => {

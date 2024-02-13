@@ -7,9 +7,8 @@ import { Link } from 'react-router-dom';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import {
-  useGetCurrentUserAnnouncements,
   useRemoveAnnouncement,
-  useSetAnnouncementStatus,
+  useSetAnnouncementStatus
 } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Box, Button, Card, DialogContentText, Stack, Typography } from 'src/ui-components';
@@ -17,19 +16,17 @@ import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type MyAnnouncementsListItemProps = {
   announcement: Announcement;
+  onRefetch: () => void;
 };
 
-export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListItemProps) => {
+export const MyAnnouncementsListItem = ({ announcement, onRefetch }: MyAnnouncementsListItemProps) => {
   const { allCategories } = useGetAllCategories();
-  const { currentUserAnnoucementsRefetch } = useGetCurrentUserAnnouncements({
-    enabled: false,
-  });
   const { setAnnouncementStatus } = useSetAnnouncementStatus();
   const { removeAnnouncement } = useRemoveAnnouncement();
   const confirm = useSetAtom(confirmationDialogAtom);
   const { enqueueSnackbar } = useSnackbar();
 
-  const categoryName = allCategories!.find((x) => x.id === announcement.categoryId)!.name;
+  const categoryName = allCategories?.find((x) => x.id === announcement.categoryId)!.name ?? '';
 
   const announcementStatus = useMemo(() => {
     if (announcement.status === AnnouncementStatus.Active)
@@ -56,7 +53,7 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
                 variant: 'success',
                 message: 'Ogłoszenie zostało zakończone',
               });
-              currentUserAnnoucementsRefetch();
+              onRefetch();
             },
           }
         ),
@@ -79,7 +76,7 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
                 variant: 'success',
                 message: 'Ogłoszenie zostało ponownie aktywowane',
               });
-              currentUserAnnoucementsRefetch();
+              onRefetch();
             },
           }
         ),
@@ -101,7 +98,7 @@ export const MyAnnouncementsListItem = ({ announcement }: MyAnnouncementsListIte
               variant: 'success',
               message: 'Ogłoszenie zostało usunięte',
             });
-            currentUserAnnoucementsRefetch();
+            onRefetch();
           },
         }),
     });

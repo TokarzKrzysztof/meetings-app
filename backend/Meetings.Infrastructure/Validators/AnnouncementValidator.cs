@@ -14,6 +14,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.EntityFrameworkCore;
 using Meetings.Models.Resources;
 using Humanizer;
+using Meetings.Database.QueryExtensions;
 
 namespace Meetings.Infrastructure.Validators
 {
@@ -21,7 +22,6 @@ namespace Meetings.Infrastructure.Validators
     {
         public static void AddCorrectDataRules(this InlineValidator<AnnouncementDTO> validator)
         {
-            validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
             validator.RuleFor(x => x.Description).NotEmpty().WithErrorCode("DescriptionEmpty");
         }
         public static IRuleBuilderOptions<T, IEnumerable<int>> InRange<T>(this IRuleBuilder<T, IEnumerable<int>> ruleBuilder, int from, int to)
@@ -63,6 +63,15 @@ namespace Meetings.Infrastructure.Validators
             }
         }
 
+        private async Task ValidateCanCreateAnnouncementInCategory(Guid categoryId)
+        {
+            Guid userId = _claimsReader.GetCurrentUserId();
+            if (await _repository.Data.GetActivelyOccupiedByUser(userId).AnyAsync(x => x.CategoryId == categoryId))
+            {
+                ValidatorUtils.ThrowError("CategoryAlreadyOccupied");
+            }
+        }
+
         internal async Task WhenEditAnnouncement(AnnouncementDTO data)
         {
             await ValidateIsAuthorCurrentUser(data.Id);
@@ -73,9 +82,12 @@ namespace Meetings.Infrastructure.Validators
             validator.ValidateAndThrow(data);
         }
 
-        internal void WhenCreateNewAnnouncement(AnnouncementDTO data)
+        internal async Task WhenCreateNewAnnouncement(AnnouncementDTO data)
         {
+            await ValidateCanCreateAnnouncementInCategory(data.CategoryId);
+
             var validator = new InlineValidator<AnnouncementDTO>();
+            validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
             validator.AddCorrectDataRules();
 
             validator.ValidateAndThrow(data);

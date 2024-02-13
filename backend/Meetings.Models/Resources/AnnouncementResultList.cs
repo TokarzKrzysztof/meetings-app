@@ -17,10 +17,4 @@ namespace Meetings.Models.Resources
         public int UserAge { get; set; }
         public int? DistanceFromCurrentUser { get; set; }
     }
-
-    public class AnnouncementResultList
-    {
-        public List<AnnouncementResultListItem> Data { get; set; }
-        public int TotalCount { get; set; }
-    }
 }

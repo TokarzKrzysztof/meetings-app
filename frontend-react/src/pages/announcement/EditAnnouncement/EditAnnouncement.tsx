@@ -6,7 +6,7 @@ import { useRouteParams } from 'src/hooks/useRouteParams';
 import { Announcement } from 'src/models/annoucement/announcement';
 import { AnnouncementForm } from 'src/pages/announcement/shared/AnnouncementForm';
 import { useEditAnnouncement, useGetAnnouncement } from 'src/queries/announcement-queries';
-import { AppRoutes, EditAnnouncementParams } from 'src/utils/enums/app-routes';
+import { EditAnnouncementParams } from 'src/utils/enums/app-routes';
 
 export const EditAnnouncement = () => {
   const [params] = useRouteParams<EditAnnouncementParams>();
@@ -22,7 +22,7 @@ export const EditAnnouncement = () => {
           variant: 'success',
           message: 'Ogłoszenie zostało zmienione',
         });
-        navigate(AppRoutes.MyAnnouncements());
+        navigate(-1);
       },
     });
   };

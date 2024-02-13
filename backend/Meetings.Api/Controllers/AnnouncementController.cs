@@ -20,7 +20,7 @@ namespace Meetings.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> GetAnnouncementResultList([FromBody] LoadAnnouncementResultListParams data)
         {
-            AnnouncementResultList result = await _announcementService.GetAnnouncementResultList(data);
+            PaginatedData<AnnouncementResultListItem> result = await _announcementService.GetAnnouncementResultList(data);
             return Ok(result);
         }
 
@@ -42,10 +42,26 @@ namespace Meetings.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetCurrentUserAnnouncements()
+        public async Task<IActionResult> GetCurrentUserAnnouncements([FromQuery] AnnoucementStatus status, [FromQuery] int skip, [FromQuery] int take)
         {
-            List<AnnouncementDTO> currentUserAnnouncements = await _announcementService.GetCurrentUserAnnouncements();
+            PaginatedData<AnnouncementDTO> currentUserAnnouncements = await _announcementService.GetCurrentUserAnnouncements(status, skip, take);
             return Ok(currentUserAnnouncements);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUserAnnouncementsCount()
+        {
+            AnnouncementsCount announcementsCount = await _announcementService.GetCurrentUserAnnouncementsCount();
+            return Ok(announcementsCount);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUserOccupiedCategoryIds()
+        {
+            List<Guid> ids = await _announcementService.GetCurrentUserOccupiedCategoryIds();
+            return Ok(ids);
         }
 
         [HttpGet]

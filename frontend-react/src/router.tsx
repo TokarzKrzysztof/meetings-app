@@ -3,9 +3,7 @@ import { queryClient } from 'src/config/query-config';
 import { User } from 'src/models/user';
 import { getCurrentUserQueryFn, getCurrentUserQueryKey } from 'src/queries/user-queries';
 import App from './App';
-import {
-  AppRoutes
-} from './utils/enums/app-routes';
+import { AppRoutes } from './utils/enums/app-routes';
 
 const protectedLoader = async () => {
   // undefined when user is not yet fetched, null when user is not logged in
@@ -175,6 +173,16 @@ export const router = createBrowserRouter([
             './pages/announcement/MyAnnouncements/MyAnnouncements'
           );
           return { Component: MyAnnouncements };
+        },
+        loader: protectedLoader,
+      },
+      {
+        path: AppRoutes.MyAnnouncementsList({} as any),
+        lazy: async () => {
+          const { MyAnnouncementsList } = await import(
+            './pages/announcement/MyAnnouncementsList/MyAnnouncementsList'
+          );
+          return { Component: MyAnnouncementsList };
         },
         loader: protectedLoader,
       },
