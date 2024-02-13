@@ -58,7 +58,7 @@ namespace Meetings.Infrastructure.Services
         public async Task<List<AnnouncementDTO>> GetCurrentUserAnnouncements()
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            List<Announcement> data = await _repository.Data.Where(x => x.UserId == userId).ToListAsync();
+            List<Announcement> data = await _repository.Data.Where(x => x.UserId == userId).OrderByDescending(x => x.CreatedAt).ToListAsync();
 
             return _mapper.Map<List<AnnouncementDTO>>(data);
         }
