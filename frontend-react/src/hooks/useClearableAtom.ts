@@ -1,9 +1,9 @@
 import { Atom, WritableAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 
-export function useClearableAtom<Value, Args extends unknown[]>(
+export const useClearableAtom = <Value, Args extends unknown[]>(
   atom: Atom<Value> | WritableAtom<Value, Args, void>
-) {
+) => {
   const atomValue = useAtomValue(atom);
   const setAtom = useSetAtom(atom as WritableAtom<Value, Args, void>);
 
@@ -16,4 +16,16 @@ export function useClearableAtom<Value, Args extends unknown[]>(
   }, []);
 
   return [atomValue, setAtom] as const;
-}
+};
+
+export const useClearableAtomValue = <Value, Args extends unknown[]>(
+  atom: Atom<Value> | WritableAtom<Value, Args, void>
+) => {
+  return useClearableAtom(atom)[0];
+};
+
+export const useSetClearableAtom = <Value, Args extends unknown[]>(
+  atom: Atom<Value> | WritableAtom<Value, Args, void>
+) => {
+  return useClearableAtom(atom)[1];
+};

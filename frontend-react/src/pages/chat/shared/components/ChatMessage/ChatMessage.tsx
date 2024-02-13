@@ -1,7 +1,7 @@
-import { useSetAtom } from 'jotai';
 import _ from 'lodash';
 import { useRef, useState } from 'react';
 import { useSignalRActions } from 'src/hooks/signalR/useSignalRActions';
+import { useSetClearableAtom } from 'src/hooks/useClearableAtom';
 import { Chat, ChatType } from 'src/models/chat/chat';
 import { Message } from 'src/models/chat/message';
 import { User } from 'src/models/user';
@@ -32,7 +32,7 @@ export const ChatMessage = ({
 }: ChatMessageProps) => {
   const author = useGetParticipant(chat, message.authorId);
   const { setMessageReaction } = useSignalRActions();
-  const setReplyMessage = useSetAtom(replyMessageAtom);
+  const setReplyMessage = useSetClearableAtom(replyMessageAtom);
   const [openReactions, setOpenReactions] = useState(false);
   const [moveX, setMoveX] = useState(0);
   const anchorRef = useRef<HTMLDivElement>(null);

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useReducer, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LocationText } from 'src/components/LocationText';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
-import { useClearableAtom } from 'src/hooks/useClearableAtom';
+import { useSetClearableAtom } from 'src/hooks/useClearableAtom';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
@@ -35,7 +35,7 @@ export const PrivateChat = () => {
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
   const connection = useAtomValue(connectionAtom);
-  const setChat = useClearableAtom(chatAtom)[1];
+  const setChat = useSetClearableAtom(chatAtom);
 
   const { privateChat, privateChatFetching } = useGetPrivateChat(params.userId, {
     onSuccess: (chat) => setChat(chat),

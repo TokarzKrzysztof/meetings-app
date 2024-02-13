@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AvatarList } from 'src/components/AvatarList';
-import { useClearableAtom } from 'src/hooks/useClearableAtom';
+import { useSetClearableAtom } from 'src/hooks/useClearableAtom';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { GroupChatActions } from 'src/pages/chat/GroupChat/GroupChatActions';
@@ -30,7 +30,7 @@ export const GroupChat = () => {
   const [showParticipantsDialog, setShowParticipantsDialog] = useState(false);
   const [showAloneInfoDialog, setShowAloneInfoDialog] = useState(false);
   const [showChangeNameDialog, setShowChangeNameDialog] = useState(false);
-  const [_, setChat] = useClearableAtom(chatAtom);
+  const setChat = useSetClearableAtom(chatAtom);
   const currentUser = useLoggedInUser();
   const navigate = useNavigate();
 
