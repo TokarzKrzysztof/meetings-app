@@ -87,7 +87,7 @@ export const ImageCropDialog = ({ image, onAccept, onClose }: ImageCropDialogPro
       ) : (
         <>
           <DialogContent sx={{ textAlign: 'center' }}>
-            <img style={{ borderRadius: '50%', maxWidth: 300 }} src={croppedImage.src} />
+            <img style={{ borderRadius: '50%', maxWidth: 300, width: '100%' }} src={croppedImage.src} />
             <Typography my={2}>
               Czy chcesz ustawić to zdjęcie jako swoje nowe zdjęcie profilowe?
             </Typography>
