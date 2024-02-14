@@ -123,7 +123,6 @@ namespace Meetings.Infrastructure.Services
             }
 
             var queryResult = await query
-                .Include(x => x.User).ThenInclude(x => x.Location)
                 .Select(x => new AnnouncementResultListItem()
                 {
                     AnnouncementId = x.Id,
@@ -131,17 +130,10 @@ namespace Meetings.Infrastructure.Services
                     UserId = x.UserId,
                     Description = x.Description,
                     User = _extendedMapper.ToUserDTO(x.User),
+                    UserAge = UserUtils.CalculateAge(x.User.BirthDate),
+                    DistanceFromCurrentUser = currentUser != null ? LocationUtils.GetDistanceFromLatLonInKm(x.User.Location, currentUser.Location) : null
                 })
                 .ToListAsync();
-
-            queryResult.ForEach((x) =>
-            {
-                x.UserAge = UserUtils.CalculateAge(x.User.BirthDate);
-                if (currentUser != null)
-                {
-                    x.DistanceFromCurrentUser = LocationUtils.GetDistanceFromLatLonInKm(x.User.Location, currentUser.Location);
-                }
-            });
 
             var result = queryResult
                 .Where(x => x.UserAge >= data.AgeRange[0] && x.UserAge <= data.AgeRange[1])

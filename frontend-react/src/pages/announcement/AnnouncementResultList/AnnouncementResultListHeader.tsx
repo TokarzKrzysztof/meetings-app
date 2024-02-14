@@ -25,7 +25,7 @@ export const AnnouncementResultListHeader = ({
       <Header
         secondToolbar={
           <Toolbar
-            sx={{ justifyContent: 'space-between', backgroundColor: 'white', minHeight: 65 }}
+            sx={{ justifyContent: 'space-between', backgroundColor: 'white', minHeight: 65, gap: 1 }}
           >
             <TextField
               select
