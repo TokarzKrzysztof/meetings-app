@@ -94,7 +94,7 @@ const ChatScrollableInner = (
 
   useImperativeHandle(ref, () => ({ scrollToBottom }), []);
   return (
-    <StyledScrollableContainer ref={scrollableRef} id='scrollableDiv'>
+    <StyledScrollableContainer ref={scrollableRef}>
       {top}
 
       <Stack direction='column' py={1}>

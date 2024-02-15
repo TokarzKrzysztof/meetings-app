@@ -1,47 +1,47 @@
 import { useSnackbar } from 'notistack';
+import { UserChatType } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { archivedChatsTxt } from 'src/pages/chat/MyChats/MyChatsMore';
 import { MyChatsList } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsList';
 import { MyChatsListItem } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsListItem';
 import { MyChatsTitle } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsTitle';
-import { useGetCurrentUserArchivedChats, useToggleArchiveChat } from 'src/queries/chat-queries';
+import { useToggleArchiveChat } from 'src/queries/chat-queries';
 import { MenuItem } from 'src/ui-components';
 
 export const MyChatsArchived = () => {
-  const { currentUserArchivedChats, currentUserArchivedChatsRefetch } =
-    useGetCurrentUserArchivedChats();
   const { toggleArchiveChat } = useToggleArchiveChat();
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleRestore = (chat: ChatPreview) => {
+  const handleRestore = (chat: ChatPreview, refetch: () => void) => {
     toggleArchiveChat(chat.id, {
       onSuccess: () => {
         enqueueSnackbar({
           variant: 'default',
           message: 'Rozmowa została przywrócona',
         });
-        currentUserArchivedChatsRefetch();
+        refetch();
       },
     });
   };
 
-  if (!currentUserArchivedChats) return null;
   return (
     <>
       <MyChatsTitle title={archivedChatsTxt} />
-      <MyChatsList noChatsText='Brak rozmów w archiwum'>
-        {currentUserArchivedChats.map((chat) => (
+      <MyChatsList
+        noChatsText='Brak rozmów w archiwum'
+        type={UserChatType.Archived}
+        renderItem={(chat, refetch) => (
           <MyChatsListItem
             key={chat.id}
             chat={chat}
             menuItems={
               <>
-                <MenuItem onClick={() => handleRestore(chat)}>Przywróć</MenuItem>
+                <MenuItem onClick={() => handleRestore(chat, refetch)}>Przywróć</MenuItem>
               </>
             }
           />
-        ))}
-      </MyChatsList>
+        )}
+      ></MyChatsList>
     </>
   );
 };

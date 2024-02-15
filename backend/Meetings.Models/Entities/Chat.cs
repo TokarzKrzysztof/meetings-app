@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Entities
 {
+    public enum UserChatType
+    {
+        Private,
+        Group,
+        Ignored,
+        Archived
+    }
     public enum ChatType
     {
         Private,

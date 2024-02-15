@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Meetings.Models.Resources
+namespace Meetings.Models.Resources.Pagination
 {
     public enum GenderFilter
     {
@@ -25,15 +25,13 @@ namespace Meetings.Models.Resources
         public const int MinAge = 0;
         public const int MaxAge = 100;
     }
-    public class LoadAnnouncementResultListParams
+    public class GetAnnouncementResultListData : PaginationParams
     {
         public Guid CategoryId { get; set; }
         public GenderFilter Gender { get; set; }
         public int DistanceMax { get; set; }
         public int[] AgeRange { get; set; }
         public SortOption SortBy { get; set; }
-        public int Skip { get; set; }
-        public int Take { get; set; }
     }
 }
 

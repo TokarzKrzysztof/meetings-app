@@ -11,7 +11,7 @@ namespace Meetings.Database.QueryExtensions
     {
         public static IQueryable<Announcement> GetActivelyOccupiedByUser(this IQueryable<Announcement> query, Guid userId)
         {
-            return query.Where(x => x.UserId == userId && (x.Status == AnnoucementStatus.Active || x.Status == AnnoucementStatus.Pending));
+            return query.Where(x => x.UserId == userId && (x.Status == AnnouncementStatus.Active || x.Status == AnnouncementStatus.Pending));
         }
     }
 }

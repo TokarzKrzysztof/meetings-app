@@ -12,7 +12,12 @@ export const AnnouncementResultList = () => {
   const [params, setParams] = useAnnouncementResultListQueryParams();
   const scrollable = window;
 
-  const { announcements, fetchNextPage, hasNextPage , isFetching} = useGetAnnouncementResultList(params);
+  const {
+    announcementResultList,
+    announcementResultListFetchNextPage,
+    announcementResultListHasNextPage,
+    announcementResultListFetching,
+  } = useGetAnnouncementResultList(params);
 
   const updateQueryParams = (params: AnnouncementResultListQueryParams) => {
     scrollable.scrollTo({ top: 0 });
@@ -24,7 +29,7 @@ export const AnnouncementResultList = () => {
     <>
       <AnnouncementResultListHeader params={params} onUpdateQueryParams={updateQueryParams} />
       <Container>
-        {announcements?.length !== 0 ? (
+        {announcementResultList?.length !== 0 ? (
           <Typography color={'black'} my={2}>
             Ogłoszenia z kategorii:{' '}
             <span style={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>{categoryName}</span>
@@ -43,12 +48,12 @@ export const AnnouncementResultList = () => {
         <Stack direction='column' gap={2} py={2}>
           <InfiniteScroll
             direction='down'
-            next={fetchNextPage}
-            hasMore={!!hasNextPage}
+            next={announcementResultListFetchNextPage}
+            hasMore={!!announcementResultListHasNextPage}
             scrollable={scrollable}
-            isFetching={isFetching}
+            isFetching={announcementResultListFetching}
           >
-            {(announcements ?? []).map((x) => (
+            {(announcementResultList ?? []).map((x) => (
               <AnnouncementResultListAnnouncement key={x.announcementId} data={x} />
             ))}
           </InfiniteScroll>

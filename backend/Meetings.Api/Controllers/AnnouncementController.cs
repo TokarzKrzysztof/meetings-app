@@ -2,6 +2,7 @@
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
+using Meetings.Models.Resources.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetAnnouncementResultList([FromBody] LoadAnnouncementResultListParams data)
+        public async Task<IActionResult> GetAnnouncementResultList([FromBody] GetAnnouncementResultListData data)
         {
             PaginatedData<AnnouncementResultListItem> result = await _announcementService.GetAnnouncementResultList(data);
             return Ok(result);
@@ -40,11 +41,11 @@ namespace Meetings.Api.Controllers
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> GetCurrentUserAnnouncements([FromQuery] AnnoucementStatus status, [FromQuery] int skip, [FromQuery] int take)
+        public async Task<IActionResult> GetCurrentUserAnnouncements([FromBody] GetCurrentUserAnnouncementsData data)
         {
-            PaginatedData<AnnouncementDTO> currentUserAnnouncements = await _announcementService.GetCurrentUserAnnouncements(status, skip, take);
+            PaginatedData<AnnouncementDTO> currentUserAnnouncements = await _announcementService.GetCurrentUserAnnouncements(data);
             return Ok(currentUserAnnouncements);
         }
 

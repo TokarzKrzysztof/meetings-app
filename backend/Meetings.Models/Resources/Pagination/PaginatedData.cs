@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Meetings.Models.Resources
+namespace Meetings.Models.Resources.Pagination
 {
     public class PaginatedData<T> where T : class
     {
-        public List<T> Data { get; set; }
-        public int TotalCount { get; set; }
+        public IEnumerable<T> Data { get; set; }
+        public int? TotalCount { get; set; }
     };
 }

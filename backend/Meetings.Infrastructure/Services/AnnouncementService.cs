@@ -8,6 +8,7 @@ using Meetings.Infrastructure.Utils;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
+using Meetings.Models.Resources.Pagination;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -38,7 +39,7 @@ namespace Meetings.Infrastructure.Services
             await _announcementValidator.WhenCreateNewAnnouncement(data);
 
             data.UserId = _claimsReader.GetCurrentUserId();
-            data.Status = Utilities.Utils.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
+            data.Status = Utilities.Utils.IsDebug() ? AnnouncementStatus.Active : AnnouncementStatus.Pending;
 
             var newAnnouncement = _mapper.Map<Announcement>(data);
             await _repository.Create(newAnnouncement);
@@ -51,22 +52,22 @@ namespace Meetings.Infrastructure.Services
 
             var item = await _repository.GetById(data.Id);
             item.Description = data.Description;
-            data.Status = Utilities.Utils.IsDebug() ? AnnoucementStatus.Active : AnnoucementStatus.Pending;
+            data.Status = Utilities.Utils.IsDebug() ? AnnouncementStatus.Active : AnnouncementStatus.Pending;
 
             await _repository.Update(item);
         }
 
-        public async Task<PaginatedData<AnnouncementDTO>> GetCurrentUserAnnouncements(AnnoucementStatus status, int skip, int take)
+        public async Task<PaginatedData<AnnouncementDTO>> GetCurrentUserAnnouncements(GetCurrentUserAnnouncementsData data)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
-            List<Announcement> result = await _repository.Data.Where(x => x.UserId == userId && x.Status == status)
-                .OrderByDescending(x => x.UpdatedAt)
-                .ToListAsync();
+
+            var query = _repository.Data.Where(x => x.UserId == userId && x.Status == data.Status);
+            List<Announcement> result = await query.OrderByDescending(x => x.UpdatedAt).Skip(data.Skip).Take(data.Take).ToListAsync();
 
             return new PaginatedData<AnnouncementDTO>()
             {
-                Data = _mapper.Map<List<AnnouncementDTO>>(result.Skip(skip).Take(take)),
-                TotalCount = result.Count()
+                Data = _mapper.Map<List<AnnouncementDTO>>(result),
+                TotalCount = data.IsFirstLoad ? await query.CountAsync() : null
             };
         }
 
@@ -79,7 +80,7 @@ namespace Meetings.Infrastructure.Services
                 .ToListAsync();
         }
 
-        public async Task SetAnnouncementStatus(Guid id, AnnoucementStatus newStatus)
+        public async Task SetAnnouncementStatus(Guid id, AnnouncementStatus newStatus)
         {
             await _announcementValidator.WhenSetAnnouncementStatus(id);
 
@@ -102,13 +103,13 @@ namespace Meetings.Infrastructure.Services
             return _mapper.Map<AnnouncementDTO>(item);
         }
 
-        public async Task<PaginatedData<AnnouncementResultListItem>> GetAnnouncementResultList(LoadAnnouncementResultListParams data)
+        public async Task<PaginatedData<AnnouncementResultListItem>> GetAnnouncementResultList(GetAnnouncementResultListData data)
         {
             _announcementValidator.WhenGetAnnouncementResultList(data);
 
             var currentUser = await _userService.TryGetCurrentUser(includeLocation: true);
 
-            var query = _repository.Data.Where(x => x.CategoryId == data.CategoryId && x.Status == AnnoucementStatus.Active);
+            var query = _repository.Data.Where(x => x.CategoryId == data.CategoryId && x.Status == AnnouncementStatus.Active);
             if (data.Gender == GenderFilter.Males)
             {
                 query = query.Where(x => x.User.Gender == UserGender.Male);
@@ -157,8 +158,8 @@ namespace Meetings.Infrastructure.Services
 
             return new PaginatedData<AnnouncementResultListItem>()
             {
-                Data = result.Skip(data.Skip).Take(data.Take).ToList(),
-                TotalCount = result.Count()
+                Data = result.Skip(data.Skip).Take(data.Take),
+                TotalCount = data.IsFirstLoad ? result.Count() : null
             };
         }
 
@@ -169,9 +170,9 @@ namespace Meetings.Infrastructure.Services
             var statuses = await _repository.Data.Where(x => x.UserId == userId).Select(x => x.Status).ToListAsync();
             return new AnnouncementsCount()
             {
-                Active = statuses.Count(x => x == AnnoucementStatus.Active),
-                Pending = statuses.Count(x => x == AnnoucementStatus.Pending),
-                Closed = statuses.Count(x => x == AnnoucementStatus.Closed),
+                Active = statuses.Count(x => x == AnnouncementStatus.Active),
+                Pending = statuses.Count(x => x == AnnouncementStatus.Pending),
+                Closed = statuses.Count(x => x == AnnouncementStatus.Closed),
             };
         }
     }

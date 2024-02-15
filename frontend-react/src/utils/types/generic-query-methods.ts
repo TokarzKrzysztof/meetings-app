@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
-import { UseMutationResult, UseQueryResult } from 'react-query';
+import { UseInfiniteQueryResult, UseMutationResult, UseQueryResult } from 'react-query';
+import { PaginatedData } from 'src/models/paginated-data';
 import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 export const genericUseMutationMethods = <TName extends string, TData, TVariables, TContext>(
@@ -36,4 +37,25 @@ export const genericUseQueryMethods = <TName extends string, TData>(
     Record<`${TName}FetchingError`, AxiosError<HttpErrorData> | null> &
     Record<`${TName}Refetch`, typeof query.refetch> &
     Record<`${TName}FetchedAfterMount`, boolean>;
+};
+
+export const genericUseInfiniteQueryMethods = <TName extends string, TData>(
+  name: TName,
+  query: UseInfiniteQueryResult<PaginatedData<TData>, AxiosError<HttpErrorData, any>>
+) => {
+  return {
+    [name]: query.data?.pages.flatMap((x) => x.data),
+    [name + 'Fetching']: query.isFetching,
+    [name + 'FetchingError']: query.error,
+    [name + 'Refetch']: query.refetch,
+    [name + 'FetchedAfterMount']: query.isFetchedAfterMount,
+    [name + 'FetchNextPage']: query.fetchNextPage,
+    [name + 'HasNextPage']: query.hasNextPage,
+  } as Record<TName, TData[] | undefined> &
+    Record<`${TName}Fetching`, boolean> &
+    Record<`${TName}FetchingError`, AxiosError<HttpErrorData> | null> &
+    Record<`${TName}Refetch`, typeof query.refetch> &
+    Record<`${TName}FetchedAfterMount`, boolean> &
+    Record<`${TName}FetchNextPage`, typeof query.fetchNextPage> &
+    Record<`${TName}HasNextPage`, typeof query.hasNextPage>;
 };

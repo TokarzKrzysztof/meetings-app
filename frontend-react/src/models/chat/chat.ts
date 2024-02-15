@@ -1,4 +1,11 @@
-import { User } from "src/models/user";
+import { User } from 'src/models/user';
+
+export enum UserChatType {
+  Private,
+  Group,
+  Ignored,
+  Archived,
+}
 
 export enum ChatType {
   Private,

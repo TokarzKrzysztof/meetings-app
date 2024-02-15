@@ -12,9 +12,9 @@ using Meetings.Database.Repositories;
 using Meetings.Utilities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Microsoft.EntityFrameworkCore;
-using Meetings.Models.Resources;
 using Humanizer;
 using Meetings.Database.QueryExtensions;
+using Meetings.Models.Resources.Pagination;
 
 namespace Meetings.Infrastructure.Validators
 {
@@ -103,9 +103,9 @@ namespace Meetings.Infrastructure.Validators
             await ValidateIsAuthorCurrentUser(id);
         }
 
-        internal void WhenGetAnnouncementResultList(LoadAnnouncementResultListParams data)
+        internal void WhenGetAnnouncementResultList(GetAnnouncementResultListData data)
         {
-            var validator = new InlineValidator<LoadAnnouncementResultListParams>();
+            var validator = new InlineValidator<GetAnnouncementResultListData>();
             validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
             validator.RuleFor(x => x.DistanceMax).GreaterThanOrEqualTo(0).WithErrorCode("DistanceMaxNegative");
             validator.RuleFor(x => x.AgeRange).InRange(AnnouncementFilterConstants.MinAge, AnnouncementFilterConstants.MaxAge).WithErrorCode("IncorrectAgeRange");

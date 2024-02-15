@@ -10,6 +10,6 @@ namespace Meetings.Models.Resources
     public class SetAnnouncementStatusData
     {
         public Guid Id { get; set; }
-        public AnnoucementStatus NewStatus { get; set; }
+        public AnnouncementStatus NewStatus { get; set; }
     }
 }

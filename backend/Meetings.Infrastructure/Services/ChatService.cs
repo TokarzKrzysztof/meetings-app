@@ -9,6 +9,7 @@ using Meetings.Infrastructure.Utils;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
+using Meetings.Models.Resources.Pagination;
 using Meetings.Utilities.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -96,24 +97,6 @@ namespace Meetings.Infrastructure.Services
                 TotalMessagesAmount = queryResult.TotalMessagesAmount,
                 Participants = _extendedMapper.ToUserDTOList(queryResult.Participants)
             };
-        }
-
-        public async Task<IEnumerable<ChatPreview>> GetCurrentUserActiveChatsOfType(ChatType type)
-        {
-            IEnumerable<ChatPreview> chats = await GetCurrentUserChats(type);
-            return chats.Where(x => !x.IsIgnored && !x.IsArchived);
-        }
-
-        public async Task<IEnumerable<ChatPreview>> GetCurrentUserIgnoredChats()
-        {
-            IEnumerable<ChatPreview> chats = await GetCurrentUserChats();
-            return chats.Where(x => x.IsIgnored);
-        }
-
-        public async Task<IEnumerable<ChatPreview>> GetCurrentUserArchivedChats()
-        {
-            IEnumerable<ChatPreview> chats = await GetCurrentUserChats();
-            return chats.Where(x => x.IsArchived);
         }
 
         public async Task<UnreadChatsCountData> GetUnreadChatsCount()
@@ -259,22 +242,28 @@ namespace Meetings.Infrastructure.Services
             return ids.Select(x => new ChatParticipant(x, chatId ?? Guid.Empty)).DistinctBy(x => x.UserId).ToList();
         }
 
-        private async Task<IEnumerable<ChatPreview>> GetCurrentUserChats(ChatType? type = null)
+        public async Task<PaginatedData<ChatPreview>> GetCurrentUserChats(GetCurrentUserChatsData data)
         {
             Guid userId = _claimsReader.GetCurrentUserId();
 
-            List<Chat> chats = await _repository.Data
+            List<Chat> queryResult = await _repository.Data
                 .IncludeParticipants()
                 .IncludeLastMessageWithAuthor()
                 .Where(x => x.Participants.Select(x => x.UserId).Contains(userId))
-                .If(type != null, q => q.Where(x => x.Type == type))
+                .If(data.Type == UserChatType.Private, q => q.Where(x => x.Type == ChatType.Private))
+                .If(data.Type == UserChatType.Group, q => q.Where(x => x.Type == ChatType.Group))
                 .ToListAsync();
 
-            return chats.Select(x =>
+            List<ChatPreview> result = new List<ChatPreview>();
+            foreach (Chat x in queryResult)
             {
                 ChatParticipant currentUserParticipant = x.Participants.Single(x => x.UserId == userId);
+                if (data.Type == UserChatType.Ignored && !currentUserParticipant.IsIgnored) continue;
+                if (data.Type == UserChatType.Archived && !currentUserParticipant.IsArchived) continue;
+                if ((data.Type == UserChatType.Private || data.Type == UserChatType.Group) && (currentUserParticipant.IsArchived || currentUserParticipant.IsIgnored)) continue;
+
                 Message lastMessage = x.Messages.Single();
-                return new ChatPreview()
+                result.Add(new ChatPreview()
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -283,10 +272,15 @@ namespace Meetings.Infrastructure.Services
                     LastMessage = _extendedMapper.ToMessageDTO(lastMessage),
                     LastMessageAuthor = _extendedMapper.ToUserDTO(lastMessage.Author),
                     Participants = _extendedMapper.ToUserDTOList(x.Participants.Select(x => x.User)),
-                    IsIgnored = currentUserParticipant.IsIgnored,
-                    IsArchived = currentUserParticipant.IsArchived,
-                };
-            }).OrderByDescending(x => x.LastMessage?.CreatedAt);
+                });
+            }
+            result = result.OrderByDescending(x => x.LastMessage?.CreatedAt).ToList();
+
+            return new PaginatedData<ChatPreview>()
+            {
+                Data = result.Skip(data.Skip).Take(data.Take),
+                TotalCount = result.Count
+            };
         }
     }
 }

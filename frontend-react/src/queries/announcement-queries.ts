@@ -3,17 +3,18 @@ import {
   UseInfiniteQueryOptions,
   UseMutationOptions,
   UseQueryOptions,
-  useInfiniteQuery,
   useMutation,
-  useQuery,
+  useQuery
 } from 'react-query';
 import axios from 'src/config/axios-config';
+import { usePaginatedQuery } from 'src/hooks/usePaginatedQuery';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { AnnouncementResultListItem } from 'src/models/annoucement/announcement-result-list';
 import { PaginatedData } from 'src/models/paginated-data';
 import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
 import { apiUrl } from 'src/utils/api-url';
 import {
+  genericUseInfiniteQueryMethods,
   genericUseMutationMethods,
   genericUseQueryMethods,
 } from 'src/utils/types/generic-query-methods';
@@ -28,58 +29,33 @@ export const useGetAnnouncementResultList = (
     AxiosError<HttpErrorData>
   >
 ) => {
-  const pageSize = 10;
-
-  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
+  const query = usePaginatedQuery({
+    pageSize: 10,
+    url: `${baseUrl}/GetAnnouncementResultList`,
     queryKey: ['GetAnnouncementResultList', params],
-    queryFn: ({ pageParam }) =>
-      axios.post(`${baseUrl}/GetAnnouncementResultList`, {
-        ...params,
-        skip: pageParam,
-        take: pageSize,
-      }),
-    getNextPageParam: (lastPage, pages) => {
-      const length = pages.flatMap((x) => x.data).length;
-      return length < lastPage.totalCount ? length : null;
+    body: params,
+    options: {
+      staleTime: Infinity,
+      ...options,
     },
-    staleTime: Infinity,
-    ...options,
   });
 
-  return {
-    announcements: data?.pages.flatMap((x) => x.data),
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-  };
+  return genericUseInfiniteQueryMethods('announcementResultList', query);
 };
 
 export const useGetCurrentUserAnnouncements = (
   status: AnnouncementStatus,
   options?: UseInfiniteQueryOptions<PaginatedData<Announcement>, AxiosError<HttpErrorData>>
 ) => {
-  const pageSize = 20;
-
-  const { data, fetchNextPage, hasNextPage, isFetching, refetch } = useInfiniteQuery({
+  const query = usePaginatedQuery({
+    pageSize: 5,
+    url: `${baseUrl}/GetCurrentUserAnnouncements`,
     queryKey: ['GetCurrentUserAnnouncements', status],
-    queryFn: ({ pageParam }) => {
-      const params = { skip: pageParam, take: pageSize, status };
-      return axios.get(`${baseUrl}/GetCurrentUserAnnouncements`, { params });
-    },
-    getNextPageParam: (lastPage, pages) => {
-      const length = pages.flatMap((x) => x.data).length;
-      return length < lastPage.totalCount ? length : null;
-    },
-    ...options,
+    body: { status },
+    options,
   });
 
-  return {
-    announcements: data?.pages.flatMap((x) => x.data),
-    refetch,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-  };
+  return genericUseInfiniteQueryMethods('currentUserAnnouncements', query);
 };
 
 export const useCreateNewAnnouncement = (

@@ -12,8 +12,13 @@ import { MyAnnouncementsListParams } from 'src/utils/enums/app-routes';
 export const MyAnnouncementsList = () => {
   const [params] = useRouteParams<MyAnnouncementsListParams>();
 
-  const { announcements, hasNextPage, fetchNextPage, isFetching, refetch } =
-    useGetCurrentUserAnnouncements(AnnouncementStatus[params.status]);
+  const {
+    currentUserAnnouncements,
+    currentUserAnnouncementsFetchNextPage,
+    currentUserAnnouncementsHasNextPage,
+    currentUserAnnouncementsFetching,
+    currentUserAnnouncementsRefetch,
+  } = useGetCurrentUserAnnouncements(AnnouncementStatus[params.status]);
 
   const { title, noAnnoucementsText } = useMemo(() => {
     if (params.status === 'Active') {
@@ -34,28 +39,28 @@ export const MyAnnouncementsList = () => {
     };
   }, [params]);
 
-  if (!announcements) return null;
+  if (!currentUserAnnouncements) return null;
   return (
     <>
       <Header leftSlot={<GoBackBtn text={title} />} />
       <Container sx={{ py: 2 }} maxWidth='sm'>
         <Stack direction='column' gap={2}>
           <InfiniteScroll
-            next={fetchNextPage}
-            hasMore={!!hasNextPage}
+            next={currentUserAnnouncementsFetchNextPage}
+            hasMore={!!currentUserAnnouncementsHasNextPage}
             direction={'down'}
-            isFetching={isFetching}
+            isFetching={currentUserAnnouncementsFetching}
           >
-            {announcements.map((x) => (
+            {currentUserAnnouncements.map((x) => (
               <MyAnnouncementsListItem
                 key={x.id}
                 announcement={x}
-                onRefetch={refetch}
+                onRefetch={currentUserAnnouncementsRefetch}
               ></MyAnnouncementsListItem>
             ))}
           </InfiniteScroll>
         </Stack>
-        {!isFetching && !announcements.length && (
+        {!currentUserAnnouncementsFetching && !currentUserAnnouncements.length && (
           <Typography textAlign='center' color='grey'>
             {noAnnoucementsText}
           </Typography>

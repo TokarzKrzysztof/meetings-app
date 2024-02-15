@@ -70,7 +70,7 @@ namespace Meetings.Mock
                     UpdatedAt = DateTime.UtcNow,
                     CategoryId = categoryId,
                     UserId = users.Random().Id,
-                    Status = AnnoucementStatus.Active,
+                    Status = AnnouncementStatus.Active,
                     Description = $"Opis do ogłoszenia - {categoryName}",
                 });
             }

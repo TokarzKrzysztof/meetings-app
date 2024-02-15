@@ -1,10 +1,19 @@
 import { AxiosError } from 'axios';
-import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
+import {
+  UseInfiniteQueryOptions,
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+} from 'react-query';
 import axios from 'src/config/axios-config';
-import { Chat } from 'src/models/chat/chat';
+import { usePaginatedQuery } from 'src/hooks/usePaginatedQuery';
+import { Chat, UserChatType } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
+import { PaginatedData } from 'src/models/paginated-data';
 import { apiUrl } from 'src/utils/api-url';
 import {
+  genericUseInfiniteQueryMethods,
   genericUseMutationMethods,
   genericUseQueryMethods,
 } from 'src/utils/types/generic-query-methods';
@@ -168,52 +177,21 @@ export const useGetPrivateChat = (
   return genericUseQueryMethods('privateChat', query);
 };
 
-export const useGetCurrentUserPrivateChats = (
-  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
+export const useGetCurrentUserChats = (
+  type: UserChatType,
+  options?: UseInfiniteQueryOptions<PaginatedData<ChatPreview>, AxiosError<HttpErrorData>>
 ) => {
-  const query = useQuery({
-    queryKey: 'GetCurrentUserPrivateChats',
-    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserPrivateChats`),
-    ...options,
+  const query = usePaginatedQuery({
+    pageSize: 10,
+    url: `${baseUrl}/GetCurrentUserChats`,
+    queryKey: ['GetCurrentUserChats', type],
+    body: {
+      type,
+    },
+    options,
   });
 
-  return genericUseQueryMethods('currentUserPrivateChats', query);
-};
-
-export const useGetCurrentUserGroupChats = (
-  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
-) => {
-  const query = useQuery({
-    queryKey: 'GetCurrentUserGroupChats',
-    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserGroupChats`),
-    ...options,
-  });
-
-  return genericUseQueryMethods('currentUserGroupChats', query);
-};
-
-export const useGetCurrentUserIgnoredChats = (
-  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
-) => {
-  const query = useQuery({
-    queryKey: 'GetCurrentUserIgnoredChats',
-    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserIgnoredChats`),
-    ...options,
-  });
-
-  return genericUseQueryMethods('currentUserIgnoredChats', query);
-};
-
-export const useGetCurrentUserArchivedChats = (
-  options?: UseQueryOptions<ChatPreview[], AxiosError<HttpErrorData>>
-) => {
-  const query = useQuery({
-    queryKey: 'GetCurrentUserArchivedChats',
-    queryFn: () => axios.get(`${baseUrl}/GetCurrentUserArchivedChats`),
-    ...options,
-  });
-
-  return genericUseQueryMethods('currentUserArchivedChats', query);
+  return genericUseInfiniteQueryMethods('currentUserChats', query);
 };
 
 export const useGetUnreadChatsCount = (

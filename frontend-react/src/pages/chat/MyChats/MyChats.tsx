@@ -59,9 +59,7 @@ export const MyChats = () => {
           </Box>
         </Stack>
       )}
-      <Box overflow='auto'>
-        <Outlet />
-      </Box>
+      <Outlet />
     </Stack>
   );
 };

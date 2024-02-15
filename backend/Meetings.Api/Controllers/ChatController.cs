@@ -2,6 +2,7 @@
 using Meetings.Infrastructure.Services;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
+using Meetings.Models.Resources.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -34,35 +35,11 @@ namespace Meetings.Api.Controllers
             return Ok(chat);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> GetCurrentUserPrivateChats()
+        public async Task<IActionResult> GetCurrentUserChats([FromBody] GetCurrentUserChatsData data)
         {
-            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserActiveChatsOfType(ChatType.Private);
-            return Ok(chats);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetCurrentUserGroupChats()
-        {
-            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserActiveChatsOfType(ChatType.Group);
-            return Ok(chats);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetCurrentUserIgnoredChats()
-        {
-            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserIgnoredChats();
-            return Ok(chats);
-        }
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetCurrentUserArchivedChats()
-        {
-            IEnumerable<ChatPreview> chats = await _chatService.GetCurrentUserArchivedChats();
+            PaginatedData<ChatPreview> chats = await _chatService.GetCurrentUserChats(data);
             return Ok(chats);
         }
 
