@@ -23,10 +23,12 @@ export const AnnouncementResultListAnnouncementLoginDialog = ({
     <Dialog open onClose={onClose} sx={{ textAlign: 'center' }}>
       <DialogTitle>Informacja</DialogTitle>
       <DialogContent>
-        <DialogContentText>Musisz być zalogowany/a żeby móc wysyłać wiadomości</DialogContentText>
+        <DialogContentText>
+          Musisz być zalogowany/a żeby wysyłać wiadomości do innych użytkowników
+        </DialogContentText>
         <Box pt={3} pb={1}>
           <Button
-            variant='text'
+            size='small'
             component={Link}
             to={AppRoutes.Login({ redirectUrl: loginRedirectUrl })}
           >
@@ -34,7 +36,7 @@ export const AnnouncementResultListAnnouncementLoginDialog = ({
           </Button>
           <DialogContentText my={1}>Lub</DialogContentText>
           <Button
-            variant='text'
+            size='small'
             component={Link}
             to={AppRoutes.Register({ redirectUrl: loginRedirectUrl })}
           >
