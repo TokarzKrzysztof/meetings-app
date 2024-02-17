@@ -12,6 +12,7 @@ namespace Meetings.Models.Resources
         public Guid UserId { get; set; }
         public Guid AnnouncementId { get; set; }
         public DateTime AnnouncementCreatedAt { get; set; }
+        public AnnouncementExperienceLevel? AnnouncementExperienceLevel { get; set; }
         public string Description { get; set; }
         public UserDTO User { get; set; }
         public int UserAge { get; set; }

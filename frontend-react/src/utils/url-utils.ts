@@ -3,8 +3,8 @@ export const parseIntoURLParams = (params: Record<string, unknown>) => {
   Object.entries(params).forEach(([key, value]) => {
     if (value instanceof Array) {
       result[key] = value.join(',');
-    } else if (value === undefined || value === null) {
-      result[key] = '';
+    } else if (value === undefined || value === null || value === '') {
+      return;
     } else {
       result[key] = value + '';
     }

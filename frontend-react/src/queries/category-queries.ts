@@ -9,7 +9,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/Category`;
 
 export const useGetAllCategories = (
-  options?: UseQueryOptions<Category[], AxiosError<HttpErrorData>>,
+  options?: UseQueryOptions<Category[], AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
     queryKey: 'GetAllCategories',
@@ -19,4 +19,21 @@ export const useGetAllCategories = (
   });
 
   return genericUseQueryMethods('allCategories', query);
+};
+
+export const useGetCategory = (
+  id: Category['id'],
+  options?: UseQueryOptions<Category, AxiosError<HttpErrorData>>
+) => {
+  const query = useQuery({
+    queryKey: ['GetCategory', id],
+    queryFn: () => {
+      const params = { id };
+      return axios.get(`${baseUrl}/GetCategory`, { params });
+    },
+    staleTime: Infinity,
+    ...options,
+  });
+
+  return genericUseQueryMethods('category', query);
 };

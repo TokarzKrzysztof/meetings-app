@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Meetings.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,12 +8,6 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Models.Resources.Pagination
 {
-    public enum GenderFilter
-    {
-        All,
-        Males,
-        Females
-    }
     public enum SortOption
     {
         Newest,
@@ -28,10 +23,11 @@ namespace Meetings.Models.Resources.Pagination
     public class GetAnnouncementResultListData : PaginationParams
     {
         public Guid CategoryId { get; set; }
-        public GenderFilter Gender { get; set; }
         public int DistanceMax { get; set; }
         public int[] AgeRange { get; set; }
         public SortOption SortBy { get; set; }
+        public UserGender? Gender { get; set; }
+        public AnnouncementExperienceLevel? ExperienceLevel { get; set; }
     }
 }
 

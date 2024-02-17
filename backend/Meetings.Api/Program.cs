@@ -76,7 +76,8 @@ using (IServiceScope scope = app.Services.CreateScope())
     {
         //await scope.ServiceProvider.GetRequiredService<DebugActions>().RemoveUserWithEmail("krzysiek210796@gmail.com");
         //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomUsers(9000);
-        //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomAnnouncements(30000, "Bilard");
+        //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomAnnouncements(6000, "Bilard");
+        //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomAnnouncements(6000, "Bilard");
 
         Console.WriteLine(123);
     }

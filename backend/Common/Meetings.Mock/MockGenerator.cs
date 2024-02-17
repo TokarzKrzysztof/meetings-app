@@ -59,19 +59,22 @@ namespace Meetings.Mock
         public async Task GenerateRandomAnnouncements(int count, string categoryName)
         {
             var users = await _userRepository.Data.ToListAsync();
-            var categoryId = (await _categoryRepository.Data.FirstAsync(x => x.Name == categoryName)).Id;
+            var category = await _categoryRepository.Data.SingleAsync(x => x.Name == categoryName);
 
             for (int i = 0; i < count; i++)
             {
+                AnnouncementExperienceLevel level = EnumUtils.GetRandomValue<AnnouncementExperienceLevel>();
+
                 _db.Announcements.Add(new Announcement()
                 {
                     Id = Guid.NewGuid(),
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
-                    CategoryId = categoryId,
+                    CategoryId = category.Id,
                     UserId = users.Random().Id,
                     Status = AnnouncementStatus.Active,
                     Description = $"Opis do ogłoszenia - {categoryName}",
+                    ExperienceLevel = category.HasExperienceLevel ? level: null
                 });
             }
             await _db.SaveChangesAsync();

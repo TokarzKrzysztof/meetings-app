@@ -13,10 +13,12 @@ namespace Meetings.Models.Entities
         public DateTime UpdatedAt { get; set; }
         public bool IsDelete { get; set; }
         public string Name { get; set; }
+        public bool HasExperienceLevel { get; set; }
     }
     public class CategoryDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public bool HasExperienceLevel { get; set; }
     }
 }

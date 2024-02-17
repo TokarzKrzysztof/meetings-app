@@ -75,7 +75,7 @@ export const AnnouncementResultListHeaderFilters = ({
   return (
     <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
       <Box component='form' onSubmit={handleSubmit(onSubmit)}>
-        <AppBar sx={{ position: 'relative' }}>
+        <AppBar sx={{ position: 'sticky' }}>
           <Toolbar sx={{ justifyContent: 'space-between' }}>
             <Stack alignItems={'center'}>
               <IconButton color='inherit' onClick={handleClose}>

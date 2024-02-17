@@ -29,8 +29,10 @@ namespace Meetings.Database
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
             builder.Entity<Category>().HasData(DbSeed.AllCategories);
             builder.Entity<UserLocation>().HasData(DbSeed.AllPolishLocations);
+
             builder.Entity<MessageReaction>().HasOne(x => x.Author).WithMany().OnDelete(DeleteBehavior.ClientCascade);
             builder.Entity<User>().HasMany(x => x.BlockedUsers).WithOne(x => x.User).OnDelete(DeleteBehavior.ClientCascade);
         }

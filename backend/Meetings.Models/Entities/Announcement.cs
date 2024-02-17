@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Entities
 {
+    public enum AnnouncementExperienceLevel
+    {
+        Begginer,
+        Indermediate,
+        Advanced,
+        Professional,
+    }
     public enum AnnouncementStatus
     {
         Active,
@@ -24,16 +31,18 @@ namespace Meetings.Models.Entities
         public virtual User User { get; set; }
         public string Description { get; set; }
         public AnnouncementStatus Status { get; set; }
+        public AnnouncementExperienceLevel? ExperienceLevel { get; set; }
+
     }
 
     public class AnnouncementDTO
     {
         public Guid Id { get; set; }
+        public DateTime CreatedAt { get; set; }
         public Guid CategoryId { get; set; }
         public Guid UserId { get; set; }
         public string Description { get; set; }
         public AnnouncementStatus Status { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public AnnouncementExperienceLevel? ExperienceLevel { get; set; }
     }
 }

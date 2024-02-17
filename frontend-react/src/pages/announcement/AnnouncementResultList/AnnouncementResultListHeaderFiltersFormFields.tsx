@@ -1,28 +1,16 @@
 import { UseFormReturn } from 'react-hook-form';
 import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
+import { useAnnouncementResultListQueryParams } from 'src/pages/announcement/AnnouncementResultList/hooks/useAnnouncementResultQueryParams';
+import { useGetCategory } from 'src/queries/category-queries';
 import { useGetCurrentUser } from 'src/queries/user-queries';
 import { Container, InputAdornment } from 'src/ui-components';
 import {
   AnnouncementResultListQueryParams,
-  GenderFilter,
   announcementFilterConstants,
+  filterExperienceLevelOptions,
+  filterGenderOptions,
 } from 'src/utils/announcement-filters-utils';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
-
-const filterGenderOptions = [
-  {
-    value: GenderFilter.All,
-    label: 'Wszyscy',
-  },
-  {
-    value: GenderFilter.Males,
-    label: 'Mężczyźni',
-  },
-  {
-    value: GenderFilter.Females,
-    label: 'Kobiety',
-  },
-] as const;
 
 export type AnnouncementResultListHeaderFiltersFormFieldsProps = {
   form: UseFormReturn<AnnouncementResultListQueryParams, any, undefined>;
@@ -31,9 +19,12 @@ export type AnnouncementResultListHeaderFiltersFormFieldsProps = {
 export const AnnouncementResultListHeaderFiltersFormFields = ({
   form,
 }: AnnouncementResultListHeaderFiltersFormFieldsProps) => {
+  const [params] = useAnnouncementResultListQueryParams();
+  const { category } = useGetCategory(params.categoryId);
   const { currentUser } = useGetCurrentUser();
   const { control } = form;
 
+  if (!category) return null;
   return (
     <Container sx={{ mt: 3 }}>
       <ControlledFormField
@@ -70,11 +61,23 @@ export const AnnouncementResultListHeaderFiltersFormFields = ({
         element='radio-group'
         name='gender'
         label='Płeć'
-        rules={{ required: ValidationMessages.required }}
         ElementProps={{
           options: filterGenderOptions,
+          isVertical: true
         }}
       ></ControlledFormField>
+      {category.hasExperienceLevel && (
+        <ControlledFormField
+          control={control}
+          element='radio-group'
+          name='experienceLevel'
+          label='Poziom zaawansowania'
+          ElementProps={{
+            options: filterExperienceLevelOptions,
+            isVertical: true
+          }}
+        ></ControlledFormField>
+      )}
     </Container>
   );
 };

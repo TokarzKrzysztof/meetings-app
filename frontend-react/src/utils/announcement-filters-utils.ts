@@ -1,10 +1,8 @@
+import { AnnouncementExperienceLevel } from 'src/models/annoucement/announcement';
+import { UserGender } from 'src/models/user';
+import { experienceLevelOptions } from 'src/utils/announcement-utils';
 import { isEqual } from 'src/utils/utils';
 
-export enum GenderFilter {
-  All,
-  Males,
-  Females,
-}
 export enum SortOption {
   Newest,
   Oldest,
@@ -19,19 +17,21 @@ export const announcementFilterConstants = {
 
 export type AnnouncementResultListQueryParams = {
   categoryId: string;
-  gender: GenderFilter;
   distanceMax: number;
   ageRange: [number, number];
   sortBy: SortOption;
+  gender: UserGender | null;
+  experienceLevel: AnnouncementExperienceLevel | null;
 };
 export const getDefaultAnnouncementResultListQueryParams = (
   categoryId: string
 ): AnnouncementResultListQueryParams => ({
   categoryId,
-  gender: GenderFilter.All,
   distanceMax: 500,
   ageRange: [announcementFilterConstants.minAge, announcementFilterConstants.maxAge],
   sortBy: SortOption.Newest,
+  gender: null,
+  experienceLevel: null
 });
 
 export const areAnnouncementResultListFiltersDefault = (
@@ -40,3 +40,26 @@ export const areAnnouncementResultListFiltersDefault = (
   const defaults = getDefaultAnnouncementResultListQueryParams(params.categoryId);
   return isEqual(params, defaults, ['categoryId', 'sortBy']);
 };
+
+export const filterGenderOptions = [
+  {
+    value: null,
+    label: 'Wszyscy',
+  },
+  {
+    value: UserGender.Male,
+    label: 'Mężczyźni',
+  },
+  {
+    value: UserGender.Female,
+    label: 'Kobiety',
+  },
+] as const;
+
+export const filterExperienceLevelOptions = [
+  {
+    value: null,
+    label: 'Wszystkie',
+  },
+  ...experienceLevelOptions
+] as const;

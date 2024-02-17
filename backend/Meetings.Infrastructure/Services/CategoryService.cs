@@ -28,5 +28,11 @@ namespace Meetings.Infrastructure.Services
             var categories = await _repository.Data.ToListAsync();
             return _mapper.Map<List<CategoryDTO>>(categories);
         }
+
+        public async Task<CategoryDTO> GetCategory(Guid id)
+        {
+            var category = await _repository.GetById(id);
+            return _mapper.Map<CategoryDTO>(category);
+        }
     }
 }

@@ -22,5 +22,12 @@ namespace Meetings.EmailTemplates.Controllers
             List<CategoryDTO> categories = await _categoryService.GetAllCategories();
             return Ok(categories);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCategory([FromQuery] Guid id)
+        {
+            CategoryDTO category = await _categoryService.GetCategory(id);
+            return Ok(category);
+        }
     }
 }

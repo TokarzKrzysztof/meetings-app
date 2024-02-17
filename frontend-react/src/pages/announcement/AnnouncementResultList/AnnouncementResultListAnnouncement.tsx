@@ -1,6 +1,7 @@
 import { Divider } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ExperienceLevel } from 'src/components/ExperienceLevel';
 import { LocationText } from 'src/components/LocationText';
 import { AnnouncementResultListItem } from 'src/models/annoucement/announcement-result-list';
 import { AnnouncementResultListAnnouncementLoginDialog } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListAnnouncementLoginDialog';
@@ -45,9 +46,12 @@ export const AnnouncementResultListAnnouncement = ({
           </Box>
         </Stack>
         <Divider />
-        <Typography fontSize={13} p={1} whiteSpace='pre-wrap'>
-          {data.description}
-        </Typography>
+        <Box p={1}>
+          <ExperienceLevel level={data.announcementExperienceLevel} />
+          <Typography fontSize={13} whiteSpace='pre-wrap'>
+            {data.description}
+          </Typography>
+        </Box>
         <Divider />
         <Box textAlign='right'>
           {currentUser ? (

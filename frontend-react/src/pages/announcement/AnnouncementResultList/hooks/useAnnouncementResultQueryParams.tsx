@@ -9,10 +9,11 @@ export const useAnnouncementResultListQueryParams = () => {
     setSearchParams(parseIntoURLParams(params));
   };
 
-  const stringParam = (name: keyof AnnouncementResultListQueryParams): string => {
+  const stringParam = (name: keyof AnnouncementResultListQueryParams) => {
     return searchParams.get(name)!;
   };
-  const numberParam = (name: keyof AnnouncementResultListQueryParams): number => {
+  const numberParam = (name: keyof AnnouncementResultListQueryParams) => {
+    if (!searchParams.has(name)) return null
     return +searchParams.get(name)!;
   };
   const rangeParam = (name: keyof AnnouncementResultListQueryParams): [number, number] => {
@@ -31,10 +32,11 @@ export const useAnnouncementResultListQueryParams = () => {
 
   const params: AnnouncementResultListQueryParams = {
     categoryId: stringParam('categoryId'),
-    gender: numberParam('gender'),
-    distanceMax: numberParam('distanceMax'),
+    distanceMax: numberParam('distanceMax')!,
     ageRange: rangeParam('ageRange'),
-    sortBy: numberParam('sortBy'),
+    sortBy: numberParam('sortBy')!,
+    gender: numberParam('gender'),
+    experienceLevel: numberParam('experienceLevel'),
   };
 
   return [params, setParams] as const;

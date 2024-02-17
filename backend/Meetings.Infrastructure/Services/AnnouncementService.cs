@@ -53,6 +53,7 @@ namespace Meetings.Infrastructure.Services
             var item = await _repository.GetById(data.Id);
             item.Description = data.Description;
             data.Status = Utilities.Utils.IsDebug() ? AnnouncementStatus.Active : AnnouncementStatus.Pending;
+            item.ExperienceLevel = data.ExperienceLevel;
 
             await _repository.Update(item);
         }
@@ -110,14 +111,21 @@ namespace Meetings.Infrastructure.Services
             var currentUser = await _userService.TryGetCurrentUser(includeLocation: true);
 
             var query = _repository.Data.Where(x => x.CategoryId == data.CategoryId && x.Status == AnnouncementStatus.Active);
-            if (data.Gender == GenderFilter.Males)
+
+            if (data.Gender == UserGender.Male)
             {
                 query = query.Where(x => x.User.Gender == UserGender.Male);
             }
-            else if (data.Gender == GenderFilter.Females)
+            else if (data.Gender == UserGender.Female)
             {
                 query = query.Where(x => x.User.Gender == UserGender.Female);
             }
+
+            if (data.ExperienceLevel != null)
+            {
+                query = query.Where(x => x.ExperienceLevel == data.ExperienceLevel);
+            }
+
             if (currentUser != null)
             {
                 query = query.Where(x => x.UserId != currentUser.Id);
@@ -128,6 +136,7 @@ namespace Meetings.Infrastructure.Services
                 {
                     AnnouncementId = x.Id,
                     AnnouncementCreatedAt = x.CreatedAt,
+                    AnnouncementExperienceLevel = x.ExperienceLevel,
                     UserId = x.UserId,
                     Description = x.Description,
                     User = _extendedMapper.ToUserDTO(x.User),

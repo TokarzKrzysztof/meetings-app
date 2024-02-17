@@ -4,12 +4,10 @@ import { useSetAtom } from 'jotai';
 import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { ExperienceLevel } from 'src/components/ExperienceLevel';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
-import {
-  useRemoveAnnouncement,
-  useSetAnnouncementStatus
-} from 'src/queries/announcement-queries';
+import { useRemoveAnnouncement, useSetAnnouncementStatus } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Box, Button, Card, DialogContentText, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -19,7 +17,10 @@ export type MyAnnouncementsListItemProps = {
   onRefetch: () => void;
 };
 
-export const MyAnnouncementsListItem = ({ announcement, onRefetch }: MyAnnouncementsListItemProps) => {
+export const MyAnnouncementsListItem = ({
+  announcement,
+  onRefetch,
+}: MyAnnouncementsListItemProps) => {
   const { allCategories } = useGetAllCategories();
   const { setAnnouncementStatus } = useSetAnnouncementStatus();
   const { removeAnnouncement } = useRemoveAnnouncement();
@@ -107,9 +108,13 @@ export const MyAnnouncementsListItem = ({ announcement, onRefetch }: MyAnnouncem
   return (
     <Card>
       <Stack justifyContent='space-between' alignItems='center' p={1}>
-        <Typography fontWeight='bold'>{categoryName}</Typography>
+        <Box>
+          <Typography fontWeight='bold'>{categoryName}</Typography>
+          <ExperienceLevel level={announcement.experienceLevel} />
+        </Box>
         {announcementStatus}
       </Stack>
+
       <Typography
         p={1}
         whiteSpace='nowrap'

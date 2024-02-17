@@ -1,3 +1,9 @@
+export enum AnnouncementExperienceLevel {
+  Begginer,
+  Indermediate,
+  Advanced,
+  Professional,
+}
 export enum AnnouncementStatus {
   Active,
   Pending,
@@ -11,5 +17,5 @@ export type Announcement = {
   description: string;
   status: AnnouncementStatus;
   createdAt: string;
-  updatedAt: string;
+  experienceLevel: AnnouncementExperienceLevel | null;
 };

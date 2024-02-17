@@ -5,6 +5,7 @@ import { Announcement } from 'src/models/annoucement/announcement';
 import { useGetCurrentUserOccupiedCategoryIds } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Button, Container, Stack, Typography } from 'src/ui-components';
+import { experienceLevelOptions } from 'src/utils/announcement-utils';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
 
@@ -32,11 +33,13 @@ export const AnnouncementForm = ({
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { isDirty },
   } = form;
   const { allCategories } = useGetAllCategories();
   const { currentUserOccupiedCategoryIds, currentUserOccupiedCategoryIdsFetching } =
     useGetCurrentUserOccupiedCategoryIds();
+  const categoryId = watch('categoryId');
 
   useEffect(() => {
     if (allCategories && data) {
@@ -44,6 +47,7 @@ export const AnnouncementForm = ({
     }
   }, [allCategories, data]);
 
+  const selectedCategory = allCategories?.find((x) => x.id === categoryId);
   if (currentUserOccupiedCategoryIdsFetching) return null;
   return (
     <Container maxWidth='sm' component='form' onSubmit={handleSubmit(onSubmit)}>
@@ -68,7 +72,20 @@ export const AnnouncementForm = ({
           disabled: !isCategoryEditable,
         }}
       />
-
+      {selectedCategory?.hasExperienceLevel && (
+        <ControlledFormField
+          control={control}
+          element='radio-group'
+          name='experienceLevel'
+          label='Poziom zaawansowania'
+          rules={{ required: ValidationMessages.required }}
+          ElementProps={{
+            options: experienceLevelOptions,
+            hasTopSpacing: true,
+            isVertical: true
+          }}
+        />
+      )}
       <ControlledFormField
         control={control}
         element='textarea'
@@ -79,6 +96,7 @@ export const AnnouncementForm = ({
           maxLength: Validators.maxStringLength,
         }}
       />
+
       <Stack mt={4} justifyContent='flex-end'>
         <Button type='submit' disabled={(disabledWhenUntouched && !isDirty) || inProgress}>
           {buttonText}

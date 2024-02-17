@@ -47,11 +47,13 @@ namespace Meetings.Infrastructure.Validators
     {
         private readonly IClaimsReader _claimsReader;
         private readonly IRepository<Announcement> _repository;
+        private readonly IRepository<Category> _categoryRepository;
 
-        public AnnouncementValidator(IClaimsReader claimsReader, IRepository<Announcement> repository)
+        public AnnouncementValidator(IClaimsReader claimsReader, IRepository<Announcement> repository, IRepository<Category> categoryRepository)
         {
             _claimsReader = claimsReader;
             _repository = repository;
+            _categoryRepository = categoryRepository;
         }
 
         private async Task ValidateIsAuthorCurrentUser(Guid announcementId)
@@ -72,9 +74,23 @@ namespace Meetings.Infrastructure.Validators
             }
         }
 
+        private async Task ValidateExperienceLevel(Guid categoryId, AnnouncementExperienceLevel? level)
+        {
+            bool categoryHasExperienceLevel = await _categoryRepository.Data.AnyAsync(x => x.Id == categoryId && x.HasExperienceLevel);
+            if (categoryHasExperienceLevel && level == null)
+            {
+                ValidatorUtils.ThrowError("CategoryNeedExperienceLevel");
+            }
+            if (!categoryHasExperienceLevel && level != null)
+            {
+                ValidatorUtils.ThrowError("CategoryHasNoExperienceLevel");
+            }
+        }
+
         internal async Task WhenEditAnnouncement(AnnouncementDTO data)
         {
             await ValidateIsAuthorCurrentUser(data.Id);
+            await ValidateExperienceLevel(data.CategoryId, data.ExperienceLevel);
 
             var validator = new InlineValidator<AnnouncementDTO>();
             validator.AddCorrectDataRules();
@@ -85,6 +101,7 @@ namespace Meetings.Infrastructure.Validators
         internal async Task WhenCreateNewAnnouncement(AnnouncementDTO data)
         {
             await ValidateCanCreateAnnouncementInCategory(data.CategoryId);
+            await ValidateExperienceLevel(data.CategoryId, data.ExperienceLevel);
 
             var validator = new InlineValidator<AnnouncementDTO>();
             validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
