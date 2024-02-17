@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { FieldPath, FieldValues } from 'react-hook-form';
 import {
   FormControl,
@@ -34,7 +33,14 @@ export const RadioGroupField = <
   hasBottomSpacing,
   isVertical = false,
 }: RadioGroupFieldProps<TFieldValues, TName> & ControlledFieldProps<TFieldValues, TName>) => {
-  const isValueNumber = useMemo(() => options.every((x) => typeof x.value === 'number'), [options]);
+  const onChange = (value: string) => {
+    const isValueNumber = options.every((x) => typeof x.value === 'number');
+    if (isValueNumber) {
+      field.onChange(+value);
+    } else {
+      field.onChange(value === '' ? null : value);
+    }
+  };
 
   return (
     <FormControl
@@ -45,9 +51,7 @@ export const RadioGroupField = <
       <FormLabel>{label}</FormLabel>
       <RadioGroup
         row={!isVertical}
-        onChange={(a, value) =>
-          field.onChange(isValueNumber ? +value : value === '' ? null : value)
-        }
+        onChange={(a, value) => onChange(value)}
         value={field.value ?? ''}
       >
         {options.map(({ label, value }) => (
