@@ -1,5 +1,4 @@
 import { AxiosError } from 'axios';
-import { useEffect, useRef } from 'react';
 import { QueryKey, UseInfiniteQueryOptions, useInfiniteQuery } from 'react-query';
 import axios from 'src/config/axios-config';
 import { PaginatedData } from 'src/models/paginated-data';
@@ -21,30 +20,24 @@ export const usePaginatedQuery = <TData>({
   queryParams,
   options,
 }: UsePaginatedQueryParams<TData>) => {
-  const isFirstLoadRef = useRef(true);
-
-  useEffect(() => {
-    isFirstLoadRef.current = true;
-  }, [JSON.stringify(queryKey)]);
-
   const query = useInfiniteQuery({
     queryKey,
     queryFn: ({ pageParam }) => {
-      const isFirstLoad = isFirstLoadRef.current;
-      if (isFirstLoad) {
-        isFirstLoadRef.current = false;
-      }
       return axios.post<PaginatedData<TData>>(
         url,
-        { skip: pageParam, take: pageSize, isFirstLoad, ...body },
+        { skip: pageParam, take: pageSize, ...body },
         {
           params: queryParams,
         }
       );
     },
+    
     getNextPageParam: (lastPage, pages) => {
       const length = pages.flatMap((x) => x.data).length;
-      return length < pages[0].totalCount! ? length : null;
+      const nextSkip = (pages.indexOf(lastPage) + 1) * pageSize;
+
+      // must return undefined instead of null because it will mean that there is no next page anymore
+      return length < pages[0].totalCount! ? nextSkip : undefined;
     },
     ...options,
   });

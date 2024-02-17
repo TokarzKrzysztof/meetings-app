@@ -68,7 +68,7 @@ namespace Meetings.Infrastructure.Services
             return new PaginatedData<AnnouncementDTO>()
             {
                 Data = _mapper.Map<List<AnnouncementDTO>>(result),
-                TotalCount = data.IsFirstLoad ? await query.CountAsync() : null
+                TotalCount = data.Skip == 0 ? await query.CountAsync() : null
             };
         }
 
@@ -168,7 +168,7 @@ namespace Meetings.Infrastructure.Services
             return new PaginatedData<AnnouncementResultListItem>()
             {
                 Data = result.Skip(data.Skip).Take(data.Take),
-                TotalCount = data.IsFirstLoad ? result.Count() : null
+                TotalCount = data.Skip == 0 ? result.Count() : null
             };
         }
 

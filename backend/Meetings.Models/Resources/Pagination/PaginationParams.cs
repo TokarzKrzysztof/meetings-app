@@ -10,6 +10,5 @@ namespace Meetings.Models.Resources.Pagination
     {
         public int Skip { get; set; }
         public int Take { get; set; }
-        public bool IsFirstLoad { get; set; }
     }
 }

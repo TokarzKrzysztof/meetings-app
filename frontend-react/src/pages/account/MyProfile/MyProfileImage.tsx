@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { ImagePreview } from 'src/components/ImagePreview';
 import { ImageCropDialog } from 'src/components/image-crop-dialog/ImageCropDialog';
 import { useFilePicker } from 'src/hooks/useFilePicker';
 import { User } from 'src/models/user';
@@ -18,6 +19,7 @@ export type MyProfileImageProps = {
 
 export const MyProfileImage = ({ currentUser }: MyProfileImageProps) => {
   const menuAnchorRef = useRef<HTMLButtonElement>(null);
+  const [showImagePreview, setShowImagePreview] = useState(false);
   const { file, showPicker, clearFile } = useFilePicker();
   const { uploadProfileImage } = useUploadProfileImage();
   const { currentUserRefetch } = useGetCurrentUser();
@@ -49,10 +51,18 @@ export const MyProfileImage = ({ currentUser }: MyProfileImageProps) => {
         <MenuItem onClick={() => showPicker('image/*')}>
           {currentUser.profileImageSrc ? 'Zmień' : 'Dodaj'} zdjęcie profilowe
         </MenuItem>
-        <MenuItem>Wyświetl zdjęcie profilowe</MenuItem>
+        {currentUser.profileImageSrc && (
+          <MenuItem onClick={() => setShowImagePreview(true)}>Wyświetl zdjęcie profilowe</MenuItem>
+        )}
       </Menu>
       {file && (
         <ImageCropDialog image={file} onAccept={handleUploadProfileImage} onClose={clearFile} />
+      )}
+      {showImagePreview && (
+        <ImagePreview
+          src={currentUser.profileImageSrc!}
+          onClose={() => setShowImagePreview(false)}
+        />
       )}
     </>
   );
