@@ -29,6 +29,7 @@ TODO
 - dodac attribution do lokalizacji https://simplemaps.com/data/world-cities
 - dodać wyszukiwania do my announcements
 - dodać możliwość ustawiania presetów do wyszukiwania ogłoszeń
+- dodać możliwość obserwowania wyszukiwania i wysyłać maile kiedy ktoś doda post
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)
