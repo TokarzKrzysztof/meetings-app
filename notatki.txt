@@ -27,6 +27,8 @@ TODO
 - mieć na uwadze to że niektóre entity tworzone przez foreign key mogą nie mieć created/updated date, można dodać extension method dla entity/entities
 - naprawić błąd z message reaction participant który odszedł/został usunięty
 - dodac attribution do lokalizacji https://simplemaps.com/data/world-cities
+- dodać wyszukiwania do my announcements
+- dodać możliwość ustawiania presetów do wyszukiwania ogłoszeń
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)
