@@ -1,6 +1,6 @@
 import { InfiniteScroll } from 'src/components/InfiniteScroll';
-import { AnnouncementResultListAnnouncement } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListAnnouncement';
 import { AnnouncementResultListHeader } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListHeader';
+import { AnnouncementResultListItem } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListItem';
 import { useAnnouncementResultListQueryParams } from 'src/pages/announcement/AnnouncementResultList/hooks/useAnnouncementResultQueryParams';
 import { useGetAnnouncementResultList } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
@@ -54,7 +54,7 @@ export const AnnouncementResultList = () => {
             isFetching={announcementResultListFetching}
           >
             {(announcementResultList ?? []).map((x) => (
-              <AnnouncementResultListAnnouncement key={x.announcementId} data={x} />
+              <AnnouncementResultListItem key={x.announcementId} data={x} />
             ))}
           </InfiniteScroll>
         </Stack>

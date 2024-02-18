@@ -3,20 +3,20 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ExperienceLevel } from 'src/components/ExperienceLevel';
 import { LocationText } from 'src/components/LocationText';
-import { AnnouncementResultListItem } from 'src/models/annoucement/announcement-result-list';
+import { AnnouncementResultListItem as AnnouncementResultListItemModel } from 'src/models/annoucement/announcement-result-list-item';
 import { AnnouncementResultListAnnouncementLoginDialog } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListAnnouncementLoginDialog';
 import { useGetCurrentUser } from 'src/queries/user-queries';
 import { Avatar, Box, Button, Card, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 import { calculateAge } from 'src/utils/user-utils';
 
-export type AnnouncementResultListAnnouncementProps = {
-  data: AnnouncementResultListItem;
+export type AnnouncementResultListItemProps = {
+  data: AnnouncementResultListItemModel;
 };
 
-export const AnnouncementResultListAnnouncement = ({
+export const AnnouncementResultListItem = ({
   data,
-}: AnnouncementResultListAnnouncementProps) => {
+}: AnnouncementResultListItemProps) => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { currentUser } = useGetCurrentUser();
 

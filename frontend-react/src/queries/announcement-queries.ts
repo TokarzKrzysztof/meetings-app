@@ -9,7 +9,7 @@ import {
 import axios from 'src/config/axios-config';
 import { usePaginatedQuery } from 'src/hooks/usePaginatedQuery';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
-import { AnnouncementResultListItem } from 'src/models/annoucement/announcement-result-list';
+import { AnnouncementResultListItem } from 'src/models/annoucement/announcement-result-list-item';
 import { PaginatedData } from 'src/models/paginated-data';
 import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
 import { apiUrl } from 'src/utils/api-url';
