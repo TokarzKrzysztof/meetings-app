@@ -66,6 +66,14 @@ const publicRoutes: RouteObject[] = [
     },
     loader: () => null,
   },
+  {
+    path: AppRoutes.UserProfile({} as any),
+    lazy: async () => {
+      const { UserProfile } = await import('./pages/user/UserProfile/UserProfile');
+      return { Component: UserProfile };
+    },
+    loader: () => null,
+  },
 ];
 
 export const router = createBrowserRouter([

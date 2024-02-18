@@ -10,6 +10,7 @@ import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { Chat } from 'src/models/chat/chat';
 import { User } from 'src/models/user';
 import { PrivateChatDeletedParticipantInfo } from 'src/pages/chat/PrivateChat/PrivateChatDeletedParticipantInfo';
+import { PrivateChatParticipant } from 'src/pages/chat/PrivateChat/PrivateChatParticipant';
 import { PrivateChatReplyToAnnouncementInfo } from 'src/pages/chat/PrivateChat/PrivateChatReplyToAnnouncementInfo';
 import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
@@ -18,7 +19,6 @@ import {
   ChatScrollable,
   ChatScrollableHandle,
 } from 'src/pages/chat/shared/components/ChatScrollable';
-import { UserActiveStatusBadge } from 'src/pages/chat/shared/components/UserActiveStatusBadge';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
 import { ChatMessageFocusProvider } from 'src/pages/chat/shared/providers/ChatMessageFocusProvider';
@@ -31,7 +31,7 @@ import { AppRoutes, PrivateChatParams } from 'src/utils/enums/app-routes';
 import { calculateAge } from 'src/utils/user-utils';
 
 export const PrivateChat = () => {
-  const [params] = useRouteParams<PrivateChatParams>();
+  const params = useRouteParams<PrivateChatParams>();
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
   const connection = useAtomValue(connectionAtom);
@@ -76,18 +76,7 @@ export const PrivateChat = () => {
   return (
     <ChatMessageFocusProvider chat={privateChat} dispatch={dispatch}>
       <Stack height='100vh' direction='column'>
-        <ChatHeader
-          right={
-            <Stack alignItems='center' gap={1}>
-              <UserActiveStatusBadge status={user.activeStatus}>
-                <Avatar src={user.profileImageSrc} size={30} isDelete={user.isDelete} />
-              </UserActiveStatusBadge>
-              <Typography>
-                {user.firstName} {user.lastName}
-              </Typography>
-            </Stack>
-          }
-        />
+        <ChatHeader right={<PrivateChatParticipant participant={user} />} />
 
         <ChatScrollable
           ref={scrollableRef}

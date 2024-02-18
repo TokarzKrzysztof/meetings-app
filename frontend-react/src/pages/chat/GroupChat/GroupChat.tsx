@@ -24,7 +24,7 @@ import { Stack, Typography } from 'src/ui-components';
 import { AppRoutes, GroupChatParams } from 'src/utils/enums/app-routes';
 
 export const GroupChat = () => {
-  const [params] = useRouteParams<GroupChatParams>();
+  const params = useRouteParams<GroupChatParams>();
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
   const [showParticipantsDialog, setShowParticipantsDialog] = useState(false);

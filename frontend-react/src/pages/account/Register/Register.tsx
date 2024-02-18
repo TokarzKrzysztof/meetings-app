@@ -23,7 +23,7 @@ import { Validators } from 'src/utils/helpers/validators';
 import { genderOptions } from 'src/utils/user-utils';
 
 export const Register = () => {
-  const [params] = useRouteParams<RegisterParams>();
+  const params = useRouteParams<RegisterParams>();
   const { locations } = useGetLocations();
   const form = useForm<User>();
   const { register, handleSubmit, control } = form;

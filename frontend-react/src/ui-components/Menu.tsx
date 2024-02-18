@@ -12,7 +12,7 @@ const StyledMenu = styled(MuiMenu)({
 });
 
 type MenuProps = Omit<MuiMenuProps, 'open'> & {
-  anchorRef: RefObject<HTMLButtonElement>;
+  anchorRef: RefObject<HTMLElement>;
 };
 export const Menu = ({ children, anchorRef, ...props }: MenuProps) => {
   const [open, setOpen] = useState(false);

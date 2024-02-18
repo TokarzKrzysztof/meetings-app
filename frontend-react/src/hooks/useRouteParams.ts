@@ -8,5 +8,5 @@ export const useRouteParams = <T extends Record<string, unknown>>() => {
     return Object.fromEntries(searchParams);
   }, [searchParams]);
 
-  return [params as T] as const;
+  return params as T;
 };

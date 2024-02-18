@@ -27,6 +27,7 @@ export const AppRoutes = {
   MyChatsIgnored: () => '/my-chats/ignored',
   MyChatsArchived: () => '/my-chats/archived',
   NewGroupChat: () => '/new-group-chat',
+  UserProfile: (params: UserProfileParams) => makeUrl('/user-profile', params),
 } as const;
 
 export type HomeParams = {
@@ -63,6 +64,10 @@ export type RegisterParams = {
 
 export type MyAnnouncementsListParams = {
   status: keyof typeof AnnouncementStatus
+};
+
+export type UserProfileParams = {
+  id: string;
 };
 
 const makeUrl = (url: string, params?: Record<string, string>) => {

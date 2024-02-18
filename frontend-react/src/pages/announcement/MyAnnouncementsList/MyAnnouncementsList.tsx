@@ -10,7 +10,7 @@ import { Container, Stack, Typography } from 'src/ui-components';
 import { MyAnnouncementsListParams } from 'src/utils/enums/app-routes';
 
 export const MyAnnouncementsList = () => {
-  const [params] = useRouteParams<MyAnnouncementsListParams>();
+  const params = useRouteParams<MyAnnouncementsListParams>();
 
   const {
     currentUserAnnouncements,
