@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import { ChatPreview } from 'src/models/chat/chat-preview';
 import { archivedChatsTxt, ignoredChatsTxt } from 'src/pages/chat/MyChats/MyChatsMore';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
-import { useToggleArchiveChat, useToggleIgnoreChat } from 'src/queries/chat-queries';
+import { useToggleArchiveChat, useToggleIgnoreChat } from 'src/queries/chat-participant-queries';
 import { DialogContentText, MenuItem } from 'src/ui-components';
 
 export type MyChatsItemCommonActionsProps = {

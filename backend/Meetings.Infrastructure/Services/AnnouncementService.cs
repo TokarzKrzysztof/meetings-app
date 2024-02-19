@@ -3,6 +3,7 @@ using Meetings.Authentication.Services;
 using Meetings.Database.QueryExtensions;
 using Meetings.Database.Repositories;
 using Meetings.FileManager;
+using Meetings.Infrastructure.Helpers;
 using Meetings.Infrastructure.Mappers;
 using Meetings.Infrastructure.Utils;
 using Meetings.Infrastructure.Validators;
@@ -22,8 +23,8 @@ namespace Meetings.Infrastructure.Services
         private readonly AnnouncementValidator _announcementValidator;
         private readonly IFileManager _fileManager;
         private readonly ExtendedMapper _extendedMapper;
-        private readonly UserService _userService;
-        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IClaimsReader claimsReader, AnnouncementValidator announcementValidator, IFileManager fileManager, ExtendedMapper extendedMapper, UserService userService)
+        private readonly IServices _services;
+        public AnnouncementService(IRepository<Announcement> repository, IMapper mapper, IClaimsReader claimsReader, AnnouncementValidator announcementValidator, IFileManager fileManager, ExtendedMapper extendedMapper, IServices services)
         {
             _repository = repository;
             _mapper = mapper;
@@ -31,7 +32,7 @@ namespace Meetings.Infrastructure.Services
             _announcementValidator = announcementValidator;
             _fileManager = fileManager;
             _extendedMapper = extendedMapper;
-            _userService = userService;
+            _services = services;
         }
 
         public async Task CreateNewAnnouncement(AnnouncementDTO data)
@@ -44,7 +45,6 @@ namespace Meetings.Infrastructure.Services
             var newAnnouncement = _mapper.Map<Announcement>(data);
             await _repository.Create(newAnnouncement);
         }
-
 
         public async Task EditAnnouncement(AnnouncementDTO data)
         {
@@ -108,7 +108,7 @@ namespace Meetings.Infrastructure.Services
         {
             _announcementValidator.WhenGetAnnouncementResultList(data);
 
-            var currentUser = await _userService.TryGetCurrentUser(includeLocation: true);
+            var currentUser = await _services.User.TryGetCurrentUser(includeLocation: true);
 
             var query = _repository.Data.Where(x => x.CategoryId == data.CategoryId && x.Status == AnnouncementStatus.Active);
 
@@ -183,6 +183,12 @@ namespace Meetings.Infrastructure.Services
                 Pending = statuses.Count(x => x == AnnouncementStatus.Pending),
                 Closed = statuses.Count(x => x == AnnouncementStatus.Closed),
             };
+        }
+
+        public async Task RemoveAllUserAnnouncements(Guid userId)
+        {
+            List<Announcement> announcements = await _repository.Data.Where(x => x.UserId == userId).ToListAsync();
+            await _repository.RemoveRange(announcements);
         }
     }
 }

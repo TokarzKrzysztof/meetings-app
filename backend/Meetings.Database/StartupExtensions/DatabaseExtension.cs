@@ -18,6 +18,7 @@ namespace Meetings.Database.StartupExtensions
             string connectionString = builder.Configuration.GetConnectionString("db");
             builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<UserRepository>();
         }
     }
 }

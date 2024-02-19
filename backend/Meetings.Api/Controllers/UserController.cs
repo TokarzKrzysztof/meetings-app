@@ -11,6 +11,7 @@ namespace Meetings.EmailTemplates.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class UserController : AppControllerBase
     {
         private readonly UserService _userService;
@@ -21,6 +22,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> IsEmailTaken([FromQuery] string email)
         {
             bool isTaken = await _userService.IsEmailTaken(email);
@@ -28,6 +30,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCurrentUser()
         {
             UserDTO? currentUser = await _userService.TryGetCurrentUser();
@@ -35,6 +38,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUser([FromQuery] Guid id, [FromQuery] bool includeDeleted)
         {
             UserDTO user = await _userService.GetUser(id, includeDeleted: includeDeleted);
@@ -42,23 +46,13 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetUsersByFilter([FromQuery] string filter, [FromQuery] int take = 50, [FromQuery] bool excludeCurrentUser = true)
         {
             List<UserDTO> users = await _userService.GetUsersByFilter(filter, take, excludeCurrentUser);
             return Ok(users);
         }
 
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile image)
-        {
-            await _userService.UploadProfileImage(image);
-            return Ok();
-        }
-
         [HttpPatch]
-        [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordData data)
         {
             await _userService.ChangePassword(data);
@@ -66,7 +60,6 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpPut]
-        [Authorize]
         public async Task<IActionResult> ChangePersonalData([FromBody] UserDTO data)
         {
             UserDTO user = await _userService.ChangePersonalData(data);
@@ -74,7 +67,6 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> SendChangeEmailAddressEmail([FromBody] ChangeEmailAddressData data)
         {
             await _userService.SendChangeEmailAddressEmail(data);
@@ -82,7 +74,6 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpPatch]
-        [Authorize]
         public async Task<IActionResult> SendUserActivityTick()
         {
             await _userService.SendUserActivityTick();
@@ -91,7 +82,6 @@ namespace Meetings.EmailTemplates.Controllers
 
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> BlockUser([FromQuery] Guid id)
         {
             await _userService.BlockUser(id);
@@ -99,7 +89,6 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         public async Task<IActionResult> UnblockUser([FromQuery] Guid id)
         {
             await _userService.UnblockUser(id);

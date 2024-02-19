@@ -172,28 +172,6 @@ namespace Meetings.Infrastructure.Services
             return _repository.Data.AnyAsync(x => x.Email == email);
         }
 
-        public async Task UploadProfileImage(IFormFile image)
-        {
-            Guid userId = _claimsReader.GetCurrentUserId();
-
-            var filePath = Path.Combine(_fileManager.Root, "ProfileImages", $"{Guid.NewGuid()}.jpg");
-            await _fileManager.Save(filePath, image);
-
-            await UpdateProfileImage(userId, filePath);
-        }
-
-        public async Task UpdateProfileImage(Guid userId, string? filePath)
-        {
-            var user = await _repository.GetById(userId);
-            if (user.ProfileImagePath != null)
-            {
-                _fileManager.Delete(user.ProfileImagePath);
-            }
-            user.ProfileImagePath = filePath;
-
-            await _repository.Update(user);
-        }
-
         public async Task SendUserActivityTick()
         {
             Guid userId = _claimsReader.GetCurrentUserId();

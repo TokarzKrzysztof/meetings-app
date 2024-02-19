@@ -2,12 +2,14 @@
 using Meetings.Infrastructure.Helpers;
 using Meetings.Infrastructure.Services;
 using Meetings.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Meetings.EmailTemplates.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class CategoryController : AppControllerBase
     {
         private readonly CategoryService _categoryService;
@@ -17,6 +19,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllCategories()
         {
             List<CategoryDTO> categories = await _categoryService.GetAllCategories();
@@ -24,6 +27,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetCategory([FromQuery] Guid id)
         {
             CategoryDTO category = await _categoryService.GetCategory(id);

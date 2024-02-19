@@ -78,6 +78,7 @@ using (IServiceScope scope = app.Services.CreateScope())
         //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomUsers(9000);
         //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomAnnouncements(6000, "Bilard");
         //await scope.ServiceProvider.GetRequiredService<MockGenerator>().GenerateRandomAnnouncements(6000, "Bilard");
+        //await scope.ServiceProvider.GetRequiredService<MockGenerator>().CreateProfilesForAllUsers();
 
         Console.WriteLine(123);
     }

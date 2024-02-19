@@ -12,6 +12,7 @@ namespace Meetings.EmailTemplates.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class AuthController : AppControllerBase
     {
         private readonly AuthService _authService;
@@ -23,6 +24,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginCredentials data)
         {
             UserDTO user = await _authService.Login(data);
@@ -30,7 +32,6 @@ namespace Meetings.EmailTemplates.Controllers
         } 
         
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _authService.Logout();
@@ -38,6 +39,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterData data)
         {
             await _authService.Register(data);
@@ -45,6 +47,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> ResendActivationLink([FromQuery] string email)
         {
             await _authService.ResendActivationLink(email);
@@ -52,6 +55,7 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> SendForgotPasswordEmail([FromQuery] string email)
         {
             await _authService.SendForgotPasswordEmail(email);
@@ -59,6 +63,7 @@ namespace Meetings.EmailTemplates.Controllers
         }  
 
         [HttpPatch]
+        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordData data)
         {
             await _authService.ResetPassword(data);
@@ -66,7 +71,6 @@ namespace Meetings.EmailTemplates.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         public async Task<IActionResult> RemoveAccount()
         {
             await _authService.RemoveAccount();

@@ -7,7 +7,7 @@ import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider
 import {
   useAddGroupChatParticipant,
   useRemoveGroupChatParticipant,
-} from 'src/queries/chat-queries';
+} from 'src/queries/chat-participant-queries';
 import {
   Avatar,
   Box,

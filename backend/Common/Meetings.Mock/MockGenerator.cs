@@ -54,6 +54,8 @@ namespace Meetings.Mock
                 });
             }
             await _db.SaveChangesAsync();
+
+            await CreateProfilesForAllUsers();
         }
 
         public async Task GenerateRandomAnnouncements(int count, string categoryName)
@@ -74,9 +76,29 @@ namespace Meetings.Mock
                     UserId = users.Random().Id,
                     Status = AnnouncementStatus.Active,
                     Description = $"Opis do ogłoszenia - {categoryName}",
-                    ExperienceLevel = category.HasExperienceLevel ? level: null
+                    ExperienceLevel = category.HasExperienceLevel ? level : null
                 });
             }
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task CreateProfilesForAllUsers()
+        {
+            var users = await _userRepository.Data.ToListAsync();
+            foreach (var user in users)
+            {
+                if (user.UserProfileId != Guid.Empty) continue;
+                var profile = new UserProfile()
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    UserId = user.Id
+                };
+                user.UserProfileId = profile.Id;
+                _db.UserProfiles.Add(profile);
+            }
+
             await _db.SaveChangesAsync();
         }
     }

@@ -171,14 +171,14 @@ namespace Meetings.Database.Repositories
             await _db.SaveChangesAsync();
         }
 
-        private void AssignCreateProperties(TEntity entity)
+        protected void AssignCreateProperties(IEntityBase entity)
         {
             entity.Id = entity.Id == Guid.Empty ? Guid.NewGuid() : entity.Id;
             entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedAt = DateTime.UtcNow;
         }
 
-        private void AssignUpdateProperties(TEntity entity)
+        protected void AssignUpdateProperties(IEntityBase entity)
         {
             entity.UpdatedAt = DateTime.UtcNow;
         }

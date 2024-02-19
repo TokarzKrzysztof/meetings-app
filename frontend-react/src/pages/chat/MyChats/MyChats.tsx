@@ -5,7 +5,7 @@ import { ChatType } from 'src/models/chat/chat';
 import { MyChatsActions } from 'src/pages/chat/MyChats/MyChatsActions';
 import { MyChatsMore } from 'src/pages/chat/MyChats/MyChatsMore';
 import { MyChatsNewPrivateMessage } from 'src/pages/chat/MyChats/MyChatsNewPrivateMessage';
-import { useGetUnreadChatsCount } from 'src/queries/chat-queries';
+import { useGetUnreadChatsCount } from 'src/queries/chat-participant-queries';
 import { Box, Stack, Tab, Tabs } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 

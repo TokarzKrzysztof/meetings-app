@@ -21,48 +21,6 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 const baseUrl = `${apiUrl}/Chat`;
 
-export const useToggleIgnoreChat = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Chat['id']>
-) => {
-  const mutation = useMutation({
-    mutationFn: (chatId) => {
-      const params = { chatId };
-      return axios.patch(`${baseUrl}/ToggleIgnoreChat`, null, { params });
-    },
-    ...options,
-  });
-
-  return genericUseMutationMethods('toggleIgnoreChat', mutation);
-};
-
-export const useToggleArchiveChat = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Chat['id']>
-) => {
-  const mutation = useMutation({
-    mutationFn: (chatId) => {
-      const params = { chatId };
-      return axios.patch(`${baseUrl}/ToggleArchiveChat`, null, { params });
-    },
-    ...options,
-  });
-
-  return genericUseMutationMethods('toggleArchiveChat', mutation);
-};
-
-export const useLeaveGroupChat = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Chat['id']>
-) => {
-  const mutation = useMutation({
-    mutationFn: (chatId) => {
-      const params = { chatId };
-      return axios.delete(`${baseUrl}/LeaveGroupChat`, { params });
-    },
-    ...options,
-  });
-
-  return genericUseMutationMethods('leaveGroupChat', mutation);
-};
-
 export const useChangeGroupChatName = (
   options?: UseMutationOptions<
     void,
@@ -76,42 +34,6 @@ export const useChangeGroupChatName = (
   });
 
   return genericUseMutationMethods('changeGroupChatName', mutation);
-};
-
-export const useAddGroupChatParticipant = (
-  options?: UseMutationOptions<
-    void,
-    AxiosError<HttpErrorData>,
-    { chatId: Chat['id']; userId: string }
-  >
-) => {
-  const mutation = useMutation({
-    mutationFn: ({ chatId, userId }) => {
-      const params = { chatId, userId };
-      return axios.post(`${baseUrl}/AddGroupChatParticipant`, null, { params });
-    },
-    ...options,
-  });
-
-  return genericUseMutationMethods('addGroupChatParticipant', mutation);
-};
-
-export const useRemoveGroupChatParticipant = (
-  options?: UseMutationOptions<
-    void,
-    AxiosError<HttpErrorData>,
-    { chatId: Chat['id']; userId: string }
-  >
-) => {
-  const mutation = useMutation({
-    mutationFn: ({ chatId, userId }) => {
-      const params = { chatId, userId };
-      return axios.delete(`${baseUrl}/RemoveGroupChatParticipant`, { params });
-    },
-    ...options,
-  });
-
-  return genericUseMutationMethods('removeGroupChatParticipant', mutation);
 };
 
 export const useCreateGroupChat = (
@@ -192,31 +114,4 @@ export const useGetCurrentUserChats = (
   });
 
   return genericUseInfiniteQueryMethods('currentUserChats', query);
-};
-
-export const useGetUnreadChatsCount = (
-  options?: UseQueryOptions<{ private: number; group: number }, AxiosError<HttpErrorData>>
-) => {
-  const query = useQuery({
-    queryKey: 'GetUnreadChatsCount',
-    queryFn: () => axios.get(`${baseUrl}/GetUnreadChatsCount`),
-    staleTime: Infinity,
-    ...options,
-  });
-
-  return genericUseQueryMethods('unreadChatsCount', query);
-};
-
-export const useMarkChatAsRead = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, Chat['id']>
-) => {
-  const mutation = useMutation({
-    mutationFn: (chatId) => {
-      const params = { chatId };
-      return axios.patch(`${baseUrl}/MarkChatAsRead`, null, { params });
-    },
-    ...options,
-  });
-
-  return genericUseMutationMethods('markChatAsRead', mutation);
 };

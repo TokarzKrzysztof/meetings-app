@@ -10,6 +10,7 @@ namespace Meetings.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class MessageController : AppControllerBase
     {
         private readonly MessageService _messageService;
@@ -18,8 +19,7 @@ namespace Meetings.Api.Controllers
             _messageService = messageService;
         }
 
-        [HttpGet]
-        [Authorize]
+        [HttpGet]     
         public async Task<IActionResult> LoadChatMessages([FromQuery] Guid chatId, [FromQuery] int skip, [FromQuery] int take)
         {
             List<MessageDTO> messages = await _messageService.LoadChatMessages(chatId, skip, take);
@@ -27,7 +27,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> LoadAllMessagesAfterDate([FromQuery] Guid chatId, [FromQuery] DateTime afterDate)
         {
             List<MessageDTO> messages = await _messageService.LoadAllMessagesAfterDate(chatId, afterDate);
@@ -35,7 +34,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> SendMessage([FromForm] SendMessageData data)
         {
             await _messageService.SendMessage(data);
@@ -43,7 +41,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAllImageMessages([FromQuery] Guid chatId)
         {
             List<MessageDTO> messages = await _messageService.GetAllImageMessages(chatId);

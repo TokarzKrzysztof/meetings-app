@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { useNavigateBack } from 'src/hooks/useNavigateBack';
 import { Chat } from 'src/models/chat/chat';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
-import { useLeaveGroupChat } from 'src/queries/chat-queries';
+import { useLeaveGroupChat } from 'src/queries/chat-participant-queries';
 import { DialogContentText, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
 
 export type GroupChatActionsProps = {

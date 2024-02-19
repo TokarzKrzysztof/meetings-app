@@ -38,7 +38,9 @@ namespace Meetings.Models.Entities
         public string? ProfileImagePath { get; set; }
         public DateTime LastActiveDate { get; set; }
         public Guid LocationId { get; set; }
-        public virtual UserLocation Location { get; set; }
+        public virtual UserLocation Location { get; set; }   
+        public Guid UserProfileId { get; set; }
+        public virtual UserProfile UserProfile { get; set; }
         public virtual ICollection<Announcement> Announcements { get; set; }
         public virtual ICollection<ChatParticipant> Chats { get; set; }
         public virtual ICollection<BlockedUser> BlockedUsers { get; set; }

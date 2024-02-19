@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useSignalREffect } from 'src/hooks/signalR/useSignalREffect';
-import { useGetUnreadChatsCount } from 'src/queries/chat-queries';
+import { useGetUnreadChatsCount } from 'src/queries/chat-participant-queries';
 import { Badge, Icon, IconButton } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 

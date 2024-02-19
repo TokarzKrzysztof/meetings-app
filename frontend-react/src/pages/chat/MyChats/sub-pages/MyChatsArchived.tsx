@@ -5,7 +5,7 @@ import { archivedChatsTxt } from 'src/pages/chat/MyChats/MyChatsMore';
 import { MyChatsList } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsList';
 import { MyChatsListItem } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsListItem';
 import { MyChatsTitle } from 'src/pages/chat/MyChats/sub-pages/shared/MyChatsTitle';
-import { useToggleArchiveChat } from 'src/queries/chat-queries';
+import { useToggleArchiveChat } from 'src/queries/chat-participant-queries';
 import { MenuItem } from 'src/ui-components';
 
 export const MyChatsArchived = () => {

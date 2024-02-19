@@ -25,6 +25,7 @@ namespace Meetings.Database
         public DbSet<ChatParticipant> ChatParticipants { get; set; }
         public DbSet<BlockedUser> BlockedUsers { get; set; }
         public DbSet<UserLocation> UserLocations { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -35,6 +36,15 @@ namespace Meetings.Database
 
             builder.Entity<MessageReaction>().HasOne(x => x.Author).WithMany().OnDelete(DeleteBehavior.ClientCascade);
             builder.Entity<User>().HasMany(x => x.BlockedUsers).WithOne(x => x.User).OnDelete(DeleteBehavior.ClientCascade);
+
+            builder.Entity<UserProfile>()
+                .HasOne(x => x.User)
+                .WithOne(x => x.UserProfile)
+                .HasForeignKey<UserProfile>(e => e.UserId)
+                .IsRequired();
+
+            builder.Entity<UserProfile>().Property(x => x.Interests)
+                .HasConversion<string>();
         }
     }
 }

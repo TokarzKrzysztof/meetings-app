@@ -10,6 +10,7 @@ namespace Meetings.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class AnnouncementController : AppControllerBase
     {
         private readonly AnnouncementService _announcementService;
@@ -19,14 +20,14 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAnnouncementResultList([FromBody] GetAnnouncementResultListData data)
         {
             PaginatedData<AnnouncementResultListItem> result = await _announcementService.GetAnnouncementResultList(data);
             return Ok(result);
         }
 
-        [HttpPost]
-        [Authorize]
+        [HttpPost]  
         public async Task<IActionResult> CreateNewAnnouncement([FromBody] AnnouncementDTO data)
         {
             await _announcementService.CreateNewAnnouncement(data);
@@ -34,7 +35,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpPut]
-        [Authorize]
         public async Task<IActionResult> EditAnnouncement([FromBody] AnnouncementDTO data)
         {
             await _announcementService.EditAnnouncement(data);
@@ -42,7 +42,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> GetCurrentUserAnnouncements([FromBody] GetCurrentUserAnnouncementsData data)
         {
             PaginatedData<AnnouncementDTO> currentUserAnnouncements = await _announcementService.GetCurrentUserAnnouncements(data);
@@ -50,7 +49,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetCurrentUserAnnouncementsCount()
         {
             AnnouncementsCount announcementsCount = await _announcementService.GetCurrentUserAnnouncementsCount();
@@ -58,7 +56,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetCurrentUserOccupiedCategoryIds()
         {
             List<Guid> ids = await _announcementService.GetCurrentUserOccupiedCategoryIds();
@@ -66,7 +63,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAnnouncement([FromQuery] Guid id)
         {
             AnnouncementDTO announcement = await _announcementService.GetAnnouncement(id);
@@ -74,7 +70,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpPatch]
-        [Authorize]
         public async Task<IActionResult> SetAnnouncementStatus([FromBody] SetAnnouncementStatusData data)
         {
             await _announcementService.SetAnnouncementStatus(data.Id, data.NewStatus);
@@ -82,7 +77,6 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         public async Task<IActionResult> RemoveAnnouncement([FromQuery] Guid id)
         {
             await _announcementService.RemoveAnnouncement(id);

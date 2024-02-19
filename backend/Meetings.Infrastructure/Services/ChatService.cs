@@ -3,9 +3,9 @@ using Meetings.Authentication.Services;
 using Meetings.Database.QueryExtensions;
 using Meetings.Database.Repositories;
 using Meetings.FileManager;
+using Meetings.Infrastructure.Helpers;
 using Meetings.Infrastructure.Hubs;
 using Meetings.Infrastructure.Mappers;
-using Meetings.Infrastructure.Utils;
 using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
@@ -13,18 +13,12 @@ using Meetings.Models.Resources.Pagination;
 using Meetings.Utilities.Extensions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Meetings.Infrastructure.Services
 {
     public class ChatService
     {
         private readonly IRepository<Chat> _repository;
-        private readonly IRepository<ChatParticipant> _chatParticipantRepository;
         private readonly IMapper _mapper;
         private readonly IClaimsReader _claimsReader;
         private readonly IHubContext<ChatHub, IChatHub> _chatHubContext;
@@ -33,28 +27,29 @@ namespace Meetings.Infrastructure.Services
         private readonly ChatValidator _chatValidator;
         private readonly UserService _userService;
         private readonly MessageService _messageService;
+        private readonly IServices _services;
 
         public ChatService(IRepository<Chat> repository,
                            IMapper mapper,
                            IClaimsReader claimsReader,
                            IHubContext<ChatHub, IChatHub> chatHubContext,
-                           IRepository<ChatParticipant> chatParticipantRepository,
                            ExtendedMapper extendedMapper,
                            IFileManager fileManager,
                            ChatValidator chatValidator,
                            UserService userService,
-                           MessageService messageService)
+                           MessageService messageService,
+                           IServices services)
         {
             _repository = repository;
             _mapper = mapper;
             _claimsReader = claimsReader;
             _chatHubContext = chatHubContext;
-            _chatParticipantRepository = chatParticipantRepository;
             _extendedMapper = extendedMapper;
             _fileManager = fileManager;
             _chatValidator = chatValidator;
             _userService = userService;
             _messageService = messageService;
+            _services = services;
         }
 
         public async Task<ChatDTO?> GetPrivateChat(Guid participantId)
@@ -87,7 +82,7 @@ namespace Meetings.Infrastructure.Services
 
             if (queryResult == null) return null;
 
-            await MarkChatAsRead(queryResult.Id);
+            await _services.ChatParticipant.MarkChatAsRead(queryResult.Id);
 
             return new ChatDTO()
             {
@@ -96,19 +91,6 @@ namespace Meetings.Infrastructure.Services
                 Type = queryResult.Type,
                 TotalMessagesAmount = queryResult.TotalMessagesAmount,
                 Participants = _extendedMapper.ToUserDTOList(queryResult.Participants)
-            };
-        }
-
-        public async Task<UnreadChatsCountData> GetUnreadChatsCount()
-        {
-            Guid userId = _claimsReader.GetCurrentUserId();
-            var unread = await _chatParticipantRepository.Data
-                .Where(x => x.UserId == userId && x.HasUnreadMessages && !x.IsIgnored)
-                .Select(x => x.Chat.Type).ToListAsync();
-            return new UnreadChatsCountData()
-            {
-                Private = unread.Where(type => type == ChatType.Private).Count(),
-                Group = unread.Where(type => type == ChatType.Group).Count(),
             };
         }
 
@@ -148,76 +130,6 @@ namespace Meetings.Infrastructure.Services
             string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "zmienił" : "zmieniła";
             string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} nazwę grupy na {chat.Name}.";
             await _messageService.SendInfoMessage(data.ChatId, info);
-        }
-
-        public async Task AddGroupChatParticipant(Guid chatId, Guid userId)
-        {
-            await _chatValidator.WhenAddGroupChatParticipant(chatId, userId);
-
-            await _chatParticipantRepository.Create(new ChatParticipant(userId, chatId));
-
-            var user = await _userService.GetUser(userId);
-            string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "dodał" : "dodała";
-            string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} użytkownika {user.FirstName + " " + user.LastName} do grupy.";
-            await _messageService.SendInfoMessage(chatId, info);
-        }
-
-        public async Task RemoveGroupChatParticipant(Guid chatId, Guid userId, bool isFromLeaveChat = false)
-        {
-            await _chatValidator.WhenRemoveGroupChatParticipant(chatId, userId);
-
-            ChatParticipant item = await _chatParticipantRepository.Data.SingleAsync(x => x.ChatId == chatId && x.UserId == userId);
-            await _chatParticipantRepository.RemovePermanently(item);
-
-            if (isFromLeaveChat)
-            {
-                string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "opuścił" : "opuściła";
-                string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} grupę.";
-                await _messageService.SendInfoMessage(chatId, info);
-            }
-            else
-            {
-                var user = await _userService.GetUser(userId);
-                string genderTxt = _claimsReader.GetCurrentUserGender() == UserGender.Male ? "usunął" : "usunęła";
-                string info = $"{_claimsReader.GetCurrentUserFirstName()} {genderTxt} użytkownika {user.FirstName + " " + user.LastName} z grupy.";
-                await _messageService.SendInfoMessage(chatId, info);
-            }
-        }
-
-        public async Task LeaveGroupChat(Guid chatId)
-        {
-            Guid userId = _claimsReader.GetCurrentUserId();
-            await RemoveGroupChatParticipant(chatId, userId, true);
-        }
-
-        public async Task MarkChatAsRead(Guid chatId)
-        {
-            await GetCurrentUserParticipantQuery(chatId)
-                .ExecuteUpdateAsync(s =>
-                    s.SetProperty(x => x.HasUnreadMessages, false)
-                 );
-        }
-
-        public async Task ToggleIgnoreChat(Guid chatId)
-        {
-            await GetCurrentUserParticipantQuery(chatId)
-               .ExecuteUpdateAsync(s =>
-                   s.SetProperty(x => x.IsIgnored, x => !x.IsIgnored)
-                );
-        }
-
-        public async Task ToggleArchiveChat(Guid chatId)
-        {
-            await GetCurrentUserParticipantQuery(chatId)
-                .ExecuteUpdateAsync(s =>
-                    s.SetProperty(x => x.IsArchived, x => !x.IsArchived)
-                 );
-        }
-
-        private IQueryable<ChatParticipant> GetCurrentUserParticipantQuery(Guid chatId)
-        {
-            Guid userId = _claimsReader.GetCurrentUserId();
-            return _chatParticipantRepository.Data.Where(x => x.UserId == userId && x.ChatId == chatId);
         }
 
         private async Task<Guid> CreateNewChat(string connectionId, List<ChatParticipant> participants, ChatType type, string name = null)

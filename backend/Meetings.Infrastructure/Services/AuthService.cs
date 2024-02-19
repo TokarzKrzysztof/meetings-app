@@ -25,30 +25,31 @@ namespace Meetings.Infrastructure.Services
 {
     public class AuthService
     {
+        private readonly UserRepository _repository;
         private readonly ITokenGenerator _tokenGenerator;
-        private readonly IRepository<User> _repository;
-        private readonly IRepository<TempData> _tempDataRepository;
-        private readonly IRepository<Announcement> _announcementRepository;
-        private readonly IRepository<ChatParticipant> _chatParticipantRepository;
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UserService _userService;
         private readonly UserValidator _userValidator;
         private readonly IClaimsReader _claimsReader;
-        public AuthService(ITokenGenerator tokenGenerator, IRepository<User> repository, IMapper mapper, IEmailSender emailSender, IRepository<TempData> tempDataRepository, IHttpContextAccessor httpContextAccessor, UserService userService, UserValidator userValidator, IClaimsReader claimsReader, IRepository<Announcement> announcementRepository, IRepository<ChatParticipant> chatParticipantRepository)
+        private readonly IServices _services;
+        public AuthService(ITokenGenerator tokenGenerator,
+                           UserRepository repository,
+                           IMapper mapper,
+                           IEmailSender emailSender,
+                           IHttpContextAccessor httpContextAccessor,
+                           UserValidator userValidator,
+                           IClaimsReader claimsReader,
+                           IServices services)
         {
             _tokenGenerator = tokenGenerator;
             _repository = repository;
             _mapper = mapper;
             _emailSender = emailSender;
-            _tempDataRepository = tempDataRepository;
             _httpContextAccessor = httpContextAccessor;
-            _userService = userService;
             _userValidator = userValidator;
             _claimsReader = claimsReader;
-            _announcementRepository = announcementRepository;
-            _chatParticipantRepository = chatParticipantRepository;
+            _services = services;
         }
 
         public async Task<UserDTO> Login(LoginCredentials data)
@@ -67,7 +68,7 @@ namespace Meetings.Infrastructure.Services
             var token = _tokenGenerator.GenerateToken(user);
             UpdateAuthCookie(token, DateTime.UtcNow.AddDays(7));
 
-            return await _userService.GetUser(user.Id);
+            return await _services.User.GetUser(user.Id);
         }
 
         public async Task Logout()
@@ -82,8 +83,8 @@ namespace Meetings.Infrastructure.Services
 
             data.Password = Hasher.Hash(data.Password);
 
-            var user = await _repository.Create(_mapper.Map(data, new User()));
-            var tempData = await _tempDataRepository.Create(RegisterTempData.ToTemp(data.RedirectUrl, user.Id));
+            var user = await _repository.CreateUserWithProfile(_mapper.Map(data, new User()));
+            var tempData = await _services.TempData.Create(RegisterTempData.ToTemp(data.RedirectUrl, user.Id));
 
             SendUserActivationLink(user, tempData.Id);
         }
@@ -91,7 +92,7 @@ namespace Meetings.Infrastructure.Services
         public async Task ResendActivationLink(string email)
         {
             var user = await _repository.Data.SingleAsync(x => x.Email == email);
-            var tempData = await _tempDataRepository.Data.SingleAsync(x => x.Data2 == user.Id.ToString());
+            var tempData = await _services.TempData.Get(x => x.Data2 == user.Id.ToString());
 
             SendUserActivationLink(user, tempData.Id);
         }
@@ -100,7 +101,7 @@ namespace Meetings.Infrastructure.Services
         {
             await _userValidator.WhenResetPassword(data);
 
-            var tempData = await _tempDataRepository.GetById(data.TempId);
+            var tempData = await _services.TempData.Get(data.TempId);
 
             string email = ForgotPasswordTempData.FromTemp(tempData).Email;
             await _repository.Data
@@ -112,7 +113,8 @@ namespace Meetings.Infrastructure.Services
 
         public async Task SendForgotPasswordEmail(string email)
         {
-            var tempData = await _tempDataRepository.Create(ForgotPasswordTempData.ToTemp(email));
+            var tempData = await _services.TempData.Create(ForgotPasswordTempData.ToTemp(email));
+
             EmailData emailData = new EmailData(
                new EmailReceiver(email, email),
                "Reset hasła",
@@ -135,14 +137,9 @@ namespace Meetings.Infrastructure.Services
 
             Guid userId = _claimsReader.GetCurrentUserId();
 
-            List<Announcement> announcements = await _announcementRepository.Data.Where(x => x.UserId == userId).ToListAsync();
-            await _announcementRepository.RemoveRange(announcements);
-
-            List<ChatParticipant> participantsInGroupChats = await _chatParticipantRepository.Data.Where(x => x.UserId == userId && x.Chat.Type == ChatType.Group).ToListAsync();
-            await _chatParticipantRepository.RemovePermanentlyRange(participantsInGroupChats);
-
-            await _userService.UpdateProfileImage(userId, null);
-
+            await _services.Announcement.RemoveAllUserAnnouncements(userId);
+            await _services.ChatParticipant.RemoveUserFromAllGroupChats(userId);
+            await _services.UserProfile.RemoveUserProfile(userId);
             await _repository.Remove(userId);
         }
 

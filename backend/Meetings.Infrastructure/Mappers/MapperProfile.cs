@@ -33,6 +33,9 @@ namespace Meetings.Infrastructure.Mappers
 
             CreateMap<UserLocation, UserLocationDTO>();
             CreateMap<UserLocationDTO, UserLocation>();
+
+            CreateMap<UserProfile, UserProfileDTO>();
+            CreateMap<UserProfileDTO, UserProfile>();
         }
     }
 }

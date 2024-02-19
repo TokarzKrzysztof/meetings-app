@@ -5,7 +5,7 @@ import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { Chat } from 'src/models/chat/chat';
 import { MessageType } from 'src/models/chat/message';
 import { MessageAction } from 'src/pages/chat/shared/reducers/message.reducer';
-import { useMarkChatAsRead } from 'src/queries/chat-queries';
+import { useMarkChatAsRead } from 'src/queries/chat-participant-queries';
 
 export const useSignalRListeners = (
   chat: Chat | null | undefined,
