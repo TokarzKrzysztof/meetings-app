@@ -1,6 +1,5 @@
 import { FieldPath, FieldValues } from 'react-hook-form';
 import { TextArea, TextFieldProps } from 'src/ui-components';
-import { Validators } from 'src/utils/helpers/validators';
 import { ControlledFieldProps } from 'src/utils/types/controlled-field-props';
 
 export type TextareaFieldProps = Omit<
@@ -18,9 +17,6 @@ export const TextareaField = <
   InputProps,
   ...props
 }: TextareaFieldProps & ControlledFieldProps<TFieldValues, TName>) => {
-  const helperText = fieldState.error
-    ? fieldState.error.message
-    : `Ilość znaków ${(field.value ?? '').length}/${Validators.maxStringLength.value}`;
   return (
     <TextArea
       fullWidth
@@ -30,9 +26,10 @@ export const TextareaField = <
       value={field.value ?? ''}
       label={label}
       error={!!fieldState.error}
-      helperText={helperText}
+      helperText={fieldState.error?.message}
       minRows={5}
       maxRows={20}
+      showAmountOfCharacters
       sx={{ mt: 2, ...sx }}
       {...props}
     />

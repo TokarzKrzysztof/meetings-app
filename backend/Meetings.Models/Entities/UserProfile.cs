@@ -15,8 +15,7 @@ namespace Meetings.Models.Entities
         public Guid UserId { get; set; }
         public virtual User User { get; set; }
         public string? Description { get; set; }
-        public string[] Interests { get; set; } = Array.Empty<string>();
-        public string? ImagePath { get; set; }
+        public List<string> Interests { get; set; } = new List<string>();
     }
 
     public class UserProfileDTO
@@ -24,7 +23,6 @@ namespace Meetings.Models.Entities
         public Guid Id { get; set; }
         public virtual UserDTO User { get; set; }
         public string? Description { get; set; }
-        public string[] Interests { get; set; }
-        public string? ImagePath { get; set; }
+        public List<string> Interests { get; set; }
     }
 }

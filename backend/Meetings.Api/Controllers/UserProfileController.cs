@@ -32,17 +32,10 @@ namespace Meetings.Api.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile image)
-        {
-            await _userProfileService.UploadProfileImage(image);
-            return Ok();
-        }
-
         [HttpPatch]
-        public async Task<IActionResult> EditInterests([FromQuery] string[] interests)
+        public async Task<IActionResult> EditInterests([FromQuery] string[] data)
         {
-            await _userProfileService.EditInterests(interests);
+            await _userProfileService.EditInterests(data);
             return Ok();
         }
 

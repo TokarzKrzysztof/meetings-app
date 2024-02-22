@@ -67,7 +67,7 @@ export type MyAnnouncementsListParams = {
 };
 
 export type UserProfileParams = {
-  id: string;
+  userId: string;
 };
 
 const makeUrl = (url: string, params?: Record<string, string>) => {

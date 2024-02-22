@@ -1,36 +1,25 @@
 import { useSetAtom } from 'jotai';
-import { TransitionProps } from 'notistack';
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
+import { FullscreenDialog } from 'src/components/FullscreenDialog';
 import { AnnouncementResultListHeaderFiltersFormFields } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListHeaderFiltersFormFields';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import {
   AppBar,
   Box,
   Button,
-  Dialog,
   DialogContentText,
   Icon,
   IconButton,
-  Slide,
   Stack,
   Toolbar,
-  Typography,
+  Typography
 } from 'src/ui-components';
 import {
   AnnouncementResultListQueryParams,
   areAnnouncementResultListFiltersDefault,
   getDefaultAnnouncementResultListQueryParams,
 } from 'src/utils/announcement-filters-utils';
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction='up' ref={ref} {...props} />;
-});
 
 export type AnnouncementResultListHeaderFiltersProps = {
   open: boolean;
@@ -73,7 +62,7 @@ export const AnnouncementResultListHeaderFilters = ({
 
   const areParamsDefault = useMemo(() => areAnnouncementResultListFiltersDefault(params), [params]);
   return (
-    <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+    <FullscreenDialog open={open} onClose={handleClose}>
       <Box component='form' onSubmit={handleSubmit(onSubmit)}>
         <AppBar sx={{ position: 'sticky' }}>
           <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -99,6 +88,6 @@ export const AnnouncementResultListHeaderFilters = ({
         </AppBar>
         <AnnouncementResultListHeaderFiltersFormFields form={form} />
       </Box>
-    </Dialog>
+    </FullscreenDialog>
   );
 };

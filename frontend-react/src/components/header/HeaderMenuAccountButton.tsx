@@ -20,7 +20,7 @@ export const HeaderMenuAccountButton = ({
       <MenuItem component={Link} to={AppRoutes.NewAnnouncement()} sx={{ fontWeight: 'bold' }}>
         Dodaj ogłoszenie
       </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.UserProfile({ id: currentUser.id })}>
+      <MenuItem component={Link} to={AppRoutes.UserProfile({ userId: currentUser.id })}>
         Mój profil
       </MenuItem>
       <MenuItem component={Link} to={AppRoutes.MyAnnouncements()}>

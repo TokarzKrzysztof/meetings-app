@@ -22,10 +22,10 @@ export const Menu = ({ children, anchorRef, ...props }: MenuProps) => {
   };
 
   useEffect(() => {
-    anchorRef.current!.addEventListener('click', () => {
+    anchorRef.current?.addEventListener('click', () => {
       setOpen(true);
     });
-  }, []);
+  }, [anchorRef.current]);
 
   return (
     <StyledMenu anchorEl={anchorRef.current} open={open} onClose={handleClose} {...props}>

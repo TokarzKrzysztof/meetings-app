@@ -14,12 +14,12 @@ import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type MyAnnouncementsListItemProps = {
   announcement: Announcement;
-  onRefetch: () => void;
+  onReload: () => void;
 };
 
 export const MyAnnouncementsListItem = ({
   announcement,
-  onRefetch,
+  onReload,
 }: MyAnnouncementsListItemProps) => {
   const { allCategories } = useGetAllCategories();
   const { setAnnouncementStatus } = useSetAnnouncementStatus();
@@ -54,7 +54,7 @@ export const MyAnnouncementsListItem = ({
                 variant: 'success',
                 message: 'Ogłoszenie zostało zakończone',
               });
-              onRefetch();
+              onReload();
             },
           }
         ),
@@ -77,7 +77,7 @@ export const MyAnnouncementsListItem = ({
                 variant: 'success',
                 message: 'Ogłoszenie zostało ponownie aktywowane',
               });
-              onRefetch();
+              onReload();
             },
           }
         ),
@@ -99,7 +99,7 @@ export const MyAnnouncementsListItem = ({
               variant: 'success',
               message: 'Ogłoszenie zostało usunięte',
             });
-            onRefetch();
+            onReload();
           },
         }),
     });

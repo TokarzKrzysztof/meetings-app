@@ -202,5 +202,26 @@ namespace Meetings.Infrastructure.Services
             BlockedUser item = await _blockedUserRepository.Data.SingleAsync(x => x.UserId == userId && x.BlockedId == id);
             await _blockedUserRepository.RemovePermanently(item);
         }
+
+        public async Task UploadProfileImage(IFormFile image)
+        {      
+            var filePath = Path.Combine(_fileManager.Root, "ProfileImages", $"{Guid.NewGuid()}.jpg");
+            await _fileManager.Save(filePath, image);
+
+            Guid userId = _claimsReader.GetCurrentUserId();
+            User user = await _repository.GetById(userId);
+            SetProfileImagePath(user, filePath);
+
+            await _repository.Update(user);
+        }
+
+        public void SetProfileImagePath(User user, string? newFilePath)
+        {
+            if (user.ProfileImagePath != null)
+            {
+                _fileManager.Delete(user.ProfileImagePath);
+            }
+            user.ProfileImagePath = newFilePath;
+        }
     }
 }

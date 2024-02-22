@@ -23,7 +23,7 @@ export const PrivateChatParticipant = ({ participant }: PrivateChatParticipantPr
         </Typography>
       </Stack>
       <Menu anchorRef={menuAnchorRef}>
-        <MenuItem component={Link} to={AppRoutes.UserProfile({ id: participant.id })}>
+        <MenuItem component={Link} to={AppRoutes.UserProfile({ userId: participant.id })}>
           Wyświetl profil
         </MenuItem>
       </Menu>

@@ -94,5 +94,12 @@ namespace Meetings.EmailTemplates.Controllers
             await _userService.UnblockUser(id);
             return Ok();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile image)
+        {
+            await _userService.UploadProfileImage(image);
+            return Ok();
+        }
     }
 }

@@ -55,7 +55,7 @@ export const MyAnnouncementsList = () => {
               <MyAnnouncementsListItem
                 key={x.id}
                 announcement={x}
-                onRefetch={currentUserAnnouncementsRefetch}
+                onReload={currentUserAnnouncementsRefetch}
               ></MyAnnouncementsListItem>
             ))}
           </InfiniteScroll>

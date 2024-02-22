@@ -27,6 +27,14 @@ namespace Meetings.Infrastructure.Mappers
             _claimsReader = claimsReader;
         }
 
+        public UserProfileDTO ToUserProfileDTO(UserProfile entity)
+        {
+            var result = _mapper.Map<UserProfileDTO>(entity);
+            result.User = ToUserDTO(entity.User);
+
+            return result;
+        }
+
         public UserDTO ToUserDTO(User entity)
         {
             var result = _mapper.Map<UserDTO>(entity);

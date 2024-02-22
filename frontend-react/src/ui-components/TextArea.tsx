@@ -4,6 +4,7 @@ import { ForwardedRef, useRef } from 'react';
 import { mergeRefs } from 'react-merge-refs';
 import { EmojiPicker } from 'src/components/EmojiPicker';
 import { InputAdornment } from 'src/ui-components';
+import { Validators } from 'src/utils/helpers/validators';
 import { typedForwardRef } from 'src/utils/types/forward-ref';
 
 const insertAtIndex = (str: string, toInsert: string, index: number) => {
@@ -16,10 +17,19 @@ export type TextAreaProps = Omit<
 > & {
   onChange: (value: string) => void;
   value: string;
+  showAmountOfCharacters?: boolean;
 };
 
 const TextAreaInner = (
-  { onChange, value, InputProps, size, ...props }: TextAreaProps,
+  {
+    onChange,
+    value,
+    InputProps,
+    size,
+    showAmountOfCharacters,
+    helperText,
+    ...props
+  }: TextAreaProps,
   ref: ForwardedRef<HTMLTextAreaElement>
 ) => {
   const fieldRef = useRef<HTMLTextAreaElement>();
@@ -35,6 +45,9 @@ const TextAreaInner = (
   };
 
   const { sx: inputPropsSx, ...RestInputProps } = InputProps ?? {};
+  const amountOfCharactersText = showAmountOfCharacters
+    ? `Ilość znaków ${(value ?? '').length}/${Validators.maxStringLength.value}`
+    : '';
   return (
     <TextField
       multiline
@@ -42,6 +55,7 @@ const TextAreaInner = (
       onChange={(e) => onChange(e.target.value)}
       value={value}
       size={size}
+      helperText={helperText ?? amountOfCharactersText}
       InputProps={{
         sx: { pr: 0, ...inputPropsSx },
         endAdornment: (

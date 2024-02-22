@@ -16,6 +16,7 @@ export type IconProps = MuiIconProps<'span', { component?: 'span' }> & {
     | 'visibility'
     | 'person_remove'
     | 'visibility_off'
+    | 'photo_camera'
     | 'more_vert'
     | 'navigate_before'
     | 'navigate_next'

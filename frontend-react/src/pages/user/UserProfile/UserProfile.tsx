@@ -2,8 +2,12 @@ import { styled } from '@mui/material';
 import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
-import { useGetUser } from 'src/queries/user-queries';
-import { Avatar, Box, Card, CardContent, Container, Stack, Typography } from 'src/ui-components';
+import { UserProfileDescription } from 'src/pages/user/UserProfile/UserProfileDescription';
+import { UserProfileImage } from 'src/pages/user/UserProfile/UserProfileImage';
+import { UserProfileInterests } from 'src/pages/user/UserProfile/UserProfileInterests';
+import { useGetUserProfile } from 'src/queries/user-profile-queries';
+import { useGetCurrentUser } from 'src/queries/user-queries';
+import { Box, Container, Stack, Typography } from 'src/ui-components';
 import { UserProfileParams } from 'src/utils/enums/app-routes';
 
 const StyledTopBackground = styled(Box)(({ theme }) => ({
@@ -18,33 +22,33 @@ const StyledTopBackground = styled(Box)(({ theme }) => ({
 
 export const UserProfile = () => {
   const params = useRouteParams<UserProfileParams>();
-  const { user } = useGetUser(params.id);
+  const { userProfile, userProfileRefetch } = useGetUserProfile(params.userId);
+  const { currentUser } = useGetCurrentUser();
 
-  if (!user) return null;
+  const isCurrentUser = !!userProfile && userProfile.user.id === currentUser?.id;
+
+  if (!userProfile) return null;
   return (
     <>
       <Header leftSlot={<GoBackBtn />} />
-      <Container maxWidth='sm' sx={{ position: 'relative', pt: 2 }}>
+      <Container maxWidth='sm' sx={{ position: 'relative', py: 2 }}>
         <StyledTopBackground />
         <Stack direction={'column'} gap={1} alignItems={'center'}>
-          <Avatar src={user.profileImageSrc} size={90} />
+          <UserProfileImage imgSrc={userProfile.user.profileImageSrc} isEditable={isCurrentUser} />
           <Typography fontSize={19}>
-            {user.firstName} {user.lastName}
+            {userProfile.user.firstName} {userProfile.user.lastName}
           </Typography>
         </Stack>
-        <Card sx={{ mt: 2 }}>
-          <CardContent sx={{ minWidth: 250 }}>
-            {/* <Typography variant='h6' mb={1} component='div'>
-              Opis
-            </Typography> */}
-            <Typography fontSize={14}>
-              Cześć! <br /> Jestem Kasia Masia <br /> i lubię Stasia
-            </Typography>
-          </CardContent>
-        </Card>
-        <Card sx={{ mt: 2 }}>
-          <CardContent sx={{ minWidth: 250 }}>Piłka nożna, football</CardContent>
-        </Card>
+        <UserProfileDescription
+          userProfile={userProfile}
+          isCurrentUser={isCurrentUser}
+          onReload={userProfileRefetch}
+        />
+        <UserProfileInterests
+          userProfile={userProfile}
+          isCurrentUser={isCurrentUser}
+          onReload={userProfileRefetch}
+        />
       </Container>
     </>
   );
