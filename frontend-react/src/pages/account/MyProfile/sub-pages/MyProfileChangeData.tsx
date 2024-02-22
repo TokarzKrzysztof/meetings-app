@@ -12,7 +12,6 @@ import { MyProfileHeader } from 'src/pages/account/MyProfile/sub-pages/shared/My
 import { MyProfileTitle } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileTitle';
 import { useGetLocations } from 'src/queries/location-queries';
 import { useChangePersonalData } from 'src/queries/user-queries';
-import { AppRoutes } from 'src/utils/enums/app-routes';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { Validators } from 'src/utils/helpers/validators';
 import { genderOptions } from 'src/utils/user-utils';
@@ -44,7 +43,7 @@ export const MyProfileChangeData = () => {
           variant: 'success',
           message: 'Dane zostały zaktualizowane',
         });
-        navigate(AppRoutes.MyProfile());
+        navigate(-1);
       },
     });
   };

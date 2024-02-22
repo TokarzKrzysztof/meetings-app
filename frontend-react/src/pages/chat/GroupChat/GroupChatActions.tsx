@@ -1,6 +1,6 @@
 import { useSetAtom } from 'jotai';
 import { useRef } from 'react';
-import { useNavigateBack } from 'src/hooks/useNavigateBack';
+import { useNavigate } from 'react-router-dom';
 import { Chat } from 'src/models/chat/chat';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import { useLeaveGroupChat } from 'src/queries/chat-participant-queries';
@@ -19,7 +19,7 @@ export const GroupChatActions = ({
 }: GroupChatActionsProps) => {
   const confirm = useSetAtom(confirmationDialogAtom);
   const menuAnchorRef = useRef<HTMLButtonElement>(null);
-  const navigateBack = useNavigateBack();
+  const navigate = useNavigate();
   const { leaveGroupChat } = useLeaveGroupChat();
 
   const handleLeaveChat = () => {
@@ -27,7 +27,7 @@ export const GroupChatActions = ({
       message: <DialogContentText>Czy na pewno chcesz opuścić ten chat?</DialogContentText>,
       onAccept: () =>
         leaveGroupChat(groupChat.id, {
-          onSuccess: navigateBack,
+          onSuccess: () => navigate(-1),
         }),
     });
   };
