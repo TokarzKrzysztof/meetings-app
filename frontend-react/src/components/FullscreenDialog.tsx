@@ -1,6 +1,16 @@
 import { TransitionProps } from 'notistack';
-import { forwardRef } from 'react';
-import { Dialog, DialogProps, Slide } from 'src/ui-components';
+import { ReactNode, forwardRef } from 'react';
+import {
+  AppBar,
+  Button,
+  Dialog,
+  Icon,
+  IconButton,
+  Slide,
+  Stack,
+  Toolbar,
+  Typography,
+} from 'src/ui-components';
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -11,14 +21,59 @@ const Transition = forwardRef(function Transition(
   return <Slide direction='up' ref={ref} {...props} />;
 });
 
-export type FullscreenDialogProps = Omit<DialogProps, 'TransitionComponent' | 'fullScreen'> & {};
+export type FullscreenDialogProps = {
+  open: boolean;
+  children: ReactNode;
+  onClose: () => void;
+  onSave?: () => void;
+  title?: ReactNode;
+  saveDisabled?: boolean;
+  onClear?: () => void;
+};
 
-export const FullscreenDialog = ({ ...props }: FullscreenDialogProps) => {
+export const FullscreenDialog = ({
+  open,
+  onClose,
+  onSave,
+  children,
+  title,
+  saveDisabled,
+  onClear,
+  ...props
+}: FullscreenDialogProps) => {
   return (
-    <Dialog
-      fullScreen
-      TransitionComponent={Transition}
-      {...props}
-    />
+    <Dialog open={open} fullScreen TransitionComponent={Transition} onClose={onClose} {...props}>
+      <AppBar sx={{ position: 'sticky' }}>
+        <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Stack alignItems={'center'}>
+            <IconButton color='inherit' onClick={onClose}>
+              <Icon name='close' />
+            </IconButton>
+            {title && (
+              <Typography ml={2} variant='h6'>
+                {title}
+              </Typography>
+            )}
+          </Stack>
+          <Stack alignItems={'center'}>
+            {onClear && (
+              <Button color='inherit' variant='text' onClick={onClear}>
+                WYCZYŚĆ
+              </Button>
+            )}
+            <Button
+              type='submit'
+              color='inherit'
+              variant='text'
+              disabled={saveDisabled}
+              onClick={onSave}
+            >
+              ZAPISZ
+            </Button>
+          </Stack>
+        </Toolbar>
+      </AppBar>
+      {children}
+    </Dialog>
   );
 };

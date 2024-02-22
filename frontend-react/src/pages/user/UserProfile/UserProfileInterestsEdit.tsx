@@ -2,17 +2,7 @@ import { useEffect, useState } from 'react';
 import { FullscreenDialog } from 'src/components/FullscreenDialog';
 import { UserProfile } from 'src/models/user-profile';
 import { useEditInterests, useGetAvailableInterests } from 'src/queries/user-profile-queries';
-import {
-    AppBar,
-    Box,
-    Button,
-    Chip,
-    Icon,
-    IconButton,
-    Stack,
-    Toolbar,
-    Typography,
-} from 'src/ui-components';
+import { Box, Chip, Stack, Typography } from 'src/ui-components';
 
 export type UserProfileInterestsEditProps = {
   open: boolean;
@@ -58,23 +48,7 @@ export const UserProfileInterestsEdit = ({
   };
 
   return (
-    <FullscreenDialog open={open} onClose={onClose}>
-      <AppBar sx={{ position: 'sticky' }}>
-        <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <IconButton color='inherit' onClick={onClose}>
-            <Icon name='close' />
-          </IconButton>
-          <Button
-            type='submit'
-            color='inherit'
-            variant='text'
-            onClick={handleSave}
-            disabled={!isDirty}
-          >
-            ZAPISZ
-          </Button>
-        </Toolbar>
-      </AppBar>
+    <FullscreenDialog open={open} onClose={onClose} saveDisabled={!isDirty} onSave={handleSave}>
       <Box p={2}>
         <Typography variant='h6'>Wybierz zainteresowania</Typography>
         {availableInterests && (

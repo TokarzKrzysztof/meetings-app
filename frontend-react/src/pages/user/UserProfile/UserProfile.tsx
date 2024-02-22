@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
+import { UserProfileBasicData } from 'src/pages/user/UserProfile/UserProfileBasicData';
 import { UserProfileDescription } from 'src/pages/user/UserProfile/UserProfileDescription';
 import { UserProfileImage } from 'src/pages/user/UserProfile/UserProfileImage';
 import { UserProfileInterests } from 'src/pages/user/UserProfile/UserProfileInterests';
@@ -39,16 +40,23 @@ export const UserProfile = () => {
             {userProfile.user.firstName} {userProfile.user.lastName}
           </Typography>
         </Stack>
-        <UserProfileDescription
-          userProfile={userProfile}
-          isCurrentUser={isCurrentUser}
-          onReload={userProfileRefetch}
-        />
-        <UserProfileInterests
-          userProfile={userProfile}
-          isCurrentUser={isCurrentUser}
-          onReload={userProfileRefetch}
-        />
+        <Box mt={2}>
+          <UserProfileBasicData userProfile={userProfile} isCurrentUser={isCurrentUser} />
+        </Box>
+        <Box mt={2}>
+          <UserProfileDescription
+            userProfile={userProfile}
+            isCurrentUser={isCurrentUser}
+            onReload={userProfileRefetch}
+          />
+        </Box>
+        <Box mt={2}>
+          <UserProfileInterests
+            userProfile={userProfile}
+            isCurrentUser={isCurrentUser}
+            onReload={userProfileRefetch}
+          />
+        </Box>
       </Container>
     </>
   );

@@ -141,7 +141,7 @@ namespace Meetings.Infrastructure.Services
                     Description = x.Description,
                     User = _extendedMapper.ToUserDTO(x.User),
                     UserAge = UserUtils.CalculateAge(x.User.BirthDate),
-                    DistanceFromCurrentUser = currentUser != null ? LocationUtils.GetDistanceFromLatLonInKm(x.User.Location, currentUser.Location) : null
+                    DistanceFromCurrentUser = currentUser != null ? LocationUtils.GetDistanceFromLatLonInKm(x.User.Location, currentUser.Location!) : null
                 })
                 .ToListAsync();
 

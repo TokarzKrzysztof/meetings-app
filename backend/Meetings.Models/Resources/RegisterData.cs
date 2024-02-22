@@ -11,7 +11,5 @@ namespace Meetings.Models.Resources
     public class RegisterData: UserDTO
     {
         public string? RedirectUrl { get; set; }
-        // avoid throwing error on register
-        public new UserLocation? Location { get; set; }
     }
 }

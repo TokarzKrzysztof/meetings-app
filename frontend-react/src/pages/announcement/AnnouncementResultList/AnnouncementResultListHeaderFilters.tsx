@@ -5,15 +5,7 @@ import { FullscreenDialog } from 'src/components/FullscreenDialog';
 import { AnnouncementResultListHeaderFiltersFormFields } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListHeaderFiltersFormFields';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import {
-  AppBar,
-  Box,
-  Button,
-  DialogContentText,
-  Icon,
-  IconButton,
-  Stack,
-  Toolbar,
-  Typography
+  DialogContentText
 } from 'src/ui-components';
 import {
   AnnouncementResultListQueryParams,
@@ -62,32 +54,15 @@ export const AnnouncementResultListHeaderFilters = ({
 
   const areParamsDefault = useMemo(() => areAnnouncementResultListFiltersDefault(params), [params]);
   return (
-    <FullscreenDialog open={open} onClose={handleClose}>
-      <Box component='form' onSubmit={handleSubmit(onSubmit)}>
-        <AppBar sx={{ position: 'sticky' }}>
-          <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Stack alignItems={'center'}>
-              <IconButton color='inherit' onClick={handleClose}>
-                <Icon name='close' />
-              </IconButton>
-              <Typography ml={2} variant='h6'>
-                Filtry
-              </Typography>
-            </Stack>
-            <Stack alignItems={'center'}>
-              {!areParamsDefault && (
-                <Button color='inherit' variant='text' onClick={handleClearFilters}>
-                  WYCZYŚĆ
-                </Button>
-              )}
-              <Button type='submit' color='inherit' variant='text' disabled={!isDirty}>
-                ZAPISZ
-              </Button>
-            </Stack>
-          </Toolbar>
-        </AppBar>
-        <AnnouncementResultListHeaderFiltersFormFields form={form} />
-      </Box>
+    <FullscreenDialog
+      open={open}
+      onClose={handleClose}
+      onSave={handleSubmit(onSubmit)}
+      title='Filtry'
+      saveDisabled={!isDirty}
+      onClear={!areParamsDefault ? handleClearFilters : undefined}
+    >
+      <AnnouncementResultListHeaderFiltersFormFields form={form} />
     </FullscreenDialog>
   );
 };
