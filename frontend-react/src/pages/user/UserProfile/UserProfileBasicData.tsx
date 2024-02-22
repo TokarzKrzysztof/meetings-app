@@ -21,7 +21,7 @@ export const UserProfileBasicData = ({ userProfile, isCurrentUser }: UserProfile
 
     const { city, adminName } = locations.find((x) => x.id === userProfile.user.locationId)!;
     return `${city}, ${adminName}`;
-  }, [locations]);
+  }, [locations, userProfile]);
 
   const birthDateText = useMemo(() => {
     const dateText = dayjs(userProfile.user.birthDate).toDate().toLocaleDateString()

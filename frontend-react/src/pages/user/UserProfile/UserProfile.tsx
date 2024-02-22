@@ -23,12 +23,12 @@ const StyledTopBackground = styled(Box)(({ theme }) => ({
 
 export const UserProfile = () => {
   const params = useRouteParams<UserProfileParams>();
-  const { userProfile, userProfileRefetch } = useGetUserProfile(params.userId);
+  const { userProfile, userProfileFetching, userProfileRefetch } = useGetUserProfile(params.userId);
   const { currentUser } = useGetCurrentUser();
 
   const isCurrentUser = !!userProfile && userProfile.user.id === currentUser?.id;
 
-  if (!userProfile) return null;
+  if (!userProfile || userProfileFetching) return null;
   return (
     <>
       <Header leftSlot={<GoBackBtn />} />
