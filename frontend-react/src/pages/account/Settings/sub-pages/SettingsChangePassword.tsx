@@ -3,10 +3,10 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { FormField } from 'src/components/FormField';
-import { MyProfileActionButtons } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileActionButtons';
-import { MyProfileForm } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileForm';
-import { MyProfileHeader } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileHeader';
-import { MyProfileTitle } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileTitle';
+import { SettingsActionButtons } from 'src/pages/account/Settings/sub-pages/shared/SettingsActionButtons';
+import { SettingsForm } from 'src/pages/account/Settings/sub-pages/shared/SettingsForm';
+import { SettingsHeader } from 'src/pages/account/Settings/sub-pages/shared/SettingsHeader';
+import { SettingsTitle } from 'src/pages/account/Settings/sub-pages/shared/SettingsTitle';
 import {
   PasswordFields,
   PasswordFieldsFormData,
@@ -19,7 +19,7 @@ type FormData = {
   existingPassword: string;
 } & PasswordFieldsFormData;
 
-export const MyProfileChangePassword = () => {
+export const SettingsChangePassword = () => {
   const form = useForm<FormData>();
   const { register, handleSubmit, setError } = form;
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ export const MyProfileChangePassword = () => {
             variant: 'success',
             message: 'Hasło zostało zmienione',
           });
-          navigate(AppRoutes.MyProfile());
+          navigate(AppRoutes.Settings());
         },
       },
     );
@@ -54,9 +54,9 @@ export const MyProfileChangePassword = () => {
 
   return (
     <>
-      <MyProfileHeader />
-      <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
-        <MyProfileTitle title='Zmiana hasła'></MyProfileTitle>
+      <SettingsHeader />
+      <SettingsForm onSubmit={handleSubmit(onSubmit)}>
+        <SettingsTitle title='Zmiana hasła'></SettingsTitle>
         <FormField
           form={form}
           label='Aktualne hasło'
@@ -70,10 +70,10 @@ export const MyProfileChangePassword = () => {
           form={form as any}
           labels={['Nowe hasło', 'Powtórz nowe hasło']}
         ></PasswordFields>
-        <MyProfileActionButtons isSaveDisabled={changePasswordInProgress}></MyProfileActionButtons>
-      </MyProfileForm>
+        <SettingsActionButtons isSaveDisabled={changePasswordInProgress}></SettingsActionButtons>
+      </SettingsForm>
     </>
   );
 };
 
-MyProfileChangePassword.displayName = 'MyProfileChangePassword';
+SettingsChangePassword.displayName = 'SettingsChangePassword';

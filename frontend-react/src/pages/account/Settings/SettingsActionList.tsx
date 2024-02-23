@@ -14,11 +14,11 @@ import {
 } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
-export type MyProfileActionListProps = {
+export type SettingsActionListProps = {
   currentUser: User;
 };
 
-export const MyProfileActionList = ({ currentUser }: MyProfileActionListProps) => {
+export const SettingsActionList = ({ currentUser }: SettingsActionListProps) => {
   const confirm = useSetAtom(confirmationDialogAtom);
   const { removeAccount } = useRemoveAccount();
   const { enqueueSnackbar } = useSnackbar();
@@ -74,21 +74,21 @@ export const MyProfileActionList = ({ currentUser }: MyProfileActionListProps) =
           <ListItemText primary='Mój profil' />
         </ListItemButton>
 
-        <ListItemButton component={Link} to={AppRoutes.MyProfileChangeData()}>
+        <ListItemButton component={Link} to={AppRoutes.SettingsChangeData()}>
           <ListItemIcon>
             <Icon name='edit' />
           </ListItemIcon>
           <ListItemText primary='Edytuj dane osobowe' />
         </ListItemButton>
 
-        <ListItemButton component={Link} to={AppRoutes.MyProfileChangePassword()}>
+        <ListItemButton component={Link} to={AppRoutes.SettingsChangePassword()}>
           <ListItemIcon>
             <Icon name='key' />
           </ListItemIcon>
           <ListItemText primary='Zmień hasło' />
         </ListItemButton>
 
-        <ListItemButton component={Link} to={AppRoutes.MyProfileChangeEmail()}>
+        <ListItemButton component={Link} to={AppRoutes.SettingsChangeEmail()}>
           <ListItemIcon>
             <Icon name='email' />
           </ListItemIcon>

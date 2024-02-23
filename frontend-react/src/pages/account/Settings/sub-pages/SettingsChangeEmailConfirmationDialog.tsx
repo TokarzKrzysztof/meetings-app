@@ -1,16 +1,16 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from 'src/ui-components';
 
-export type MyProfileChangeEmailConfirmationDialogProps = {
+export type SettingsChangeEmailConfirmationDialogProps = {
   onRetry: () => void;
   onClose: () => void;
   inProgress: boolean;
 };
 
-export const MyProfileChangeEmailConfirmationDialog = ({
+export const SettingsChangeEmailConfirmationDialog = ({
   onRetry,
   onClose,
   inProgress,
-}: MyProfileChangeEmailConfirmationDialogProps) => {
+}: SettingsChangeEmailConfirmationDialogProps) => {
   return (
     <Dialog open>
       <DialogContent>

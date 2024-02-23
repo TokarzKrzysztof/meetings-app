@@ -32,7 +32,7 @@ export const UserProfileBasicData = ({ userProfile, isCurrentUser }: UserProfile
     <UserProfileCard
       title='Dane podstawowe'
       showEditButton={isCurrentUser}
-      editLink={AppRoutes.MyProfileChangeData()}
+      editLink={AppRoutes.SettingsChangeData()}
     >
       <List disablePadding>
         <ListItem disableGutters disablePadding>

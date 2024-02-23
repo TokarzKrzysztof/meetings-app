@@ -43,7 +43,7 @@ export const HeaderMenuAccountButton = ({
         </ListItemIcon>
         <ListItemText>Mój profil</ListItemText>
       </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.MyProfile()}>
+      <MenuItem component={Link} to={AppRoutes.Settings()}>
         <ListItemIcon>
           <Icon name={'settings'} />
         </ListItemIcon>

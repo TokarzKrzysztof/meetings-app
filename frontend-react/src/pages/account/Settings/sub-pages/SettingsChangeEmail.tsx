@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormField } from 'src/components/FormField';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
-import { MyProfileChangeEmailConfirmationDialog } from 'src/pages/account/MyProfile/sub-pages/MyProfileChangeEmailConfirmationDialog';
-import { MyProfileActionButtons } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileActionButtons';
-import { MyProfileForm } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileForm';
-import { MyProfileHeader } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileHeader';
-import { MyProfileTitle } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileTitle';
+import { SettingsChangeEmailConfirmationDialog } from 'src/pages/account/Settings/sub-pages/SettingsChangeEmailConfirmationDialog';
+import { SettingsActionButtons } from 'src/pages/account/Settings/sub-pages/shared/SettingsActionButtons';
+import { SettingsForm } from 'src/pages/account/Settings/sub-pages/shared/SettingsForm';
+import { SettingsHeader } from 'src/pages/account/Settings/sub-pages/shared/SettingsHeader';
+import { SettingsTitle } from 'src/pages/account/Settings/sub-pages/shared/SettingsTitle';
 import { useSendChangeEmailAddressEmail } from 'src/queries/user-queries';
 import { Typography } from 'src/ui-components';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
@@ -17,7 +17,7 @@ type FormData = {
   email: string;
 };
 
-export const MyProfileChangeEmail = () => {
+export const SettingsChangeEmail = () => {
   const currentUser = useLoggedInUser();
   const form = useForm<FormData>();
   const { register, handleSubmit, setError, getValues } = form;
@@ -46,9 +46,9 @@ export const MyProfileChangeEmail = () => {
 
   return (
     <>
-      <MyProfileHeader />
-      <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
-        <MyProfileTitle title='Zmiana adresu email'></MyProfileTitle>
+      <SettingsHeader />
+      <SettingsForm onSubmit={handleSubmit(onSubmit)}>
+        <SettingsTitle title='Zmiana adresu email'></SettingsTitle>
         <Typography mb={2}>
           Twój obecny adres email: <b>{currentUser.email}</b>
         </Typography>
@@ -71,12 +71,12 @@ export const MyProfileChangeEmail = () => {
             },
           })}
         ></FormField>
-        <MyProfileActionButtons
+        <SettingsActionButtons
           isSaveDisabled={sendChangeEmailAddressEmailInProgress}
-        ></MyProfileActionButtons>
-      </MyProfileForm>
+        ></SettingsActionButtons>
+      </SettingsForm>
       {showDialog && (
-        <MyProfileChangeEmailConfirmationDialog
+        <SettingsChangeEmailConfirmationDialog
           onRetry={() => onSubmit(getValues())}
           onClose={() => setShowDialog(false)}
           inProgress={sendChangeEmailAddressEmailInProgress}
@@ -86,4 +86,4 @@ export const MyProfileChangeEmail = () => {
   );
 };
 
-MyProfileChangeEmail.displayName = 'MyProfileChangeEmail';
+SettingsChangeEmail.displayName = 'SettingsChangeEmail';

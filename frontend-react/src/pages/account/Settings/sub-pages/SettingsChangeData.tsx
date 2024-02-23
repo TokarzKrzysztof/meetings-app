@@ -6,10 +6,10 @@ import { ControlledFormField } from 'src/components/controlled-form-field/Contro
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useSetQueryData } from 'src/hooks/useSetQueryData';
 import { User } from 'src/models/user';
-import { MyProfileActionButtons } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileActionButtons';
-import { MyProfileForm } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileForm';
-import { MyProfileHeader } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileHeader';
-import { MyProfileTitle } from 'src/pages/account/MyProfile/sub-pages/shared/MyProfileTitle';
+import { SettingsActionButtons } from 'src/pages/account/Settings/sub-pages/shared/SettingsActionButtons';
+import { SettingsForm } from 'src/pages/account/Settings/sub-pages/shared/SettingsForm';
+import { SettingsHeader } from 'src/pages/account/Settings/sub-pages/shared/SettingsHeader';
+import { SettingsTitle } from 'src/pages/account/Settings/sub-pages/shared/SettingsTitle';
 import { useGetLocations } from 'src/queries/location-queries';
 import { useChangePersonalData } from 'src/queries/user-queries';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
@@ -18,7 +18,7 @@ import { genderOptions } from 'src/utils/user-utils';
 
 type FormData = Pick<User, 'firstName' | 'lastName' | 'birthDate' | 'gender' | 'locationId'>;
 
-export const MyProfileChangeData = () => {
+export const SettingsChangeData = () => {
   const { locations } = useGetLocations();
   const currentUser = useLoggedInUser();
   const form = useForm<FormData>({
@@ -50,9 +50,9 @@ export const MyProfileChangeData = () => {
 
   return (
     <>
-      <MyProfileHeader />
-      <MyProfileForm onSubmit={handleSubmit(onSubmit)}>
-        <MyProfileTitle title='Edycja danych osobowych'></MyProfileTitle>
+      <SettingsHeader />
+      <SettingsForm onSubmit={handleSubmit(onSubmit)}>
+        <SettingsTitle title='Edycja danych osobowych'></SettingsTitle>
         <FormField
           form={form}
           label='Imię'
@@ -102,12 +102,12 @@ export const MyProfileChangeData = () => {
           }}
         ></ControlledFormField>
 
-        <MyProfileActionButtons
+        <SettingsActionButtons
           isSaveDisabled={changePersonalDataInProgress || !isDirty}
-        ></MyProfileActionButtons>
-      </MyProfileForm>
+        ></SettingsActionButtons>
+      </SettingsForm>
     </>
   );
 };
 
-MyProfileChangeData.displayName = 'MyProfileChangeData';
+SettingsChangeData.displayName = 'SettingsChangeData';

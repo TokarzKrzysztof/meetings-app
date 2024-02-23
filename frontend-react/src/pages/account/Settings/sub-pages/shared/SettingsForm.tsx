@@ -1,12 +1,12 @@
 import { FormHTMLAttributes, PropsWithChildren } from 'react';
 import { Container } from 'src/ui-components';
 
-export type MyProfileFormProps = PropsWithChildren<{
+export type SettingsFormProps = PropsWithChildren<{
   onSubmit: FormHTMLAttributes<HTMLFormElement>['onSubmit'];
   onChange?: FormHTMLAttributes<HTMLFormElement>['onChange'];
 }>;
 
-export const MyProfileForm = ({ children, onSubmit, onChange }: MyProfileFormProps) => {
+export const SettingsForm = ({ children, onSubmit, onChange }: SettingsFormProps) => {
   return (
     <Container
       component='form'

@@ -195,40 +195,40 @@ export const router = createBrowserRouter([
         loader: protectedLoader,
       },
       {
-        path: AppRoutes.MyProfile(),
+        path: AppRoutes.Settings(),
         lazy: async () => {
-          const { MyProfile } = await import('./pages/account/MyProfile/MyProfile');
-          return { Component: MyProfile };
+          const { Settings } = await import('./pages/account/Settings/SettingsProfile');
+          return { Component: Settings };
         },
         loader: protectedLoader,
         children: [
           {
-            path: AppRoutes.MyProfileChangeData(),
+            path: AppRoutes.SettingsChangeData(),
             lazy: async () => {
-              const { MyProfileChangeData } = await import(
-                './pages/account/MyProfile/sub-pages/MyProfileChangeData'
+              const { SettingsChangeData } = await import(
+                './pages/account/Settings/sub-pages/SettingsChangeData'
               );
-              return { Component: MyProfileChangeData };
+              return { Component: SettingsChangeData };
             },
             loader: protectedLoader,
           },
           {
-            path: AppRoutes.MyProfileChangeEmail(),
+            path: AppRoutes.SettingsChangeEmail(),
             lazy: async () => {
-              const { MyProfileChangeEmail } = await import(
-                './pages/account/MyProfile/sub-pages/MyProfileChangeEmail'
+              const { SettingsChangeEmail } = await import(
+                './pages/account/Settings/sub-pages/SettingsChangeEmail'
               );
-              return { Component: MyProfileChangeEmail };
+              return { Component: SettingsChangeEmail };
             },
             loader: protectedLoader,
           },
           {
-            path: AppRoutes.MyProfileChangePassword(),
+            path: AppRoutes.SettingsChangePassword(),
             lazy: async () => {
-              const { MyProfileChangePassword } = await import(
-                './pages/account/MyProfile/sub-pages/MyProfileChangePassword'
+              const { SettingsChangePassword } = await import(
+                './pages/account/Settings/sub-pages/SettingsChangePassword'
               );
-              return { Component: MyProfileChangePassword };
+              return { Component: SettingsChangePassword };
             },
             loader: protectedLoader,
           },
