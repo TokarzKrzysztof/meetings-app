@@ -1,13 +1,13 @@
 import { LoginCredentials } from 'src/models/login-credentials';
 
-export type SimpleStorageKey = 'token';
+export type SimpleStorageKey = 'token' | 'hide-edit-profile-info';
 export type ObjectStorageKey = {
   'login-credentials': LoginCredentials;
 };
 
 export class LocalStorage {
-  static setValue(key: SimpleStorageKey, value: string) {
-    window.localStorage.setItem(key, value);
+  static setValue(key: SimpleStorageKey, value: string | boolean | number) {
+    window.localStorage.setItem(key, value.toString());
   }
 
   static getValue(key: SimpleStorageKey): string | null {

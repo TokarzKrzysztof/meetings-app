@@ -1,4 +1,5 @@
 import { styled } from '@mui/material';
+import { useEffect } from 'react';
 import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
@@ -11,6 +12,7 @@ import { useGetUserProfile } from 'src/queries/user-profile-queries';
 import { useGetCurrentUser } from 'src/queries/user-queries';
 import { Box, Container, Stack, Typography } from 'src/ui-components';
 import { UserProfileParams } from 'src/utils/enums/app-routes';
+import { LocalStorage } from 'src/utils/helpers/local-storage';
 
 const StyledTopBackground = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -28,6 +30,12 @@ export const UserProfile = () => {
   const { currentUser } = useGetCurrentUser();
 
   const isCurrentUser = !!userProfile && userProfile.user.id === currentUser?.id;
+
+  useEffect(() => {
+    if (isCurrentUser && !LocalStorage.getValue('hide-edit-profile-info')) {
+      LocalStorage.setValue('hide-edit-profile-info', true);
+    }
+  }, [isCurrentUser]);
 
   if (!userProfile || userProfileFetching) return null;
   return (

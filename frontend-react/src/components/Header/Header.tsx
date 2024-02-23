@@ -1,5 +1,6 @@
 import { ReactElement, ReactNode, cloneElement, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { CheckOwnProfileInfo } from 'src/components/CheckOwnProfileInfo';
 import { HeaderMenu } from 'src/components/header/HeaderMenu';
 import { AppBar, Box, Slide, Toolbar } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -11,10 +12,13 @@ export type HeaderProps = {
 };
 
 export const Header = ({ leftSlot, secondToolbar }: HeaderProps) => {
+  const checkOwnProfileInfo = <CheckOwnProfileInfo />;
+
   return (
     <>
       <HideOnScroll>
         <AppBar>
+          {checkOwnProfileInfo}
           <Toolbar sx={{ justifyContent: 'space-between' }}>
             <Box>
               {leftSlot ?? (
@@ -30,6 +34,7 @@ export const Header = ({ leftSlot, secondToolbar }: HeaderProps) => {
           {secondToolbar}
         </AppBar>
       </HideOnScroll>
+      {cloneElement(checkOwnProfileInfo)}
       <Toolbar />
       {secondToolbar && cloneElement(secondToolbar, { children: null })}
     </>
