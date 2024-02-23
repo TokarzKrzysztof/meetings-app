@@ -47,6 +47,7 @@ export const RadioGroupField = <
       error={!!fieldState.error}
       variant='standard'
       sx={{ mt: hasTopSpacing ? 2 : undefined, mb: hasBottomSpacing ? 2 : undefined }}
+      fullWidth
     >
       <FormLabel>{label}</FormLabel>
       <RadioGroup

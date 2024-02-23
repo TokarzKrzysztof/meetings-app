@@ -26,7 +26,7 @@ export const AnnouncementResultListHeaderFiltersFormFields = ({
 
   if (!category) return null;
   return (
-    <Container sx={{ mt: 3 }}>
+    <Container>
       <ControlledFormField
         control={control}
         element='slider'

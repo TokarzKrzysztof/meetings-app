@@ -2,7 +2,6 @@ import { styled } from '@mui/material';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Header } from 'src/components/header/Header';
 import { ChatType } from 'src/models/chat/chat';
-import { MyChatsActions } from 'src/pages/chat/MyChats/MyChatsActions';
 import { MyChatsMore } from 'src/pages/chat/MyChats/MyChatsMore';
 import { MyChatsNewPrivateMessage } from 'src/pages/chat/MyChats/MyChatsNewPrivateMessage';
 import { useGetUnreadChatsCount } from 'src/queries/chat-participant-queries';
@@ -53,10 +52,7 @@ export const MyChats = () => {
               value={AppRoutes.MyChatsGroup()}
             />
           </Tabs>
-          <Box>
-            <MyChatsActions />
-            <MyChatsMore />
-          </Box>
+          <MyChatsMore />
         </Stack>
       )}
       <Outlet />

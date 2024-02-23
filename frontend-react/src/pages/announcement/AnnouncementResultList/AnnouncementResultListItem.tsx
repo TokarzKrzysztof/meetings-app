@@ -1,5 +1,6 @@
 import { Divider } from '@mui/material';
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ExperienceLevel } from 'src/components/ExperienceLevel';
 import { LocationText } from 'src/components/LocationText';
 import { LoginRequiredDialog } from 'src/components/LoginRequiredDialog';
@@ -29,7 +30,9 @@ export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemP
     <>
       <Card>
         <Stack p={1} alignItems='center'>
-          <Avatar src={data.user.profileImageSrc} size={50} />
+          <Box role='button' component={Link} to={AppRoutes.UserProfile({ userId: data.user.id })}>
+            <Avatar src={data.user.profileImageSrc} size={50} />
+          </Box>
           <Box ml={2}>
             <Typography fontSize={14}>
               {data.user.firstName}, {age}

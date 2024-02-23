@@ -6,11 +6,20 @@ import {
 import { ForwardedRef } from 'react';
 import { typedForwardRef } from 'src/utils/types/forward-ref';
 
-export type ContainerProps = {};
+export type ContainerProps<D extends React.ElementType = ContainerTypeMap['defaultComponent']> =
+  MuiContainerProps<D, { component?: D }> & {
+    disableVerticalSpacing?: boolean;
+  };
 
 const ContainerInner = <D extends React.ElementType = ContainerTypeMap['defaultComponent']>(
-  { ...props }: MuiContainerProps<D, { component?: D }> & ContainerProps,
+  { sx, disableVerticalSpacing, ...props }: ContainerProps<D>,
   ref: ForwardedRef<HTMLDivElement>
-) => <MuiContainer {...props} ref={ref}></MuiContainer>;
+) => (
+  <MuiContainer
+    ref={ref}
+    sx={{ py: disableVerticalSpacing ? undefined : 2, ...sx }}
+    {...props}
+  ></MuiContainer>
+);
 
 export const Container = typedForwardRef(ContainerInner);

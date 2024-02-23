@@ -22,8 +22,8 @@ export const MyAnnouncements = () => {
   return (
     <>
       <Header />
-      <Container sx={{ py: 2 }} maxWidth='sm'>
-        <Typography variant='h6' mb={2} textAlign='center' fontWeight='bold' position='relative'>
+      <Container maxWidth='sm'>
+        <Typography variant='h6' mb={2} textAlign='center' fontWeight='bold'>
           Moje ogłoszenia
         </Typography>
 

@@ -6,7 +6,7 @@ const StyledMenu = styled(MuiMenu)({
   '& .MuiList-root': {
     padding: 0,
   },
-  '& .MuiMenuItem-root': {
+  '& .MuiMenuItem-root, & .MuiTypography-root': {
     fontSize: 13,
   },
 });

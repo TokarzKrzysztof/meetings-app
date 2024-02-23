@@ -1,9 +1,9 @@
 import { Outlet, useLocation } from 'react-router-dom';
+import { PageTitle } from 'src/components/PageTitle';
 import { Header } from 'src/components/header/Header';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { MyProfileActionList } from 'src/pages/account/MyProfile/MyProfileActionList';
-import { MyProfileImage } from 'src/pages/account/MyProfile/MyProfileImage';
-import { Container, Stack, Typography } from 'src/ui-components';
+import { Container } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export const MyProfile = () => {
@@ -14,14 +14,9 @@ export const MyProfile = () => {
     return (
       <>
         <Header />
-        <Container sx={{ pt: 4 }}>
-          <Stack gap={3} alignItems='center'>
-            <MyProfileImage currentUser={currentUser} />
-            <Typography fontSize='large'>
-              {currentUser.firstName} {currentUser.lastName}
-            </Typography>
-          </Stack>
-          <MyProfileActionList currentUser={currentUser}/>
+        <Container>
+          <PageTitle>Ustawienia konta</PageTitle>
+          <MyProfileActionList currentUser={currentUser} />
         </Container>
       </>
     );

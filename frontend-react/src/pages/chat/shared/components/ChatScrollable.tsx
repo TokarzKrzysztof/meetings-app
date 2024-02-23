@@ -94,7 +94,7 @@ const ChatScrollableInner = (
 
   useImperativeHandle(ref, () => ({ scrollToBottom }), []);
   return (
-    <StyledScrollableContainer ref={scrollableRef}>
+    <StyledScrollableContainer ref={scrollableRef} disableVerticalSpacing>
       {top}
 
       <Stack direction='column' py={1}>

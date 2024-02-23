@@ -1,7 +1,15 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { User } from 'src/models/user';
-import { Avatar, Icon, IconButton, Menu, MenuItem } from 'src/ui-components';
+import {
+  Avatar,
+  Icon,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type HeaderMenuAccountButtonProps = {
@@ -18,23 +26,49 @@ export const HeaderMenuAccountButton = ({
   const menuOptions = currentUser ? (
     <>
       <MenuItem component={Link} to={AppRoutes.NewAnnouncement()} sx={{ fontWeight: 'bold' }}>
-        Dodaj ogłoszenie
-      </MenuItem>
-      <MenuItem component={Link} to={AppRoutes.UserProfile({ userId: currentUser.id })}>
-        Mój profil
+        <ListItemIcon>
+          <Icon name={'campaign'} />
+        </ListItemIcon>
+        <ListItemText>Dodaj ogłoszenie</ListItemText>
       </MenuItem>
       <MenuItem component={Link} to={AppRoutes.MyAnnouncements()}>
-        Moje ogłoszenia
+        <ListItemIcon>
+          <Icon name={'list'} />
+        </ListItemIcon>
+        <ListItemText>Moje ogłoszenia</ListItemText>
       </MenuItem>
-      <MenuItem onClick={onLogout}>Wyloguj się</MenuItem>
+      <MenuItem component={Link} to={AppRoutes.UserProfile({ userId: currentUser.id })}>
+        <ListItemIcon>
+          <Icon name={'person'} />
+        </ListItemIcon>
+        <ListItemText>Mój profil</ListItemText>
+      </MenuItem>
+      <MenuItem component={Link} to={AppRoutes.MyProfile()}>
+        <ListItemIcon>
+          <Icon name={'settings'} />
+        </ListItemIcon>
+        <ListItemText>Ustawienia</ListItemText>
+      </MenuItem>
+      <MenuItem onClick={onLogout}>
+        <ListItemIcon>
+          <Icon name={'logout'} />
+        </ListItemIcon>
+        <ListItemText>Wyloguj się</ListItemText>
+      </MenuItem>
     </>
   ) : (
     <>
       <MenuItem component={Link} to={AppRoutes.Login()}>
-        Logowanie
+        <ListItemIcon>
+          <Icon name={'login'} />
+        </ListItemIcon>
+        <ListItemText>Logowanie</ListItemText>
       </MenuItem>
       <MenuItem component={Link} to={AppRoutes.Register()}>
-        Rejestracja
+        <ListItemIcon>
+          <Icon name={'person_add'} />
+        </ListItemIcon>
+        <ListItemText>Rejestracja</ListItemText>
       </MenuItem>
     </>
   );

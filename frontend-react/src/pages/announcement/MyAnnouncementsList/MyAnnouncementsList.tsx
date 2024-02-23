@@ -43,7 +43,7 @@ export const MyAnnouncementsList = () => {
   return (
     <>
       <Header leftSlot={<GoBackBtn text={title} />} />
-      <Container sx={{ py: 2 }} maxWidth='sm'>
+      <Container maxWidth='sm'>
         <Stack direction='column' gap={2}>
           <InfiniteScroll
             next={currentUserAnnouncementsFetchNextPage}

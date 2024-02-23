@@ -41,7 +41,7 @@ export const UserProfile = () => {
   return (
     <>
       <Header leftSlot={<GoBackBtn />} />
-      <Container maxWidth='sm' sx={{ position: 'relative', py: 2 }}>
+      <Container maxWidth='sm' sx={{ position: 'relative' }}>
         <StyledTopBackground />
         <Stack direction={'column'} gap={1} alignItems={'center'}>
           <UserProfileImage

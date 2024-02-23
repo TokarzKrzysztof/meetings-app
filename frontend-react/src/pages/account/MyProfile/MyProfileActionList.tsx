@@ -46,13 +46,13 @@ export const MyProfileActionList = ({ currentUser }: MyProfileActionListProps) =
           </ul>
         </DialogContentText>
       ),
-      confirmButtonText: "Usuń konto",
+      confirmButtonText: 'Usuń konto',
       ConfirmButtonProps: {
         color: 'error',
-        variant: 'text'
+        variant: 'text',
       },
       CancelButtonProps: {
-        variant: 'contained'
+        variant: 'contained',
       },
       onAccept: () =>
         removeAccount(undefined, {
@@ -66,7 +66,14 @@ export const MyProfileActionList = ({ currentUser }: MyProfileActionListProps) =
 
   return (
     <>
-      <List sx={{ mt: 4 }} color='primary'>
+      <List color='primary'>
+        <ListItemButton component={Link} to={AppRoutes.UserProfile({ userId: currentUser.id })}>
+          <ListItemIcon>
+            <Icon name='person' />
+          </ListItemIcon>
+          <ListItemText primary='Mój profil' />
+        </ListItemButton>
+
         <ListItemButton component={Link} to={AppRoutes.MyProfileChangeData()}>
           <ListItemIcon>
             <Icon name='edit' />

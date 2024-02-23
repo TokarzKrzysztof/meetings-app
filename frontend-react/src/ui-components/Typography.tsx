@@ -4,10 +4,9 @@ import {
   TypographyTypeMap,
 } from '@mui/material/Typography';
 
-export type TypographyProps = {};
+export type TypographyProps<D extends React.ElementType = TypographyTypeMap['defaultComponent']> =
+  MuiTypographyProps<D, { component?: D }> & {};
 
 export const Typography = <D extends React.ElementType = TypographyTypeMap['defaultComponent']>({
   ...props
-}: MuiTypographyProps<D, { component?: D }> & TypographyProps) => (
-  <MuiTypography {...props}></MuiTypography>
-);
+}: TypographyProps<D>) => <MuiTypography {...props}></MuiTypography>;

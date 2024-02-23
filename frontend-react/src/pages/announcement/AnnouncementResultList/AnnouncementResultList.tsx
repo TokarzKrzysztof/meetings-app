@@ -30,12 +30,12 @@ export const AnnouncementResultList = () => {
       <AnnouncementResultListHeader params={params} onUpdateQueryParams={updateQueryParams} />
       <Container>
         {announcementResultList?.length !== 0 ? (
-          <Typography color={'black'} my={2}>
+          <Typography color={'black'} mb={2}>
             Ogłoszenia z kategorii:{' '}
             <span style={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>{categoryName}</span>
           </Typography>
         ) : (
-          <Box mt={6} textAlign='center' color='grey'>
+          <Box mt={4} textAlign='center' color='grey'>
             <Typography>
               Brak ogłoszeń z kategorii <br />
               <b>{categoryName}</b>

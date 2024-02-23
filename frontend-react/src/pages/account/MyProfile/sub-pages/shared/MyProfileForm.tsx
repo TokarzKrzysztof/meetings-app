@@ -10,7 +10,6 @@ export const MyProfileForm = ({ children, onSubmit, onChange }: MyProfileFormPro
   return (
     <Container
       component='form'
-      sx={{ pb: 2 }}
       onSubmit={onSubmit}
       onChange={onChange}
       maxWidth='sm'

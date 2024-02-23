@@ -1,13 +1,9 @@
-import { Typography } from 'src/ui-components';
+import { PageTitle } from 'src/components/PageTitle';
 
 export type MyProfileTitleProps = {
   title: string;
 };
 
 export const MyProfileTitle = ({ title }: MyProfileTitleProps) => {
-  return (
-    <Typography variant='h5' sx={{ my: 8 }} textAlign='center' fontWeight='bold'>
-      {title}
-    </Typography>
-  );
+  return <PageTitle mb={4}>{title}</PageTitle>;
 };
