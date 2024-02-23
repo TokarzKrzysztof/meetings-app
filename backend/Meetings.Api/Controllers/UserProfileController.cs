@@ -33,16 +33,16 @@ namespace Meetings.Api.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> EditInterests([FromQuery] string[] data)
+        public async Task<IActionResult> EditInterests([FromQuery] Guid[] ids)
         {
-            await _userProfileService.EditInterests(data);
+            await _userProfileService.EditInterests(ids);
             return Ok();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAvailableInterests()
         {
-            string[] interests = _userProfileService.GetAvailableInterests();
+            List<Interest> interests = _userProfileService.GetAvailableInterests();
             return Ok(interests);
         }
     }

@@ -48,25 +48,16 @@ namespace Meetings.Infrastructure.Services
             await _repository.Update(userProfile);
         }
 
-        public async Task EditInterests(string[] data)
-        {     
+        public async Task EditInterests(Guid[] data)
+        {
             var userProfile = await GetCurrentUserProfile();
-
             // to preserve order of interests
-            var result = new List<string>();
-            foreach (var item in GetAvailableInterests())
-            {
-                if (data.Contains(item))
-                {
-                    result.Add(item);
-                }
-            }
-            userProfile.Interests = result;
+            userProfile.InterestsIds = GetAvailableInterests().Where(x => data.Contains(x.Id)).Select(x => x.Id).ToList();
 
             await _repository.Update(userProfile);
         }
 
-        public string[] GetAvailableInterests()
+        public List<Interest> GetAvailableInterests()
         {
             return UserProfileUtils.Interests;
         }

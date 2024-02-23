@@ -43,7 +43,7 @@ namespace Meetings.Database
                 .HasForeignKey<UserProfile>(e => e.UserId)
                 .IsRequired();
 
-            builder.Entity<UserProfile>().Property(x => x.Interests)
+            builder.Entity<UserProfile>().Property(x => x.InterestsIds)
                 .HasConversion<string>();
         }
     }

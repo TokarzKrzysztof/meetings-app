@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { UseMutationOptions, UseQueryOptions, useMutation, useQuery } from 'react-query';
 import axios from 'src/config/axios-config';
-import { UserProfile } from 'src/models/user-profile';
+import { Interest, UserProfile } from 'src/models/user-profile';
 import { apiUrl } from 'src/utils/api-url';
 import {
   genericUseMutationMethods,
@@ -42,11 +42,11 @@ export const useEditDescription = (
 };
 
 export const useEditInterests = (
-  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, UserProfile['interests']>
+  options?: UseMutationOptions<void, AxiosError<HttpErrorData>, string[]>
 ) => {
   const mutation = useMutation({
-    mutationFn: (data) => {
-      const params = { data };
+    mutationFn: (ids) => {
+      const params = { ids };
       return axios.patch(`${baseUrl}/EditInterests`, null, {
         params,
         paramsSerializer: { indexes: null },
@@ -59,7 +59,7 @@ export const useEditInterests = (
 };
 
 export const useGetAvailableInterests = (
-  options?: UseQueryOptions<string[], AxiosError<HttpErrorData>>
+  options?: UseQueryOptions<Interest[], AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
     queryKey: 'GetAvailableInterests',

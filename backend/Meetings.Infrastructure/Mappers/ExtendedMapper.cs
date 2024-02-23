@@ -31,6 +31,7 @@ namespace Meetings.Infrastructure.Mappers
         {
             var result = _mapper.Map<UserProfileDTO>(entity);
             result.User = ToUserDTO(entity.User);
+            result.Interests = UserProfileUtils.Interests.Where(x => entity.InterestsIds.Contains(x.Id)).ToList();
 
             return result;
         }
