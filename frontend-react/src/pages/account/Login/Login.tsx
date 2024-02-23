@@ -20,7 +20,7 @@ import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 import { ValidationPatterns } from 'src/utils/helpers/validation-patterns';
 
 export const Login = () => {
-  const params = useRouteParams<LoginParams>();
+  const [params] = useRouteParams<LoginParams>();
   const form = useForm<LoginCredentials>();
   const { register, handleSubmit, getValues } = form;
   const navigate = useNavigate();

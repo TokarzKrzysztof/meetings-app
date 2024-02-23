@@ -8,7 +8,7 @@ import { Container, Typography } from 'src/ui-components';
 import { HomeParams } from 'src/utils/enums/app-routes';
 
 export const Home = () => {
-  const params = useRouteParams<HomeParams>();
+  const [params] = useRouteParams<HomeParams>();
   const { allCategories } = useGetAllCategories();
   const { enqueueSnackbar } = useSnackbar();
 

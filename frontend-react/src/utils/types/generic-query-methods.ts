@@ -5,7 +5,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 
 export const genericUseMutationMethods = <TName extends string, TData, TVariables, TContext>(
   name: TName,
-  mutation: UseMutationResult<TData, AxiosError<HttpErrorData>, TVariables, TContext>,
+  mutation: UseMutationResult<TData, AxiosError<HttpErrorData>, TVariables, TContext>
 ) => {
   return {
     [name]: mutation.mutate,
@@ -24,7 +24,7 @@ export const genericUseMutationMethods = <TName extends string, TData, TVariable
 
 export const genericUseQueryMethods = <TName extends string, TData>(
   name: TName,
-  query: UseQueryResult<TData, AxiosError<HttpErrorData>>,
+  query: UseQueryResult<TData, AxiosError<HttpErrorData>>
 ) => {
   return {
     [name]: query.data,

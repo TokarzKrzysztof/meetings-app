@@ -20,7 +20,7 @@ export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemP
 
   const age = useMemo(() => calculateAge(data.user.birthDate), [data]);
   const privateChatUrl = AppRoutes.PrivateChat({
-    userId: data.userId,
+    userId: data.user.id,
     announcementId: data.announcementId,
   });
 

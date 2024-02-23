@@ -25,7 +25,7 @@ const StyledTopBackground = styled(Box)(({ theme }) => ({
 }));
 
 export const UserProfile = () => {
-  const params = useRouteParams<UserProfileParams>();
+  const [params] = useRouteParams<UserProfileParams>();
   const { userProfile, userProfileFetching, userProfileRefetch } = useGetUserProfile(params.userId);
   const { currentUser } = useGetCurrentUser();
 

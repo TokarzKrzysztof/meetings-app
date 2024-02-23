@@ -10,6 +10,7 @@ using Meetings.Infrastructure.Validators;
 using Meetings.Models.Entities;
 using Meetings.Models.Resources;
 using Meetings.Models.Resources.Pagination;
+using Meetings.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -63,8 +64,13 @@ namespace Meetings.Infrastructure.Services
             Guid userId = _claimsReader.GetCurrentUserId();
 
             var query = _repository.Data.Where(x => x.UserId == userId && x.Status == data.Status);
-            List<Announcement> result = await query.OrderByDescending(x => x.UpdatedAt).Skip(data.Skip).Take(data.Take).ToListAsync();
+            if (!string.IsNullOrEmpty(data.Filter))
+            {
+                string filterLower = data.Filter.ToLower();
+                query = query.Where(x => x.Category.Name.ToLower().Contains(filterLower) || x.Description.ToLower().Contains(filterLower));
+            }
 
+            List<Announcement> result = await query.OrderByDescending(x => x.UpdatedAt).Skip(data.Skip).Take(data.Take).ToListAsync();
             return new PaginatedData<AnnouncementDTO>()
             {
                 Data = _mapper.Map<List<AnnouncementDTO>>(result),

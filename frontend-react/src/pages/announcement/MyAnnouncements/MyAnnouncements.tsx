@@ -1,5 +1,7 @@
+import { useSetAtom } from 'jotai';
 import { Link } from 'react-router-dom';
 import { Header } from 'src/components/header/Header';
+import { announcementsFilterAtom } from 'src/pages/announcement/MyAnnouncementsList/MyAnnouncementsList';
 import { useGetCurrentUserAnnouncementsCount } from 'src/queries/announcement-queries';
 import {
   Box,
@@ -12,7 +14,7 @@ import {
   ListItemText,
   Typography,
 } from 'src/ui-components';
-import { AppRoutes } from 'src/utils/enums/app-routes';
+import { AppRoutes, MyAnnouncementsListParams } from 'src/utils/enums/app-routes';
 
 export const MyAnnouncements = () => {
   const { currentUserAnnouncementsCount, currentUserAnnouncementsCountFetching } =
@@ -28,38 +30,18 @@ export const MyAnnouncements = () => {
         </Typography>
 
         <List sx={{ mt: 1 }} color='primary'>
-          <ListItemButton
-            component={Link}
-            to={AppRoutes.MyAnnouncementsList({ status: 'Active' })}
-            sx={{ pr: 0 }}
-          >
-            <ListItemText primary={`Aktywne (${currentUserAnnouncementsCount!.active})`} />
-            <ListItemIcon sx={{ minWidth: 'initial' }}>
-              <Icon name='navigate_next' />
-            </ListItemIcon>
-          </ListItemButton>
-
-          <ListItemButton
-            component={Link}
-            to={AppRoutes.MyAnnouncementsList({ status: 'Pending' })}
-            sx={{ pr: 0 }}
-          >
-            <ListItemText primary={`Oczekujące (${currentUserAnnouncementsCount!.pending})`} />
-            <ListItemIcon sx={{ minWidth: 'initial' }}>
-              <Icon name='navigate_next' />
-            </ListItemIcon>
-          </ListItemButton>
-
-          <ListItemButton
-            component={Link}
-            to={AppRoutes.MyAnnouncementsList({ status: 'Closed' })}
-            sx={{ pr: 0 }}
-          >
-            <ListItemText primary={`Zakończone (${currentUserAnnouncementsCount!.closed})`} />
-            <ListItemIcon sx={{ minWidth: 'initial' }}>
-              <Icon name='navigate_next' />
-            </ListItemIcon>
-          </ListItemButton>
+          <NavigationLink
+            status={'Active'}
+            text={`Aktywne (${currentUserAnnouncementsCount!.active})`}
+          />
+          <NavigationLink
+            status={'Pending'}
+            text={`Oczekujące (${currentUserAnnouncementsCount!.pending})`}
+          />
+          <NavigationLink
+            status={'Closed'}
+            text={`Zakończone (${currentUserAnnouncementsCount!.closed})`}
+          />
         </List>
         <Box textAlign='center' my={3}>
           <Button
@@ -73,6 +55,30 @@ export const MyAnnouncements = () => {
         </Box>
       </Container>
     </>
+  );
+};
+
+const NavigationLink = ({
+  status,
+  text,
+}: {
+  status: MyAnnouncementsListParams['status'];
+  text: string;
+}) => {
+  const setAnnouncementsFilter = useSetAtom(announcementsFilterAtom);
+
+  return (
+    <ListItemButton
+      component={Link}
+      to={AppRoutes.MyAnnouncementsList({ status })}
+      sx={{ pr: 0 }}
+      onClick={() => setAnnouncementsFilter('')}
+    >
+      <ListItemText primary={text} />
+      <ListItemIcon sx={{ minWidth: 'initial' }}>
+        <Icon name='navigate_next' />
+      </ListItemIcon>
+    </ListItemButton>
   );
 };
 

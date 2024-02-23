@@ -10,5 +10,6 @@ namespace Meetings.Models.Resources.Pagination
     public class GetCurrentUserAnnouncementsData: PaginationParams
     {
         public AnnouncementStatus Status { get; set; }
+        public string Filter { get; set; }
     }
 }

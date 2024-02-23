@@ -63,7 +63,7 @@ export type RegisterParams = {
 };
 
 export type MyAnnouncementsListParams = {
-  status: keyof typeof AnnouncementStatus
+  status: keyof typeof AnnouncementStatus;
 };
 
 export type UserProfileParams = {

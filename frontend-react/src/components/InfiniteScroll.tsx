@@ -1,5 +1,5 @@
 import { ReactElement, useEffect, useRef } from 'react';
-import { Box, CircularProgress } from 'src/ui-components';
+import { Loader } from 'src/components/Loader';
 
 const isWindow = (element: any): element is Window => {
   return element === window;
@@ -68,17 +68,7 @@ export const InfiniteScroll = ({
     }
   }, [isFetching]);
 
-  const spinner = (
-    <Box
-      display='flex'
-      justifyContent='center'
-      p={2}
-      // change only visibility to avoid scroll jumping
-      visibility={isFetching ? 'visible' : 'hidden'}
-    >
-      <CircularProgress size={25} />
-    </Box>
-  );
+  const spinner = <Loader visibility={isFetching ? 'visible' : 'hidden'}></Loader>;
   return (
     <>
       {(isFetching || hasMore) && direction === 'up' && spinner}

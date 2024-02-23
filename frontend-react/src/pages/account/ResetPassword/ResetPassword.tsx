@@ -8,15 +8,15 @@ import { AuthGoToMainPageBtn } from 'src/pages/account/shared/AuthGoToMainPageBt
 import { AuthIcon } from 'src/pages/account/shared/AuthIcon';
 import { AuthRedirectInfo } from 'src/pages/account/shared/AuthRedirectInfo';
 import {
-  PasswordFields,
-  PasswordFieldsFormData,
+    PasswordFields,
+    PasswordFieldsFormData,
 } from 'src/pages/account/shared/PasswordFields';
 import { useResetPassword } from 'src/queries/auth-queries';
 import { Button } from 'src/ui-components';
 import { AppRoutes, ResetPasswordParams } from 'src/utils/enums/app-routes';
 
 export const ResetPassword = () => {
-  const params = useRouteParams<ResetPasswordParams>();
+  const [params] = useRouteParams<ResetPasswordParams>();
   const form = useForm<PasswordFieldsFormData>();
   const { handleSubmit } = form;
   const { resetPassword, resetPasswordInProgress } = useResetPassword();

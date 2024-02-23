@@ -45,16 +45,16 @@ export const useGetAnnouncementResultList = (
 
 export const useGetCurrentUserAnnouncements = (
   status: AnnouncementStatus,
+  filter: string,
   options?: UseInfiniteQueryOptions<PaginatedData<Announcement>, AxiosError<HttpErrorData>>
 ) => {
   const query = usePaginatedQuery({
     pageSize: 5,
     url: `${baseUrl}/GetCurrentUserAnnouncements`,
-    queryKey: ['GetCurrentUserAnnouncements', status],
-    body: { status },
+    queryKey: ['GetCurrentUserAnnouncements', status, filter],
+    body: { status, filter },
     options,
   });
-
   return genericUseInfiniteQueryMethods('currentUserAnnouncements', query);
 };
 

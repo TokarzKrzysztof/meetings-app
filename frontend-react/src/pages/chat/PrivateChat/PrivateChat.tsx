@@ -16,8 +16,8 @@ import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/components/ChatNewMessage';
 import {
-  ChatScrollable,
-  ChatScrollableHandle,
+    ChatScrollable,
+    ChatScrollableHandle,
 } from 'src/pages/chat/shared/components/ChatScrollable';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
@@ -31,7 +31,7 @@ import { AppRoutes, PrivateChatParams } from 'src/utils/enums/app-routes';
 import { calculateAge } from 'src/utils/user-utils';
 
 export const PrivateChat = () => {
-  const params = useRouteParams<PrivateChatParams>();
+  const [params] = useRouteParams<PrivateChatParams>();
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
   const connection = useAtomValue(connectionAtom);

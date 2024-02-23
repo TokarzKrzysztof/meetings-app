@@ -12,8 +12,8 @@ import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/components/ChatNewMessage';
 import {
-  ChatScrollable,
-  ChatScrollableHandle,
+    ChatScrollable,
+    ChatScrollableHandle,
 } from 'src/pages/chat/shared/components/ChatScrollable';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
@@ -24,7 +24,7 @@ import { Stack, Typography } from 'src/ui-components';
 import { AppRoutes, GroupChatParams } from 'src/utils/enums/app-routes';
 
 export const GroupChat = () => {
-  const params = useRouteParams<GroupChatParams>();
+  const [params] = useRouteParams<GroupChatParams>();
   const scrollableRef = useRef<ChatScrollableHandle>(null);
   const [messages, dispatch] = useReducer(messageReducer, []);
   const [showParticipantsDialog, setShowParticipantsDialog] = useState(false);

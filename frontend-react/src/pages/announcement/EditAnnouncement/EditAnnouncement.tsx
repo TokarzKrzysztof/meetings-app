@@ -9,7 +9,7 @@ import { useEditAnnouncement, useGetAnnouncement } from 'src/queries/announcemen
 import { EditAnnouncementParams } from 'src/utils/enums/app-routes';
 
 export const EditAnnouncement = () => {
-  const params = useRouteParams<EditAnnouncementParams>();
+  const [params] = useRouteParams<EditAnnouncementParams>();
   const { announcement } = useGetAnnouncement(params.id);
   const { editAnnouncement, editAnnouncementInProgress } = useEditAnnouncement();
   const { enqueueSnackbar } = useSnackbar();

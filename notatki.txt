@@ -30,6 +30,7 @@ TODO
 - dodać wyszukiwania do my announcements
 - dodać możliwość ustawiania presetów do wyszukiwania ogłoszeń
 - dodać możliwość obserwowania wyszukiwania i wysyłać maile kiedy ktoś doda post
+- sprawdzić wyświetlenie userprofile dla usuniętego użytkownika
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)
