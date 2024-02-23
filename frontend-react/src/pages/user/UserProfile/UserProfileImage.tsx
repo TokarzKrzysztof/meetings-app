@@ -14,10 +14,10 @@ const StyledEditButton = styled(IconButton)({
 
 export type UserProfileImageProps = {
   imgSrc: string | null;
-  isEditable: boolean;
+  isCurrentUser: boolean;
 };
 
-export const UserProfileImage = ({ imgSrc, isEditable }: UserProfileImageProps) => {
+export const UserProfileImage = ({ imgSrc, isCurrentUser }: UserProfileImageProps) => {
   const menuAnchorRef = useRef<HTMLButtonElement>(null);
   const [showImagePreview, setShowImagePreview] = useState(false);
   const { file, showPicker, clearFile } = useFilePicker();
@@ -35,9 +35,12 @@ export const UserProfileImage = ({ imgSrc, isEditable }: UserProfileImageProps) 
 
   return (
     <>
-      <Box position='relative'>
+      <Box
+        position='relative'
+        onClick={!isCurrentUser && imgSrc ? () => setShowImagePreview(true) : undefined}
+      >
         <Avatar src={imgSrc} size={90} />
-        {isEditable && (
+        {isCurrentUser && (
           <StyledEditButton color='primary' filled ref={menuAnchorRef}>
             <Icon name='photo_camera' />
           </StyledEditButton>

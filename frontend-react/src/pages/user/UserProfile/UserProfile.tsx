@@ -35,7 +35,7 @@ export const UserProfile = () => {
       <Container maxWidth='sm' sx={{ position: 'relative', py: 2 }}>
         <StyledTopBackground />
         <Stack direction={'column'} gap={1} alignItems={'center'}>
-          <UserProfileImage imgSrc={userProfile.user.profileImageSrc} isEditable={isCurrentUser} />
+          <UserProfileImage imgSrc={userProfile.user.profileImageSrc} isCurrentUser={isCurrentUser} />
           <Typography fontSize={19}>
             {userProfile.user.firstName} {userProfile.user.lastName}
           </Typography>
