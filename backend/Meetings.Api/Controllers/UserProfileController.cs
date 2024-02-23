@@ -19,6 +19,7 @@ namespace Meetings.Api.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUserProfile([FromQuery] Guid userId)
         {
             UserProfileDTO userProfile = await _userProfileService.GetUserProfile(userId);

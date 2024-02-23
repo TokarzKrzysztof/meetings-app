@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Link, To } from 'react-router-dom';
+import { To } from 'react-router-dom';
 import { Box, Button, Card, Icon, Typography } from 'src/ui-components';
 
 export type UserProfileCardProps = {
@@ -21,13 +21,6 @@ export const UserProfileCard = ({
   onEdit,
   editLink,
 }: UserProfileCardProps) => {
-  const buttonProps = {
-    size: 'small',
-    variant: 'text',
-    children: 'Edytuj',
-    startIcon: <Icon name='edit'></Icon>,
-  } as const;
-  
   return (
     <Card sx={{ pt: 2, pl: 2, pb: 1, pr: 1 }}>
       {title && (
@@ -38,11 +31,18 @@ export const UserProfileCard = ({
       {children}
       {showEditButton && (
         <Box mt={1} textAlign={'right'}>
-          {onEdit ? (
-            <Button onClick={onEdit} {...buttonProps} />
-          ) : (
-            <Button component={Link} to={editLink} {...buttonProps} />
-          )}
+          <Button
+            size='small'
+            variant='text'
+            startIcon={<Icon name='edit'></Icon>}
+            buttonOrLink={{
+              isLink: !!editLink,
+              to: editLink,
+              onClick: onEdit,
+            }}
+          >
+            Edytuj
+          </Button>
         </Box>
       )}
     </Card>

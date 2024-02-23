@@ -17,7 +17,9 @@ export const UserProfileInterestsEdit = ({
   onClose,
   onReload,
 }: UserProfileInterestsEditProps) => {
-  const { availableInterests } = useGetAvailableInterests();
+  const { availableInterests } = useGetAvailableInterests({
+    enabled: open
+  });
   const { editInterests } = useEditInterests();
   const [selectedInterestsIds, setSelectedInterestsIds] = useState<string[]>([]);
   const [isDirty, setIsDirty] = useState(false);

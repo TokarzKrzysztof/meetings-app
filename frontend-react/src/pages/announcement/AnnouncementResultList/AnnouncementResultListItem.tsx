@@ -1,10 +1,9 @@
 import { Divider } from '@mui/material';
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { ExperienceLevel } from 'src/components/ExperienceLevel';
 import { LocationText } from 'src/components/LocationText';
+import { LoginRequiredDialog } from 'src/components/LoginRequiredDialog';
 import { AnnouncementResultListItem as AnnouncementResultListItemModel } from 'src/models/annoucement/announcement-result-list-item';
-import { AnnouncementResultListAnnouncementLoginDialog } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListAnnouncementLoginDialog';
 import { useGetCurrentUser } from 'src/queries/user-queries';
 import { Avatar, Box, Button, Card, Stack, Typography } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
@@ -14,18 +13,11 @@ export type AnnouncementResultListItemProps = {
   data: AnnouncementResultListItemModel;
 };
 
-export const AnnouncementResultListItem = ({
-  data,
-}: AnnouncementResultListItemProps) => {
+export const AnnouncementResultListItem = ({ data }: AnnouncementResultListItemProps) => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const { currentUser } = useGetCurrentUser();
 
   const age = useMemo(() => calculateAge(data.user.birthDate), [data]);
-  const buttonProps = {
-    size: 'small',
-    variant: 'text',
-    children: 'Wyślij wiadomość',
-  } as const;
   const privateChatUrl = AppRoutes.PrivateChat({
     userId: data.userId,
     announcementId: data.announcementId,
@@ -54,15 +46,21 @@ export const AnnouncementResultListItem = ({
         </Box>
         <Divider />
         <Box textAlign='right'>
-          {currentUser ? (
-            <Button component={Link} to={privateChatUrl} {...buttonProps} />
-          ) : (
-            <Button onClick={() => setShowLoginPrompt(true)} {...buttonProps} />
-          )}
+          <Button
+            size='small'
+            variant='text'
+            buttonOrLink={{
+              isLink: !!currentUser,
+              to: privateChatUrl,
+              onClick: () => setShowLoginPrompt(true),
+            }}
+          >
+            Wyślij wiadomość
+          </Button>
         </Box>
       </Card>
       {showLoginPrompt && (
-        <AnnouncementResultListAnnouncementLoginDialog
+        <LoginRequiredDialog
           loginRedirectUrl={privateChatUrl}
           onClose={() => setShowLoginPrompt(false)}
         />

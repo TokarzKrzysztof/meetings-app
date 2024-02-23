@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import { GoBackBtn } from 'src/components/GoBackBtn';
 import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
+import { UserProfileActions } from 'src/pages/user/UserProfile/UserProfileActions';
 import { UserProfileBasicData } from 'src/pages/user/UserProfile/UserProfileBasicData';
 import { UserProfileDescription } from 'src/pages/user/UserProfile/UserProfileDescription';
 import { UserProfileImage } from 'src/pages/user/UserProfile/UserProfileImage';
@@ -35,11 +36,19 @@ export const UserProfile = () => {
       <Container maxWidth='sm' sx={{ position: 'relative', py: 2 }}>
         <StyledTopBackground />
         <Stack direction={'column'} gap={1} alignItems={'center'}>
-          <UserProfileImage imgSrc={userProfile.user.profileImageSrc} isCurrentUser={isCurrentUser} />
+          <UserProfileImage
+            imgSrc={userProfile.user.profileImageSrc}
+            isCurrentUser={isCurrentUser}
+          />
           <Typography fontSize={19}>
             {userProfile.user.firstName} {userProfile.user.lastName}
           </Typography>
         </Stack>
+        {!isCurrentUser && (
+          <Box mt={2}>
+            <UserProfileActions userProfile={userProfile} isLoggedIn={!!currentUser} />
+          </Box>
+        )}
         <Box mt={2}>
           <UserProfileBasicData userProfile={userProfile} isCurrentUser={isCurrentUser} />
         </Box>

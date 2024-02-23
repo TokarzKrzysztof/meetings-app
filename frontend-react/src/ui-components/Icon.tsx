@@ -39,6 +39,7 @@ export type IconNames =
   | 'add'
   | 'send'
   | 'reply'
+  | 'message'
   | 'keyboard_double_arrow_down'
   | 'photo'
   | 'south';

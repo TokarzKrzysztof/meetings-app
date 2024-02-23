@@ -1,24 +1,21 @@
 import { Link } from 'react-router-dom';
 import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
 } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
-export type AnnouncementResultListAnnouncementLoginDialogProps = {
+export type LoginRequiredDialogProps = {
   loginRedirectUrl: string;
   onClose: () => void;
 };
 
-export const AnnouncementResultListAnnouncementLoginDialog = ({
-  loginRedirectUrl,
-  onClose,
-}: AnnouncementResultListAnnouncementLoginDialogProps) => {
+export const LoginRequiredDialog = ({ loginRedirectUrl, onClose }: LoginRequiredDialogProps) => {
   return (
     <Dialog open onClose={onClose} sx={{ textAlign: 'center' }}>
       <DialogTitle>Informacja</DialogTitle>
