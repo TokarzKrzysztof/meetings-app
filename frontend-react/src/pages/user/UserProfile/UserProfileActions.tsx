@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { LoginRequiredDialog } from 'src/components/LoginRequiredDialog';
 import { UserProfile } from 'src/models/user-profile';
-import { Box, Button, Icon } from 'src/ui-components';
+import { UserProfileActionsMore } from 'src/pages/user/UserProfile/UserProfileActionsMore';
+import { Button, Icon, Stack } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type UserProfileActionsProps = {
@@ -17,7 +18,7 @@ export const UserProfileActions = ({ userProfile, isLoggedIn }: UserProfileActio
 
   return (
     <>
-      <Box textAlign={'center'}>
+      <Stack justifyContent={'center'} gap={1}>
         <Button
           variant='outlined'
           startIcon={<Icon name='message' />}
@@ -29,7 +30,10 @@ export const UserProfileActions = ({ userProfile, isLoggedIn }: UserProfileActio
         >
           Wiadomość
         </Button>
-      </Box>
+        {isLoggedIn && (
+          <UserProfileActionsMore userProfile={userProfile} />
+        )}
+      </Stack>
       {showLoginPrompt && (
         <LoginRequiredDialog
           loginRedirectUrl={privateChatUrl}

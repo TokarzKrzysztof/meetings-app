@@ -28,6 +28,7 @@ export type FullscreenDialogProps = {
   onSave?: () => void;
   title?: ReactNode;
   saveDisabled?: boolean;
+  saveButtonText?: string;
   onClear?: () => void;
 };
 
@@ -38,6 +39,7 @@ export const FullscreenDialog = ({
   children,
   title,
   saveDisabled,
+  saveButtonText,
   onClear,
   ...props
 }: FullscreenDialogProps) => {
@@ -68,7 +70,7 @@ export const FullscreenDialog = ({
               disabled={saveDisabled}
               onClick={onSave}
             >
-              ZAPISZ
+              {saveButtonText ?? 'ZAPISZ'}
             </Button>
           </Stack>
         </Toolbar>

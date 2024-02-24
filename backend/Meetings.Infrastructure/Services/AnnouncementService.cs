@@ -64,7 +64,7 @@ namespace Meetings.Infrastructure.Services
             Guid userId = _claimsReader.GetCurrentUserId();
 
             var query = _repository.Data.Where(x => x.UserId == userId && x.Status == data.Status);
-            if (!string.IsNullOrEmpty(data.Filter))
+            if (!string.IsNullOrWhiteSpace(data.Filter))
             {
                 string filterLower = data.Filter.ToLower();
                 query = query.Where(x => x.Category.Name.ToLower().Contains(filterLower) || x.Description.ToLower().Contains(filterLower));

@@ -40,6 +40,7 @@ export type IconNames =
   | 'edit'
   | 'group_add'
   | 'voice_over_off'
+  | 'groups'
   | 'cloud_upload'
   | 'list'
   | 'archive'
