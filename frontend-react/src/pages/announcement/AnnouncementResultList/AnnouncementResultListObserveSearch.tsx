@@ -104,7 +104,11 @@ export const AnnouncementResultListObserveSearch = ({
         </Button>
       )}
       {showLoginPrompt && (
-        <LoginRequiredDialog loginRedirectUrl={''} onClose={() => setShowLoginPrompt(false)} />
+        <LoginRequiredDialog
+          text='Musisz być zalogowany/a żeby obserwować wyszukiwania'
+          loginRedirectUrl={''}
+          onClose={() => setShowLoginPrompt(false)}
+        />
       )}
     </>
   );
