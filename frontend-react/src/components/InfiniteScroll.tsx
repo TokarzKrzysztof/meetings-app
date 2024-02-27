@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { Loader } from 'src/components/Loader';
 
 const isWindow = (element: any): element is Window => {
@@ -24,9 +24,6 @@ export const InfiniteScroll = ({
   scrollThreshold = 50,
   scrollable = window,
 }: InfiniteScrollProps) => {
-  // ref to always get synchronous value
-  const isFetchingRef = useRef(false);
-
   const isScrolled = () => {
     if (isWindow(scrollable)) {
       if (direction === 'down') {
@@ -50,23 +47,28 @@ export const InfiniteScroll = ({
 
   useEffect(() => {
     const handler = () => {
-      if (!isFetchingRef.current && isScrolled() && hasMore) {
-        isFetchingRef.current = true;
+      if (!isFetching && isScrolled() && hasMore) {
         next();
+        // assign new value to scoped variable
+        isFetching = true;
       }
     };
+
+    // call handler in case hasMore and no scroll is shown
+    if (direction === 'up') {
+      // timeout for direction up because of scroll to previous state delay
+      setTimeout(() => {
+        handler();
+      });
+    } else {
+      handler();
+    }
 
     scrollable?.addEventListener('scroll', handler);
     return () => {
       scrollable?.removeEventListener('scroll', handler);
     };
   });
-
-  useEffect(() => {
-    if (!isFetching) {
-      isFetchingRef.current = false;
-    }
-  }, [isFetching]);
 
   const spinner = <Loader visibility={isFetching ? 'visible' : 'hidden'}></Loader>;
   return (
