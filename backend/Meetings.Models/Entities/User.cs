@@ -44,6 +44,7 @@ namespace Meetings.Models.Entities
         public virtual ICollection<Announcement> Announcements { get; set; }
         public virtual ICollection<ChatParticipant> Chats { get; set; }
         public virtual ICollection<BlockedUser> BlockedUsers { get; set; }
+        public virtual ICollection<ObservedSearch> ObservedSearches { get; set; }
 
         public User()
         {
@@ -68,7 +69,5 @@ namespace Meetings.Models.Entities
         public string? ProfileImageSrc { get; set; }
         public UserActiveStatus ActiveStatus { get; set; }
         public Guid LocationId { get; set; }
-        // to avoid throwing error when making request
-        public UserLocation? Location { get; set; }
     }
 }

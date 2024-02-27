@@ -5,15 +5,15 @@ import { useGetCategory } from 'src/queries/category-queries';
 import { useGetCurrentUser } from 'src/queries/user-queries';
 import { Container, InputAdornment } from 'src/ui-components';
 import {
-  AnnouncementResultListQueryParams,
-  announcementFilterConstants,
+  ResultListQueryParams,
+  filterConstants,
   filterExperienceLevelOptions,
-  filterGenderOptions,
-} from 'src/utils/announcement-filters-utils';
+  filterGenderOptions
+} from 'src/utils/announcement-result-list-utils';
 import { ValidationMessages } from 'src/utils/helpers/validation-messages';
 
 export type AnnouncementResultListHeaderFiltersFormFieldsProps = {
-  form: UseFormReturn<AnnouncementResultListQueryParams, any, undefined>;
+  form: UseFormReturn<ResultListQueryParams, any, undefined>;
 };
 
 export const AnnouncementResultListHeaderFiltersFormFields = ({
@@ -35,8 +35,8 @@ export const AnnouncementResultListHeaderFiltersFormFields = ({
         rules={{ required: ValidationMessages.required }}
         ElementProps={{
           isRange: true,
-          min: announcementFilterConstants.minAge,
-          max: announcementFilterConstants.maxAge,
+          min: filterConstants.minAge,
+          max: filterConstants.maxAge,
           renderPreview: (values) => {
             const [from, to] = values as number[];
             return `${from} - ${to} lat`;

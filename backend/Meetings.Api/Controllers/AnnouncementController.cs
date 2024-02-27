@@ -11,19 +11,21 @@ namespace Meetings.Api.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class AnnouncementController : AppControllerBase
+    public class AnnouncementController : ControllerBase
     {
         private readonly AnnouncementService _announcementService;
-        public AnnouncementController(AnnouncementService announcementService)
+        private readonly AnnouncementResultListService _announcementResultListService;
+        public AnnouncementController(AnnouncementService announcementService, AnnouncementResultListService announcementResultListService)
         {
             _announcementService = announcementService;
+            _announcementResultListService = announcementResultListService;
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> GetAnnouncementResultList([FromBody] GetAnnouncementResultListData data)
         {
-            PaginatedData<AnnouncementResultListItem> result = await _announcementService.GetAnnouncementResultList(data);
+            PaginatedData<AnnouncementResultListItem> result = await _announcementResultListService.GetAnnouncementResultList(data);
             return Ok(result);
         }
 

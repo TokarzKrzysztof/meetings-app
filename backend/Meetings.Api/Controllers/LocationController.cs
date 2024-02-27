@@ -9,7 +9,7 @@ namespace Meetings.Api.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class LocationController : AppControllerBase
+    public class LocationController : ControllerBase
     {
         private readonly LocationService _locationService;
         public LocationController(LocationService locationService)

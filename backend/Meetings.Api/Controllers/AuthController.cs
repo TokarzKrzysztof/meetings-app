@@ -13,7 +13,7 @@ namespace Meetings.EmailTemplates.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class AuthController : AppControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly AuthService _authService;
         private readonly UserService _userService;

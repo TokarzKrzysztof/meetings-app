@@ -11,7 +11,7 @@ import { usePaginatedQuery } from 'src/hooks/usePaginatedQuery';
 import { Announcement, AnnouncementStatus } from 'src/models/annoucement/announcement';
 import { AnnouncementResultListItem } from 'src/models/annoucement/announcement-result-list-item';
 import { PaginatedData } from 'src/models/paginated-data';
-import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
+import { ResultListQueryParams } from 'src/utils/announcement-result-list-utils';
 import { apiUrl } from 'src/utils/api-url';
 import {
   genericUseInfiniteQueryMethods,
@@ -23,7 +23,7 @@ import { HttpErrorData } from 'src/utils/types/http-error-data';
 const baseUrl = `${apiUrl}/Announcement`;
 
 export const useGetAnnouncementResultList = (
-  params: AnnouncementResultListQueryParams,
+  params: ResultListQueryParams,
   options?: UseInfiniteQueryOptions<
     PaginatedData<AnnouncementResultListItem>,
     AxiosError<HttpErrorData>

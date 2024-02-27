@@ -1,5 +1,5 @@
 import { AnnouncementStatus } from 'src/models/annoucement/announcement';
-import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
+import { ResultListQueryParams } from 'src/utils/announcement-result-list-utils';
 import { parseIntoURLParams } from 'src/utils/url-utils';
 
 export const AppRoutes = {
@@ -8,7 +8,7 @@ export const AppRoutes = {
   Register: (params?: RegisterParams) => makeUrl('/register', params),
   ForgotPassword: () => '/forgot-password',
   ResetPassword: (params: ResetPasswordParams) => makeUrl('/reset-password', params),
-  AnnouncementResultList: (params: AnnouncementResultListQueryParams) =>
+  AnnouncementResultList: (params: ResultListQueryParams) =>
     makeUrl('/announcement-result-list', parseIntoURLParams(params)),
   NewAnnouncement: () => '/new-announcement',
   EditAnnouncement: (params: EditAnnouncementParams) => makeUrl('/edit-announcement', params),
@@ -28,6 +28,7 @@ export const AppRoutes = {
   MyChatsArchived: () => '/my-chats/archived',
   NewGroupChat: () => '/new-group-chat',
   UserProfile: (params: UserProfileParams) => makeUrl('/user-profile', params),
+  ObservedSearches: () => '/observed-searches',
 } as const;
 
 export type HomeParams = {

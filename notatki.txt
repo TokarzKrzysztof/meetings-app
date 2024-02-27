@@ -31,6 +31,9 @@ TODO
 - dodać możliwość ustawiania presetów do wyszukiwania ogłoszeń
 - dodać możliwość obserwowania wyszukiwania i wysyłać maile kiedy ktoś doda post
 - sprawdzić wyświetlenie userprofile dla usuniętego użytkownika
+- zrobić logger na frontend i backend
+- naprawić bug nie ładują się elementy w infiniteScroll kiedy nie pojawia się scroll
+- wysyłać resultListUrl z frontendu i ewentualnie zrobić validację na backendzie
 
 Mój profil:
 po zalogowaniu widoczny mój profil (?)

@@ -36,6 +36,11 @@ namespace Meetings.Infrastructure.Mappers
 
             CreateMap<UserProfile, UserProfileDTO>();
             CreateMap<UserProfileDTO, UserProfile>();
+
+            CreateMap<ResultListFilters, ObservedSearch>();
+
+            CreateMap<ObservedSearch, ObservedSearchDTO>();
+            CreateMap<ObservedSearchDTO, ObservedSearch>();
         }
     }
 }

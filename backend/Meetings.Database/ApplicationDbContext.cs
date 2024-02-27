@@ -26,6 +26,7 @@ namespace Meetings.Database
         public DbSet<BlockedUser> BlockedUsers { get; set; }
         public DbSet<UserLocation> UserLocations { get; set; }
         public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<ObservedSearch> ObservedSearches { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -44,6 +45,9 @@ namespace Meetings.Database
                 .IsRequired();
 
             builder.Entity<UserProfile>().Property(x => x.InterestsIds)
+                .HasConversion<string>();
+
+            builder.Entity<ObservedSearch>().Property(x => x.AgeRange)
                 .HasConversion<string>();
         }
     }

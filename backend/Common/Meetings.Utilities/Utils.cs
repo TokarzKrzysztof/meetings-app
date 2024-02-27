@@ -17,5 +17,9 @@ namespace Meetings.Utilities
             return false;
 #endif
         }
+        public static string GetClientUrl()
+        {
+            return "http://localhost:3000";
+        }
     }
 }

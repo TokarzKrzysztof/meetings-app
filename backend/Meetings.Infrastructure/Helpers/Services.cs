@@ -10,6 +10,7 @@ namespace Meetings.Infrastructure.Helpers
 {
     public interface IServices
     {
+        public AnnouncementResultListService AnnouncementResultList { get; }
         public AnnouncementService Announcement { get; }
         public AuthService Auth { get; }
         public CategoryService Category { get; }
@@ -18,6 +19,7 @@ namespace Meetings.Infrastructure.Helpers
         public LocationService Location { get; }
         public MessageReactionService MessageReaction { get; }
         public MessageService Message { get; }
+        public ObservedSearchService ObservedSearch { get; }
         public TempDataService TempData { get; }
         public UserProfileService UserProfile { get; }
         public UserService User { get; }
@@ -34,6 +36,7 @@ namespace Meetings.Infrastructure.Helpers
             _serviceProvider = serviceProvider;
         }
 
+        public AnnouncementResultListService AnnouncementResultList => _serviceProvider.GetRequiredService<AnnouncementResultListService>();
         public AnnouncementService Announcement => _serviceProvider.GetRequiredService<AnnouncementService>();
         public AuthService Auth => _serviceProvider.GetRequiredService<AuthService>();
         public CategoryService Category => _serviceProvider.GetRequiredService<CategoryService>();
@@ -42,6 +45,7 @@ namespace Meetings.Infrastructure.Helpers
         public LocationService Location => _serviceProvider.GetRequiredService<LocationService>();
         public MessageReactionService MessageReaction => _serviceProvider.GetRequiredService<MessageReactionService>();
         public MessageService Message => _serviceProvider.GetRequiredService<MessageService>();
+        public ObservedSearchService ObservedSearch => _serviceProvider.GetRequiredService<ObservedSearchService>();
         public TempDataService TempData => _serviceProvider.GetRequiredService<TempDataService>();
         public UserProfileService UserProfile => _serviceProvider.GetRequiredService<UserProfileService>();
         public UserService User => _serviceProvider.GetRequiredService<UserService>();

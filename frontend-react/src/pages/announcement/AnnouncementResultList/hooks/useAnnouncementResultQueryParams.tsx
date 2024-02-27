@@ -1,22 +1,22 @@
 import { useSearchParams } from 'react-router-dom';
-import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
+import { ResultListQueryParams } from 'src/utils/announcement-result-list-utils';
 import { parseIntoURLParams } from 'src/utils/url-utils';
 
 export const useAnnouncementResultListQueryParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const setParams = (params: AnnouncementResultListQueryParams) => {
+  const setParams = (params: ResultListQueryParams) => {
     setSearchParams(parseIntoURLParams(params));
   };
 
-  const stringParam = (name: keyof AnnouncementResultListQueryParams) => {
+  const stringParam = (name: keyof ResultListQueryParams) => {
     return searchParams.get(name)!;
   };
-  const numberParam = (name: keyof AnnouncementResultListQueryParams) => {
+  const numberParam = (name: keyof ResultListQueryParams) => {
     if (!searchParams.has(name)) return null
     return +searchParams.get(name)!;
   };
-  const rangeParam = (name: keyof AnnouncementResultListQueryParams): [number, number] => {
+  const rangeParam = (name: keyof ResultListQueryParams): [number, number] => {
     try {
       const result = searchParams
         .get(name)!
@@ -30,7 +30,7 @@ export const useAnnouncementResultListQueryParams = () => {
     }
   };
 
-  const params: AnnouncementResultListQueryParams = {
+  const params: ResultListQueryParams = {
     categoryId: stringParam('categoryId'),
     distanceMax: numberParam('distanceMax')!,
     ageRange: rangeParam('ageRange'),
@@ -38,6 +38,5 @@ export const useAnnouncementResultListQueryParams = () => {
     gender: numberParam('gender'),
     experienceLevel: numberParam('experienceLevel'),
   };
-
   return [params, setParams] as const;
 };

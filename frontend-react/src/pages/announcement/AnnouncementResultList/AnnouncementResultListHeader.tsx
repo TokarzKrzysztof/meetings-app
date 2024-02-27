@@ -4,13 +4,13 @@ import { AnnouncementResultListHeaderFilters } from 'src/pages/announcement/Anno
 import { useGetCurrentUser } from 'src/queries/user-queries';
 import { Button, MenuItem, TextField, Toolbar } from 'src/ui-components';
 import {
-  AnnouncementResultListQueryParams,
-  SortOption,
-} from 'src/utils/announcement-filters-utils';
+    ResultListQueryParams,
+    SortOption,
+} from 'src/utils/announcement-result-list-utils';
 
 export type AnnouncementResultListHeaderProps = {
-  params: AnnouncementResultListQueryParams;
-  onUpdateQueryParams: (params: AnnouncementResultListQueryParams) => void;
+  params: ResultListQueryParams;
+  onUpdateQueryParams: (params: ResultListQueryParams) => void;
 };
 
 export const AnnouncementResultListHeader = ({

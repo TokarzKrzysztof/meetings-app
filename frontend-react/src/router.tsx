@@ -195,6 +195,14 @@ export const router = createBrowserRouter([
         loader: protectedLoader,
       },
       {
+        path: AppRoutes.ObservedSearches(),
+        lazy: async () => {
+          const { ObservedSearches } = await import('./pages/account/ObservedSearches/ObservedSearches');
+          return { Component: ObservedSearches };
+        },
+        loader: protectedLoader,
+      },
+      {
         path: AppRoutes.Settings(),
         lazy: async () => {
           const { Settings } = await import('./pages/account/Settings/SettingsProfile');

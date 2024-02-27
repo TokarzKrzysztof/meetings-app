@@ -12,7 +12,7 @@ namespace Meetings.Api.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class ChatController : AppControllerBase
+    public class ChatController : ControllerBase
     {
         private readonly ChatService _chatService;
         public ChatController(ChatService chatService)

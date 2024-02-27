@@ -9,7 +9,7 @@ namespace Meetings.Api.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class UserProfileController : AppControllerBase
+    public class UserProfileController : ControllerBase
     {
         private readonly UserProfileService _userProfileService;
         public UserProfileController(UserProfileService userProfileService)

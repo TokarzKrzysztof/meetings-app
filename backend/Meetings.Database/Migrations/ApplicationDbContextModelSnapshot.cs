@@ -5422,6 +5422,62 @@ namespace Meetings.Database.Migrations
                     b.ToTable("MessageReactions");
                 });
 
+            modelBuilder.Entity("Meetings.Models.Entities.ObservedSearch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AgeRange")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DistanceMax")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ExperienceLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEmailNotificationEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("NewAnnouncementsCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ResultListUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ShouldSendEmail")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ObservedSearches");
+                });
+
             modelBuilder.Entity("Meetings.Models.Entities.TempData", b =>
                 {
                     b.Property<Guid>("Id")
@@ -5641,6 +5697,25 @@ namespace Meetings.Database.Migrations
                     b.Navigation("Message");
                 });
 
+            modelBuilder.Entity("Meetings.Models.Entities.ObservedSearch", b =>
+                {
+                    b.HasOne("Meetings.Models.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Meetings.Models.Entities.User", "User")
+                        .WithMany("ObservedSearches")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Meetings.Models.Entities.User", b =>
                 {
                     b.HasOne("Meetings.Models.Entites.UserLocation", "Location")
@@ -5682,6 +5757,8 @@ namespace Meetings.Database.Migrations
                     b.Navigation("BlockedUsers");
 
                     b.Navigation("Chats");
+
+                    b.Navigation("ObservedSearches");
 
                     b.Navigation("UserProfile")
                         .IsRequired();

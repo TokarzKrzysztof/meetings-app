@@ -10,34 +10,33 @@ export enum SortOption {
   DistanceMax,
 }
 
-export const announcementFilterConstants = {
+export const filterConstants = {
   minAge: 0,
   maxAge: 100,
+  defaultSortOption: SortOption.Newest
 } as const;
 
-export type AnnouncementResultListQueryParams = {
+export type ResultListFilters = {
   categoryId: string;
   distanceMax: number;
   ageRange: [number, number];
-  sortBy: SortOption;
   gender: UserGender | null;
   experienceLevel: AnnouncementExperienceLevel | null;
 };
-export const getDefaultAnnouncementResultListQueryParams = (
-  categoryId: string
-): AnnouncementResultListQueryParams => ({
+export type ResultListQueryParams = ResultListFilters & {
+  sortBy: SortOption;
+};
+export const getDefaultResultListQueryParams = (categoryId: string): ResultListQueryParams => ({
   categoryId,
   distanceMax: 500,
-  ageRange: [announcementFilterConstants.minAge, announcementFilterConstants.maxAge],
-  sortBy: SortOption.Newest,
+  ageRange: [filterConstants.minAge, filterConstants.maxAge],
+  sortBy: filterConstants.defaultSortOption,
   gender: null,
-  experienceLevel: null
+  experienceLevel: null,
 });
 
-export const areAnnouncementResultListFiltersDefault = (
-  params: AnnouncementResultListQueryParams
-): boolean => {
-  const defaults = getDefaultAnnouncementResultListQueryParams(params.categoryId);
+export const areResultListQueryParamsDefault = (params: ResultListQueryParams): boolean => {
+  const defaults = getDefaultResultListQueryParams(params.categoryId);
   return isEqual(params, defaults, ['categoryId', 'sortBy']);
 };
 
@@ -61,5 +60,5 @@ export const filterExperienceLevelOptions = [
     value: null,
     label: 'Wszystkie',
   },
-  ...experienceLevelOptions
+  ...experienceLevelOptions,
 ] as const;

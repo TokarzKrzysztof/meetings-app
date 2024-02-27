@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Meetings.Utilities.Extensions;
 using Meetings.Models.Resources;
 using Meetings.Authentication.Services;
+using Meetings.Infrastructure.Helpers;
 
 namespace Meetings.Infrastructure.Mappers
 {
@@ -20,11 +21,13 @@ namespace Meetings.Infrastructure.Mappers
         private readonly IMapper _mapper;
         private readonly IFileManager _fileManager;
         private readonly IClaimsReader _claimsReader;
-        public ExtendedMapper(IMapper mapper, IFileManager fileManager, IClaimsReader claimsReader)
+        private readonly IServices _services;
+        public ExtendedMapper(IMapper mapper, IFileManager fileManager, IClaimsReader claimsReader, IServices services)
         {
             _mapper = mapper;
             _fileManager = fileManager;
             _claimsReader = claimsReader;
+            _services = services;
         }
 
         public UserProfileDTO ToUserProfileDTO(UserProfile entity)

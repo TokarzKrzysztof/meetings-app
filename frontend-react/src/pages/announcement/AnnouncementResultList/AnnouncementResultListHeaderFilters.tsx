@@ -8,15 +8,15 @@ import {
   DialogContentText
 } from 'src/ui-components';
 import {
-  AnnouncementResultListQueryParams,
-  areAnnouncementResultListFiltersDefault,
-  getDefaultAnnouncementResultListQueryParams,
-} from 'src/utils/announcement-filters-utils';
+  ResultListQueryParams,
+  areResultListQueryParamsDefault,
+  getDefaultResultListQueryParams,
+} from 'src/utils/announcement-result-list-utils';
 
 export type AnnouncementResultListHeaderFiltersProps = {
   open: boolean;
-  params: AnnouncementResultListQueryParams;
-  onSubmit: (data: AnnouncementResultListQueryParams) => void;
+  params: ResultListQueryParams;
+  onSubmit: (data: ResultListQueryParams) => void;
   onClose: () => void;
 };
 
@@ -27,7 +27,7 @@ export const AnnouncementResultListHeaderFilters = ({
   onClose,
 }: AnnouncementResultListHeaderFiltersProps) => {
   const confirm = useSetAtom(confirmationDialogAtom);
-  const form = useForm<AnnouncementResultListQueryParams>();
+  const form = useForm<ResultListQueryParams>();
   const {
     handleSubmit,
     reset,
@@ -48,11 +48,11 @@ export const AnnouncementResultListHeaderFilters = ({
       message: (
         <DialogContentText>Czy na pewno chcesz wyczyścić filtry wyszukiwania?</DialogContentText>
       ),
-      onAccept: () => onSubmit(getDefaultAnnouncementResultListQueryParams(params.categoryId)),
+      onAccept: () => onSubmit(getDefaultResultListQueryParams(params.categoryId)),
     });
   };
 
-  const areParamsDefault = useMemo(() => areAnnouncementResultListFiltersDefault(params), [params]);
+  const areParamsDefault = useMemo(() => areResultListQueryParamsDefault(params), [params]);
   return (
     <FullscreenDialog
       open={open}

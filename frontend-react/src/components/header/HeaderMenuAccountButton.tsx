@@ -43,6 +43,12 @@ export const HeaderMenuAccountButton = ({
         </ListItemIcon>
         <ListItemText>Mój profil</ListItemText>
       </MenuItem>
+      <MenuItem component={Link} to={AppRoutes.ObservedSearches()}>
+        <ListItemIcon>
+          <Icon name={'visibility'} />
+        </ListItemIcon>
+        <ListItemText>Obserwowane</ListItemText>
+      </MenuItem>
       <MenuItem component={Link} to={AppRoutes.Settings()}>
         <ListItemIcon>
           <Icon name={'settings'} />

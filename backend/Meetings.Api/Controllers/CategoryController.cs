@@ -10,7 +10,7 @@ namespace Meetings.EmailTemplates.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class CategoryController : AppControllerBase
+    public class CategoryController : ControllerBase
     {
         private readonly CategoryService _categoryService;
         public CategoryController(CategoryService categoryService)

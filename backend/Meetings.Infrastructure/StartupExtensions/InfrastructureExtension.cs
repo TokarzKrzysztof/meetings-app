@@ -13,6 +13,7 @@ using Meetings.Infrastructure.Validators;
 using Meetings.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Meetings.Infrastructure.Helpers;
+using Meetings.Infrastructure.HostServices;
 
 namespace Meetings.Infrastructure.StartupExtensions
 {
@@ -22,6 +23,7 @@ namespace Meetings.Infrastructure.StartupExtensions
         {
             builder.Services.AddScoped<IServices, Helpers.Services>();
 
+            builder.Services.AddScoped<AnnouncementResultListService>();
             builder.Services.AddScoped<AnnouncementService>();
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<CategoryService>();
@@ -30,6 +32,7 @@ namespace Meetings.Infrastructure.StartupExtensions
             builder.Services.AddScoped<LocationService>();
             builder.Services.AddScoped<MessageReactionService>();
             builder.Services.AddScoped<MessageService>();
+            builder.Services.AddScoped<ObservedSearchService>();
             builder.Services.AddScoped<TempDataService>();
             builder.Services.AddScoped<UserProfileService>();
             builder.Services.AddScoped<UserService>();
@@ -37,6 +40,9 @@ namespace Meetings.Infrastructure.StartupExtensions
             builder.Services.AddScoped<ChatValidator>();
             builder.Services.AddScoped<UserValidator>();
             builder.Services.AddScoped<AnnouncementValidator>();
+            builder.Services.AddScoped<ObservedSearchValidator>();
+
+            builder.Services.AddHostedService<ObservedSearchHostService>();
 
             builder.Services.AddSignalR();
 

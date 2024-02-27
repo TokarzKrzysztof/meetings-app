@@ -24,6 +24,12 @@ namespace Meetings.Infrastructure.Validators
         {
             validator.RuleFor(x => x.Description).NotEmpty().WithErrorCode("DescriptionEmpty");
         }
+        public static void AddResultListFiltersRules<T>(this InlineValidator<T> validator) where T : ResultListFilters
+        {
+            validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
+            validator.RuleFor(x => x.DistanceMax).GreaterThanOrEqualTo(0).WithErrorCode("DistanceMaxNegative");
+            validator.RuleFor(x => x.AgeRange).InRange(AnnouncementFilterConstants.MinAge, AnnouncementFilterConstants.MaxAge).WithErrorCode("IncorrectAgeRange");
+        }
         public static IRuleBuilderOptions<T, IEnumerable<int>> InRange<T>(this IRuleBuilder<T, IEnumerable<int>> ruleBuilder, int from, int to)
         {
             return ruleBuilder.Must(values =>
@@ -110,9 +116,10 @@ namespace Meetings.Infrastructure.Validators
             validator.ValidateAndThrow(data);
         }
 
-        internal async Task WhenSetAnnouncementStatus(Guid id)
+        internal async Task WhenSetAnnouncementStatus(Guid id, AnnouncementStatus newStatus)
         {
             await ValidateIsAuthorCurrentUser(id);
+            if (newStatus == AnnouncementStatus.Active) ValidatorUtils.ThrowError("StatusCannotBeActive");
         }
 
         internal async Task WhenRemoveAnnouncement(Guid id)
@@ -123,9 +130,7 @@ namespace Meetings.Infrastructure.Validators
         internal void WhenGetAnnouncementResultList(GetAnnouncementResultListData data)
         {
             var validator = new InlineValidator<GetAnnouncementResultListData>();
-            validator.RuleFor(x => x.CategoryId).NotEmpty().WithErrorCode("CategoryIdEmpty");
-            validator.RuleFor(x => x.DistanceMax).GreaterThanOrEqualTo(0).WithErrorCode("DistanceMaxNegative");
-            validator.RuleFor(x => x.AgeRange).InRange(AnnouncementFilterConstants.MinAge, AnnouncementFilterConstants.MaxAge).WithErrorCode("IncorrectAgeRange");
+            validator.AddResultListFiltersRules();
 
             validator.ValidateAndThrow(data);
         }

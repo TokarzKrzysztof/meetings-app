@@ -11,7 +11,7 @@ namespace Meetings.Api.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class MessageController : AppControllerBase
+    public class MessageController : ControllerBase
     {
         private readonly MessageService _messageService;
         public MessageController(MessageService messageService)

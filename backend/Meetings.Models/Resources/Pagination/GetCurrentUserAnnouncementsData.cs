@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Meetings.Models.Resources.Pagination
 {
-    public class GetCurrentUserAnnouncementsData: PaginationParams
+    public class GetCurrentUserAnnouncementsData: IPaginationParams
     {
+        public int Skip { get; set; }
+        public int Take { get; set; }
         public AnnouncementStatus Status { get; set; }
         public string Filter { get; set; }
     }

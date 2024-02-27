@@ -1,0 +1,28 @@
+﻿@using Meetings.EmailTemplates.Views;
+@using Meetings.EmailTemplates.Views.Shared;
+@model NewAnnouncementNotificationModel;
+
+@{
+    ViewData["EmailTitle"] = "Witaj!";
+    ViewData["EmailPreHeader"] = "Pojawiły się nowe ogłoszenie do wyszukiwania które obserwujesz.";
+
+    string newAnnouncementsText = "";
+    if (Model.NewAnnouncementsCount == 1)
+    {
+        newAnnouncementsText = "Pojawiło się <b>1</b> nowe ogłoszenie";
+    }
+    else if (Model.NewAnnouncementsCount < 5)
+    {
+        newAnnouncementsText = $"Pojawiły się <b>{Model.NewAnnouncementsCount}</b> nowe ogłoszenia";
+    } 
+    else
+    {
+        newAnnouncementsText = $"Pojawiło się <b>{Model.NewAnnouncementsCount}</b> nowych ogłoszeń";
+    }
+}
+
+@await Html.PartialAsync("CenteredText", $"{newAnnouncementsText} w kategorii <b>{Model.CategoryName}</b>.")
+<br />
+@await Html.PartialAsync("CenteredText", "Kliknij poniższy link aby wyświetlić te ogłoszenia")
+<br />
+@await Html.PartialAsync("EmailButton", new EmailButtonModel("Sprawdź", Model.ButtonUrl))

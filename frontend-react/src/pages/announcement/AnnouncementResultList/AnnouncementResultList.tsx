@@ -1,11 +1,12 @@
 import { InfiniteScroll } from 'src/components/InfiniteScroll';
 import { AnnouncementResultListHeader } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListHeader';
 import { AnnouncementResultListItem } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListItem';
+import { AnnouncementResultListObserveSearch } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListObserveSearch';
 import { useAnnouncementResultListQueryParams } from 'src/pages/announcement/AnnouncementResultList/hooks/useAnnouncementResultQueryParams';
 import { useGetAnnouncementResultList } from 'src/queries/announcement-queries';
 import { useGetAllCategories } from 'src/queries/category-queries';
 import { Box, Container, Stack, Typography } from 'src/ui-components';
-import { AnnouncementResultListQueryParams } from 'src/utils/announcement-filters-utils';
+import { ResultListQueryParams } from 'src/utils/announcement-result-list-utils';
 
 export const AnnouncementResultList = () => {
   const { allCategories } = useGetAllCategories();
@@ -19,7 +20,7 @@ export const AnnouncementResultList = () => {
     announcementResultListFetching,
   } = useGetAnnouncementResultList(params);
 
-  const updateQueryParams = (params: AnnouncementResultListQueryParams) => {
+  const updateQueryParams = (params: ResultListQueryParams) => {
     scrollable.scrollTo({ top: 0 });
     setParams(params);
   };
@@ -30,7 +31,7 @@ export const AnnouncementResultList = () => {
       <AnnouncementResultListHeader params={params} onUpdateQueryParams={updateQueryParams} />
       <Container>
         {announcementResultList?.length !== 0 ? (
-          <Typography color={'black'} mb={2}>
+          <Typography color={'black'}>
             Ogłoszenia z kategorii:{' '}
             <span style={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>{categoryName}</span>
           </Typography>
@@ -45,7 +46,10 @@ export const AnnouncementResultList = () => {
             </Typography>
           </Box>
         )}
-        <Stack direction='column' gap={2} py={2}>
+        <Box textAlign={announcementResultList?.length !== 0 ? 'right' : 'center'} my={2}>
+          <AnnouncementResultListObserveSearch params={params} />
+        </Box>
+        <Stack direction='column' gap={2}>
           <InfiniteScroll
             direction='down'
             next={announcementResultListFetchNextPage}

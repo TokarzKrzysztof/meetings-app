@@ -133,23 +133,32 @@ namespace Meetings.Infrastructure.Services
             return data;
         }
 
+        public async Task<User> TryGetCurrentUserEntity(bool includeLocation = false)
+        {
+            Guid? userId = _claimsReader.TryGetCurrentUserId();
+            if (userId == null) return null;
+
+            return await GetUserEntity((Guid)userId, includeLocation: includeLocation);
+        }
         public async Task<UserDTO> TryGetCurrentUser(bool includeLocation = false)
         {
             Guid? userId = _claimsReader.TryGetCurrentUserId();
-            if (userId == null)
-            {
-                return null;
-            }
+            if (userId == null) return null;
 
             return await GetUser((Guid)userId, includeLocation: includeLocation);
         }
 
-        public async Task<UserDTO> GetUser(Guid id, bool includeLocation = false, bool includeDeleted = false)
+        public async Task<User> GetUserEntity(Guid id, bool includeLocation = false, bool includeDeleted = false)
         {
             User user = await _repository.RawData
                 .Where(x => x.Id == id && (includeDeleted || !x.IsDelete))
                 .If(includeLocation, q => q.Include(x => x.Location))
                 .SingleAsync();
+            return user;
+        }
+        public async Task<UserDTO> GetUser(Guid id, bool includeLocation = false, bool includeDeleted = false)
+        {
+            User user = await GetUserEntity(id, includeLocation: includeLocation, includeDeleted: includeDeleted);
             return _extendedMapper.ToUserDTO(user);
         }
 
@@ -204,7 +213,7 @@ namespace Meetings.Infrastructure.Services
         }
 
         public async Task UploadProfileImage(IFormFile image)
-        {      
+        {
             var filePath = Path.Combine(_fileManager.Root, "ProfileImages", $"{Guid.NewGuid()}.jpg");
             await _fileManager.Save(filePath, image);
 
