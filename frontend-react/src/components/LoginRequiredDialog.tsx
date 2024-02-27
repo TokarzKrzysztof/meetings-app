@@ -1,27 +1,32 @@
 import { Link } from 'react-router-dom';
 import {
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type LoginRequiredDialogProps = {
   loginRedirectUrl: string;
   onClose: () => void;
+  text?: string;
 };
 
-export const LoginRequiredDialog = ({ loginRedirectUrl, onClose }: LoginRequiredDialogProps) => {
+export const LoginRequiredDialog = ({
+  loginRedirectUrl,
+  onClose,
+  text,
+}: LoginRequiredDialogProps) => {
   return (
     <Dialog open onClose={onClose} sx={{ textAlign: 'center' }}>
       <DialogTitle>Informacja</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Musisz być zalogowany/a żeby wysyłać wiadomości do innych użytkowników
+          {text ?? 'Musisz być zalogowany/a żeby wysyłać wiadomości do innych użytkowników'}
         </DialogContentText>
         <Box pt={3} pb={1}>
           <Button

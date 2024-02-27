@@ -20,7 +20,7 @@ export const AnnouncementResultListObserveSearch = ({
   params,
 }: AnnouncementResultListObserveSearchProps) => {
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const { currentUser } = useGetCurrentUser();
+  const { currentUser, currentUserFetching } = useGetCurrentUser();
   const {
     observedSearchByFilters,
     observedSearchByFiltersFetching,
@@ -75,11 +75,11 @@ export const AnnouncementResultListObserveSearch = ({
   };
 
   const isButtonDisabled =
+    currentUserFetching ||
     observedSearchByFiltersFetching ||
     addObservedSearchInProgress ||
     removeObservedSearchInProgress;
 
-  if (observedSearchByFilters === undefined) return null;
   return (
     <>
       {observedSearchByFilters ? (
