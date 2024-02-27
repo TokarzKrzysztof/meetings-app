@@ -46,6 +46,7 @@ export type IconNames =
   | 'archive'
   | 'campaign'
   | 'add'
+  | 'person_off'
   | 'logout'
   | 'send'
   | 'reply'

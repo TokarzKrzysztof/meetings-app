@@ -34,7 +34,7 @@ export const MyChatsMore = ({ ...props }: MyChatsMoreProps) => {
         </MenuItem>
         <MenuItem component={Link} to={AppRoutes.MyChatsIgnored()}>
           <ListItemIcon>
-            <Icon name={'voice_over_off'} />
+            <Icon name={'person_off'} />
           </ListItemIcon>
           <ListItemText>{ignoredChatsTxt}</ListItemText>
         </MenuItem>
