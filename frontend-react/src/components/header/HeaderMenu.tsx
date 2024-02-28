@@ -12,7 +12,7 @@ import { AppRoutes } from 'src/utils/enums/app-routes';
 export type HeaderMenuProps = {};
 
 export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
-  const { currentUser } = useGetCurrentUser();
+  const { currentUser, currentUserLoading } = useGetCurrentUser();
   const confirm = useSetAtom(confirmationDialogAtom);
   const { isDesktop } = useDeviceMediaQuery();
   const { logout } = useLogout();
@@ -74,7 +74,11 @@ export const HeaderMenu = ({ ...props }: HeaderMenuProps) => {
           <HeaderMenuMessages />
         </>
       )}
-      <HeaderMenuAccountButton currentUser={currentUser} onLogout={handleLogout} />
+      <HeaderMenuAccountButton
+        currentUser={currentUser}
+        currentUserLoading={currentUserLoading}
+        onLogout={handleLogout}
+      />
     </>
   );
 };

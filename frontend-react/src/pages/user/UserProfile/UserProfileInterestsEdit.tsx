@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FullscreenDialog } from 'src/components/FullscreenDialog';
+import { Loader } from 'src/components/Loader';
 import { Interest, UserProfile } from 'src/models/user-profile';
 import { useEditInterests, useGetAvailableInterests } from 'src/queries/user-profile-queries';
 import { Box, Chip, Icon, IconNames, Stack, Typography } from 'src/ui-components';
@@ -17,10 +18,10 @@ export const UserProfileInterestsEdit = ({
   onClose,
   onReload,
 }: UserProfileInterestsEditProps) => {
-  const { availableInterests } = useGetAvailableInterests({
-    enabled: open
+  const { availableInterests, availableInterestsLoading } = useGetAvailableInterests({
+    enabled: open,
   });
-  const { editInterests } = useEditInterests();
+  const { editInterests, editInterestsInProgress } = useEditInterests();
   const [selectedInterestsIds, setSelectedInterestsIds] = useState<string[]>([]);
   const [isDirty, setIsDirty] = useState(false);
 
@@ -50,12 +51,17 @@ export const UserProfileInterestsEdit = ({
   };
 
   return (
-    <FullscreenDialog open={open} onClose={onClose} saveDisabled={!isDirty} onSave={handleSave}>
+    <FullscreenDialog
+      open={open}
+      onClose={onClose}
+      saveDisabled={!isDirty || editInterestsInProgress}
+      onSave={handleSave}
+    >
       <Box p={2}>
         <Typography variant='h6'>Wybierz zainteresowania</Typography>
-        {availableInterests && (
+        {!availableInterestsLoading ? (
           <Stack mt={2} gap={1} flexWrap={'wrap'}>
-            {availableInterests.map((x) => (
+            {availableInterests!.map((x) => (
               <Chip
                 key={x.id}
                 label={x.name}
@@ -66,6 +72,8 @@ export const UserProfileInterestsEdit = ({
               />
             ))}
           </Stack>
+        ) : (
+          <Loader />
         )}
       </Box>
     </FullscreenDialog>

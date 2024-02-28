@@ -86,7 +86,7 @@ const ChatScrollableInner = (
       {
         onSuccess: (data) => {
           dispatch({ type: 'prepend-range', messageList: data });
-          scrollToPreviousScrollState(scrollableRef.current!.scrollHeight);
+          scrollableRef.current && scrollToPreviousScrollState(scrollableRef.current.scrollHeight);
         },
       }
     );

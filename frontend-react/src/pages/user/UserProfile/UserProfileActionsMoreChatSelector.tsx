@@ -2,6 +2,7 @@ import { useSetAtom } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FullscreenDialog } from 'src/components/FullscreenDialog';
+import { Loader } from 'src/components/Loader';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { UserChatType } from 'src/models/chat/chat';
 import { ChatPreview } from 'src/models/chat/chat-preview';
@@ -10,7 +11,13 @@ import { UserProfile } from 'src/models/user-profile';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
 import { useAddGroupChatParticipant } from 'src/queries/chat-participant-queries';
 import { useGetCurrentUserChats } from 'src/queries/chat-queries';
-import { DialogContentText, List, ListItemButton, ListItemText } from 'src/ui-components';
+import {
+  DialogContentText,
+  List,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from 'src/ui-components';
 import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type UserProfileActionsMoreChatSelectorProps = {
@@ -28,8 +35,12 @@ export const UserProfileActionsMoreChatSelector = ({
   const currentUser = useLoggedInUser();
   const navigate = useNavigate();
   const [selectedChat, setSelectedChat] = useState<ChatPreview | null>(null);
-  const { currentUserChats } = useGetCurrentUserChats(UserChatType.Group, { enabled: open });
-  const { addGroupChatParticipant } = useAddGroupChatParticipant();
+  const { currentUserChats, currentUserChatsFetching } = useGetCurrentUserChats(
+    UserChatType.Group,
+    { enabled: open }
+  );
+  const { addGroupChatParticipant, addGroupChatParticipantInProgress } =
+    useAddGroupChatParticipant();
 
   useEffect(() => {
     if (open) {
@@ -81,20 +92,30 @@ export const UserProfileActionsMoreChatSelector = ({
     <FullscreenDialog
       open={open}
       onClose={onClose}
-      saveDisabled={selectedChat === null}
+      saveDisabled={selectedChat === null || addGroupChatParticipantInProgress}
       saveButtonText={'DODAJ'}
       onSave={handleSave}
     >
       <List>
-        {displayedItems.map((x) => (
-          <ListItemButton
-            key={x.id}
-            selected={selectedChat?.id === x.id}
-            onClick={() => setSelectedChat(x)}
-          >
-            <ListItemText primary={x.name} secondary={x.secondary} />
-          </ListItemButton>
-        ))}
+        {!currentUserChatsFetching ? (
+          displayedItems.length ? (
+            displayedItems.map((x) => (
+              <ListItemButton
+                key={x.id}
+                selected={selectedChat?.id === x.id}
+                onClick={() => setSelectedChat(x)}
+              >
+                <ListItemText primary={x.name} secondary={x.secondary} />
+              </ListItemButton>
+            ))
+          ) : (
+            <Typography mt={6} textAlign='center' color='grey'>
+              Nie ma żadnej rozmowy grupowej do której możesz dodać tego użytkownika
+            </Typography>
+          )
+        ) : (
+          <Loader />
+        )}
       </List>
     </FullscreenDialog>
   );

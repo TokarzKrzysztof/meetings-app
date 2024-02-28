@@ -24,7 +24,6 @@ export const AnnouncementResultListHeaderFiltersFormFields = ({
   const { currentUser } = useGetCurrentUser();
   const { control } = form;
 
-  if (!category) return null;
   return (
     <Container>
       <ControlledFormField
@@ -66,7 +65,7 @@ export const AnnouncementResultListHeaderFiltersFormFields = ({
           isVertical: true
         }}
       ></ControlledFormField>
-      {category.hasExperienceLevel && (
+      {category?.hasExperienceLevel && (
         <ControlledFormField
           control={control}
           element='radio-group'

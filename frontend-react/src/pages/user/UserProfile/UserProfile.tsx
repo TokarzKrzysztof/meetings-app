@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import { useEffect } from 'react';
 import { GoBackBtn } from 'src/components/GoBackBtn';
+import { Loader } from 'src/components/Loader';
 import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { UserProfileActions } from 'src/pages/user/UserProfile/UserProfileActions';
@@ -26,7 +27,7 @@ const StyledTopBackground = styled(Box)(({ theme }) => ({
 
 export const UserProfile = () => {
   const [params] = useRouteParams<UserProfileParams>();
-  const { userProfile, userProfileFetching, userProfileRefetch } = useGetUserProfile(params.userId);
+  const { userProfile, userProfileLoading, userProfileRefetch } = useGetUserProfile(params.userId);
   const { currentUser } = useGetCurrentUser();
 
   const isCurrentUser = !!userProfile && userProfile.user.id === currentUser?.id;
@@ -37,43 +38,48 @@ export const UserProfile = () => {
     }
   }, [isCurrentUser]);
 
-  if (!userProfile || userProfileFetching) return null;
   return (
     <>
       <Header leftSlot={<GoBackBtn />} />
       <Container maxWidth='sm' sx={{ position: 'relative' }}>
-        <StyledTopBackground />
-        <Stack direction={'column'} gap={1} alignItems={'center'}>
-          <UserProfileImage
-            imgSrc={userProfile.user.profileImageSrc}
-            isCurrentUser={isCurrentUser}
-          />
-          <Typography fontSize={19}>
-            {userProfile.user.firstName} {userProfile.user.lastName}
-          </Typography>
-        </Stack>
-        {!isCurrentUser && (
-          <Box mt={2}>
-            <UserProfileActions userProfile={userProfile} isLoggedIn={!!currentUser} />
-          </Box>
+        {!userProfileLoading ? (
+          <>
+            <StyledTopBackground />
+            <Stack direction={'column'} gap={1} alignItems={'center'}>
+              <UserProfileImage
+                imgSrc={userProfile!.user.profileImageSrc}
+                isCurrentUser={isCurrentUser}
+              />
+              <Typography fontSize={19}>
+                {userProfile!.user.firstName} {userProfile!.user.lastName}
+              </Typography>
+            </Stack>
+            {!isCurrentUser && (
+              <Box mt={2}>
+                <UserProfileActions userProfile={userProfile!} isLoggedIn={!!currentUser} />
+              </Box>
+            )}
+            <Box mt={2}>
+              <UserProfileBasicData userProfile={userProfile!} isCurrentUser={isCurrentUser} />
+            </Box>
+            <Box mt={2}>
+              <UserProfileDescription
+                userProfile={userProfile!}
+                isCurrentUser={isCurrentUser}
+                onReload={userProfileRefetch}
+              />
+            </Box>
+            <Box mt={2}>
+              <UserProfileInterests
+                userProfile={userProfile!}
+                isCurrentUser={isCurrentUser}
+                onReload={userProfileRefetch}
+              />
+            </Box>
+          </>
+        ) : (
+          <Loader />
         )}
-        <Box mt={2}>
-          <UserProfileBasicData userProfile={userProfile} isCurrentUser={isCurrentUser} />
-        </Box>
-        <Box mt={2}>
-          <UserProfileDescription
-            userProfile={userProfile}
-            isCurrentUser={isCurrentUser}
-            onReload={userProfileRefetch}
-          />
-        </Box>
-        <Box mt={2}>
-          <UserProfileInterests
-            userProfile={userProfile}
-            isCurrentUser={isCurrentUser}
-            onReload={userProfileRefetch}
-          />
-        </Box>
       </Container>
     </>
   );

@@ -4,13 +4,13 @@ import { AnnouncementResultListItem } from 'src/pages/announcement/AnnouncementR
 import { AnnouncementResultListObserveSearch } from 'src/pages/announcement/AnnouncementResultList/AnnouncementResultListObserveSearch';
 import { useAnnouncementResultListQueryParams } from 'src/pages/announcement/AnnouncementResultList/hooks/useAnnouncementResultQueryParams';
 import { useGetAnnouncementResultList } from 'src/queries/announcement-queries';
-import { useGetAllCategories } from 'src/queries/category-queries';
+import { useGetCategory } from 'src/queries/category-queries';
 import { Box, Container, Stack, Typography } from 'src/ui-components';
 import { ResultListQueryParams } from 'src/utils/announcement-result-list-utils';
 
 export const AnnouncementResultList = () => {
-  const { allCategories } = useGetAllCategories();
   const [params, setParams] = useAnnouncementResultListQueryParams();
+  const { category } = useGetCategory(params.categoryId);
   const scrollable = window;
 
   const {
@@ -25,7 +25,7 @@ export const AnnouncementResultList = () => {
     setParams(params);
   };
 
-  const categoryName = allCategories?.find((x) => x.id === params.categoryId)?.name;
+  const categoryName = category?.name ?? '';
   return (
     <>
       <AnnouncementResultListHeader params={params} onUpdateQueryParams={updateQueryParams} />

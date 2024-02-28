@@ -28,11 +28,13 @@ export const genericUseQueryMethods = <TName extends string, TData>(
 ) => {
   return {
     [name]: query.data,
+    [name + 'Loading']: query.isFetching || query.data === undefined,
     [name + 'Fetching']: query.isFetching,
     [name + 'FetchingError']: query.error,
     [name + 'Refetch']: query.refetch,
     [name + 'FetchedAfterMount']: query.isFetchedAfterMount,
   } as Record<TName, TData | undefined> &
+    Record<`${TName}Loading`, boolean> &
     Record<`${TName}Fetching`, boolean> &
     Record<`${TName}FetchingError`, AxiosError<HttpErrorData> | null> &
     Record<`${TName}Refetch`, typeof query.refetch> &

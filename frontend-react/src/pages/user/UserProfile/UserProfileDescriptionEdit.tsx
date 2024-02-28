@@ -17,7 +17,7 @@ export const UserProfileDescriptionEdit = ({
   onClose,
   onReload,
 }: UserProfileDescriptionEditProps) => {
-  const { editDescription } = useEditDescription();
+  const { editDescription, editDescriptionInProgress } = useEditDescription();
   const [value, setValue] = useState<UserProfile['description']>('');
   const [isDirty, setIsDirty] = useState(false);
 
@@ -43,7 +43,12 @@ export const UserProfileDescriptionEdit = ({
   };
 
   return (
-    <FullscreenDialog open={open} onClose={onClose} saveDisabled={!isDirty} onSave={handleSave}>
+    <FullscreenDialog
+      open={open}
+      onClose={onClose}
+      saveDisabled={!isDirty || editDescriptionInProgress}
+      onSave={handleSave}
+    >
       <Box p={2}>
         <TextArea
           sx={{ mt: 2 }}

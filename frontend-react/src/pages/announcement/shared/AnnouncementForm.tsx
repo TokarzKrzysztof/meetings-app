@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { PageTitle } from 'src/components/PageTitle';
 import { ControlledFormField } from 'src/components/controlled-form-field/ControlledFormField';
@@ -29,27 +28,20 @@ export const AnnouncementForm = ({
   disabledWhenUntouched,
   isCategoryEditable,
 }: AnnouncementFormProps) => {
-  const form = useForm<Announcement>();
+  const form = useForm<Announcement>({
+    defaultValues: data,
+  });
   const {
     control,
     handleSubmit,
-    reset,
     watch,
     formState: { isDirty },
   } = form;
   const { allCategories } = useGetAllCategories();
-  const { currentUserOccupiedCategoryIds, currentUserOccupiedCategoryIdsFetching } =
-    useGetCurrentUserOccupiedCategoryIds();
+  const { currentUserOccupiedCategoryIds } = useGetCurrentUserOccupiedCategoryIds();
   const categoryId = watch('categoryId');
 
-  useEffect(() => {
-    if (allCategories && data) {
-      reset(data);
-    }
-  }, [allCategories, data]);
-
   const selectedCategory = allCategories?.find((x) => x.id === categoryId);
-  if (currentUserOccupiedCategoryIdsFetching) return null;
   return (
     <Container maxWidth='sm' component='form' onSubmit={handleSubmit(onSubmit)}>
       <PageTitle>{title}</PageTitle>
@@ -63,7 +55,7 @@ export const AnnouncementForm = ({
           required: ValidationMessages.required,
         }}
         ElementProps={{
-          optionsAsync: allCategories,
+          optionsAsync: currentUserOccupiedCategoryIds && allCategories ? allCategories : undefined,
           getOptionLabel: (opt) => opt.name,
           getOptionDisabled: (opt) => currentUserOccupiedCategoryIds!.includes(opt.id),
           helperText: 'Możesz mieć maksymalnie jedno aktywne ogłoszenie na daną kategorię',
@@ -71,6 +63,7 @@ export const AnnouncementForm = ({
           disabled: !isCategoryEditable,
         }}
       />
+
       {selectedCategory?.hasExperienceLevel && (
         <ControlledFormField
           control={control}
@@ -81,7 +74,7 @@ export const AnnouncementForm = ({
           ElementProps={{
             options: experienceLevelOptions,
             hasTopSpacing: true,
-            isVertical: true
+            isVertical: true,
           }}
         />
       )}

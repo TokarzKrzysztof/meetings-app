@@ -1,5 +1,6 @@
 import { useSetAtom } from 'jotai';
 import { useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { LoginRequiredDialog } from 'src/components/LoginRequiredDialog';
 import { UserGender } from 'src/models/user';
 import { confirmationDialogAtom } from 'src/providers/ConfirmationDialogProvider/ConfirmationDialogProvider';
@@ -32,6 +33,7 @@ export const AnnouncementResultListObserveSearch = ({
   const { removeObservedSearch, removeObservedSearchInProgress } = useRemoveObservedSearch();
   const confirm = useSetAtom(confirmationDialogAtom);
   const isEmailNotificationEnabledRef = useRef(true);
+  const location = useLocation();
 
   const handleAddObservedSearch = () => {
     confirm({
@@ -106,7 +108,7 @@ export const AnnouncementResultListObserveSearch = ({
       {showLoginPrompt && (
         <LoginRequiredDialog
           text='Musisz być zalogowany/a żeby obserwować wyszukiwania'
-          loginRedirectUrl={''}
+          loginRedirectUrl={location.pathname + location.search}
           onClose={() => setShowLoginPrompt(false)}
         />
       )}

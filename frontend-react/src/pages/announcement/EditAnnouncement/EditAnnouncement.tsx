@@ -1,6 +1,7 @@
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 import { GoBackBtn } from 'src/components/GoBackBtn';
+import { Loader } from 'src/components/Loader';
 import { Header } from 'src/components/header/Header';
 import { useRouteParams } from 'src/hooks/useRouteParams';
 import { Announcement } from 'src/models/annoucement/announcement';
@@ -10,7 +11,7 @@ import { EditAnnouncementParams } from 'src/utils/enums/app-routes';
 
 export const EditAnnouncement = () => {
   const [params] = useRouteParams<EditAnnouncementParams>();
-  const { announcement } = useGetAnnouncement(params.id);
+  const { announcement, announcementLoading } = useGetAnnouncement(params.id);
   const { editAnnouncement, editAnnouncementInProgress } = useEditAnnouncement();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -30,14 +31,18 @@ export const EditAnnouncement = () => {
   return (
     <>
       <Header leftSlot={<GoBackBtn />} />
-      <AnnouncementForm
-        data={announcement}
-        onSubmit={onSubmit}
-        title='Edycja ogłoszenia'
-        inProgress={editAnnouncementInProgress}
-        buttonText='Zapisz zmiany'
-        disabledWhenUntouched
-      />
+      {!announcementLoading ? (
+        <AnnouncementForm
+          data={announcement!}
+          onSubmit={onSubmit}
+          title='Edycja ogłoszenia'
+          inProgress={editAnnouncementInProgress}
+          buttonText='Zapisz zmiany'
+          disabledWhenUntouched
+        />
+      ) : (
+        <Loader />
+      )}
     </>
   );
 };

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AvatarList } from 'src/components/AvatarList';
+import { Loader } from 'src/components/Loader';
 import { useSetClearableAtom } from 'src/hooks/useClearableAtom';
 import { useLoggedInUser } from 'src/hooks/useLoggedInUser';
 import { useRouteParams } from 'src/hooks/useRouteParams';
@@ -12,8 +13,8 @@ import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/components/ChatNewMessage';
 import {
-    ChatScrollable,
-    ChatScrollableHandle,
+  ChatScrollable,
+  ChatScrollableHandle,
 } from 'src/pages/chat/shared/components/ChatScrollable';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
@@ -67,7 +68,7 @@ export const GroupChat = () => {
     return ['Ty', ...others].join(', ');
   }, [groupChat, isAloneInChat]);
 
-  if (!groupChat) return null;
+  if (!groupChat) return <Loader />;
   return (
     <>
       <ChatMessageFocusProvider chat={groupChat} dispatch={dispatch}>

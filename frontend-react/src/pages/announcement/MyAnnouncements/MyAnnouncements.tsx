@@ -2,7 +2,10 @@ import { useSetAtom } from 'jotai';
 import { Link } from 'react-router-dom';
 import { Header } from 'src/components/header/Header';
 import { announcementsFilterAtom } from 'src/pages/announcement/MyAnnouncementsList/MyAnnouncementsList';
-import { useGetCurrentUserAnnouncementsCount } from 'src/queries/announcement-queries';
+import {
+  AnnouncementsCount,
+  useGetCurrentUserAnnouncementsCount,
+} from 'src/queries/announcement-queries';
 import {
   Box,
   Button,
@@ -17,10 +20,12 @@ import {
 import { AppRoutes, MyAnnouncementsListParams } from 'src/utils/enums/app-routes';
 
 export const MyAnnouncements = () => {
-  const { currentUserAnnouncementsCount, currentUserAnnouncementsCountFetching } =
-    useGetCurrentUserAnnouncementsCount();
+  const { currentUserAnnouncementsCount } = useGetCurrentUserAnnouncementsCount();
 
-  if (currentUserAnnouncementsCountFetching) return null;
+  const getCount = (type: keyof AnnouncementsCount) => {
+    return currentUserAnnouncementsCount ? `(${currentUserAnnouncementsCount[type]})` : '';
+  };
+
   return (
     <>
       <Header />
@@ -30,18 +35,9 @@ export const MyAnnouncements = () => {
         </Typography>
 
         <List sx={{ mt: 1 }} color='primary'>
-          <NavigationLink
-            status={'Active'}
-            text={`Aktywne (${currentUserAnnouncementsCount!.active})`}
-          />
-          <NavigationLink
-            status={'Pending'}
-            text={`Oczekujące (${currentUserAnnouncementsCount!.pending})`}
-          />
-          <NavigationLink
-            status={'Closed'}
-            text={`Zakończone (${currentUserAnnouncementsCount!.closed})`}
-          />
+          <NavigationLink status={'Active'} text={`Aktywne ${getCount('active')}`} />
+          <NavigationLink status={'Pending'} text={`Oczekujące ${getCount('pending')}`} />
+          <NavigationLink status={'Closed'} text={`Zakończone ${getCount('closed')}`} />
         </List>
         <Box textAlign='center' my={3}>
           <Button

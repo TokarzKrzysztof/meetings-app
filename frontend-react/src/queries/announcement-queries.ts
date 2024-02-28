@@ -4,7 +4,7 @@ import {
   UseMutationOptions,
   UseQueryOptions,
   useMutation,
-  useQuery
+  useQuery,
 } from 'react-query';
 import axios from 'src/config/axios-config';
 import { usePaginatedQuery } from 'src/hooks/usePaginatedQuery';
@@ -137,11 +137,9 @@ export const useGetCurrentUserOccupiedCategoryIds = (
   return genericUseQueryMethods('currentUserOccupiedCategoryIds', query);
 };
 
+export type AnnouncementsCount = { active: number; pending: number; closed: number };
 export const useGetCurrentUserAnnouncementsCount = (
-  options?: UseQueryOptions<
-    { active: number; pending: number; closed: number },
-    AxiosError<HttpErrorData>
-  >
+  options?: UseQueryOptions<AnnouncementsCount, AxiosError<HttpErrorData>>
 ) => {
   const query = useQuery({
     queryKey: 'GetCurrentUserAnnouncementsCount',

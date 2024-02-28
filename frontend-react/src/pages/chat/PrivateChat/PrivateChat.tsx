@@ -1,6 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { useEffect, useMemo, useReducer, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Loader } from 'src/components/Loader';
 import { LocationText } from 'src/components/LocationText';
 import { connectionAtom } from 'src/hooks/signalR/connectionAtom';
 import { useSetClearableAtom } from 'src/hooks/useClearableAtom';
@@ -16,8 +17,8 @@ import { chatAtom } from 'src/pages/chat/shared/atoms/chat-atom';
 import { ChatHeader } from 'src/pages/chat/shared/components/ChatHeader';
 import { ChatNewMessage } from 'src/pages/chat/shared/components/ChatNewMessage';
 import {
-    ChatScrollable,
-    ChatScrollableHandle,
+  ChatScrollable,
+  ChatScrollableHandle,
 } from 'src/pages/chat/shared/components/ChatScrollable';
 import { useSignalRListeners } from 'src/pages/chat/shared/hooks/useSignalRListeners';
 import { useUnloadListener } from 'src/pages/chat/shared/hooks/useUnloadListener';
@@ -72,7 +73,7 @@ export const PrivateChat = () => {
 
   const age = useMemo(() => (user ? calculateAge(user.birthDate) : null), [user]);
 
-  if (!user || privateChatFetching) return null;
+  if (!user || privateChatFetching) return <Loader />;
   return (
     <ChatMessageFocusProvider chat={privateChat} dispatch={dispatch}>
       <Stack height='100vh' direction='column'>

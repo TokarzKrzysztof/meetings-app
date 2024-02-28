@@ -14,11 +14,13 @@ import { AppRoutes } from 'src/utils/enums/app-routes';
 
 export type HeaderMenuAccountButtonProps = {
   currentUser: User | null | undefined;
+  currentUserLoading: boolean;
   onLogout: () => void;
 };
 
 export const HeaderMenuAccountButton = ({
   currentUser,
+  currentUserLoading,
   onLogout,
 }: HeaderMenuAccountButtonProps) => {
   const menuAnchorRef = useRef<HTMLButtonElement>(null);
@@ -79,6 +81,7 @@ export const HeaderMenuAccountButton = ({
     </>
   );
 
+  if (currentUserLoading) return null;
   return (
     <>
       <IconButton color='inherit' ref={menuAnchorRef}>
